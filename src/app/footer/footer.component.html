@@ -1,0 +1,96 @@
+ <div class="fondoFooter"> 
+  <div class="container footer">
+    <div class="row showAlways">
+      <div class="col-sm-4 col-xs-12 footer__section">
+        <div class="header">SINA</div>
+        <div class="content">
+          <p>Email: <a href="mailto:infoweb@sina.com.ar" style="text-transform: none;">infoweb@sina.com.ar</a></p>
+          <p>Teléfono: <a href="tel:01121399100">011 2139-9100</a></p>
+          <p>Whatsapp: <a target="_blank" href="https://api.whatsapp.com/send?phone=5491123145727">+54 9 11 2314-5727</a></p>
+          <p>Horario de atención: Lun. a Vie. de 8 a 12 hs. y de 14 a 17 hs. Sáb. de 8 a 12 hs.</p>
+          <p>Domicilio: Madres de Plaza de Mayo 949, Quilmes, Bs. As.</p>
+        </div>
+      </div>
+      <div class="col-sm-8 col-xs-12">
+        <div class="row">
+            <div class="col-sm-2 col-xs-6 footer__section">
+              <div class="header">CONTENIDO</div>
+              <div class="content">
+                <ul>
+                  <li *ngFor="let item of LinkList" class="nav-item">
+                    <a class="nav-link" routerLink="{{item.url}}" routerLinkActive="active">{{item.texto}} <span class="sr-only">current</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="cursor: pointer" class="nav-link" (click)="registrar()">Nuevo cliente</a>
+                  </li>      
+                  <li class="nav-item">
+                    <a class="nav-link" routerLink="contacto" routerLinkActive="active">Contacto<span class="sr-only">current</span></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-sm-2 col-xs-12 footer__section social">
+                <div class="header">SEGUINOS</div>
+                <div class="content">
+                  <ul class="ulSocial">
+                    <li *ngFor="let item of SocialList" class="nav-item" [ngClass]="{'active': item.active}">
+                      <a class="nav-link" href="{{item.url}}">
+                        <img src="{{item.urlImg}}" title="{{item.texto}}" />
+                        {{item.texto}}
+                        <span class="sr-only">current</span>
+                      </a>
+                    </li>          
+                  </ul>  
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12 footer__section">
+                <div class="header">NEWSLETTER / SUSCRIBITE</div>
+                <div class="content">
+                  <input type="text" name="nombre" placeholder="Nombre">
+                  <input type="text" name="email"  placeholder="Email">
+                  <button class="whiteButton">SUSCRIBIRME</button>
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12 footer__section">
+                <div class="header">SUMATE A SINA</div>
+                <div class="content">
+                  <p>Si estás interesado en formar parte de nuestro Staff envianos tus datos y adjuntá tu CV.</p>
+                  <button class="whiteButton">SUMARME</button>
+                </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="row showMobile">
+      <div class="col-xs-12 footer__section">
+        <div class="header">EMPRESA</div>
+        <div class="content">
+          <p style="font-weight:bold;">Administración y Ventas</p>
+          <p>Madres de Plaza de Mayo 949, Quilmes, Bs. As.</p>
+          <p>Tel.: (011) 2139-9100</p>
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="row">
+            <div class="col-sm-2 col-xs-12 footer__section">
+              <div class="header">CONTENIDO</div>
+              <div class="content">
+                <ul>
+                  <li *ngFor="let item of LinkList" class="nav-item" [ngClass]="{'active': item.active}">
+                    <a class="nav-link" href="#">{{item.texto}} <span class="sr-only">current</span></a>
+                  </li>          
+                </ul>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+          <img src="./assets/images/header/logo.png" alt="Sina" height="34">
+          <p>Copyright © 2019 Sina. Todos los derechos reservados. Desarrollado por <a href="https://www.leren.com.ar"><b>Leren</b></a></p>
+        </div>
+    </div>
+  </div>
+</div>

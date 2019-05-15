@@ -1,0 +1,108 @@
+<div class="row message">
+    <div class="container">
+        <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
+            {{ successMessage }}
+            <button class="actionButton transparentButton" [routerLink]="['/compra']">VER TODOS</button>
+        </ngb-alert>
+    </div>
+</div>
+<div class="container producto">
+  <div class="row producto__header" style="position: relative;">
+    <img src="./assets/images/iconos/oferta.png" alt="">
+    <p> OFERTA DEL MES </p>
+    <h1 style="    position: absolute;
+    right: 0;
+    bottom: 0px;
+    font-size: 14px;
+    margin: 0;">{{producto["titulo"]}}</h1>
+  </div>
+  <div class="row">
+    <div class="producto__path">
+        <span *ngFor="let item of fullPath">
+          <p>{{item}}</p><p>></p></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-6" style="max-height: 350px;"><ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div>
+    <div class="col-xs-12 col-md-6 producto__descripcion">
+      <div class="row title">
+        <p>{{producto['titulo']}} - {{producto['tituloAdicional']}}</p>
+        <div class="social">
+            <i [shareButton]="'facebook'" [sbUrl]="full_link" class="fa fa-facebook" aria-hidden="true"></i>
+            <i [shareButton]="'twitter'"  [sbUrl]="full_link" class="fa fa-twitter"  aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="row codigo">
+        <p>Código: {{producto['codInterno']}}</p>
+        <p style="    margin-bottom: 0px;">Código de barras: {{producto['codBarra']}}</p>
+        <p>Presentación: {{producto["unidadMedida"]}}</p>
+      </div>
+      <!--div class="row titled">
+        <p>DESCRIPCIÓN</p>
+        <p>{{producto.descripcion}}</p>
+      </div-->
+      <!--div class="row titled">
+          <p>CONDICION</p>
+          <p style="margin-top: -10px;">{{producto.condicion}}</p>  
+      </div-->
+      <div class="row producto__precio" *ngIf="loginStatus === true">
+        <div class="col-md-4 col-xs-6 titled">
+          <p>$ {{producto.precio}}</p>
+        </div>
+        <!--div class="col-md-4 col-xs-6 titled">
+          <p>ANTES</p>
+          <p style="text-decoration: line-through;">$ {{producto.precio}}</p>
+        </div-->
+      </div>
+      <div style="position: relative;"class="row" *ngIf="loginStatus === true">
+        <p style="position: absolute; top: -20px;">{{iva_usuario}}</p>
+      </div>
+      <div class="row producto__compra">
+        <div class="cantidad">
+          <p style="margin-right: 10px; margin-bottom: 0;">Cantidad:</p>
+          <input type="number" [(ngModel)]="producto.cantidad" (focus)="producto['incompleto'] = false">
+          <div class="cantidad--label" [class.alerta]="producto['incompleto']">
+            <div class="mensaje">
+              <div class="mensaje__content">
+                  <span *ngIf="producto.cantidad % producto['cantPack'] !== 0"> * La cantidad ingresada debe ser multiplo de {{producto['cantPack']}}.</span>
+                  <span *ngIf="producto.cantidad < producto['cantMinima']"> * La cantidad es menor al mínimo.</span>
+              </div>
+            </div>
+          </div>  
+        </div>
+      </div>
+      <div class="button">
+          <button style="max-width: 260px;margin-left: -15px;" class="agregar actionButton" *ngIf="producto.comprado == false" (click)="newMessage(producto)">AGREGAR AL CARRITO</button>
+          <button style="max-width: 260px;margin-left: -15px;" class="agregar actionButton greeButton" *ngIf="producto.comprado == true" (click)="removeMessage(producto)">AGREGADO</button>
+      </div> 
+    </div>
+    <!--div class="col-xs-2 producto__compartir">
+      <div class="row">
+        <p>Compartir</p>
+      </div>
+      <div class="row">
+        <div class="item">
+          <i class="fa fa-share-alt" aria-hidden="true"></i>
+          <p>Publicar en Facebook</p>          
+        </div>
+        <div class="item">
+          <i class="fa fa-share" aria-hidden="true"></i>
+          <p>Enviar a un amigo</p>          
+        </div>
+        <div class="item">
+          <i class="fa fa-print" aria-hidden="true"></i>
+          <p>Imprimir</p>          
+        </div>
+      </div>
+    </div-->
+  </div>
+  <div class="row producto__relacionados">
+    <div class="row">
+      <h2>Articulos relacionados</h2>
+    </div>
+    <div class="row resultado">
+        <div class="resultado__item col-xs-6 col-md-3" *ngFor="let item of relacionados | myfilter:{id: null}">
+            <producto [item]="item" [relacionado]="true" [sesion]="false" [mensaje]="_success"></producto>
+      </div>
+  </div>
+</div>

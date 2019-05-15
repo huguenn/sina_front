@@ -1,0 +1,322 @@
+{
+    "DatosUsuario": {
+        "nombre": "Sergio Daniel Medina",
+        "direccion": "Tucuman 141",
+        "localidad": "Monserrat",
+        "provincia": "Buenos Aires",
+        "email": "sergio@leren.com.ar",
+        "cliente": "123123",
+        "cuil" : "2300000009"
+    },
+    "lista": [
+
+    ],
+    "comprados": [
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 12,
+            "minimo":   0
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   5
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   10
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 24,
+            "minimo":   0
+        },        
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   10
+        },        
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   0
+        },        
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   0
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   0
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   0
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   0
+        },
+        {
+            "cantidad": 20,
+            "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+            "precioUnitario": 19.90,
+            "precioTotal" : 150.90,
+            "indice": 1,
+            "minimo":   0
+        }
+    ],
+    "ultimasCompras": [
+        {
+            "fecha": "1 de Julio de 2017 18:35hs",
+            "lista": [
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                }
+            ],
+            "total": 2650.90
+        },
+        {
+            "fecha": "1 de Julio de 2017 18:35hs",
+            "lista": [
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                }
+            ],
+            "total": 2650.90
+        },
+        {
+            "fecha": "1 de Julio de 2017 18:35hs",
+            "lista": [
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },        
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                },
+                {
+                    "cantidad": 20,
+                    "descripcion": "BARREDOR 35 CM ALGOD DOMESTICO COMPLETO",
+                    "precioUnitario": 19.90,
+                    "precioTotal" : 150.90
+                }
+            ],
+            "total": 2650.90
+        }
+    ]
+}

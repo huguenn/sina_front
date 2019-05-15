@@ -1,0 +1,92 @@
+{
+    "Resultados" : [
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 12,
+        "oferta": true,
+        "imperdible": false, "comprado": false,
+        "minimo":   0
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 1,
+        "oferta": false,
+        "imperdible": true, "comprado": false,
+        "minimo":   12
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 1,
+        "oferta": false,
+        "imperdible": false, "comprado": false,
+        "minimo":   0
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 1,
+        "oferta": true,
+        "imperdible": false, "comprado": false,
+        "minimo":   5
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 12,
+        "oferta": true,
+        "imperdible": false, "comprado": false,
+        "minimo":   0
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 1,
+        "oferta": false,
+        "imperdible": true, "comprado": false,
+        "minimo":   0
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 1,
+        "oferta": false,
+        "imperdible": false, "comprado": false,
+        "minimo":   0
+        },
+        { 
+        "imagen": "./assets/images/resultados/1.png",
+        "cantidad": 1,
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "indice": 1,
+        "oferta": true,
+        "imperdible": false, "comprado": false,
+        "minimo":   0
+        }
+    ]
+}

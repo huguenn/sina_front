@@ -1,0 +1,325 @@
+<ng-sidebar-container>
+    <ng-sidebar [(opened)]="_opened" [mode]="_MODES[_option]">
+        <app-sidebar></app-sidebar>
+    </ng-sidebar>
+    <div ng-sidebar-content class="ventana" #ventana (click)="eventoclick($event)">
+        <div class="mensaje" [ngClass]="{'mensaje__activo': sticky.activo}">
+            <div class="container">
+                <p>{{sticky.mensaje}}</p>
+                <a class="actionButton" href={{sticky.link}}>{{sticky.call_to_action}}</a>
+                <i (click)="sticky.activo = false" class="fa fa-times-circle"></i>
+            </div>
+        </div>
+        <app-header 
+            [greetMessage]="childmessage"
+            [headerStatus]="menuStatus"
+        ></app-header>
+        <router-outlet></router-outlet>
+        <div class="modal__container" [ngClass]="{'modalHide': loginStatus}" (click)="closeFull($event)">
+            <div role="document" class="modal-dialog">
+              <div class="loading" [ngClass]="{'loaded': !loginLoading}">
+                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+              </div>
+              <div class="modal-content">
+              <div class="modal-header">
+                <img class="desktop" src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <img class="mobile" src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
+              <h4 class="modal-title">{{registrarStatus ? "Registrando nuevo usuario" : "Bienvenido / Bienvenida"}}</h4>
+              <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
+              <span aria-hidden="true">×</span>
+              </button>
+              </div>
+              <div class="modal-body">
+                  <div class="row" style="display: flex; align-items: center;" *ngIf="!registrarStatus">
+                      <div class="col-xs-12 col-md-6 modal__texto">
+                        <img src="./assets/images/home/login.png" alt="Sina">
+                      </div>
+                      <div class="col-xs-12 col-md-6 modal__registrar">
+                        <p>Si ya tenes usuario:</p>
+                        <input type="text" [(ngModel)]="login.user" name="user" placeholder="Usuario" (keydown)="enterLogin($event)">
+                        <input type="password" [(ngModel)]="login.pass" name="pass" placeholder="Contraseña" (keydown)="enterLogin($event)">
+                        <button class="btn btn-outline-dark actionButton" type="button"(click)="loginModal(login.user, login.pass)">INGRESAR</button>
+                        <p style="color: #F44336; margin-top: 5px;" *ngIf="login.error">{{login.errorMsg || "Error en el logeo"}}</p>
+                        <a href="#">Olvide la contraseña</a>
+                      </div>
+                    </div>
+                    <div class="row" *ngIf="registrarStatus" >
+                        <div class="row">
+                            <p>Registrate en 3 simples pasos</p>
+                        </div>
+                        <div class="steps">
+                            <ul class="steps__bar">
+                                <li (click)="this.processing.finish(); _step = 1; _changeStep(1)"[ngClass]="{'active': _step >= 1}">Solicitud de Alta</li>
+                                <li (click)="this.processing.finish(); _step = 2; _changeStep(2)"[ngClass]="{'active': _step >= 2}">Datos de Entrega</li>
+                                <li (click)="this.processing.finish(); _step = 3; _changeStep(3)"[ngClass]="{'active': _step >= 3}">Confirmación de Datos</li>
+                            </ul>                      
+                            <div class="steps">
+                                <div class="steps__item"></div>
+                            </div>
+                        </div>
+                        <div *ngIf="_step === 1" class="row stepsContent">
+                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 10px">
+                                <input [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
+                                <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia">
+                                <input [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
+                                <ng-select [ngClass]="{'noValidado': validador?.cat_selected}" style="height: 32px; margin: 6px 0px;" [allowClear]="true"
+                                            (removed)="deleteCUIT()"
+                                            (data)="refreshCUIT($event)"
+                                            [items]="reponsable"
+                                            [active]="cat_selected"
+                                            placeholder="CAT. IVA.*">
+                                </ng-select>
+                                <input [ngClass]="{'noValidado': validador?.cuit}" type="text" placeholder="{{cuit}}*" [(ngModel)]="contacto.cuit" name="cuit">
+                                <input [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono">
+                                <input type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular">
+                            </div>
+                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 10px">
+                                <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
+                                    <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion">
+                                    <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero">
+                                </div>
+                                <input [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad">
+                                <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal">
+                                <ng-select [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="height: 32px; margin: 6px 0px;" [allowClear]="true"
+                                    [items]="provincia"
+                                    placeholder="Provincia*"
+                                    (removed)="deleteProvincia()"
+                                    (data)="refreshProvincia($event)"
+                                    [active]="domicilio_provincia"
+                                    >
+                                </ng-select>
+                                <input [ngClass]="{'noValidado': validador?.contrasena}" type="password" placeholder="Contraseña*">
+                                <input [ngClass]="{'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Repetir contraseña*">
+                            </div>
+                        </div>
+                        <div class="row stepsContent" *ngIf="_step === 2">
+                            <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 10px">
+                                    <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras">
+                                    <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
+                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion">
+                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero">
+                                    </div>   
+                                    <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
+                                            <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad">
+                                            <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal">
+                                    </div>
+                                    <ng-select style="height: 32px; margin: 6px 0px;" [allowClear]="true"
+                                                [items]="provincia"
+                                                (removed)="deleteProvincia2()"
+                                                (data)="refreshProvincia2($event)"
+                                                placeholder="Provincia de entrega"
+                                                [active]="envio_provincia"
+                                                >
+                                    </ng-select>
+                            </div>        
+                        </div>
+                        <div class="row stepsContent" *ngIf="_step === 3">
+                            <div class="notProcessing" *ngIf="!processing.started">
+                                <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
+                                    <p [ngClass]="ckeckItem(contacto.razon_social).status"><b>Nombre o razón social: </b>{{ckeckItem(contacto.razon_social).text}}</p>
+                                    <p *ngIf="contacto.nombre_fantasia"><b>Nombre de fantasia: </b>{{contacto.nombre_fantasia}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.email).status"><b>Email: </b>{{ckeckItem(contacto.email).text}}</p>
+                                    <p [ngClass]="ckeckItem(cativa).status"><b>CAT. IVA.: </b>{{ckeckItem(cativa).text}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.domicilio_ciudad).status"><b>Localidad: </b>{{ckeckItem(contacto.domicilio_ciudad).text}}</p>
+                                    <p *ngIf="contacto.domicilio_direccion"><b>Dirección: </b>{{(contacto.domicilio_direccion) + " " + contacto.domicilio_numero}}</p>
+                                    <br>
+                                    <p [ngClass]="ckeckItem(contacto.nombre_responsable_compras).status"><b>Entrega a:</b> {{ckeckItem(contacto.nombre_responsable_compras).text}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.envio_domicilio_ciudad).status"><b>Localidad de entrega</b>: {{ckeckItem(contacto.envio_domicilio_ciudad).text}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.envio_domicilio_ciudad).status"><b>C.P. de entrega</b>: {{ckeckItem(contacto.envio_domicilio_codigo_postal).text}}</p>
+                                </div>
+                                <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
+                                    <p [ngClass]="ckeckItem(contacto.telefono).status"><b>Teléfono: </b>{{ckeckItem(contacto.telefono).text}}</p>
+                                    <p *ngIf="(contacto.telefono_celular)"><b>Teléfono celular: </b>{{contacto.telefono_celular}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.cuit).status"><b>DNI o CUIT.: </b>{{ckeckItem(contacto.cuit).text}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.domicilio_codigo_postal).status"><b>C.P.: </b>{{ckeckItem(contacto.domicilio_codigo_postal).text}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.domicilio_provincia).status"><b>Provincia: </b>{{ckeckItem(contacto.domicilio_provincia).text}}</p>
+                                    <br>
+                                    <p [ngClass]="ckeckItem(contacto.envio_domicilio_direccion).status"><b>Domicilio de entrega:</b> {{ckeckItem(contacto.envio_domicilio_direccion).text}}</p>
+                                    <p [ngClass]="ckeckItem(contacto.envio_domicilio_provincia).status"><b>Provincia de entrega:</b> {{ckeckItem(contacto.envio_domicilio_provincia).text}}</p>
+                                </div>
+                            </div>
+                            <div class="processing" *ngIf="processing.started">
+                                <div class="loading" *ngIf="processing.right_now">
+                                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                                </div>
+                                <div class="response" *ngIf="!processing.right_now">
+                                    <p>{{response.mensaje}}</p>
+                                    <button  *ngIf="response.action == 'Volver al primer paso'" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row" *ngIf="!registrarStatus">
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <p>Aun no tienes usuario:</p>
+                            <button class="whiteButton" type="button" [routerLink]="['/']" (click)="registrarStatus = !registrarStatus">REGISTRATE</button>
+                        </div>
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button type="button" class="facebook"> CONTINUAR CON FACEBOOK </button>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="registrarStatus && !processing.started">
+                        <button class="btn btn-outline-dark actionButton" type="button"(click)="_anteriorStep()">{{_step === 1 ? "CANCELAR" : "ANTERIOR"}}</button>
+                        <button class="btn btn-outline-dark actionButton" style="margin-bottom: 5px;"   type="button"(click)="_changeStep()">{{_step === 3 ? "REGISTRATE" : "SIGUIENTE"}}</button>
+                    </div>
+                </div>
+            </div>                            
+        </div>
+        </div>
+        <div class="modal__container" [ngClass]="{'modalHide': carritoStatus}" (click)="closeFull2($event)">
+            <div role="document" class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <h4 class="modal-title">Tiene un carrito pendiente</h4>
+                <button aria-label="Close" class="close" type="button" (click)= "carritoCancelModal()">
+                <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="card">
+                            <h3 class="card-header">{{childmessage.length}} compras pendientes</h3>
+                            <div class="card-block">
+                                <div class="row carrito__header">
+                                    <div class="col-1">
+                                        <div class="border">
+                                        <p>Cantidad</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="border">
+                                            <p>Descripcion</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="border">
+                                        <p>Precio Unitario</p>
+                                        </div>
+                                    </div>  
+                                    <div class="col-4">
+                                        <div class="border">
+                                        <p>Subtotal</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row carrito__content" *ngFor="let compra of childmessage">
+                                    <div class="col-1">
+                                        <input type="number" name="cantidad" id="cantidad" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
+                                    </div>
+                                    <div class="col-2">
+                                        <p>{{compra.descripcion}}</p>
+                                    </div>
+                                    <div class="col-3">
+                                        <p>${{formatMoney(compra.precio)}}</p>
+                                    </div>  
+                                    <div class="col-4">
+                                        <p>${{updatePrecio(compra.precio, compra.cantidad)}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer carrito">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button class="actionButton" type="button" (click)="carritoModal()">CONTINUAR COMPRA</button>
+                        </div>
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button type="button" class="whiteButton" (click)="carritoCancelModal()"> CANCELAR </button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>                            
+        </div>
+        <div class="modal__container" [ngClass]="{'modalHide': !actualEmergenteFlag }" (click)="closeEmergente($event)">
+                <div role="document" class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding: 0;">
+                            <img [src]="actualEmergente['img'] || ''" alt="Sina" style="position: relative; bottom: 0px; left: 0px; width: 100%;">
+                            <button aria-label="Close" class="close" type="button" (click)= "closeEmergente2()">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        </div>
+                    </div>
+                </div>                            
+        </div>  
+        <div class="modal__container" [ngClass]="{'modalHide': representarStatus}" (click)="closeFullRepresentar($event)">
+            <div class="loading" [ngClass]="{'loaded': !loginLoading}">
+                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+            </div>
+            <div role="document" class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <h4 class="modal-title">Cuentas disponibles para representación</h4>
+                <button aria-label="Close" class="close" type="button" (click)= "representarCancel()">
+                <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="card">
+                            <h3 class="card-header">Seleccioná alguna de las {{cuentasRepresentar.length}} cuentas que puede representar</h3>
+                            <div class="buscador_cuenta">
+                                    <input type="text" placeholder="Escriba para filtrar por Nombre/Razón Social o CUIT" [(ngModel)]="filterBusqueda" style="    width: 100%;
+                                    border: none;
+                                    padding: 5px 10px;">
+                                </div>        
+                            <div class="card-block" style="max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
+                                <div class="row carrito__header">
+                                    <div class="col-rep-3">
+                                        <div class="border">
+                                        <p>Selección</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-rep-4">
+                                        <div class="border">
+                                            <p>CUIT</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-rep-5">
+                                        <div class="border">
+                                        <p>Nombre o razón social</p>
+                                        </div>
+                                    </div>  
+                                </div>
+                                <div class="row carrito__content" *ngFor="let cuenta of cuentasRepresentar | cuentasFilter: filterBusqueda; let $index = index" >
+                                    <div class="col-rep-3">
+                                        <div class="border">
+                                            <input [value]="cuenta.id" [checked]="$index === 0" type="radio" [(ngModel)]="cuenta.seleccion" name="opcionCuenta" (click)="seleccionarCuenta(cuenta)" style="padding: 0; margin: auto;">
+                                        </div>
+                                    </div>
+                                    <div class="col-rep-4">
+                                        <p>{{cuenta.cuit}}</p>
+                                    </div>
+                                    <div class="col-rep-5">
+                                        <p>{{cuenta.razon_social}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-weight: bold; color: red; margin-left: 35px; margin-top: 20px; margin-bottom: -10px;">{{cuentaRespuesta}}</p>
+                <div class="modal-footer carrito">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button class="actionButton" type="button" (click)="representarCuenta(cuentaSeleccionada)">REPRESENTAR CUENTA</button>
+                        </div>
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button type="button" class="whiteButton" (click)="cerrarRepresentarCuenta()"> CERRAR SESIÓN </button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>                            
+        </div>
+        <app-footer></app-footer>
+    </div>
+</ng-sidebar-container>
+       

@@ -1,0 +1,473 @@
+@media (min-width: 1430px) {
+    .container {
+      width: 1400px;
+    }
+  }  
+
+
+/* You can add global styles to this file, and also import other style files */
+.filter__item .card{
+    border-bottom: 1px solid rgb(116, 113, 113);
+}
+.filter__item .card div:nth-child(1){
+    padding: 5px 10px;
+}    
+.filter__item .card div:nth-child(1) a{
+    font-size: 20px;
+}    
+.filter__item .card div:nth-child(2) a{
+    font-size: 18px;
+    color: #000000;
+    margin: 0px calc(50% - 30px);
+}    
+
+
+ngx-gallery{
+    width: 100% !important;
+    max-height: 452px !important;
+}
+ngx-gallery-image{
+    border: 2px solid #f8f8f8;
+    z-index: 0;
+}
+.ngx-gallery-thumbnail{
+    border: 2px solid #f8f8f8;    
+}
+
+
+ngb-accordion .card-header{
+    background: #f8f8f8;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+ngb-accordion .card {
+    margin: -15px;
+    border: 2px solid #f8f8f8;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+}
+ngb-accordion ngb-accordion .card-header {
+    border: 1px solid #ccccccc2;   
+    background-color: #ffffff;
+    font-weight: bold;
+}    
+ngb-accordion ngb-accordion .card {
+    margin: 15px;
+    border: none;    
+}
+ngb-accordion ngb-accordion .card-body {
+    margin: 15px;
+    color: #9d9d9d;
+}    
+ngb-accordion .card:nth-child(1) {
+    margin-top: 15px;
+}    
+ngb-accordion .card-header a {
+    color: #000000;
+    text-decoration: none;
+}
+ngb-accordion .card-header span {
+    position: absolute;
+    right: 15px;
+}    
+ngb-accordion .card .row {
+    margin: 15px;
+}    
+.ultimaCompra ngb-accordion .card {
+    margin-top: 15px;
+}
+.form-group img {
+    width: 100%;
+    margin-top: 7px;    
+}
+.form-group > label {
+    margin-top: 5px;
+    font-size: 14px;
+    padding: 0px;
+}
+
+.popup__lista li{
+    border: none;
+    width: 100%;
+}
+.popup__lista li:hover{
+    background-color: #f8f8f8;
+}
+.popover-title{
+    display: none;
+}
+.estado_pop .popover-content {
+    padding-bottom: 80px;
+}
+.cuenta_pop .popover-content {
+    padding: 15px 0px;
+    padding-top: 25px;
+}
+
+
+.popover.bottom {
+    margin-top: -5px;
+    margin-left: 2px;
+    margin-right: -80px;
+}
+.popup__header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+.popup__mas {
+    width: 100%;
+    background: #00c973;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+    position: absolute;
+    bottom: 0px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    cursor: pointer;
+    margin: 0px;
+}
+.popup__mas p {
+    margin: 0px;
+}
+
+.buy .popover.bottom {
+    display: block;
+    top: 40px !important;
+    left: -94.796875px !important;
+}
+
+/* alert */
+.message {
+    position: fixed;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    top: 88px;
+    z-index: 1000;
+}
+.message * {
+    color: #ffffff;
+}    
+.message .alert-success {
+    background-color: #00c973;
+    color: #ffffff;
+    z-index: 10;
+    width: 30%;
+    margin-left: 70%;
+    position: relative;
+}
+.message .transparentButton {
+    position: absolute;
+    right: 5px;
+    top: 2px;
+}
+.message .close {
+    display: none;
+}
+.message .transparentButton:hover {
+    background: #fff;
+    color: #00c973;
+}
+.carouselContainer{
+    min-height: calc(100vw * 704 / 2667);
+    max-height: calc(100vw * 704 / 2667);
+    position: relative;
+    overflow: hidden;
+    background: #f1f1f1;
+}
+.imageSelector .container {
+    display: flex; 
+    justify-content: center; 
+    width: 100%; 
+    position: absolute; 
+    bottom: 10px;
+}
+.imageContainer {
+    /*position: relative;*/
+    overflow: hidden;
+}
+.imageContainer img {
+    opacity: 0;
+    position: absolute;
+    transition: 0.5s ease all;
+}
+.imageContainer img.activeItem {
+    opacity: 1;
+}
+.imageContainerItem {
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+    background: #057aff;
+    opacity: 0.4;
+    margin: 0 4px;
+    text-align: center;
+    cursor: pointer;
+}
+.imageContainerItem.active {
+    opacity: 1;
+}
+.carousel-nav-list__item {
+    background-color: #9e9e9e8a !important;
+}
+.carousel-nav-list__item--current {
+    background-color: #0579ff !important;
+}
+ng-sidebar-container {
+    height: 100vh !important;
+}
+.ngx-gallery-thumbnail-size-cover .ngx-gallery-thumbnails .ngx-gallery-thumbnail,
+.ngx-gallery-image-size-cover .ngx-gallery-image{
+    background-size: contain !important;
+}
+.ngx-gallery-thumbnails {
+    display: none !important;
+}
+@media screen and (max-width: 968px){
+    .message .alert-success {
+        width: 100%;
+        margin: 10px 0px;
+    }        
+    .carouselContainer{
+        height: 30vh;
+        max-height: 30vh;
+    }
+    .carouselContainer .imageContainer img{
+        /*height: 100%;*/
+        width: 200% !important;
+        margin: 0 -50% !important;
+    }
+}
+
+
+/*BUTTONS*/
+.actionButton {
+    background: #00c973;
+    border: 2px solid #00c973;
+    padding: 5px 25px;
+    border-radius: 5px;
+    color: #fff;
+    margin: 5px 0px;
+    transition: 0.5s ease background;
+    font-weight: bold;
+}
+.greeButton,
+.actionButton:hover {
+    background: transparent;
+    color: #00c973;
+}
+.whiteButton {
+    background: transparent;
+    border: 2px solid #0579ff;
+    padding: 8px 20px;
+    border-radius: 5px;
+    color: #0579ff;
+    margin: 5px 0px;
+    transition: 0.5s ease all;
+    font-weight: bold;
+}
+.whiteButton:hover {
+    background: #0579ff;
+    color: #fff;
+}
+.transparentButton {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+
+}
+.blueButton {
+    background: #0579ff;
+    color: #fff;
+}
+.blueButton:hover {
+    background: transparent;
+    border: 1px solid #0579ff;
+    color: #0579ff;
+}
+
+.resultado{
+    margin: 20px 0px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #cccccc;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.resultado__head{
+    background-color: #00c9737d;
+    min-height: 297px;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    text-align: center;
+}
+.resultado__head > .img{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: -1;
+    margin-left: -10px;
+    background-position: center;
+    background-size: cover;
+}
+.resultado__head > button{
+    border: 1px solid #FFF;
+    background-color: transparent;
+    border-radius: 5px;
+    color: #FFF;
+    width: 50%;
+    margin-left: 25%;
+    padding: 5px;
+}
+.resultado__head > p{
+    color: #FFF;
+    font-size: 25px;
+}
+.resultado__item{
+    padding: 0px;
+    margin-top: 15px;
+}
+
+.misFrecuentesRow .mensaje,
+.cantidad--label  .mensaje {
+    position: absolute;
+    padding: 5px;
+    top: 15px;
+    height: 100px;
+    margin-top: -50px;
+    display: none;
+    align-items: center;
+}
+.misFrecuentesRow .mensaje__content,
+.cantidad--label  .mensaje__content {
+    background: #000000b0;
+    color: #fff;
+    padding: 10px;
+    position: relative;
+    z-index: 10;
+}
+.misFrecuentesRow .mensaje__content::after,
+.cantidad--label  .mensaje__content::after {
+    position: absolute;
+    content: "";
+    left: -10px;
+    top: calc(50% - 10px);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #000000b0;
+}
+.misFrecuentesRow .cantidad--right {
+    position: absolute;
+    right: 6px;
+    top: -6px;
+}
+.misFrecuentesRow .cantidad--right .mensaje{
+    width: 150px;
+}
+.misFrecuentesRow .cantidad--right.alerta .mensaje,
+.cantidad--label.alerta .mensaje {
+    display: flex;
+}
+
+
+
+@media (max-width: 992px) {
+    .resultado__head{
+        min-height: auto;
+        padding: 10px 0 15px 0;
+        width: 100%;
+    }
+    .resultado__item {
+        padding: 0px !important;
+    }
+}
+
+
+/* ELIPSE */
+
+.lds-ellipsis {
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    left: calc(50% - 32px);
+    top: calc(50% - 32px);
+    z-index: 0;
+  }
+  .lds-ellipsis div {
+    position: absolute;
+    top: 27px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  }
+  .lds-ellipsis div:nth-child(1) {
+    left: 6px;
+    animation: lds-ellipsis1 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(2) {
+    left: 6px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(3) {
+    left: 26px;
+    animation: lds-ellipsis2 0.6s infinite;
+  }
+  .lds-ellipsis div:nth-child(4) {
+    left: 45px;
+    animation: lds-ellipsis3 0.6s infinite;
+  }
+  @keyframes lds-ellipsis1 {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes lds-ellipsis3 {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(0);
+    }
+  }
+  @keyframes lds-ellipsis2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(19px, 0);
+    }
+  }
+  
+
+  .pull-left {
+    overflow-x: hidden;
+    width: calc(100% - 30px);
+}
+
+
+/* validacion */
+
+.noValidado, 
+.noValidado span {
+    background: #F44336;
+    color: #fff;
+}
+.noValidado::placeholder {
+    color: white;
+}
+
+@media screen and (max-width: 768px){
+    ngb-accordion .card .row {
+        margin: 0px;
+    }
+}

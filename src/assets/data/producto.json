@@ -1,0 +1,66 @@
+{
+    "detalles": { 
+        "imagen": "./images/resultados/1.png",
+        "texto1": "Escobon",
+        "texto2": "Escobillón sina",
+        "precio": 18.99,
+        "cantidad": 1,
+        "minimo":   0,
+        "indice": 100,
+        "oferta": true,
+        "imperdible": false,
+        "descripcion": "Lorem asdasdas",
+        "condicion": "Pack de 100 unidades"
+    },
+    "path": [
+        "Limpieza",
+        "Escobillones",
+        "Escobas"
+    ],
+    "relacionados": [
+        { 
+          "imagen": "./assets/images/resultados/1.png",
+          "texto1": "Escobon",
+          "texto2": "Escobillón sina",
+          "precio": 18.99,
+          "cantidad": 1,
+          "indice": 1,
+          "oferta": true,
+          "imperdible": false ,
+          "minimo":   5
+        },
+        { 
+          "imagen": "./assets/images/resultados/1.png",
+          "texto1": "Escobon",
+          "texto2": "Escobillón sina",
+          "precio": 18.99,
+          "cantidad": 1,
+          "indice": 12,
+          "oferta": false,
+          "imperdible": false ,
+          "minimo":   12
+        },
+        { 
+          "imagen": "./assets/images/resultados/1.png",
+          "texto1": "Escobon",
+          "texto2": "Escobillón sina",
+          "precio": 18.99,
+          "cantidad": 1,
+          "indice": 1,
+          "oferta": false,
+          "imperdible": false,
+          "minimo":   0
+        },
+        { 
+          "imagen": "./assets/images/resultados/1.png",
+          "texto1": "Escobon",
+          "texto2": "Escobillón sina",
+          "precio": 18.99,
+          "cantidad": 1,
+          "indice": 1,
+          "oferta": false,
+          "imperdible": true,
+          "minimo":   0
+        }
+    ]
+}

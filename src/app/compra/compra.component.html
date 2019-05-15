@@ -1,0 +1,648 @@
+<div class="row" style="background: #f8f8f8; margin: 0;">
+  <div class="container">
+    <div class="row" style="padding: 60px 45px;    padding-bottom: 0;">
+        <div class="tab">
+          <div class="tab__header">
+            <p>{{secciones[transaccion.paso]}}</p>
+            <ul>
+              <li [class.active]="transaccion.check(0)" 
+                  (click)="transaccion.cambio(0); checkCarritoInit(0);"
+                  >Carrito</li>
+              <li [class.active]="transaccion.check(1)"
+                  (click)="transaccion.cambio(1)"
+                  >Envío y facturación</li>
+              <li [class.active]="transaccion.check(2)"
+              >Confirmacion</li>
+            </ul>
+          </div>
+          <div class="tab__content">
+            <div class="tab__item" *ngIf="transaccion.paso === 0">
+              <div class="content">
+                  <div class="row tab__item__header">
+                    <p>Tu código de Cliente es {{facturacion.datos.codigoCliente}}</p>
+                    <button (click)="transaccion.cambio(1)">Siguiente &#62;</button>
+                    <span>{{secciones[transaccion.paso]}}</span>
+                  </div>
+                  <div class="row">
+                  <div class="col-xs-12 col-md-8">
+                    <div class="carrito">
+                      <div class="carrito__loading" *ngIf="carritoLoading">
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div>
+                        </div>
+                      </div>
+                      <div class="row carrito__titulo">
+                        <p style="font-weight: bold;">COMPRA ACTUAL</p>
+                        <p style="font-size: 10px;margin-top: -8px;">{{carrito.hora}}</p>
+                      </div>
+                      <div class="row carrito__header">
+                        <div class="col-1">
+                          <div class="border">
+                            <p>Cantidad</p>
+                          </div>
+                        </div>
+                        <div class="col-2">
+                          <div class="border">
+                              <p>Descripcion</p>
+                          </div>
+                        </div>
+                        <div class="col-3">
+                          <div class="border">
+                            <p>Precio Unit.</p>
+                          </div>
+                        </div>  
+                        <div class="col-4">
+                          <div class="border">
+                            <p>Subtotal</p>
+                          </div>
+                        </div>
+                        <div class="col-5"></div>  
+                      </div>
+                      <div class="row carrito__content" *ngFor="let compra of carrito.lista">
+                        <div class="col-1">
+                          <input type="number" name="cantidad" id="cantidad" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
+                        </div>
+                        <div class="col-2">
+                          <p>{{compra.descripcion}}</p>
+                        </div>
+                        <div class="col-3">
+                          <p>${{corregirPrecio(compra.precio)}}</p>
+                        </div>  
+                        <div class="col-4">
+                          <p>${{updatePrecio(compra.precio, compra.cantidad)}}</p>
+                        </div>
+                        <div class="col-5">
+                          <button (click)="removeCompraItem(compra)">
+                              <img width="18" src="./assets/images/iconos/Eliminar-producto.png" alt="">
+                          </button>
+                        </div>  
+                      </div>
+                    </div>
+                    <div class="row" style="padding: 20px 20px;">
+                      <p style="font-weight: 14px;">Los productos que se encuentran en oferta, tienen una validez que se limita a la modalidad de contado efectivo, hasta agotar Stock.</p>
+                      <div class="row buscador__general">
+                        <div class="col-xs-12 col-md-10">
+                          <div class="input-group" style="width: 100%;">
+                            <!--span class="input-group-btn">
+                              <button class="btn btn-secondary" type="button">AGREGAR</button>
+                            </span-->
+                            <!--(keyup)="buscarPalabra($event)"-->
+                            <input [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)" name="texto_busqueda" class="form-control" type="text" placeholder="Buscar más productos para agregar a mi compra">
+                            <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
+                              <ul>
+                                <li *ngFor="let item of ResultadoBusqueda" (click)="cerrarBusqueda(item)">
+                                  <img class="busqueda__icono" src="{{item.urlImagen}}" alt="">
+                                  <p class="busqueda__titulo">{{item.titulo}}</p>
+                                  <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
+                                </li>
+                              </ul>
+                            </div>                                            
+                          </div>                        
+                        </div>
+                        <div class="col-xs-12 col-md-2">
+                            <button type="button" class="whiteButton" routerLink="/busqueda/{{texto_busqueda}}" >BUSCAR</button>
+                        </div>
+                      </div>
+                    </div>      
+                  </div>
+                  <div class="col-xs-12 col-md-4">
+                    <div class="row carrito__total">
+                      <div class="row envio__total">
+                        <p>SUBTOTAL</p>
+                        <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
+                        <span style="position: absolute; bottom: -7px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
+                      </div>
+                      <button class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                    </div>
+                    <!--div class="row carrito__busqueda">
+                      <h3>¿TENÉS UN CUPÓN?</h3>
+                      <input type="number" value="1">
+                      <button class="whiteButton">ACEPTAR</button>
+                    </div-->
+                  </div>
+                </div>
+              </div>  
+            </div>
+            <div class="tab__item" *ngIf="transaccion.paso === 1">
+              <div class="content">
+                  <div class="row tab__item__header">
+                      <p>Tu código de Cliente es {{facturacion.datos.codigoCliente}}</p>
+                      <button (click)="transaccion.cambio(0); checkCarritoInit(0);"> &#60; Atrás</button>
+                      <span>{{secciones[transaccion.paso]}}</span>
+                    </div>
+                  <div class="row">
+                  <div class="col-xs-12 col-md-4">
+                    <div class="row envio__seccion">
+                      <div class="row envio__seccion__header">
+                        <p>FORMA DE ENTREGA</p>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('0')">
+                          <img src="./assets/images/iconos/camion.png" alt="">
+                          <p>Envío</p>
+                          <input type="radio" id="test1" value="0" [ngModel]="datosCompra.entrega" checked>
+                          <label for="test1"></label>
+                        </div>
+                        <div class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('1')">
+                          <img src="./assets/images/iconos/retiro.png" alt="">
+                          <p>Retiro en tienda</p>
+                          <input type="radio" id="test2"  value="1" [ngModel]="datosCompra.entrega">
+                          <label for="test2"></label>
+                        </div>
+                      </div>              
+                    </div>
+                    <div class="row envio__seccion--editable" *ngIf="datosCompra.entrega === '0'">
+                      <div class="row envio__seccion__header--editable">
+                        <p>DATOS DE ENVÍO</p>
+                        <button (click)="editingEnvio = !editingEnvio">
+                          <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                        </button>
+                      </div>
+                      <div class="row envio__seccion__content transporte error" *ngIf="!editingEnvio && !datosEnvio_flag">
+                        <p>Debes cargar los datos de envio</p>
+                      </div> 
+                      <div class="row envio__seccion__content" *ngIf="!editingEnvio">
+                        <p>{{datos_envio.domicilio_direccion}}</p>
+                        <p>{{datos_envio.domicilio_ciudad}} ({{datos_envio.domicilio_codigo_postal}})</p>
+                        <p>{{datos_envio.domicilio_provincia}}</p>
+                        <p>{{datos_envio.telefono}}</p>
+                        <p>{{cod_transporte ? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
+                      </div> 
+                      <div class="row envio__seccion__content edit" *ngIf="editingEnvio">
+                        <div class="form-group row" *ngIf="!cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Domicilio
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" name="calle" [(ngModel)]="datos_envio.domicilio_direccion">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="!cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Localidad
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" name="localidad" [(ngModel)]="datos_envio.domicilio_ciudad">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="!cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Código Postal
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" name="calle" [(ngModel)]="datos_envio.domicilio_codigo_postal">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>  
+                        <div class="form-group row" *ngIf="!cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Provincia
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" name="provincia" [(ngModel)]="datos_envio.domicilio_provincia">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="!cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Telefono
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" name="telefono" [(ngModel)]="datos_envio.telefono">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="!cargarTransporte && false">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Días de entrega
+                          </label>
+                          <div class="col-xs-8" style="padding-top: 6px;">
+                              <div class="emergencia">
+                                  Lunes
+                                  <input type="checkbox" [(ngModel)]="isChecked.entrega_lunes">
+                                  <span class="checkmark" (click)="clicked('entrega_lunes')"></span>                              
+                              </div>
+                              <div class="emergencia">
+                                  Martes
+                                  <input type="checkbox" [(ngModel)]="isChecked.entrega_martes">
+                                  <span class="checkmark" (click)="clicked('entrega_martes')"></span>                              
+                              </div>
+                              <div class="emergencia">
+                                  Miércoles
+                                  <input type="checkbox" [(ngModel)]="isChecked.entrega_miercoles">
+                                  <span class="checkmark" (click)="clicked('entrega_miercoles')"></span>                              
+                              </div>
+                              <div class="emergencia">
+                                  Jueves
+                                  <input type="checkbox" [(ngModel)]="isChecked.entrega_jueves">
+                                  <span class="checkmark" (click)="clicked('entrega_jueves')"></span>                              
+                              </div>
+                              <div class="emergencia">
+                                  Viernes
+                                  <input type="checkbox" [(ngModel)]="isChecked.entrega_viernes">
+                                  <span class="checkmark" (click)="clicked('entrega_viernes')"></span>                              
+                              </div>
+                              <div class="emergencia">
+                                  Sábado
+                                  <input type="checkbox" [(ngModel)]="isChecked.entrega_sabado">
+                                  <span class="checkmark" (click)="clicked('entrega_sabado')"></span>                              
+                              </div>
+                          </div>
+                        </div> 
+                        <div class="form-group row" *ngIf="!cargarTransporte  && false">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Horarios
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" name="telefono" [(ngModel)]="datos_envio.horario_entrega">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>   
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Transporte
+                          </label>  
+                          <div class="col-xs-8">
+                              <ng-select style="height: 32px; margin: 6px 0px;" [allowClear]="true"
+                                          [items]="entrega.transporte.lista"
+                                          (data)="refreshTransporte($event)"
+                                          [active]="initialLista"
+                                          placeholder="Medio de transporte">
+                              </ng-select>
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Nombre
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="datostransporte.form.nombreTransporte">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Teléfono
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="datostransporte.form.telefonoTransporte">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row" *ngIf="cargarTransporte">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Dirección en Buenos Aires
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="datostransporte.form.domicilioTransporte">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="row" *ngIf="datos_envio_error !== ''">
+                          <p style="color: red;">{{datos_envio_error}}</p>
+                        </div>
+                        <div class="row" style="text-align:right; padding: 15px;">
+                          <button class="whiteButton" (click)="addTransporte()">{{cargarTransporte ? "CONFIRMAR TRANSPORTE" : "GUARDAR"}}</button>
+                        </div>
+                      </div>                                     
+                    </div>
+                    <div class="row envio__seccion" *ngIf="datosCompra.entrega === '1'">
+                      <div class="row envio__seccion__header">
+                        <p>DATOS DEL RETIRO</p>
+                      </div>
+                      <div class="row envio__seccion__content retiro" style="width: 100%;
+                          margin: 0;
+                          padding: 0 5px;
+                          padding-right: 30px;">
+                          <p style="font-weight: bold; font-size: 14px; padding-bottom: 10px;">Día y horario</p>
+                          <div class="form-group row">
+                            <div class="col-xs-7 horario">
+                              <input [ngModel]="retiroHora | date:'yyyy-MM-dd'" (ngModelChange)="fechaUpdate($event)" type="date" name="retiroHora"/>
+                            </div>
+                            <div class="col-xs-5 horario">
+                              <input [ngModel]="retiroHora1 | date:'HH:mm'" (ngModelChange)="fechaUpdate1($event)" type="time" name="retiroHora1"/>
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia === 'Domingo'">No es posible el retiro los días Domingo</p>
+                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia === 'Sábado'">Sábados: horarios de retiro es de 08hs a 11:30hs</p>
+                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia !== 'Domingo' && dia !== 'Sábado'">Lunes a Viernes: horarios de retiro es de 08hs a 12hs y de 14hs a 16:30hs</p>
+                          </div>
+                          <p style="font-weight: bold; font-size: 14px; padding-bottom: 10px;">Dirección</p>
+                          <div class="form-group row">
+                            <div class="col-xs-12">
+                              <p class="mapa__container">Madres de plaza de Mayo 949, Quilmes. <a (click)="mapa = !mapa">
+                                <div class="frame"></div>
+                                <div class="mapa__content" *ngIf="mapa">
+                                    <span (click)="mapa = !mapa">x</span>
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3278.7818186963987!2d-58.267091685238306!3d-34.735893572009736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e6449263693%3A0x2487ca7b31b60673!2sMessina+Hnos+S.A.!5e0!3m2!1sen!2sar!4v1527709856965" width="480" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                                </div>
+                                <p>Ver Mapa</p>
+                              </a></p>
+                            </div>
+                          </div>
+                      </div>              
+                    </div>
+  
+                  </div>
+                  <div class="col-xs-12 col-md-4">
+                    <div class="row envio__seccion--editable">
+                      <div class="row envio__seccion__header--editable">
+                        <p>DATOS DE FACTURACIÓN</p>
+                        <!--button (click)="editingFacturacion = !editingFacturacion">
+                          <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                        </button-->
+                      </div>
+                      <div class="row envio__seccion__content" *ngIf="!editingFacturacion">
+                        <p>Nombre o razón Social: {{facturacion.datos.razon_social || facturacion.datos.nombre_fantasia}}</p>
+                        <p>CUIT/DNI: {{facturacion.datos.cuit}}</p>
+                        <p>Cat. I.V.A.: {{facturacion.datos.categoria_iva}}</p>
+                        <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
+                        <p>Localidad: {{facturacion.datos.domicilio_ciudad}} ({{facturacion.datos.domicilio_codigo_postal}})</p>
+                        <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
+                        <p>Email: {{facturacion.datos.email}}</p>
+                        <p>Teléfono: {{facturacion.datos.telefono}}</p>
+                      </div>              
+                      <div class="row envio__seccion__content edit" *ngIf="editingFacturacion">
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Razón social
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.razon_social">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Nombre de fantasía
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_fantasia">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>  
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              CAT. IVA.
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.cod_categoria_iva">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Responsable compra
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_responsable_compras">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>    
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Responsable facturacion
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.facturacion_nombre_responsable">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>      
+                        <!--div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              {{facturacion.datos.cod_categoria_iva === "Consumidor Final" ? "DNI" : "CUIT"}}
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.cod_categoria_iva">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div-->
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Dirección
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.domicilio_direccion">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Localidad
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.domicilio_ciudad">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Código Postal
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.domicilio_provincia">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>  
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Provincia
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.domicilio_provincia">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Email Fact.
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.facturacion_email">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                            Tel. Fact.
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.facturacion_telefono">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Telefono
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.telefono">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <label for="example-text-input" class="col-xs-4 col-form-label">
+                              Telefono Celular
+                          </label>
+                          <div class="col-xs-8">
+                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.telefono_celular">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          </div>
+                        </div>  
+                        <div class="row" style="text-align:right; padding: 15px;">
+                          <button (click)="facturacion.update()" class="whiteButton">GUARDAR</button>
+                        </div>
+                      </div>              
+                    </div>
+                    <div class="row envio__seccion">
+                      <div class="row envio__seccion__header">
+                        <p>OBSERVACIONES</p>
+                      </div>
+                      <div class="row envio__seccion__content">
+                        <div class="form-group row">
+                          <div class="col-xs-12" style="margin-left: -15px;">
+                              <textarea [(ngModel)]="observaciones" class="form-control" id="exampleTextarea" rows="3"></textarea>
+                          </div>
+                        </div>
+                      </div>           
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-md-4">
+                    <div class="row carrito__titulo">
+                      <p>RESUMEN DE TU SOLICITUD</p>
+                    </div>
+                    <div class="row envio">
+                      <div class="row envio__total">
+                          <p>SUBTOTAL</p>
+                          <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
+                          <span style="position: absolute; bottom: -7px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
+                      </div>  
+                      <div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
+                          <p>ENVÍO</p>
+                          <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
+                      </div>  
+                        <div class="row envio__confirm" style="margin-bottom: 15px;">
+                        <button class="actionButton" (click)="completarCompra()">COMPLETAR COMPRA</button>
+                        <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}"> 
+                          <p> {{completarCompraTexto}}</p>
+                        </div>
+                      </div>    
+                      <div class="row envio__header">
+                        <div class="col-1">
+                          <p>Cant.</p>
+                        </div>
+                        <div class="col-5">
+                          <p>Artículo</p>
+                        </div>
+                        <div class="col-4">
+                          <p>Subtotal</p>
+                        </div>  
+                      </div>
+                      <div class="row envio__content" *ngFor="let compra of carrito.lista">
+                        <div class="col-1">
+                          <p>{{compra.cantidad}}</p>
+                        </div>
+                        <div class="col-5">
+                          <p style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">{{compra.descripcion}}</p>
+                        </div>
+                        <div class="col-4">
+                          <p>${{compra.total.toFixed(2)}}</p>
+                        </div>  
+                      </div>
+      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab__item" *ngIf="transaccion.paso === 2">
+                <div class="content">
+                    <div class="row tab__item__header">
+                        <p>Tu código de Cliente es {{facturacion.datos.codigoCliente}}</p>
+                        <span>{{secciones[transaccion.paso]}}</span>
+                      </div>
+                    <div class="row">
+                      <div class="cuadro">
+                        <h1>¡MUCHAS GRACIAS POR SU SOLICITUD!</h1>
+                        <p>{{completarCompraTexto}}</p>
+                        <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank">
+                          <button class="actionButton">IMPRIMIR COTIZACIÓN</button>
+                        </a>
+                        <img src="./assets/images/header/logo_mobile_azul.png" alt="">
+                      </div>
+                    </div>
+                    <div class="row confirmacion">
+                      <div class="col-xs-12 col-md-3">
+                        <div class="row envio__seccion__header">
+                          <p>FORMA DE ENTREGA</p>
+                        </div>
+                        <div class="row">
+                          <div class="envio__seccion__opcion" *ngIf="datosCompra.entrega === '0'">
+                            <img src="./assets/images/iconos/camion.png" alt="">
+                            <p>Envío</p>
+                          </div>
+                          <div class="envio__seccion__opcion" *ngIf="datosCompra.entrega === '1'">
+                            <img src="./assets/images/iconos/retiro.png" alt="">
+                            <p>Retiro en tienda</p>
+                          </div>
+                        </div>              
+                      </div>
+                      <div class="col-xs-12 col-md-3 envio__seccion--editable">
+                        <div class="row envio__seccion__header--editable">
+                          <p>DATOS DE ENVÍO</p>
+                        </div>
+                        <div class="row envio__seccion__content">
+                          <p>{{datos_envio.domicilio_direccion}}</p>
+                          <p>{{datos_envio.domicilio_ciudad}} ({{datos_envio.domicilio_codigo_postal}})</p>
+                          <p>{{datos_envio.domicilio_provincia}}</p>
+                          <p>{{datos_envio.telefono}}</p>
+                          <p>{{datos_envio.cod_transporte ? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
+                        </div>              
+                      </div>
+                      <div class="col-xs-4 col-md-3">
+                        <div class="row envio__seccion--editable">
+                          <div class="row envio__seccion__header--editable">
+                            <p>DATOS DE FACTURACIÓN</p>
+                          </div>
+                          <div class="row envio__seccion__content">
+                            <p>Razón Social: {{facturacion.datos.razon_social}}</p>
+                            <p>Nombre de fantasía: {{facturacion.datos.nombre_fantasia}}</p>
+                            <p>Categoría IVA: {{facturacion.datos.cod_categoria_iva}}</p>
+                            <p>Telefono: {{facturacion.datos.telefono}}</p>
+                            <p>Telefono celular: {{facturacion.datos.telefono_celular}}</p>
+                            <p>Nombre responsable de compras: {{facturacion.datos.nombre_responsable_compras}}</p>
+                            <p>Nombre responsable de facturación: {{facturacion.datos.facturacion_nombre_responsable}}</p>
+                            <p>Email de facturación: {{facturacion.datos.facturacion_email}}</p>
+                            <p>Telefono de facturación: {{facturacion.datos.facturacion_telefono}}</p>
+                            <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
+                            <p>Ciudad: {{facturacion.datos.domicilio_ciudad}} CP: {{facturacion.datos.domicilio_codigo_postal}}</p>
+                            <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
+                          </div>              
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-md-3">
+                        <div class="row envio">
+                          <div class="row envio__total">
+                              <p>SUBTOTAL</p>
+                              <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
+                          </div>  
+                        </div>
+                      </div>
+                  </div>
+                  <div class="row volver">
+                    <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank">
+                      <button class="whiteButton">IMPRIMIR</button>
+                    </a>
+                  </div>
+              </div>
+            </div>
+        </div>
+      </div>    
+      <div class="row">
+        <p style=" padding: 0px 60px; margin: 20px 0px; margin-bottom:60px;">{{iva_usuario}}</p>
+      </div>
+    </div>
+  </div>
+</div>

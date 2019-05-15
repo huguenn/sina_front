@@ -1,0 +1,91 @@
+<div class="row message">
+  <div class="container">
+      <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+  </div>
+</div>
+<div class="container filter">
+  <div class="row">
+    <div class="col-md-3 col-xs-12">
+      <div class="row filter__top" style="border: none; display: flex; flex-direction: column; height: auto;">
+        <div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
+          <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Ordenar por</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+            <button class="dropdown-item">Nombre</button>
+            <button class="dropdown-item">Precio</button>
+          </div>
+        </div>
+        <div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
+          <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Vista: {{modoVista}}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+            <button class="dropdown-item" (click)="cambiarVista('Paginado')">Paginado</button>
+            <button class="dropdown-item" (click)="cambiarVista('Listado')">Listado</button>
+          </div>
+        </div>  
+      </div>
+    <!--
+      <div class="row">
+        <div class="col-md-8 col-xs-12">
+          <div class="selection" 
+            [ngClass]="{'hidden': filter.head.selected == 0}" 
+            *ngFor="let filter of FilterItem; let i = index">
+            <div class="header"><p>{{filter.head.texto}}: {{filter.head.selectedText}}</p><span (click)="itemFilterRemoveClick(i)">x</span></div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-8 col-xs-12 selector" 
+          [ngClass]="{'toggle': filter.head.state, 'hidden': filter.head.selected != 0}" 
+          *ngFor="let filter of FilterItem; let i = index">
+          <div class="header" (click)="itemFilterClick(i)"><p>{{filter.head.texto}}</p><span></span></div>
+          <div class="content">
+            <div *ngFor="let item of filter.items; let j = index" class="item" (click)="selectItemClick(i, j)">{{item.texto}}</div>
+          </div>
+        </div>
+      </div>
+      <br>
+    -->
+      <div class="containerSidebarCategorias">
+        <div class="row filter__top">
+          <p>CATEGORÍAS</p>
+        </div>
+        <div class="row listadoCategorias">
+          <div class="col-md-8 col-xs-12">
+              <p><b>{{id_filtro}}</b></p>
+              <p style="margin-left: 10px;" [ngClass]="{'actual': num_subcategoria === -1}">{{id_categoria}}</p>
+              <p style="margin-left: 20px;" *ngFor="let element of listado_subcategorias; let $index = index" [ngClass]="{'actual': num_subcategoria === $index}">{{element?.nombre}}</p>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9 col-xs-12">
+      <div class="row filter__top">
+        <div class="col">
+            <h1 style="
+            font-size: 14px;
+            margin: 0 0 10px;">{{categoriaPadre? categoriaPadre + " - " : ""}} {{categoriaHijo}}</h1>
+        </div>
+        <div class="siguiente" *ngIf="modoVista === 'Paginado'">
+          <button (click)="paginado.anterior()">Anterior</button>
+          <span>Página {{paginado.pagina}} de {{paginado.maximo}}</span>
+          <button (click)="paginado.siguiente()">Siguiente</button>
+        </div>
+      </div>
+      <div class="row resultado">
+        <div class="resultado__item col-md-3 col-xs-6" *ngFor="let item of listaResultados | filter : term">
+            <producto [item]="item" [sesion]="loginStatus" [mensaje]="_success"></producto>            
+        </div>
+      </div>
+      <div class="row">
+        <p style="margin: 10px 15px;">{{iva_usuario}}</p>
+      </div>
+      <div class="row">
+          <div class="siguiente" *ngIf="modoVista === 'Paginado'">
+              <button (click)="paginado.anterior()">Anterior</button>
+              <span>Página {{paginado.pagina}} de {{paginado.maximo}}</span>
+              <button (click)="paginado.siguiente()">Siguiente</button>
+          </div>    
+      </div>
+    </div>
+  </div>
+</div>

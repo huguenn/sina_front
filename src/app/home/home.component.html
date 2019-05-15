@@ -1,0 +1,65 @@
+<div class="row message">
+    <div class="container">
+        <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
+            {{ successMessage }}
+            <button class="actionButton transparentButton" [routerLink]="['/compra']">VER TODOS</button>
+        </ngb-alert>
+    </div>
+</div>
+<div class="container">
+    <h1 class="title">Artículos de limpieza por mayor, artículos de bazar</h1>
+</div>
+<div class="carouselContainer">
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+    <div class="imageContainer" *ngFor="let item of imageSources; let $index = index">
+        <img [src]="item" alt="item" [ngClass]="{'activeItem': $index === carousel__item}" style="width: 100%;">
+    </div>
+    <div class="imageSelector">
+        <div class="container">
+            <div  *ngFor="let item of imageSources; let $index = index" (click)="carousel__item = $index">
+                <div class="imageContainerItem" [ngClass]="{'active': $index === carousel__item}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="resultado row" *ngFor="let row of listaResultados">
+        <div class="resultado__head col-xs-6 col-md-15">
+            <div class="img" [ngStyle]="{'background-image': 'url(' + row.head.imagen + ')'}"></div>
+            <p>{{row.head.texto}}</p>
+            <button routerLink="{{row.head.filter}}">VER TODOS</button>
+        </div>
+        <div class="resultado__item col-xs-6 col-md-15" *ngFor="let item of row.lista">
+            <producto [item]="item" [sesion]="loginStatus" [mensaje]="_success"></producto>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="banner_final row">
+        <a routerLink="como-comprar">
+            <img src="./assets/images/home/banner/banners web-02.png" alt="Cómo comprar" title="Cómo comprar" />                                
+        </a>
+        <a routerLink="envios">
+            <img src="./assets/images/home/banner/banners web-03.png" alt="Envíos" title="Envíos" />                                
+        </a>
+        <a (click)="registrar()">
+            <img src="./assets/images/home/banner/banners web-04.png" alt="Registrarse" title="Registrarse" />
+        </a>                                
+        <a hfre="#">
+            <img src="./assets/images/home/banner/banners web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios" />
+        </a>
+    </div>
+    <div class="row" style="padding: 15px;">        
+        {{iva_usuario}}
+    </div>
+</div>
+<div class="row nuevocliente">
+    <div class="container">
+        <div class="contain">
+            <h1>Nuevo Cliente</h1>
+            <p>Compra más rápido y seguro.</p>
+            <p>Sólo tenés que completar la solicitud de alta.</p>
+            <button class="actionButton">REGISTRARME</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="sidenavMenu">
+    <div class="row">
+        <div class="col-xs-10">
+            <a class="navbar-brand" [routerLink]="['/']" (click)="toggleSideBar()">
+                <img src="./assets/images/header/logo.png" alt="Sina" width="100">
+            </a>
+        </div>
+        <div class="col-xs-2">
+            <div class="menu" [ngClass]="SideStateIcon">
+                <i (click)="toggleMenu()" class="fa fa-bars" aria-hidden="true" style="font-size: 25px; color: #fff; margin-top: 15px;"></i>          
+            </div>  
+        </div>
+    </div>
+    <div class="row" style="    display: flex;
+    justify-content: space-around;
+    padding: 5px;">
+        <div class="telefono">
+            <div (click)="toggleSideBar()" style="    
+                cursor: pointer;
+                background: #0083ff;
+                border-radius: 25px;
+                margin: 0px 5px;
+                padding: 8px;" routerLink="contacto">
+                <img src="./assets/images/header/phone.png" alt="telefono" width="24">
+            </div>
+            </div>
+            <div (click)="toggleSideBar()" class="whatsapp">
+            <div style="    
+                cursor: pointer;
+                background: #0083ff;
+                border-radius: 25px;
+                padding: 8px;">
+                <a target="_blank" href="https://wa.me/5491123145727?text=Hola">
+                <img src="./assets/images/header/whatsapp.png" alt="whatsapp" width="24">
+                </a>
+            </div>
+            </div>
+            <div class="email">
+            <div (click)="toggleSideBar()" style="    
+                cursor: pointer;
+                background: #0083ff;
+                border-radius: 25px;
+                margin: 0px 5px;
+                padding: 8px;">
+                <a href="mailto:infoweb@sina.com.ar">
+                <img src="./assets/images/header/email.png" alt="email" width="24">
+                </a>
+            </div>
+            </div>
+    </div>
+    <div class="row listado">
+        <a>Categorias</a>
+        <ul class="items">
+            <li *ngFor="let item of LinkList; let itemIndex = index" class="nav-item">
+                <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)">
+                    <img width="30" src="{{item.img1}}" alt="">
+                    <p>{{item.texto}}</p>
+                </a>
+                <div class="subcategorias column" [ngClass]="{'toggleSubCategorias': (LinkIndex === (itemIndex + 1))}">
+                    <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)">Volver</a>
+                    <div class="section" *ngFor="let section of item.links; let ItemIndexLink = index;">
+                            <a *ngIf="(LinkIndexHija === 0) && (section.items.length === 0)" (click)="changeStyleClickHija(ItemIndexLink + 1, section)" [routerLink]="section.head.link" class="title" style="
+                                max-width: 100%;
+                                display: block;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                "
+                            >{{section.head.texto}}</a>
+                            <a *ngIf="(LinkIndexHija === 0) && (section.items.length !== 0)" (click)="changeStyleClickHija(ItemIndexLink + 1, section)" class="title" style="
+                                max-width: 100%;
+                                display: block;
+                                text-overflow: ellipsis;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                "
+                            >{{section.head.texto}}</a>
+                            <!--div *ngFor="let itemHija of section.items; let ItemIndexHija = index;" class="subcategorias column" [ngClass]="{'toggleSubCategorias__hija': (LinkIndexHija === (ItemIndexHija + 1))}" style="top: 0px;"-->        
+                            <div *ngFor="let itemHija of section.items; let ItemIndexHija = index;" class="subcategorias column" [ngClass]="{'toggleSubCategorias__hija': (LinkIndexHija === (ItemIndexLink + 1))}" style="top: 0px;">
+                                <a class="nav-link" (click)="closeHija()">Volver</a>
+                                <div class="section" *ngFor="let itemHija of section.items;" >
+                                    <a (click)="toggleSideBar()"[routerLink]="itemHija?.link" class="title" style="
+                                            max-width: 100%;
+                                            display: block;
+                                            text-overflow: ellipsis;
+                                            overflow: hidden;
+                                            white-space: nowrap;
+                                        ">{{itemHija.texto}}</a>                     
+                                </div>
+                            </div>                        
+                        </div>
+                </div>
+            </li>
+        </ul>
+        <div class="sesion">
+            <div class="cuenta" [routerLink]="['/cuenta']" *ngIf="UserLog" (click)="toggleSideBar()">
+                <img src="./assets/images/header/user__verde.png" alt="User" width="40">
+                <p> {{UserName}}</p>
+            </div>
+            <div class="cuenta" (click)="registrar()" *ngIf="!UserLog">
+                <img src="./assets/images/header/user__verde.png" alt="User" width="40">
+                <p> Iniciar Sesion </p>
+            </div>
+            <div class="cerrar" *ngIf="UserLog" (click)="toggleSideBar()" [routerLink]="['/cuenta']" [queryParams]="{tab: 4}">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>
+                <p> Cerrar sesión </p>
+            </div>
+        </div>
+    </div>
+</div>

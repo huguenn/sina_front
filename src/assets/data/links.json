@@ -1,0 +1,46 @@
+{
+  "links": [
+    {
+      "texto": "Limpieza",  
+      "img1": "assets/images/header/iconos/limpieza_blanco.png", 
+      "img2": "assets/images/header/iconos/limpieza_azul.png",
+      "links": []
+    },
+    {
+      "texto": "Bazar",
+      "img1": "assets/images/header/iconos/bazar_blanco.png", 
+      "img2": "assets/images/header/iconos/bazar_azul.png",
+      "links": []
+    },
+    {
+      "texto": "Textil" ,   
+      "img1": "assets/images/header/iconos/textil_blanco.png", 
+      "img2": "assets/images/header/iconos/textil_azul.png",
+      "links": []
+    },
+    {
+      "texto": "Liquidos",
+      "img1": "assets/images/header/iconos/liquidos_blanco.png", 
+      "img2": "assets/images/header/iconos/liquidos_azul.png",
+      "links": []
+    },
+    {
+      "texto": "Jardin y riego" ,   
+      "img1": "assets/images/header/iconos/jardin_blanco.png", 
+      "img2": "assets/images/header/iconos/jardin_azul.png",
+      "links": []
+    },
+    {
+      "texto": "Profesional" ,  
+      "img1": "assets/images/header/iconos/electro_blanco.png", 
+      "img2": "assets/images/header/iconos/electro_azul.png",
+      "links": []
+    },
+    {
+      "texto": "Mas productos",
+      "img1": "assets/images/header/iconos/perfumeria_blanco.png", 
+      "img2": "assets/images/header/iconos/perfumeria_azul.png",
+      "links": []
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+.row > .container > h1.title {
+    font-size: 14px;
+    margin: 0;
+    color: #0579ff;
+    text-align: right;
+    padding: 15px 0px;
+}
+
+.dots-list {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-top: 115px;
+    }
+    .dots-list ol {
+    width: 100%;    
+    position: relative;
+    margin-bottom: 20px;
+    list-style: none !important;
+    }
+    .dots-list ol li {
+        height: 150px;
+    position: relative;
+    margin-top: 0em;
+    margin-bottom: 20px;
+    }
+    .dots-list ol li .texto {
+        position: absolute;
+        top: calc(-200px/2 + 5px);
+        width: calc(100% - 40px);
+        height: 200px;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        right: calc(0px);
+    }
+    .dots-list ol li .img {
+        background-size: calc(100% + 20px);
+        background-position: -10px -10px;
+        box-shadow: #9d9d9d 0px 3px 5px 1px;
+        width: 200px;
+        height: 200px;
+        border-radius: 200px;
+        position: absolute;
+        top: calc(-200px/2 + 5px);
+        left: calc(-80px - 200px);
+    }
+    .dots-list ol li .date {
+    position: absolute;
+    left: -115px;
+    font-weight: bold;
+    font-size: 1em;
+    top: -2px;
+    background: transparent;
+    }
+    .dots-list ol li:before {
+    content: "";
+    background: #0084ff; /*edit line colour*/
+    position: absolute;
+    width: 1px;
+    top: 5px;
+    bottom: -25px;
+    left: -24px;
+    }
+    .dots-list ol li:after {
+    content: "";
+    background: #0084ff;  /*edit circle colour*/
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border-radius: 100%;
+    border:2px solid #0084ff; /*edit circle border colour*/
+    top: 5px;
+    left: -30px;
+    }
+    .dots-list ol li:last-child:before {
+    content: "";
+    background: rgba(0, 0, 0, 0);
+    }
+    
+    @media (min-width: 769px) {
+        .dots-list ol li:nth-child(even) .img{
+            left: 40px;
+        }
+        .dots-list ol li:nth-child(even) .texto{
+            text-align: right;
+            right: calc(100% + 80px);
+        }
+        .dots-list ol {
+            width: calc(50% - 20px);    
+        }    
+        .dots-list ol li {
+            height: 200px;
+        }    
+    }

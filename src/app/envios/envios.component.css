@@ -1,0 +1,45 @@
+.row {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  width: 100%;
+  max-width: 970px;
+  margin: 0 auto;
+}
+.containerEnvios h1, .containerEnvios h2, .containerEnvios h3  {
+  color: #0579ff;
+}
+.containerEnvios h1 {
+  font-size: 28px;
+}
+.containerEnvios h2 {
+  font-size: 20px;
+}
+.containerEnvios h3 {
+  font-size: 18px;
+}
+.containerEnvios h4 {
+  font-size: 15px;
+  font-weight: bold;
+}
+.containerEnvios p, .containerEnvios li {
+  color: #666;
+}
+.containerEnvios .textoNegro {
+  color: #000;
+}
+.line{
+  margin: 15px 0;
+  background: #0084ff;
+  height: 1px;
+}
+.fila {
+  display: flex;
+}
+.veinte {
+  min-width: 140px;
+  max-width: 140px;
+  margin-right: 10px;
+}

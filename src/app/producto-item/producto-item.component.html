@@ -1,0 +1,47 @@
+<div class="resultado__item__content" routerLink="{{item.fullLink}}" >
+  <div class="imgContainer">
+    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+    <div class="imagen">
+      <img [src]="item.urlImagen" alt="">
+    </div>
+  </div>
+  <div class="tituloContainer">
+    <p>{{item.titulo}}</p>
+    <p>{{item.tituloAdicional}}</p>
+  </div>
+</div>
+<div class="cantidad" *ngIf="sesion || item.oferta">
+  <div class="cantidad--right" [class.alerta]="item.incompleto">
+    <div class="mensaje">
+      <div class="mensaje__content">
+        <span *ngIf="item.cantidad % item.cantPack !== 0"> * La cantidad ingresada debe ser multiplo de {{item.cantPack}}.</span>
+        <span *ngIf="item.cantidad < item.cantMinima"> * La cantidad mínima es {{item.cantMinima}} unidades.</span>
+      </div>
+    </div>
+    <div class="precio" *ngIf="sesion || item.oferta">
+      <p>${{item.precio_mostrado}}</p>
+      <span style="margin-left: 5px">{{iva_usuario}}</span>
+    </div>
+    <!--div class="side">
+      <p>{{item.unidadMedida}}</p>
+    </div-->
+  </div>
+  <div class="cantidad--left">
+    <div class="custom-select">
+      <input (keyup.enter)="enterCheck()" type="number" [(ngModel)]="item.cantidad" (focus)="item['incompleto'] = false">
+    </div>
+  </div>
+</div>
+<div *ngIf="item.oferta" class="oferta">
+  <img src="./assets/images/iconos/oferta.png" alt="">
+  <h3>OFERTA</h3>
+</div>
+<div *ngIf="item.imperdible" class="imperdible">
+  <img src="./assets/images/iconos/imperdible.png" alt="">                
+  <h3>NOVEDAD</h3>
+</div>
+<div class="resultado__item__comprar" *ngIf="!relacionado" style="    padding: 0px 15px;">
+  <button class="actionButton" *ngIf="item.comprado == false && sesion" (click)="newMessage(item)">COMPRAR</button>
+  <button class="actionButton" *ngIf="!sesion" (click)="newMessage(item)">VER PRECIO</button>
+  <button class="actionButton greeButton" *ngIf="item.comprado == true" (click)="removeMessage(item)">AGREGADO</button>
+</div>

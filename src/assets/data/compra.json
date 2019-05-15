@@ -1,0 +1,22 @@
+{
+    "compra": {
+        "entrega": "0",
+        "envio": {
+            "calle":        "Casanovas 5",
+            "localidad":    "Quilmes",
+            "provincia":    "Buenos Aires",
+            "telefono":     "4253-7990"
+        },
+        "facturacion": {
+            "nombre":       "Sergio M.",
+            "cliente":      "Consumidor Final",
+            "cuil":         "38.326.249",
+            "calle":        "Casanovas 5",
+            "localidad":    "Quilmes",
+            "provincia":    "Buenos Aires",
+            "mail":         "sergio@leren.com.ar",
+            "telefono":     "4253-7990",
+            "celular":      "11.5050.5050"
+        }
+    }
+}
