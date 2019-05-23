@@ -2,9 +2,29 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.1.
 
+## Estilos de codificación
+
+Para tener un código ordenado, el cual puedan entender distintes desarrolladores y obtener un resultado de calidad usaremos las siguientes convenciones y patrones:
+
+### Versionado Semantico
+
+[Semantic Versioning 2.0.0](https://semver.org/)
+
+### Un amplio README
+
+[README de ejemplo](https://github.com/thephpleague/skeleton/blob/master/README.md)
+
+### Convenciones y buenas prácticas JavaScript
+
+[Link buenas prácticas](https://medium.com/@davidenq/gu%C3%ADa-de-estilo-convenciones-y-buenas-pr%C3%A1cticas-de-desarrollo-con-javascript-d2e9ef80d63b) Nota con distintos puntos de buenas prácticas
+
+### Buenas prácticas HTML y CSS
+
+[Guía de estilo Google de HTML/CSS](https://google.github.io/styleguide/htmlcssguide.html)
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` or `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
