@@ -15,7 +15,9 @@ import { MenuService } from './menu.service';
 })
 export class AppComponent implements OnInit {
   @ViewChild('ventana') el:ElementRef;
-
+  public recuperarClave: boolean
+  public recuperarOk: string
+  public recuperarError: string
   public usuario = {
 
   }
@@ -42,7 +44,8 @@ export class AppComponent implements OnInit {
     envio_domicilio_direccion: "",
     envio_domicilio_codigo_postal:"",
     envio_domicilio_ciudad: "",
-    envio_domicilio_provincia: ""
+    envio_domicilio_provincia: "",
+    actividad: ""
   }
 
   public provincia = [ "Ciudad de Buenos Aires", "Buenos Aires", "Catamarca", "Chaco", "Chubut", "Córdoba", "Corrientes", "Entre Ríos", "Formosa", "Jujuy", "La Pampa", "La Rioja", "Mendoza", "Misiones", "Neuquén", "Río Negro", "Salta", "San Juan", "San Luis", "Santa Cruz", "Santa Fe", "Santiago del Estero", "Tierra del Fuego", "Tucumán", "Otra"]
@@ -329,6 +332,9 @@ export class AppComponent implements OnInit {
     private auth: AutenticacionService, 
     private db: DatabaseService, 
     private router: Router) {
+    this.recuperarClave = false
+    this.recuperarOk = ""
+    this.recuperarError = ""
   }
   ngAfterViewChecked()
   {
@@ -398,6 +404,26 @@ export class AppComponent implements OnInit {
     setInterval(()=> {
       this.menuStatus = this.el.nativeElement.parentElement.scrollTop
     },100); 
+
+    //reading user data
+    this.auth.get("cliente/datos")
+    .then(($response)  =>{
+      const datos_locales = this.auth.localGet("user")
+      
+      if($response.response["codigo"] !== datos_locales["codigo"]) {
+        console.log(datos_locales, $response.response)
+        this.auth.localSet("user",  $response.response as cliente)
+        this.data.updateUser($response.response)
+        //this.auth.userTypeUpdate($response.response["numeroListaPrecios"])
+        window.location.reload()
+      } else {
+        console.log($response.response)
+      }
+    })
+    .catch($error => {
+      console.log($error)
+    })
+
   }
 
   find_index(){
@@ -546,11 +572,41 @@ export class AppComponent implements OnInit {
       this.loginModal(this.login.user, this.login.pass)
     }  
   }
+  enterRecuperarEvento() {
+    let body = new URLSearchParams();
+    body.set("email", this.login.user);
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    this.http.post(this.auth.getPath('public/cliente/recuperar_contrasena'),body.toString(), {headers, observe: 'response'})
+    .subscribe(($response:any) => {
+      console.log("response", $response.body.response.mensaje)
+      if($response.body.response.mensaje) {
+        this.recuperarOk = $response.body.response.mensaje
+      }
+    },($error) => {
+      try {
+        Object.keys($error.error.response.error).forEach(element => {
+          this.recuperarError += $error.error.response.error[element] + " "
+        })
+      } catch($throw) {
+        console.log($throw)
+      }
+    })     
+  }
+  enterRecuperar($event) {
+    this.recuperarOk = ""
+    this.recuperarError = ""
+    if($event.keyCode == 13) {
+      //this.loginModal(this.login.user, this.login.pass)
+      this.enterRecuperarEvento()
+
+    }  
+  }
   carritoModal() {
     this.data.toggleLoginModal2()
   }
   carritoCancelModal() {
-    window.localStorage.setItem("carrito", "")
+    window.localStorage.setItem("carrito", JSON.stringify([]))
     this.data.lista = []
     this.data.updateMessage()
     this.data.toggleLoginModal2()

@@ -11,6 +11,7 @@ p {
     white-space: nowrap;
     text-align: center;
 }
+
 .resultado__item__content p:first-child {
     margin-top: 5px;
 }
@@ -30,6 +31,8 @@ p {
     text-align: center;
     position: relative;
     background-color: hsl(0, 0%, 80%);
+    background-color: #fff;
+    justify-content: space-around;
 }
 .resultado__item__comprar button{
     display: block;

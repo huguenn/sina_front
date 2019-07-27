@@ -417,3 +417,12 @@
     margin-bottom: -20px;
 }
 
+
+
+textarea {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    margin-left: -10px;
+}

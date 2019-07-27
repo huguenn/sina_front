@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { MenuService } from '../menu.service';
 
 const Filter1: FilterSection[] = [
   //first query result
@@ -68,9 +69,18 @@ export class FilterComponent implements OnInit {
   id_subcategoria = ""
   num_subcategoria = -1
   listado_subcategorias
-
-  constructor(private auth: AutenticacionService, private data: SharedService, private http: HttpClient, private route: ActivatedRoute) { }
+  mensaje:string
+  private LinkList
+  constructor(
+    private menu: MenuService,
+    private auth: AutenticacionService, 
+    private data: SharedService, 
+    private http: HttpClient, 
+    private route: ActivatedRoute) { }
+  ngOnDestroy() {
+  }
   ngOnInit() {
+
     this.data.currentUser.subscribe($user => {
       if ($user) {
         switch($user["codCategoriaIva"]) {
@@ -90,89 +100,84 @@ export class FilterComponent implements OnInit {
 
     let num_filtro
     let num_categoria
-    let listado
     this.route.params.subscribe(params => {
       let id = (params['id2'])
       let id2 = (params['id'])
       this.categoriaPadre = (params['padre'])? params['padre'].split('-').join(' ') : ""
       this.categoriaHijo = id2 ? id2.split('-').join(' ') : ""
-      this.http.get('assets/data/resultadosFilter.json')
-      .subscribe(res => {
-        this.listaResultados = res["Resultados"];
-        let url_consulta = this.loginStatus ? "": "public/"
-        new Promise((resolve, reject) => {
-          if(!id2) {
-            url_consulta += (window.location.href.indexOf("ofertas") !== -1) ? "producto/listado/ofertas/" :
-            (window.location.href.indexOf("novedades") !== -1) ? "producto/listado/novedades" : ""
-            this.categoriaHijo = (window.location.href.indexOf("ofertas") !== -1) ? "OFERTAS" : "NOVEDADES"
-            this.auth.get(url_consulta)
-              .then($res => resolve($res.response)).catch($error => reject($error))
-          } else if(id) {
-            this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ", " : "") + this.categoriaHijo + " | Sina", 'Mayorista y distribuidora de '+ this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre +' con entrega a todo el país, hacé tu pedido online!')
-              this.auth.get(url_consulta + "producto/categoria/" + (+id))
-                .then($res => resolve($res.response)).catch($error => reject($error))
-
-              this.http.get(this.auth.getPath("public/producto/categorias/getAll"))
-                .subscribe(($response: any)  =>{
-                  listado = $response.response
-                  let $categoria, $subcategoria
-                  if(this.categoriaHijo && this.categoriaPadre) {
-                    $subcategoria  = this.categoriaHijo
-                    $categoria     = this.categoriaPadre
-                  } else if(this.categoriaHijo) {
-                    $categoria     = this.categoriaHijo
-                  } 
-                    for (const filtro_id in listado) {
-                      if (listado.hasOwnProperty(filtro_id)) {
-                        const filtro = listado[filtro_id]
-                        for (const categoria_id in filtro) {
-                          if (filtro.hasOwnProperty(categoria_id)) {
-                            filtro[categoria_id].nombre_categoria = categoria_id.toUpperCase()
-                            filtro[categoria_id].nombre_filtro    = filtro_id.toUpperCase()
-                            const categoria = filtro[categoria_id];
-                            if(categoria.nombre_categoria === $categoria) {
-                              this.id_categoria = categoria.nombre_categoria
-                              this.id_filtro = categoria.nombre_filtro
-                              num_categoria = categoria_id
-                              num_filtro = filtro_id
-                            }
-                            for (const subcategoria_id in categoria.categoriasHijas) {
-                              if (categoria.categoriasHijas.hasOwnProperty(subcategoria_id)) {
-                                categoria.categoriasHijas[subcategoria_id].nombre_subcategoria   = categoria.categoriasHijas[subcategoria_id].nombre.toUpperCase()
-                                const subcategoria = categoria.categoriasHijas[subcategoria_id];
-                                if(subcategoria.nombre_subcategoria === $subcategoria) {
-                                  this.id_subcategoria = subcategoria.nombre_subcategoria
-                                  this.num_subcategoria = parseInt(subcategoria_id)
-                                  this.listado_subcategorias = categoria.categoriasHijas
-                                }
-    
-                              }
-                            }
-                          }
-                        }
-                      }
+      let url_consulta = this.loginStatus ? "": "public/"
+      this.mensaje = "Cargando"
+      new Promise((resolve, reject) => {
+        if(!id2) {
+          url_consulta += (window.location.href.indexOf("ofertas") !== -1) ? "producto/listado/ofertas/" :
+          (window.location.href.indexOf("novedades") !== -1) ? "producto/listado/novedades" : ""
+          this.categoriaHijo = (window.location.href.indexOf("ofertas") !== -1) ? "OFERTAS" : "NOVEDADES"
+          this.auth.get(url_consulta)
+            .then($res => resolve($res.response)).catch($error => reject($error))
+        } else if(id) {
+          this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ", " : "") + this.categoriaHijo + " | Sina", 'Mayorista y distribuidora de '+ this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre +' con entrega a todo el país, hacé tu pedido online!')
+            this.auth.get(url_consulta + "producto/categoria/" + (+id))
+              .then($res => {
+                if(!this.LinkList) {
+                  this.LinkList = this.menu.LinkList
+                }
+                let $categoria, $subcategoria
+                if(this.categoriaHijo && this.categoriaPadre) {
+                  $subcategoria  = this.categoriaHijo
+                  $categoria     = this.categoriaPadre
+                } else if(this.categoriaHijo) {
+                  $categoria     = this.categoriaHijo
+                } 
+                let itemActualMenu, itemActualMenuPadre, itemActualMenuHijo
+                let padreEncabezado = $categoria
+                if(padreEncabezado.includes('   ')){
+                  padreEncabezado = padreEncabezado.split('   ').join(' - ')
+                }
+                itemActualMenu = this.LinkList.find(($item:any) => {
+                  let incluyeItem = false
+                  $item.links.forEach(($item_padre) => {
+                    if(padreEncabezado === $item_padre.head.texto) {
+                      incluyeItem = true
+                      itemActualMenuPadre = $item_padre
                     }
-                },$error => {
-                  console.log("header error: ", $error)
+                  })
+                  return incluyeItem
                 })
-            
-          } else{
-            if(window.location.href.includes("busqueda")) {
-              let body = new URLSearchParams();
-              body.set("frase", id2);  
-              this.auth.post(url_consulta + "producto/busqueda/", body)
-                .then($res => resolve($res.body.response)).catch($error => reject($error))
-            }
+                if($subcategoria && itemActualMenuPadre) {
+                  itemActualMenuHijo = itemActualMenuPadre.items.findIndex(($item_hijo:any) => {
+                    return $item_hijo.texto === $subcategoria
+                  })
+                }
+                if(itemActualMenu) {
+                  this.id_filtro = itemActualMenu.texto.toUpperCase()
+                  this.id_categoria = itemActualMenuPadre.head.texto.toUpperCase()
+                  this.listado_subcategorias = itemActualMenuPadre.items
+                  this.num_subcategoria = itemActualMenuHijo
+                }
+                resolve($res.response)
+              })
+              .catch($error => reject($error))
+        } else{
+          if(window.location.href.includes("busqueda")) {
+            let body = new URLSearchParams();
+            body.set("frase", id2);  
+            this.auth.post(url_consulta + "producto/busqueda/", body)
+              .then($res => resolve($res.body.response)).catch($error => reject($error))
           }
-        }).then(($response)  =>{
-          this.listaResultados = $response
-          this.paginado.init()
-        })
-        .catch($error => {
-          this.listaResultados = []
-          console.log($error)
-        })
-      });
+        }
+      }).then(($response)  =>{
+        this.listaResultados = $response
+        this.paginado.init()
+        if(!this.listaResultados.length) {
+          this.mensaje = "No hay resultado para la consulta"
+        } else {
+          this.mensaje = ""
+        }
+      })
+      .catch($error => {
+        this.listaResultados = []
+        this.mensaje = "No hay resultado para la consulta"
+      })
     })
     //subscribing to data on loginStatus
     this.data.currentLogin.subscribe(

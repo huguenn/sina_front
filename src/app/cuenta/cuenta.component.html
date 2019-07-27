@@ -196,7 +196,7 @@
             <div class="tab__item" *ngIf="transaccion.paso === 1">              
               <div class="content">
                 <div class="row tab__item__header">
-                    <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
+                    <p>{{DatosUsuario.codigo ? "Tu número de Cliente es " + DatosUsuario.codigo : "El cliente no fue "}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
                   </div>
                 <div class="row">
@@ -211,26 +211,26 @@
                         <ng-template ngbPanelContent >
                           <div class="form-group row">
                             <label for="example-text-input" class="col-xs-3 col-form-label">
-                                Nombre completo
+                                Razon social
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.nombreFantasia}}">
+                              <input class="form-control" type="text" name="razon_social" [(ngModel)]="DatosUsuario.razonSocial" >
                             </div>
                           </div>
                           <div class="form-group row">
                             <label for="example-text-input" class="col-xs-3 col-form-label">
-                                Cliente
+                                Nombre de fantasia
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.id}}">
+                              <input class="form-control" type="text" name="nombre_fantasia" [(ngModel)]="DatosUsuario.nombreFantasia">
                             </div>
                           </div>
                           <div class="form-group row">
                             <label for="example-text-input" class="col-xs-3 col-form-label">
-                                CUIL
+                                Categoria IVA
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.cuit}}">
+                              <input class="form-control" type="text" name="cod_categoria_iva" [(ngModel)]="DatosUsuario.codCategoriaIva">
                             </div>
                           </div>
 
@@ -239,7 +239,7 @@
                                   Direccion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" value="{{DatosUsuario.domicilio.direccion}}">
+                                <input class="form-control" type="text" name="domicilio_direccion" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.direccion">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -247,25 +247,26 @@
                                   Localidad
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" value="{{DatosUsuario.domicilio.ciudad}}">
+                                <input class="form-control" type="text" name="domicilio_ciudad" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.ciudad">
                               </div>
                             </div>
-                              <div class="form-group row">
-                                <label for="example-text-input" class="col-xs-3 col-form-label">
-                                    Provincia
-                                </label>
-                                <div class="col-xs-9">
-                                  <input class="form-control" type="text" value="{{DatosUsuario.domicilio.provincia}}">
-                                </div>
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-xs-3 col-form-label">
+                                  Provincia
+                              </label>
+                              <div class="col-xs-9">
+                                <input class="form-control" type="text" name="domicilio_provincia" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.provincia">
                               </div>
-                              <div class="form-group row">
-                                <label for="example-text-input" class="col-xs-3 col-form-label">
-                                    E-mail
-                                </label>
-                                <div class="col-xs-9">
-                                  <input class="form-control" type="text" value="{{DatosUsuario.email}}">
-                                </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-xs-3 col-form-label">
+                                  Codigo postal
+                              </label>
+                              <div class="col-xs-9">
+                                <input class="form-control" type="text" name="domicilio_codigo_postal" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.codPostal">
                               </div>
+
+                            </div>
                           </ng-template>
                       </ngb-panel>
                       <ngb-panel id="datos0">
@@ -311,7 +312,7 @@
                       </ngb-panel>
                     </ngb-accordion>
                     <div class="row">
-                      <button class="actionButton" style="float: right;">GUARDAR</button>
+                      <button (click)="guardarDatos()" class="actionButton" style="float: right;">GUARDAR</button>
                     </div>
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">

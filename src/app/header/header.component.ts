@@ -11,7 +11,6 @@ import { NgModule } from '@angular/core';
 import { AutenticacionService } from '../autenticacion.service';
 import { element } from 'protractor';
 import { link } from 'fs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MenuService } from '../menu.service';
 
@@ -79,24 +78,7 @@ export class HeaderComponent implements OnChanges {
     this.selectedItem.show = true
   }
 
-  convertLink= ($subcategoria) => {
-    try{
-      const texto = $subcategoria.nombre.split(' ').join('-').toUpperCase() + "/" + $subcategoria.id
-      return texto
-    } catch($error) {
-      console.log("Alguno de los datos de la subcategoria esta incompleto")
-      return ""
-    }
-  }
-  convertLink2= ($categoria, $subcategoria) => {
-    try{
-      const texto = $categoria.nombre.split(' ').join('-').toUpperCase()  + "/" +  $subcategoria.nombre.split(' ').join('-').toUpperCase() + "/" + $subcategoria.id
-      return texto
-    } catch($error) {
-      console.log("Alguno de los datos de la subcategoria esta incompleto")
-      return ""
-    }
-  }
+
   cuenta = [
     { texto: "Mi cuenta", id: 0 },
     { texto: "Mis datos", id: 1 },
@@ -134,55 +116,22 @@ export class HeaderComponent implements OnChanges {
   cerrarBusqueda() {
     this.ResultadoBusqueda = []
   }
-  constructor(private menu: MenuService, private router: Router, private data: SharedService, private http:HttpClient, private auth: AutenticacionService) { 
+  constructor(private menu: MenuService, private router: Router, private data: SharedService, private auth: AutenticacionService) { 
     this.MenuClass = '';
-    this.http.get('assets/data/links.json')
-    .subscribe(res => {
-      this.LinkList = res["links"]
-      this.MenuList = this.LinkList[0].links
-      this.http.get(this.auth.getPath("public/producto/categorias/getAll"))
-      .subscribe(($response)  =>{
-        this.LinkList.forEach((categoria, indexCat, array) => {
-          let categorias = []
-          const links = $response["response"][categoria.texto.toUpperCase()]
-          if(links) {
-            for (const sub_link in links) {
-              if (links.hasOwnProperty(sub_link)) {
-                let subcategoria = links[sub_link];
-                subcategoria["padre"] = {
-                  nombre: sub_link,
-                  id: subcategoria.id
-                }
-                const indice = categorias.push({show: false, head: {texto: subcategoria.padre.nombre, link: this.convertLink(subcategoria.padre)}, items: []}) - 1
-                if(subcategoria.categoriasHijas) {
-                  //Corto el array de las categorías hijas a máximo 5
-                  subcategoria.categoriasHijas = subcategoria.categoriasHijas.slice(0,5);
-
-                  for (const hija in subcategoria.categoriasHijas) {
-                    if (subcategoria.categoriasHijas.hasOwnProperty(hija)) {
-                      const categoriaHija = subcategoria.categoriasHijas[hija];
-                      if(categoriaHija.nombre) {
-                        categorias[indice].items.push({texto: categoriaHija.nombre, link: this.convertLink2(subcategoria.padre, categoriaHija)})
-                      } else {
-                        console.log("categoria hija sin nombre", categoriaHija)
-                      }
-                    }
-                  }
-                  //Agrego como categoría hija el VER MÁS que va a la categoría padre
-                  categorias[indice].items.push({texto: "VER MÁS...", link: this.convertLink(subcategoria.padre)});
-                }
-              }
-            }
-          }
-          array[indexCat].links = categorias
-        })
-      },$error => {
-        console.log("header error: ", $error)
-      })  
-    });
     this.menu.notifyObservable$.subscribe($cambio => {
       if($cambio) {
         this.closeCompra()
+      }
+    })
+    this.menu.LinkList$.subscribe(($cambio_link:any) => {
+      if($cambio_link) {
+        this.LinkList = $cambio_link
+      }
+
+    })
+    this.menu.MenuList$.subscribe(($cambio_menu:any) => {
+      if($cambio_menu) {
+        this.MenuList = $cambio_menu
       }
     })
     //subscribing to data on carritoStatus
@@ -207,6 +156,15 @@ export class HeaderComponent implements OnChanges {
         }catch(e){}
       }
     )
+    this.data.currentUser.subscribe($user => {
+      try {
+        console.log("user viejo", this.data.user.razonSocial)
+        this.UserName = $user["razonSocial"]
+        this.UserJob  = $user["categoriaIva"]
+      }catch(e){
+        console.log("error", e)
+      }
+    })
     
   }
   representado: boolean = false

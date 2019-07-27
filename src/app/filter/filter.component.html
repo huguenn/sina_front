@@ -6,7 +6,7 @@
 <div class="container filter">
   <div class="row">
     <div class="col-md-3 col-xs-12">
-      <div class="row filter__top" style="border: none; display: flex; flex-direction: column; height: auto;">
+      <div class="row filter__selector filter__top" style="border: none; display: flex; flex-direction: column; height: auto;">
         <div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
           <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Ordenar por</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
@@ -53,12 +53,14 @@
           <div class="col-md-8 col-xs-12">
               <p><b>{{id_filtro}}</b></p>
               <p style="margin-left: 10px;" [ngClass]="{'actual': num_subcategoria === -1}">{{id_categoria}}</p>
-              <p style="margin-left: 20px;" *ngFor="let element of listado_subcategorias; let $index = index" [ngClass]="{'actual': num_subcategoria === $index}">{{element?.nombre}}</p>
+              <p style="cursor: pointer; margin-left: 20px;" *ngFor="let element of listado_subcategorias; let $index = index" [ngClass]="{'actual': num_subcategoria === $index}" routerLink="{{'/' + element?.link}}" (click)="num_subcategoria = $index">
+              {{element?.texto}}
+            </p>
             </div>
         </div>
       </div>
     </div>
-    <div class="col-md-9 col-xs-12">
+    <div class="col-md-9 col-xs-12" *ngIf="listaResultados && listaResultados?.length">
       <div class="row filter__top">
         <div class="col">
             <h1 style="
@@ -86,6 +88,22 @@
               <button (click)="paginado.siguiente()">Siguiente</button>
           </div>    
       </div>
+    </div>
+    <div class="col-md-9 col-xs-12" *ngIf="mensaje" style="
+      display: flex;
+      align-items: center;
+      flex-direction: revert;
+      text-align: center;
+      height: 300px;
+    ">
+      <p
+      style="
+        margin: auto;
+        font-size: 3em;
+        color: #057aff;
+        opacity: 0.6;
+      "
+      >{{mensaje}}</p>
     </div>
   </div>
 </div>

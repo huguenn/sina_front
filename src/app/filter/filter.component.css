@@ -98,12 +98,17 @@
 .resultado {
     width: 100%;
 }
+.filter {
+    min-height: 300px;
+}
 
 .filter__top{
     margin: 0;
-    border-bottom: 1px solid #ccc;
-    height: 50px;
     padding-top: 15px;
+}
+.filter__top > .col {
+    width: 100%;
+    border-bottom: 1px solid #ccc;
 }
 .filter__top:first-child .order{
     padding: 0px;
@@ -254,4 +259,10 @@
 
 .actual {
     color: #0084ff;
+}
+
+@media screen and (max-width: 968px) {
+    .filter__top.filter__selector {
+        flex-direction: row !important;
+    }
 }

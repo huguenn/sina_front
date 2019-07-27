@@ -303,13 +303,13 @@ ng-sidebar-container {
     justify-content: space-around;
     flex-direction: column;
     text-align: center;
+    margin-left: -10px;
 }
 .resultado__head > .img{
     height: 100%;
-    width: 100%;
+    width: calc(100% - 10px);    
     position: absolute;
     z-index: -1;
-    margin-left: -10px;
     background-position: center;
     background-size: cover;
 }

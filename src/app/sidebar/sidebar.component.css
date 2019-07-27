@@ -2,6 +2,7 @@
     background: #057aff;
     height: 100%;
     width: 70vw;
+    max-width: 350px;
 }
 .sidenavMenu > div {
     margin: 0px;
@@ -56,6 +57,7 @@
     display: none;
     height: calc(100vh - 110px);
     overflow: scroll;
+    scrollbar-width: none;
 }
 .toggleSubCategorias__hija, 
 .toggleSubCategorias {
@@ -63,19 +65,20 @@
 }
 .subcategorias > a {
     display: block;
-    font-size: 15px;
-    background: #e1e1e1;
-    color: #057aff;
-    padding: 15px 20px !important;
+    font-size: 25px;
+    background: #00c973;
+    color: #fff;
+    padding: 5px 0px !important;
     margin-bottom: 0;
     text-align: center;
+    font-weight: bold;
 }
 .subcategorias .section {
-    margin: 20px 0px;
+    margin: 10px 0px;
 }
 .subcategorias .section .title {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
 }
 .sesion {
     position: absolute;
@@ -83,7 +86,11 @@
     width: 100%;
     background: #ccc;
     padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 .sesion * {
     display: inline;
+    cursor: pointer;
 }

@@ -23,7 +23,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-md-6" style="max-height: 350px;"><ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div>
+    <div class="col-xs-12 col-md-6" style="max-height: 350px;display: flex;">
+      <!--ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div-->
+      <img [src]="producto['urlImagen']" alt="">
+    </div>
     <div class="col-xs-12 col-md-6 producto__descripcion">
       <div class="row title">
         <p>{{producto['titulo']}} - {{producto['tituloAdicional']}}</p>
@@ -72,8 +75,8 @@
         </div>
       </div>
       <div class="button">
-          <button style="max-width: 260px;margin-left: -15px;" class="agregar actionButton" *ngIf="producto.comprado == false" (click)="newMessage(producto)">AGREGAR AL CARRITO</button>
-          <button style="max-width: 260px;margin-left: -15px;" class="agregar actionButton greeButton" *ngIf="producto.comprado == true" (click)="removeMessage(producto)">AGREGADO</button>
+          <button class="agregar actionButton" *ngIf="producto.comprado == false" (click)="newMessage(producto)">AGREGAR AL CARRITO</button>
+          <button class="agregar actionButton greeButton" *ngIf="producto.comprado == true" (click)="removeMessage(producto)">AGREGADO</button>
       </div> 
     </div>
     <!--div class="col-xs-2 producto__compartir">

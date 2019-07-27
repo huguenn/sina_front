@@ -140,8 +140,9 @@ export class SharedService {
         if(user !== ""){
           this.user = user
           this.userSource.next(this.user)
-          if(localStorage.getItem("carrito")){
+          if(JSON.parse(localStorage.getItem("carrito")).length !== 0){
             this.toggleLoginModal2()
+            console.log(JSON.parse(localStorage.getItem("carrito")))
           }
         }
       }else{
@@ -217,7 +218,7 @@ export class SharedService {
     this.messageSource.next(this.lista)  
   }
   cleanCarrito(){
-    localStorage.setItem("carrito", "[]")
+    localStorage.setItem("carrito", JSON.stringify([]))
     this.lista = []
     this.messageSource.next(this.lista)  
   }

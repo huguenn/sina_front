@@ -41,6 +41,7 @@ import { ComoComprarComponent } from './como-comprar/como-comprar.component';
 import { EnviosComponent } from './envios/envios.component';
 import { NosotrosComponent } from './nosotros/nosotros.component';
 import { ContactoComponent } from './contacto/contacto.component';
+import { RecuperarPassComponent } from './recuperar-pass/recuperar-pass.component';
 
 // router config
 const appRoutes: Routes = [
@@ -55,6 +56,11 @@ const appRoutes: Routes = [
   {
     path: 'confirmacion',
     component: ConfirmacionComponent,
+    data: { id: 1 }
+  },
+  {
+    path: 'recuperar_contrasena',
+    component: RecuperarPassComponent,
     data: { id: 1 }
   },
   {
@@ -138,7 +144,8 @@ const appRoutes: Routes = [
     ComoComprarComponent,
     EnviosComponent,
     NosotrosComponent,
-    ContactoComponent
+    ContactoComponent,
+    RecuperarPassComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

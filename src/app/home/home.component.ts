@@ -113,6 +113,7 @@ export class HomeComponent implements OnInit {
       })  
     })
     this.data.currentUser.subscribe($user => {
+      console.log("actualizacion de usuario")
       if ($user) {
         switch($user["codCategoriaIva"]) {
           case "CF": 

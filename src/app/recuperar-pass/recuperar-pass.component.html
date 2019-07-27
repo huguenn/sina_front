@@ -1,0 +1,36 @@
+<div class="row" style="background: #f8f8f8; margin: 0;">
+  <div class="container">
+      <div class="row" style="padding: 60px 45px;">
+          <div class="tab">
+            <div class="tab__header" style="    color: #ffffff;
+            border-bottom: 5px solid #00c973 !important;
+            padding-top: 70px;
+            padding-bottom: 10px;
+            position: relative;">
+              <p style="    color: #0579ff;
+              position: absolute;
+              bottom: 10px;
+              left: 20px;
+              font-size: 20px;
+              font-weight: bold;
+              width: calc(100% - 625px);
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;">Confirmación de contraseña</p>
+            </div>
+            <div class="tab__content" style="    background-color: #ffffff;">
+              <div class="content" style="padding: 40px; max-width: 380px; margin: auto; display: flex; flex-direction: column; width: 100%;">
+              	<input *ngIf="!volviendoAlHome" type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)" style="margin-bottom: 5px;">
+              	<input *ngIf="!volviendoAlHome" type="password" [(ngModel)]="password_re" name="password_re" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)">
+                <button *ngIf="!volviendoAlHome" class="btn btn-outline-dark actionButton" type="button"(click)="confirmarClave()">CONFIRMAR NUEVA CONTRASEÑA</button>
+                <p style="font-size: 16px; font-weight: bold;">
+                  {{respuesta}}
+                </p>            
+                <button *ngIf="volviendoAlHome" class="btn btn-outline-dark actionButton" type="button"(click)="volver_home()">VOLVER AL HOME</button>
+
+              </div>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>

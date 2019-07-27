@@ -1,6 +1,8 @@
-.agregar{
+.agregar {
     display: block;
     width: 100%;
+    max-width: 260px;
+    margin-left: -15px;
 }
 producto h2{
     font-size: 30px;
@@ -161,5 +163,9 @@ producto h2{
     }
     .producto__relacionados > .row {
         margin-bottom: 0px !important;
+    }
+    .agregar{
+        max-width: none;
+        margin-left: 0px;
     }
 }

@@ -128,14 +128,16 @@ export class CuentaComponent implements OnInit {
     });
     this.auth.get("pedido/getUltimos")
     .then(($response)  =>{
-      this.ultimasCompras = $response.response
-      this.ultimasCompras.forEach(compra => {
-        compra["fechaPedido"].date = {
-          year: (new Date(compra["fechaPedido"].date).getFullYear()),
-          date: (new Date(compra["fechaPedido"].date).getDate()),
-          month: (new Date(compra["fechaPedido"].date).getMonth())
-        }
-      })
+      if($response.response) {
+        this.ultimasCompras = $response.response
+        this.ultimasCompras.forEach(compra => {
+          compra["fechaPedido"].date = {
+            year: (new Date(compra["fechaPedido"].date).getFullYear()),
+            date: (new Date(compra["fechaPedido"].date).getDate()),
+            month: (new Date(compra["fechaPedido"].date).getMonth())
+          }
+        })
+      }
     })
     .catch($error => {
       console.log($error)
@@ -143,10 +145,12 @@ export class CuentaComponent implements OnInit {
     })
     this.auth.get("producto/productosMasPedidos")
     .then(($response)  =>{
-      this.comprados = $response.response
-      this.comprados.forEach(producto => {
-        producto.cantidad = +producto["cantSugerida"]
-      })
+      if($response.response) {
+        this.comprados = $response.response
+        this.comprados.forEach(producto => {
+          producto.cantidad = +producto["cantSugerida"]
+        })
+      }
     })
     .catch($error => {
       console.log($error)
@@ -273,5 +277,32 @@ export class CuentaComponent implements OnInit {
       }
     )    
 
+  }
+  guardarDatos() {
+    let body = new URLSearchParams();
+    body.set("razon_social", this.DatosUsuario.razonSocial);
+    body.set("nombre_fantasia", this.DatosUsuario.nombreFantasia);
+    body.set("cod_categoria_iva", this.DatosUsuario.codCategoriaIva);
+    body.set("domicilio_direccion", this.DatosUsuario.datosEnvio.domicilioEntrega.direccion);
+    body.set("domicilio_ciudad", this.DatosUsuario.datosEnvio.domicilioEntrega.ciudad);
+    body.set("domicilio_provincia", this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
+    body.set("domicilio_codigo_postal", this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    this.auth.post('cliente/actualizar',body)
+    .then($response => {
+      console.log("respuesta", $response)
+    })
+    .catch(($error) => {
+      let respuesta;
+      try {
+        Object.keys($error.response).forEach(element => {
+          respuesta.mensaje += $error.response[element] + " "
+        })
+        console.log(respuesta)
+      } catch($throw) {
+        console.log($throw)
+      }
+    })
   }
 }
