@@ -92,5 +92,12 @@
 }
 .sesion * {
     display: inline;
+    margin: 0px 5px;
     cursor: pointer;
+}
+.cuenta {
+    flex-direction: row;
+        display: flex !important;
+        align-items: center;
+        margin: 0 !important;
 }

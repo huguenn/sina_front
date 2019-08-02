@@ -132,6 +132,9 @@ producto h2{
     color: #9E9E9E;
 }
 
+.precio__container__mobile {
+    display: none;
+}
 @media (max-width: 540px) {
     .producto__header p {
         display: none;
@@ -167,5 +170,39 @@ producto h2{
     .agregar{
         max-width: none;
         margin-left: 0px;
+    }
+    .imagen__visor img {
+        width: 100%;
+    }
+    .producto__descripcion .title .social {
+        display: none;
+    }
+    .title > p {
+        padding-right: 0;
+    }
+    .precio__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .precio__container .titled {
+        width: auto;
+    }
+    .precio__container .titled p {
+        font-size: 30px;
+        margin: auto;
+    }
+    .precio__container__mobile {
+        display: block;
+    }
+    .producto__compra {
+        width: auto;
+    }
+    .producto__cartel {
+        display: none;
+    }
+    .cantidad {
+        display: flex;
+        flex-direction: column;
     }
 }

@@ -4,6 +4,7 @@ import { ViewChild, ElementRef } from "@angular/core"
 import { HttpClient } from '@angular/common/http';
 import { AutenticacionService } from '../autenticacion.service';
 import { Router } from '@angular/router';
+import { MenuService } from '../menu.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,47 +21,18 @@ export class SidebarComponent implements OnInit {
   UserName: any;
   UserJob: any;
 
-  constructor(private router: Router, private data: SharedService, private http:HttpClient, private auth: AutenticacionService) { 
-    this.http.get('assets/data/links.json')
-    .subscribe(res => {
-      this.LinkList = res["links"];
-      this.MenuList = this.LinkList[0].links;
-      this.http.get(this.auth.getPath("public/producto/categorias/getAll"))
-      .subscribe(($response)  =>{
-        this.LinkList.forEach((categoria, indexCat, array) => {
-          let categorias = []
-          const links = $response["response"][categoria.texto.toUpperCase()]
-          if(links) {
-            for (const sub_link in links) {
-              if (links.hasOwnProperty(sub_link)) {
-                let subcategoria = links[sub_link];
-                subcategoria["padre"] = {
-                  nombre: sub_link
-                }
-                const indice = categorias.push({show: false, head: {texto: subcategoria.padre.nombre, link: this.convertLink(subcategoria.padre)}, items: []}) - 1
-                if(subcategoria.categoriasHijas) {
-                  for (const hija in subcategoria.categoriasHijas) {
-                    if (subcategoria.categoriasHijas.hasOwnProperty(hija)) {
-                      const categoriaHija = subcategoria.categoriasHijas[hija];
-                      if(categoriaHija.nombre) {
-                        categorias[indice].items.push({texto: categoriaHija.nombre, link: this.convertLink2(subcategoria.padre, categoriaHija)})
-                      } else {
-                        console.log("categoria hija sin nombre", categoriaHija)
-                      }
-                    }
-                  }
-                  //Agrego el "VER TODO" al listado
-                  categorias[indice].items.push({texto: "VER TODO", link: this.convertLink(subcategoria.padre)});
-                }
-              }
-            }
-          }
-          array[indexCat].links = categorias
-        })
-      },$error => {
-        console.log("header error: ", $error)
-      }) 
-    });
+  constructor(private menu: MenuService, private router: Router, private data: SharedService, private http:HttpClient, private auth: AutenticacionService) { 
+    this.menu.LinkList$.subscribe(($cambio_link:any) => {
+      if($cambio_link) {
+        this.LinkList = $cambio_link
+      }
+
+    })
+    this.menu.MenuList$.subscribe(($cambio_menu:any) => {
+      if($cambio_menu) {
+        this.MenuList = $cambio_menu
+      }
+    })
   }
   ngOnInit() {
         //subscribing to data on carritoStatus

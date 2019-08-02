@@ -52,7 +52,7 @@
         <div class="row listadoCategorias">
           <div class="col-md-8 col-xs-12">
               <p><b>{{id_filtro}}</b></p>
-              <p style="margin-left: 10px;" [ngClass]="{'actual': num_subcategoria === -1}">{{id_categoria}}</p>
+              <p routerLink="{{'/' + id_categoria?.link}}" style="margin-left: 10px; cursor: pointer; text-transform: uppercase;" [ngClass]="{'actual': num_subcategoria === -1}">{{id_categoria?.texto}}</p>
               <p style="cursor: pointer; margin-left: 20px;" *ngFor="let element of listado_subcategorias; let $index = index" [ngClass]="{'actual': num_subcategoria === $index}" routerLink="{{'/' + element?.link}}" (click)="num_subcategoria = $index">
               {{element?.texto}}
             </p>

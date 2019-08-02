@@ -413,6 +413,7 @@
     padding: 6px 10px;
     font-weight: bold;
 }
+
 .envio .col-1 {
     text-align: left;
     width: 10%;
@@ -567,8 +568,16 @@
 .transporte.error {
     color: #F44336;
 }
+.iva__mensaje {
+    padding: 0px 60px; 
+    margin: 20px 0px; 
+    margin-bottom:60px
+}
 
 @media (max-width: 540px) {
+    .iva__mensaje {
+        margin-bottom: 30px
+    }
     .container > .row {
         padding: 5px !important;
     }
@@ -588,6 +597,29 @@
     .form-control {
         width: calc(100% + 30px);
     }
+    .buscador__general input{
+        width: calc(100% + 4px);
+        margin-bottom: 10px;
+    }   
+    .col-4 {
+        display: none;
+    }
+    .col-2 {
+        width: calc(78% - 95px);
+    }
+    .col-2 p {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
+    }
+    .col-3 {
+        min-width: 60px;
+    }
+    .col-5 {
+        min-width: 40px;
+    }
+
 }
 
 /* filtros */

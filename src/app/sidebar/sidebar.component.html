@@ -87,6 +87,18 @@
                                             white-space: nowrap;
                                         ">{{itemHija.texto}}</a>                     
                                 </div>
+                                <div class="section">
+                                    <a (click)="toggleSideBar()"[routerLink]="section.head?.link" class="title" style="
+                                            max-width: 100%;
+                                            display: block;
+                                            text-overflow: ellipsis;
+                                            overflow: hidden;
+                                            white-space: nowrap;
+                                        ">VER TODO</a>                     
+                                </div>
+                                <li class="nav-item">
+                                  <a class="nav-link" routerLink="" (click)="itemClicked()"></a>
+                                </li>
                             </div>                        
                         </div>
                 </div>
@@ -95,7 +107,17 @@
         <div class="sesion">
             <div class="cuenta" [routerLink]="['/cuenta']" *ngIf="UserLog" (click)="toggleSideBar()">
                 <img src="./assets/images/header/user__verde.png" alt="User" width="40">
-                <p> {{UserName}}</p>
+                <p style="color: #fff; 
+                max-width: 130px;
+                width: 100px;
+                margin: 0px 10px;
+                line-height: 14px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                display: block;
+
+                " *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> {{UserJob || "Registrarse"}} </p>
             </div>
             <div class="cuenta" (click)="registrar()" *ngIf="!UserLog">
                 <img src="./assets/images/header/user__verde.png" alt="User" width="40">

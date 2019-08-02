@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-md-6" style="max-height: 350px;display: flex;">
+    <div class="col-xs-12 col-md-6 imagen__visor" style="max-height: 350px;display: flex;">
       <!--ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div-->
       <img [src]="producto['urlImagen']" alt="">
     </div>
@@ -48,31 +48,37 @@
           <p>CONDICION</p>
           <p style="margin-top: -10px;">{{producto.condicion}}</p>  
       </div-->
-      <div class="row producto__precio" *ngIf="loginStatus === true">
-        <div class="col-md-4 col-xs-6 titled">
-          <p>$ {{producto.precio}}</p>
+      <div class="precio__container">
+        <div class="row producto__precio" *ngIf="loginStatus === true">
+          <div class="col-md-4 col-xs-6 titled">
+            <p>$ {{producto.precio}}</p>
+          </div>
+          <div class="precio__container__mobile" *ngIf="loginStatus === true">
+            <p>{{iva_usuario}}</p>
+          </div>
+          <!--div class="col-md-4 col-xs-6 titled">
+            <p>ANTES</p>
+            <p style="text-decoration: line-through;">$ {{producto.precio}}</p>
+          </div-->
         </div>
-        <!--div class="col-md-4 col-xs-6 titled">
-          <p>ANTES</p>
-          <p style="text-decoration: line-through;">$ {{producto.precio}}</p>
-        </div-->
-      </div>
-      <div style="position: relative;"class="row" *ngIf="loginStatus === true">
-        <p style="position: absolute; top: -20px;">{{iva_usuario}}</p>
-      </div>
-      <div class="row producto__compra">
-        <div class="cantidad">
-          <p style="margin-right: 10px; margin-bottom: 0;">Cantidad:</p>
-          <input type="number" [(ngModel)]="producto.cantidad" (focus)="producto['incompleto'] = false">
-          <div class="cantidad--label" [class.alerta]="producto['incompleto']">
-            <div class="mensaje">
-              <div class="mensaje__content">
-                  <span *ngIf="producto.cantidad % producto['cantPack'] !== 0"> * La cantidad ingresada debe ser multiplo de {{producto['cantPack']}}.</span>
-                  <span *ngIf="producto.cantidad < producto['cantMinima']"> * La cantidad es menor al mínimo.</span>
+        <div style="position: relative;"class="row producto__cartel" *ngIf="loginStatus === true">
+          <p style="position: absolute; top: -20px;">{{iva_usuario}}</p>
+        </div>
+        <div class="row producto__compra">
+          <div class="cantidad">
+            <p style="margin-right: 10px; margin-bottom: 0;">Cantidad:</p>
+            <input type="number" [(ngModel)]="producto.cantidad" (focus)="producto['incompleto'] = false">
+            <div class="cantidad--label" [class.alerta]="producto['incompleto']">
+              <div class="mensaje">
+                <div class="mensaje__content">
+                    <span *ngIf="producto.cantidad % producto['cantPack'] !== 0"> * La cantidad ingresada debe ser multiplo de {{producto['cantPack']}}.</span>
+                    <span *ngIf="producto.cantidad < producto['cantMinima']"> * La cantidad es menor al mínimo.</span>
+                </div>
               </div>
-            </div>
-          </div>  
+            </div>  
+          </div>
         </div>
+        
       </div>
       <div class="button">
           <button class="agregar actionButton" *ngIf="producto.comprado == false" (click)="newMessage(producto)">AGREGAR AL CARRITO</button>

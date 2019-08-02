@@ -65,7 +65,7 @@ export class FilterComponent implements OnInit {
   categoriaPadre = undefined
   categoriaHijo = undefined
   id_filtro = ""
-  id_categoria = ""
+  id_categoria = undefined
   id_subcategoria = ""
   num_subcategoria = -1
   listado_subcategorias
@@ -150,7 +150,8 @@ export class FilterComponent implements OnInit {
                 }
                 if(itemActualMenu) {
                   this.id_filtro = itemActualMenu.texto.toUpperCase()
-                  this.id_categoria = itemActualMenuPadre.head.texto.toUpperCase()
+                  console.log(itemActualMenuPadre)
+                  this.id_categoria = itemActualMenuPadre.head
                   this.listado_subcategorias = itemActualMenuPadre.items
                   this.num_subcategoria = itemActualMenuHijo
                 }

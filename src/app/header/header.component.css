@@ -758,17 +758,31 @@
     }
 }
 
-@media screen and (max-width: 1430px){
     .header--fixed .navbar-brand img:nth-child(2) {
         display: block;
     }
     .header--fixed .navbar-brand img:nth-child(1) {
         display: none;
     }
+@media screen and (max-width: 1430px){
     .right__form {
         max-width: 120px;
     }
  
+}
+@media screen and (min-width: 1430px){
+    .right__form {
+        max-width: 120px;
+    }
+    .buscador__container {
+        width: calc(100% - 950px);
+    }
+    .right__form {
+        max-width: 200px;
+    }
+    .navbar-fixed .login p {        
+        width: 110px;
+    }
 }
 
 .login .popup ul li {
