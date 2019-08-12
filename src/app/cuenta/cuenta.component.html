@@ -196,7 +196,7 @@
             <div class="tab__item" *ngIf="transaccion.paso === 1">              
               <div class="content">
                 <div class="row tab__item__header">
-                    <p>{{DatosUsuario.codigo ? "Tu número de Cliente es " + DatosUsuario.codigo : "El cliente no fue "}}</p>
+                    <p>{{DatosUsuario.codigo ? "Tu número de Cliente es " + this.DatosUsuario.codigo : "El cliente no fue "}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
                   </div>
                 <div class="row">
@@ -227,19 +227,42 @@
                           </div>
                           <div class="form-group row">
                             <label for="example-text-input" class="col-xs-3 col-form-label">
+                                CUIT/DNI
+                            </label>
+                            <div class="col-xs-9">
+                              <input class="form-control" type="text" name="cuit" [(ngModel)]="DatosUsuario.cuit">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="example-text-input" class="col-xs-3 col-form-label">
                                 Categoria IVA
                             </label>
                             <div class="col-xs-9">
                               <input class="form-control" type="text" name="cod_categoria_iva" [(ngModel)]="DatosUsuario.codCategoriaIva">
                             </div>
                           </div>
-
+                          <div class="form-group row">
+                            <label for="example-text-input" class="col-xs-3 col-form-label">
+                                Telefono
+                            </label>
+                            <div class="col-xs-9">
+                              <input class="form-control" type="text" value="{{DatosUsuario.telefono}}">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="example-text-input" class="col-xs-3 col-form-label">
+                                Celular
+                            </label>
+                            <div class="col-xs-9">
+                              <input class="form-control" type="text" value="{{DatosUsuario.telefonoCelular}}">
+                            </div>
+                          </div>
                         <div class="form-group row">
                               <label for="example-text-input" class="col-xs-3 col-form-label">
                                   Direccion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_direccion" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.direccion">
+                                <input class="form-control" type="text" name="domicilio_direccion" [(ngModel)]="DatosUsuario.domicilio.direccion">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -247,7 +270,7 @@
                                   Localidad
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_ciudad" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.ciudad">
+                                <input class="form-control" type="text" name="domicilio_ciudad" [(ngModel)]="DatosUsuario.domicilio.ciudad">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -255,7 +278,7 @@
                                   Provincia
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_provincia" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.provincia">
+                                <input class="form-control" type="text" name="domicilio_provincia" [(ngModel)]="DatosUsuario.domicilio.provincia">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -263,9 +286,40 @@
                                   Codigo postal
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_codigo_postal" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.codPostal">
+                                <input class="form-control" type="text" name="domicilio_codigo_postal" [(ngModel)]="DatosUsuario.domicilio.codPostal">
                               </div>
-
+                            </div>
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-xs-3 col-form-label">
+                                  Responsable facturacion
+                              </label>
+                              <div class="col-xs-9">
+                                <input class="form-control" type="text" name="nombreResponsableFacturacion" [(ngModel)]="DatosUsuario.nombreResponsableFacturacion">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-xs-3 col-form-label">
+                                  Email facturacion
+                              </label>
+                              <div class="col-xs-9">
+                                <input class="form-control" type="text" name="emailFacturacion" [(ngModel)]="DatosUsuario.emailFacturacion">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-xs-3 col-form-label">
+                                  Telefono facturacion
+                              </label>
+                              <div class="col-xs-9">
+                                <input class="form-control" type="text" name="telefonoFacturacion" [(ngModel)]="DatosUsuario.telefonoFacturacion">
+                              </div>
+                            </div>
+                            <div class="form-group row">
+                              <label for="example-text-input" class="col-xs-3 col-form-label">
+                                  Breve Descripcion
+                              </label>
+                              <div class="col-xs-9">
+                                <input class="form-control" type="text" name="descripcion" [(ngModel)]="DatosUsuario.descripcion">
+                              </div>
                             </div>
                           </ng-template>
                       </ngb-panel>
@@ -281,7 +335,7 @@
                                   Direccion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" value="{{DatosUsuario.datosEnvio.domicilioEntrega?.direccion}}">
+                                <input class="form-control" type="text" name="entrega_domicilio_direccion" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.direccion">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -289,7 +343,7 @@
                                   Localidad
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" value="{{DatosUsuario.datosEnvio.domicilioEntrega?.ciudad}}">
+                                <input class="form-control" type="text" name="entrega_domicilio_ciudad" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.ciudad">
                               </div>
                             </div>
                               <div class="form-group row">
@@ -297,7 +351,15 @@
                                     Provincia
                                 </label>
                                 <div class="col-xs-9">
-                                  <input class="form-control" type="text" value="{{DatosUsuario.datosEnvio.domicilioEntrega?.provincia}}">
+                                  <input class="form-control" type="text" name="entrega_domicilio_provincia" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.provincia">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="example-text-input" class="col-xs-3 col-form-label">
+                                    Cod. Postal
+                                </label>
+                                <div class="col-xs-9">
+                                  <input class="form-control" type="text" name="entrega_domicilio_codPostal" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.codPostal">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -305,13 +367,31 @@
                                     Telefono
                                 </label>
                                 <div class="col-xs-9">
-                                  <input class="form-control" type="text" value="{{DatosUsuario.datosEnvio.telefono}}">
+                                  <input class="form-control" type="text"  name="entrega_domicilio_telefono" [(ngModel)]="DatosUsuario.datosEnvio.telefono">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="example-text-input" class="col-xs-3 col-form-label">
+                                    Transporte
+                                </label>  
+                                <div class="col-xs-9">
+                                    <ng-select style="height: 32px; margin: 6px 0px;" 
+                                      [clearable]="true"
+                                      (change)="refreshTransporte($event)"
+                                      ng-model="DatosUsuario.datosEnvio.idTransporte" 
+                                      placeholder="Medio de transporte">
+                                      <ng-option *ngFor="let country of transporte_lista" [value]="country.id">
+                                        {{country.text}}
+                                      </ng-option>
+                                    </ng-select>
                                 </div>
                               </div>
                           </ng-template>
                       </ngb-panel>
                     </ngb-accordion>
-                    <div class="row">
+                    <div class="row" *ngIf="!procesando_info_entrega && !procesando_info_entrega">
+                      <p style="color: red;">{{procesando_info_error}}</p>
+                      <p style="color: red;">{{procesando_info_entrega_error}}</p>
                       <button (click)="guardarDatos()" class="actionButton" style="float: right;">GUARDAR</button>
                     </div>
                   </div>

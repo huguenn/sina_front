@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubjectSubscriber, Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operator/debounceTime';
@@ -111,7 +111,14 @@ export class CuentaComponent implements OnInit {
 
   misFrecuentesLink: string = "#"
 
+  transporte_lista: Array<any> = []
+  initialLista: Array<any> = []
+  procesando_info: boolean = false
+  procesando_info_entrega: boolean = false
+  procesando_info_error: string = ""
+  procesando_info_entrega_error: string = ""
   constructor(
+    private _ngZone: NgZone,
     private data:   SharedService,
     private route:  ActivatedRoute,
     private router: Router,
@@ -119,7 +126,7 @@ export class CuentaComponent implements OnInit {
     private auth:   AutenticacionService
     ){ 
     this.transaccion = new DatosTransaccion(0);
-    this.DatosUsuario = this.auth.localGet("user")
+
     this.http.get('assets/data/cuenta.json')
     .subscribe(res => {
       this.ListaCompras = res["lista"]
@@ -156,6 +163,10 @@ export class CuentaComponent implements OnInit {
       console.log($error)
       this.router.navigate(["/"])
     })
+  }
+  public refreshTransporte(value:any):void {
+    //this.medioTransporte = value.text
+    this.DatosUsuario.datosEnvio.codigoTransporte = value
   }
   repetirPregunta($item) {
     this.repetirFlag = true
@@ -203,8 +214,29 @@ export class CuentaComponent implements OnInit {
           this.loginStatus = status
         }
       )    
-      this.data.currentUser.subscribe($user => {
+      this.data.currentUser.subscribe(($user:any) => {
         if ($user) {
+          this.DatosUsuario = $user
+          new Promise(($acepto, $rechazo) => {
+            this.auth.get("public/cliente/envio/getAll").then((result)=> {
+                result.response.forEach(transporte => {
+                  this.transporte_lista.push({
+                    id: transporte.codigo,
+                    text: transporte.nombre
+                  })
+                });
+                this.DatosUsuario.datosEnvio.idTransporte = (this.transporte_lista.find((transporte)=>{ 
+                  return transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte
+                })).text
+              $acepto("ok")
+            }).catch((error)=> $rechazo(error))
+          })
+          .then($respuesta => {
+            console.log("okerso", this.transporte_lista, this.initialLista)
+          })
+          .catch($error => {
+            console.log("public/cliente/envio/getAll: ", this.transporte_lista, this.initialLista)
+          })
           switch($user["codCategoriaIva"]) {
             case "CF": 
             case "INR": 
@@ -279,27 +311,67 @@ export class CuentaComponent implements OnInit {
 
   }
   guardarDatos() {
-    let body = new URLSearchParams();
-    body.set("razon_social", this.DatosUsuario.razonSocial);
-    body.set("nombre_fantasia", this.DatosUsuario.nombreFantasia);
-    body.set("cod_categoria_iva", this.DatosUsuario.codCategoriaIva);
-    body.set("domicilio_direccion", this.DatosUsuario.datosEnvio.domicilioEntrega.direccion);
-    body.set("domicilio_ciudad", this.DatosUsuario.datosEnvio.domicilioEntrega.ciudad);
-    body.set("domicilio_provincia", this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
-    body.set("domicilio_codigo_postal", this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
+    this.procesando_info = true
+    this.procesando_info_entrega = true
 
+    let body = new URLSearchParams();
+    let body_entrega = new URLSearchParams();
+    body.set("razon_social", this.DatosUsuario.razonSocial)
+    body.set("nombre_fantasia", this.DatosUsuario.nombreFantasia)
+    body.set("cuit", this.DatosUsuario.cuit)
+    body.set("telefono", this.DatosUsuario.telefono);
+    body.set("telefono_celular", this.DatosUsuario.telefonoCelular);
+    body.set("body_entrega", this.DatosUsuario.telefonoCelular);
+    body.set("cod_categoria_iva", this.DatosUsuario.codCategoriaIva);
+    body.set("domicilio_direccion", this.DatosUsuario.domicilio.direccion);
+    body.set("domicilio_ciudad", this.DatosUsuario.domicilio.ciudad);
+    body.set("domicilio_provincia", this.DatosUsuario.domicilio.provincia);
+    body.set("domicilio_codigo_postal", this.DatosUsuario.domicilio.codPostal);
+    body.set("nombre_responsable_facturacion", this.DatosUsuario.nombreResponsableFacturacion);
+    body.set("email_facturacion", this.DatosUsuario.emailFacturacion);
+    body.set("telefono_facturacion", this.DatosUsuario.telefonoFacturacion);
+    body.set("descripcion", this.DatosUsuario.descripcion);
+    
+
+    body_entrega.set("domicilio_direccion", this.DatosUsuario.datosEnvio.domicilioEntrega.direccion);
+    body_entrega.set("domicilio_ciudad", this.DatosUsuario.datosEnvio.domicilioEntrega.ciudad);
+    body_entrega.set("domicilio_provincia", this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
+    body_entrega.set("domicilio_codigo_postal", this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
+    body_entrega.set("telefono", this.DatosUsuario.datosEnvio.telefono);
+    body_entrega.set("cod_transporte", this.DatosUsuario.datosEnvio.idTransporte);
+
+    console.log(body, body_entrega)
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     this.auth.post('cliente/actualizar',body)
     .then($response => {
       console.log("respuesta", $response)
+      this.procesando_info = false
+      this.procesando_info_error = ""
     })
     .catch(($error) => {
-      let respuesta;
+      this.procesando_info = false
+      this.procesando_info_error = "";
       try {
-        Object.keys($error.response).forEach(element => {
-          respuesta.mensaje += $error.response[element] + " "
+        Object.values($error.error.response).forEach(element => {
+          this.procesando_info_error += element + " "
         })
-        console.log(respuesta)
+      } catch($throw) {
+        console.log($throw)
+      }
+    })
+    this.auth.post('cliente/envio/actualizar_datos',body_entrega)
+    .then($response => {
+      console.log("respuesta", $response)
+      this.procesando_info_entrega = false
+      this.procesando_info_entrega_error ="";
+    })
+    .catch(($error) => {
+      this.procesando_info_entrega = false
+      this.procesando_info_entrega_error ="";
+      try {
+        Object.values($error.response).forEach(element => {
+          this.procesando_info_entrega_error += element + " "
+        })
       } catch($throw) {
         console.log($throw)
       }

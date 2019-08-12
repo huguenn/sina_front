@@ -52,6 +52,13 @@
 .footer__section.social p {
   display: block;
 }
+.footer__section.social a {
+  display: flex;
+}
+.footer__section.social p {
+  display: block;
+  margin: 0px 0px 0px 10px;
+}
 .footer__section .whiteButton {
   background: #fff;
   border: 2px solid #fff;

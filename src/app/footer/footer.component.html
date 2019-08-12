@@ -36,7 +36,9 @@
                     <li *ngFor="let item of SocialList" class="nav-item" [ngClass]="{'active': item.active}">
                       <a class="nav-link" href="{{item.url}}">
                         <img src="{{item.urlImg}}" title="{{item.texto}}" />
+                        <p>
                         {{item.texto}}
+                        </p>
                         <span class="sr-only">current</span>
                       </a>
                     </li>          
@@ -76,9 +78,15 @@
               <div class="header">CONTENIDO</div>
               <div class="content">
                 <ul>
-                  <li *ngFor="let item of LinkList" class="nav-item" [ngClass]="{'active': item.active}">
-                    <a class="nav-link" href="#">{{item.texto}} <span class="sr-only">current</span></a>
-                  </li>          
+                  <li *ngFor="let item of LinkList" class="nav-item">
+                    <a class="nav-link" routerLink="{{item.url}}" routerLinkActive="active">{{item.texto}} <span class="sr-only">current</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a style="cursor: pointer" class="nav-link" (click)="registrar()">Nuevo cliente</a>
+                  </li>      
+                  <li class="nav-item">
+                    <a class="nav-link" routerLink="contacto" routerLinkActive="active">Contacto<span class="sr-only">current</span></a>
+                  </li>
                 </ul>
               </div>
             </div>

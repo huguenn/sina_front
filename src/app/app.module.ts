@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms'
 import { HttpModule }      from '@angular/http';
 import { HttpClientModule }      from '@angular/common/http';
 import { SidebarModule } from 'ng-sidebar';
-import { SelectModule } from 'ng2-select';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 //bootstrap
@@ -150,7 +150,7 @@ const appRoutes: Routes = [
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    SelectModule,
+    NgSelectModule,
     FormsModule,
     PopoverModule,
     NgbModule.forRoot(),

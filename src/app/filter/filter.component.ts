@@ -80,7 +80,8 @@ export class FilterComponent implements OnInit {
   ngOnDestroy() {
   }
   ngOnInit() {
-
+    let num_filtro
+    let num_categoria
     this.data.currentUser.subscribe($user => {
       if ($user) {
         switch($user["codCategoriaIva"]) {
@@ -97,93 +98,91 @@ export class FilterComponent implements OnInit {
         }
       }
     })
-
-    let num_filtro
-    let num_categoria
-    this.route.params.subscribe(params => {
-      let id = (params['id2'])
-      let id2 = (params['id'])
-      this.categoriaPadre = (params['padre'])? params['padre'].split('-').join(' ') : ""
-      this.categoriaHijo = id2 ? id2.split('-').join(' ') : ""
-      let url_consulta = this.loginStatus ? "": "public/"
-      this.mensaje = "Cargando"
-      new Promise((resolve, reject) => {
-        if(!id2) {
-          url_consulta += (window.location.href.indexOf("ofertas") !== -1) ? "producto/listado/ofertas/" :
-          (window.location.href.indexOf("novedades") !== -1) ? "producto/listado/novedades" : ""
-          this.categoriaHijo = (window.location.href.indexOf("ofertas") !== -1) ? "OFERTAS" : "NOVEDADES"
-          this.auth.get(url_consulta)
-            .then($res => resolve($res.response)).catch($error => reject($error))
-        } else if(id) {
-          this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ", " : "") + this.categoriaHijo + " | Sina", 'Mayorista y distribuidora de '+ this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre +' con entrega a todo el país, hacé tu pedido online!')
-            this.auth.get(url_consulta + "producto/categoria/" + (+id))
-              .then($res => {
-                if(!this.LinkList) {
-                  this.LinkList = this.menu.LinkList
-                }
-                let $categoria, $subcategoria
-                if(this.categoriaHijo && this.categoriaPadre) {
-                  $subcategoria  = this.categoriaHijo
-                  $categoria     = this.categoriaPadre
-                } else if(this.categoriaHijo) {
-                  $categoria     = this.categoriaHijo
-                } 
-                let itemActualMenu, itemActualMenuPadre, itemActualMenuHijo
-                let padreEncabezado = $categoria
-                if(padreEncabezado.includes('   ')){
-                  padreEncabezado = padreEncabezado.split('   ').join(' - ')
-                }
-                itemActualMenu = this.LinkList.find(($item:any) => {
-                  let incluyeItem = false
-                  $item.links.forEach(($item_padre) => {
-                    if(padreEncabezado === $item_padre.head.texto) {
-                      incluyeItem = true
-                      itemActualMenuPadre = $item_padre
-                    }
-                  })
-                  return incluyeItem
-                })
-                if($subcategoria && itemActualMenuPadre) {
-                  itemActualMenuHijo = itemActualMenuPadre.items.findIndex(($item_hijo:any) => {
-                    return $item_hijo.texto === $subcategoria
-                  })
-                }
-                if(itemActualMenu) {
-                  this.id_filtro = itemActualMenu.texto.toUpperCase()
-                  console.log(itemActualMenuPadre)
-                  this.id_categoria = itemActualMenuPadre.head
-                  this.listado_subcategorias = itemActualMenuPadre.items
-                  this.num_subcategoria = itemActualMenuHijo
-                }
-                resolve($res.response)
-              })
-              .catch($error => reject($error))
-        } else{
-          if(window.location.href.includes("busqueda")) {
-            let body = new URLSearchParams();
-            body.set("frase", id2);  
-            this.auth.post(url_consulta + "producto/busqueda/", body)
-              .then($res => resolve($res.body.response)).catch($error => reject($error))
-          }
-        }
-      }).then(($response)  =>{
-        this.listaResultados = $response
-        this.paginado.init()
-        if(!this.listaResultados.length) {
-          this.mensaje = "No hay resultado para la consulta"
-        } else {
-          this.mensaje = ""
-        }
-      })
-      .catch($error => {
-        this.listaResultados = []
-        this.mensaje = "No hay resultado para la consulta"
-      })
-    })
     //subscribing to data on loginStatus
     this.data.currentLogin.subscribe(
       status => {
         this.loginStatus = status
+        console.log("estatus logo", this.loginStatus)
+        this.route.params.subscribe(params => {
+          let id = (params['id2'])
+          let id2 = (params['id'])
+          this.categoriaPadre = (params['padre'])? params['padre'].split('-').join(' ') : ""
+          this.categoriaHijo = id2 ? id2.split('-').join(' ') : ""
+          let url_consulta = this.loginStatus ? "": "public/"
+          this.mensaje = "Cargando"
+          new Promise((resolve, reject) => {
+            if(!id2) {
+              url_consulta += (window.location.href.indexOf("ofertas") !== -1) ? "producto/listado/ofertas/" :
+              (window.location.href.indexOf("novedades") !== -1) ? "producto/listado/novedades" : ""
+              this.categoriaHijo = (window.location.href.indexOf("ofertas") !== -1) ? "OFERTAS" : "NOVEDADES"
+              this.auth.get(url_consulta)
+                .then($res => resolve($res.response)).catch($error => reject($error))
+            } else if(id) {
+              this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ", " : "") + this.categoriaHijo + " | Sina", 'Mayorista y distribuidora de '+ this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre +' con entrega a todo el país, hacé tu pedido online!')
+                this.auth.get(url_consulta + "producto/categoria/" + (+id))
+                  .then($res => {
+                    if(!this.LinkList) {
+                      this.LinkList = this.menu.LinkList
+                    }
+                    let $categoria, $subcategoria
+                    if(this.categoriaHijo && this.categoriaPadre) {
+                      $subcategoria  = this.categoriaHijo
+                      $categoria     = this.categoriaPadre
+                    } else if(this.categoriaHijo) {
+                      $categoria     = this.categoriaHijo
+                    } 
+                    let itemActualMenu, itemActualMenuPadre, itemActualMenuHijo
+                    let padreEncabezado = $categoria
+                    if(padreEncabezado.includes('   ')){
+                      padreEncabezado = padreEncabezado.split('   ').join(' - ')
+                    }
+                    itemActualMenu = this.LinkList.find(($item:any) => {
+                      let incluyeItem = false
+                      $item.links.forEach(($item_padre) => {
+                        if(padreEncabezado === $item_padre.head.texto) {
+                          incluyeItem = true
+                          itemActualMenuPadre = $item_padre
+                        }
+                      })
+                      return incluyeItem
+                    })
+                    if($subcategoria && itemActualMenuPadre) {
+                      itemActualMenuHijo = itemActualMenuPadre.items.findIndex(($item_hijo:any) => {
+                        return $item_hijo.texto === $subcategoria
+                      })
+                    }
+                    if(itemActualMenu) {
+                      this.id_filtro = itemActualMenu.texto.toUpperCase()
+                      console.log(itemActualMenuPadre)
+                      this.id_categoria = itemActualMenuPadre.head
+                      this.listado_subcategorias = itemActualMenuPadre.items
+                      this.num_subcategoria = itemActualMenuHijo
+                    }
+                    resolve($res.response)
+                  })
+                  .catch($error => reject($error))
+            } else{
+              if(window.location.href.includes("busqueda")) {
+                let body = new URLSearchParams();
+                body.set("frase", id2);  
+                this.auth.post(url_consulta + "producto/busqueda/", body)
+                  .then($res => resolve($res.body.response)).catch($error => reject($error))
+              }
+            }
+          }).then(($response)  =>{
+            this.listaResultados = $response
+            this.paginado.init()
+            if(!this.listaResultados.length) {
+              this.mensaje = "No hay resultado para la consulta"
+            } else {
+              this.mensaje = ""
+            }
+          })
+          .catch($error => {
+            this.listaResultados = []
+            this.mensaje = "No hay resultado para la consulta"
+          })
+        })
       }
     )
     

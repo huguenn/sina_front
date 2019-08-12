@@ -409,16 +409,14 @@ export class AppComponent implements OnInit {
     this.auth.get("cliente/datos")
     .then(($response)  =>{
       const datos_locales = this.auth.localGet("user")
-      
       if($response.response["codigo"] !== datos_locales["codigo"]) {
-        console.log(datos_locales, $response.response)
-        this.auth.localSet("user",  $response.response as cliente)
-        this.data.updateUser($response.response)
-        //this.auth.userTypeUpdate($response.response["numeroListaPrecios"])
         window.location.reload()
       } else {
-        console.log($response.response)
+        console.log(datos_locales, $response.response)
       }
+      this.auth.localSet("user",  $response.response as cliente)
+      this.data.updateUser($response.response)
+      //this.auth.userTypeUpdate($response.response["numeroListaPrecios"])
     })
     .catch($error => {
       console.log($error)

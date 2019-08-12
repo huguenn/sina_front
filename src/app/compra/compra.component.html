@@ -264,11 +264,14 @@
                               Transporte
                           </label>  
                           <div class="col-xs-8">
-                              <ng-select style="height: 32px; margin: 6px 0px;" [allowClear]="true"
-                                          [items]="entrega.transporte.lista"
-                                          (data)="refreshTransporte($event)"
-                                          [active]="initialLista"
-                                          placeholder="Medio de transporte">
+                              <ng-select style="height: 32px; margin: 6px 0px;" 
+                                [clearable]="true"
+                                (change)="refreshTransporte($event)"
+                                ng-model="initialLista[0].value" 
+                                placeholder="Medio de transporte">
+                                <ng-option *ngFor="let country of entrega.transporte.lista" [value]="country.id">
+                                  {{country.text}}
+                                </ng-option>
                               </ng-select>
                           </div>
                         </div>
