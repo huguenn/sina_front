@@ -140,9 +140,12 @@ export class SharedService {
         if(user !== ""){
           this.user = user
           this.userSource.next(this.user)
-          if(JSON.parse(localStorage.getItem("carrito")).length !== 0){
-            this.toggleLoginModal2()
-            console.log(JSON.parse(localStorage.getItem("carrito")))
+          const carrito = JSON.parse(localStorage.getItem("carrito"))
+          if(carrito){
+            if(carrito.length !== 0) {
+              this.toggleLoginModal2()
+              console.log(JSON.parse(localStorage.getItem("carrito")))
+            }
           }
         }
       }else{
