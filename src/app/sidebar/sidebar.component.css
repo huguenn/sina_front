@@ -3,6 +3,9 @@
     height: 100%;
     width: 70vw;
     max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .sidenavMenu > div {
     margin: 0px;
@@ -22,7 +25,7 @@
     padding: 0px 15px;
 }
 .sidenavMenu .listado .items > li{
-    padding: 10px 0px;
+    padding: 6px 0px;
     border-bottom: 1px solid #e1e1e1;
 }    
 .sidenavMenu .listado .items > li:last-child {
@@ -81,10 +84,9 @@
     font-size: 16px;
 }
 .sesion {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    background: #ccc;
+    background: #0379ff;
+    color: #fff;
     padding: 10px;
     display: flex;
     justify-content: space-around;
@@ -100,4 +102,16 @@
         display: flex !important;
         align-items: center;
         margin: 0 !important;
+}
+
+@media only screen and (max-width: 480px) {
+  .sidenavMenu {
+    height: calc(100vh - 56px);
+  }
+}
+.sidenavMenu .row {
+    margin: 0;
+}
+.ng-sidebar--left {
+    background: #0379ff;
 }
