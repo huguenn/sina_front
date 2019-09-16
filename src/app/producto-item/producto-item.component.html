@@ -43,5 +43,5 @@
 <div class="resultado__item__comprar" *ngIf="!relacionado" style="    padding: 0px 15px;">
   <button class="actionButton" *ngIf="item.comprado == false && sesion" (click)="newMessage(item)">COMPRAR</button>
   <button class="actionButton" *ngIf="!sesion" (click)="newMessage(item)">VER PRECIO</button>
-  <button class="actionButton greeButton" *ngIf="item.comprado == true" (click)="removeMessage(item)">AGREGADO</button>
+  <button class="actionButton greeButton" *ngIf="sesion && item.comprado == true" (click)="removeMessage(item)">AGREGADO</button>
 </div>
