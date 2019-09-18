@@ -341,16 +341,14 @@
 .col-4  {
     width: 13%;
 }
-.col-5 {
-    
-}
 .col-2 {
-    width: calc(100% - 11% - 11% - 13% - 60px);
+    width: calc(69% - 160px);
 }
 .col-1,
 .col-2,
 .col-3,
-.col-4 {
+.col-4,
+.col-5 {
   float: left;
   position: relative;
   min-height: 1px;
@@ -359,6 +357,9 @@
   min-width: 80px;
 }
 
+.col-5 {
+    min-width: 44px;
+}
 .col-1 input {
   width: 90%;
   padding: 5px 8px;
@@ -574,6 +575,13 @@
     margin-bottom:60px
 }
 
+.col-2 p {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+}
+
 @media (max-width: 540px) {
     .iva__mensaje {
         margin-bottom: 30px
@@ -601,18 +609,10 @@
         width: calc(100% + 4px);
         margin-bottom: 10px;
     }   
-    .col-4 {
-        display: none;
-    }
     .col-2 {
-        width: calc(78% - 95px);
+        width: calc(84% - 140px);
     }
-    .col-2 p {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        text-align: center;
-    }
+
     .col-3 {
         min-width: 60px;
     }
