@@ -29,6 +29,9 @@ const SOCIAL: Link[] = [
 export class FooterComponent implements OnInit {
   LinkList = LINKS
   SocialList = SOCIAL
+  nombre: String
+  email: String
+
   constructor(private data: SharedService) { }
   registrar() {
     this.data.toggleLoginModal()
