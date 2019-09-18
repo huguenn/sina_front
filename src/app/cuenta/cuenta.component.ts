@@ -94,8 +94,8 @@ export class CuentaComponent implements OnInit {
   DatosUsuario: cliente = new cliente()
 
   comprados = []
-
-  ultimasCompras = [
+  ultimasCompras = []
+  /*ultimasCompras = [
     {
       fecha:"",
       lista: [
@@ -107,7 +107,7 @@ export class CuentaComponent implements OnInit {
         }      
       ],
       total: ""
-  }]
+  }]*/
 
   misFrecuentesLink: string = "#"
 
@@ -168,6 +168,10 @@ export class CuentaComponent implements OnInit {
     //this.medioTransporte = value.text
     this.DatosUsuario.datosEnvio.codigoTransporte = value
   }
+  public refreshCategoria(value:any):void {
+    //this.medioTransporte = value.text
+    this.DatosUsuario.codCategoriaIva = value
+  }
   repetirPregunta($item) {
     this.repetirFlag = true
     this.repetirTemp = $item
@@ -225,7 +229,7 @@ export class CuentaComponent implements OnInit {
                     text: transporte.nombre
                   })
                 });
-                this.DatosUsuario.datosEnvio.idTransporte = (this.transporte_lista.find((transporte)=>{ 
+                this.DatosUsuario.datosEnvio.codigoTransporte = (this.transporte_lista.find((transporte)=>{ 
                   return transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte
                 })).text
               $acepto("ok")
@@ -338,7 +342,7 @@ export class CuentaComponent implements OnInit {
     body_entrega.set("domicilio_provincia", this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
     body_entrega.set("domicilio_codigo_postal", this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
     body_entrega.set("telefono", this.DatosUsuario.datosEnvio.telefono);
-    body_entrega.set("cod_transporte", this.DatosUsuario.datosEnvio.idTransporte);
+    body_entrega.set("cod_transporte", this.DatosUsuario.datosEnvio.codigoTransporte);
 
     console.log(body, body_entrega)
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
