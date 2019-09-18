@@ -105,6 +105,9 @@
 .filter__top{
     margin: 0;
     padding-top: 15px;
+    border-bottom: #057aff solid 2px;
+    width: 85%;
+    font-weight: bold;
 }
 .filter__top > .col {
     width: 100%;
@@ -113,6 +116,7 @@
 .filter__top:first-child .order{
     padding: 0px;
     padding-top: 5px;
+    width: 100%;
 }
 .filter__top > p {
     margin-top: 15px;
@@ -231,6 +235,7 @@
     padding: 0;
     margin: 0 0 5px 0;
     font-size: 12px;
+    margin-bottom: 10px;
 }
 @media (max-width: 968px) {
     .selector .content .item{ 

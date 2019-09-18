@@ -7,13 +7,13 @@
   <div class="row">
     <div class="col-md-3 col-xs-12">
       <div class="row filter__selector filter__top" style="border: none; display: flex; flex-direction: column; height: auto;">
-        <div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
+        <!--div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
           <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Ordenar por</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
             <button class="dropdown-item">Nombre</button>
             <button class="dropdown-item">Precio</button>
           </div>
-        </div>
+        </div-->
         <div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
           <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Vista: {{modoVista}}</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
@@ -47,16 +47,22 @@
     -->
       <div class="containerSidebarCategorias">
         <div class="row filter__top">
-          <p>CATEGORÍAS</p>
+          <p>{{id_filtro}}</p>
         </div>
         <div class="row listadoCategorias">
-          <div class="col-md-8 col-xs-12">
-              <p><b>{{id_filtro}}</b></p>
-              <p routerLink="{{'/' + id_categoria?.link}}" style="margin-left: 10px; cursor: pointer; text-transform: uppercase;" [ngClass]="{'actual': num_subcategoria === -1}">{{id_categoria?.texto}}</p>
-              <p style="cursor: pointer; margin-left: 20px;" *ngFor="let element of listado_subcategorias; let $index = index" [ngClass]="{'actual': num_subcategoria === $index}" routerLink="{{'/' + element?.link}}" (click)="num_subcategoria = $index">
-              {{element?.texto}}
-            </p>
-            </div>
+            <p routerLink="{{'/' + id_categoria?.link}}" style="font-weight: bold; cursor: pointer; text-transform: uppercase;" [ngClass]="{'actual': num_subcategoria === -1}">{{id_categoria?.texto}}</p>
+            <p style="cursor: pointer; margin-left: 20px;" *ngFor="let element of listado_subcategorias; let $index = index" [ngClass]="{'actual': num_subcategoria === $index}" routerLink="{{'/' + element?.link}}" (click)="num_subcategoria = $index">
+            {{element?.texto}}
+          </p>
+        </div>
+      </div>
+      <div class="containerSidebarCategorias">
+        <div class="row filter__top">
+          <p>ORDENAR POR</p>
+        </div>
+        <div class="row listadoCategorias">
+          <p style="margin-left: 20px; cursor: pointer; text-transform: uppercase;">NOMBRE</p>
+          <p style="margin-left: 20px; cursor: pointer; text-transform: uppercase;">PRECIO</p>
         </div>
       </div>
     </div>
