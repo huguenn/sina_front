@@ -317,7 +317,10 @@
     cursor: pointer;
     padding: 2px 0px;
 }
-
+.header__filter__content .item li:last-child {
+    font-weight: bold;
+    font-size: 9px;
+}
 .login > img,
 .login > p,
 .buy > img,
