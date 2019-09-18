@@ -236,9 +236,17 @@
                           <div class="form-group row">
                             <label for="example-text-input" class="col-xs-3 col-form-label">
                                 Categoria IVA
-                            </label>
+                            </label>  
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" name="cod_categoria_iva" [(ngModel)]="DatosUsuario.codCategoriaIva">
+                                <ng-select style="height: 32px; margin: 6px 0px;" 
+                                  [clearable]="true"
+                                  (change)="refreshCategoria($event)"
+                                  ng-model="DatosUsuario.codCategoriaIva" 
+                                  placeholder="Categoria IVA">
+                                  <ng-option *ngFor="let cat of data.reponsable_lista" [value]="cat.codigo">
+                                    {{cat.text}}
+                                  </ng-option>
+                                </ng-select>
                             </div>
                           </div>
                           <div class="form-group row">
@@ -378,10 +386,10 @@
                                     <ng-select style="height: 32px; margin: 6px 0px;" 
                                       [clearable]="true"
                                       (change)="refreshTransporte($event)"
-                                      ng-model="DatosUsuario.datosEnvio.idTransporte" 
+                                      ng-model="DatosUsuario.datosEnvio.codigoTransporte" 
                                       placeholder="Medio de transporte">
-                                      <ng-option *ngFor="let country of transporte_lista" [value]="country.id">
-                                        {{country.text}}
+                                      <ng-option *ngFor="let transporte of transporte_lista" [value]="transporte.id">
+                                        {{transporte.text}}
                                       </ng-option>
                                     </ng-select>
                                 </div>
@@ -430,7 +438,7 @@
                     <div class="row">
                       <h3 class="misFrecuentesTitle">MIS ARTICULOS MAS COMPRADOS</h3>
                     </div>
-                    <div class="row">
+                    <div class="row" *ngIf="comprados?.length > 0">
                       <div class="misFrecuentes">
                         <div class="row misFrecuentesHeader">
                             <div class="col-1"><div class="border">Cantidad</div></div>
@@ -470,7 +478,7 @@
                         </div>
                     </div>
                     </div>
-                    <div class="row descarga">
+                    <div class="row descarga" *ngIf="comprados?.length > 0">
                         <div class="col-md-9 col-xs-12">
                           <p>{{iva_usuario}}</p>
                         </div>
@@ -480,6 +488,9 @@
                             <p>LISTA DE PRECIOS</p>
                           </button>
                         </div>
+                    </div>
+                    <div class="row" *ngIf="!comprados?.length">
+                      <h3 class="misFrecuentesTitle">TODAVIA NO HAY ARTICULOS PARA MOSTRAR</h3>
                     </div>    
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">
@@ -513,7 +524,7 @@
                   </div>
                 <div class="row">
                   <div class="col-md-9 col-xs-12">
-                    <ngb-accordion #acc="ngbAccordion" closeOthers="true">
+                    <ngb-accordion *ngIf="ultimasCompras?.length" #acc="ngbAccordion" closeOthers="true">
                         <ngb-panel *ngFor="let compra of ultimasCompras; let i = index" id="compra{{i}}">
                           <ng-template ngbPanelTitle>
                             <div class="header" style="font-weight: bold;">
@@ -567,6 +578,9 @@
                           </ng-template>
                         </ngb-panel>
                     </ngb-accordion>
+                    <div class="row" *ngIf="!ultimasCompras?.length">
+                        <h3 class="misFrecuentesTitle">TODAVIA NO SE REGISTRAN COMPRAS ANTERIORES PARA MOSTRAR</h3>
+                    </div>
                     <div *ngIf="repetirFlag" class="modal__container" (click)="closeRepetir($event)">
                         <div role="document" class="modal-dialog">
                           <div class="modal-content">
