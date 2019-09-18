@@ -496,7 +496,7 @@ export class AppComponent implements OnInit {
           console.log($error)
         })
       } else {
-        this.auth.get("/cliente/getAll")
+        this.auth.get("cliente/getAll")
         .then(($response)  =>{
           this.data.toggleLoginStatus(true)
           this.loginLoading = false
