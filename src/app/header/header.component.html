@@ -97,12 +97,16 @@
                 <div class="popup__header">
                   <b>ESTADO DE COMPRA</b>
                 </div>
-                <div class="popup__lista">
+                <div style="text-align: center; padding-bottom: 15px;" *ngIf="listFilter(greetMessage)?.length === 0 || !listFilter(greetMessage)">
+                  <h1 style="color: #057aff; font-size: 30px;">Tu carrito está vacío</h1>
+                  <h4 style="margin:auto; width: 90%;">¡Esperamos que encuentres pronto lo que estas buscando!</h4>
+                </div>
+                <div class="popup__lista" *ngIf="listFilter(greetMessage)?.length !== 0">
                   <ul class="list-group">
                   <li *ngFor="let item of listFilter(greetMessage)" class="list-group-item justify-content-between">
                     {{item.descripcion}}
                     <p>${{updatePrecio(item.precio, item.cantidad)}}</p>                    
-                    <input [(ngModel)]="item.cantidad">
+                    <input [(ngModel)]="item.cantidad" type="number">
                     <div class="eliminar">
                       <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
                       <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
@@ -209,7 +213,11 @@
                   <div class="popup__header">
                     <b>ESTADO DE COMPRA</b>
                   </div>
-                  <div class="popup__lista">
+                  <div style="text-align: center; padding-bottom: 15px;" *ngIf="listFilter(greetMessage)?.length === 0 || !listFilter(greetMessage)">
+                    <h1 style="color: #057aff; font-size: 30px;">Tu carrito está vacío</h1>
+                    <h4 style="margin:auto; width: 90%;">¡Esperamos que encuentres pronto lo que estas buscando!</h4>
+                  </div>
+                  <div class="popup__lista" *ngIf="listFilter(greetMessage)?.length !== 0">
                     <ul class="list-group">
                     <li *ngFor="let item of listFilter(greetMessage)" [ngClass]="{'selected': true}" class="list-group-item justify-content-between">
                       {{item.descripcion}}
