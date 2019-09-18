@@ -59,11 +59,16 @@
   display: block;
   margin: 0px 0px 0px 10px;
 }
-.footer__section .whiteButton {
+.footer__section a.whiteButton {
+  margin-top: 10px;
   background: #fff;
   border: 2px solid #fff;
+  text-decoration: none;
+  color: #057aff;
+  padding: 8px 18px;
+  display: block;
 }
-.footer__section .whiteButton:hover {
+.footer__section a.whiteButton:hover {
   background-color: #057aff;
   color: #fff;
 }
