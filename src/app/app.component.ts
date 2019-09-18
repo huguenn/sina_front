@@ -219,7 +219,7 @@ export class AppComponent implements OnInit {
   _changeStep($step){
     if(this._step === 3) {
       if(this.processing.finished){
-        const Cat = this.reponsable_lista.find(element => element.texto === this.contacto.cativa)
+        const Cat = this.data.reponsable_lista.find(element => element.texto === this.contacto.cativa)
         this.contacto["cod_categoria_iva"] = Cat ? Cat.codigo : ""
         try{
           this.no_obligatorios.forEach($item => {
