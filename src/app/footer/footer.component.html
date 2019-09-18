@@ -21,6 +21,9 @@
                     <a class="nav-link" routerLink="{{item.url}}" routerLinkActive="active">{{item.texto}} <span class="sr-only">current</span></a>
                   </li>
                   <li class="nav-item">
+                    <a routerLink="como-comprar" class="nav-link"></a>
+                  </li>
+                  <li class="nav-item">
                     <a style="cursor: pointer" class="nav-link" (click)="registrar()">Nuevo cliente</a>
                   </li>      
                   <li class="nav-item">
@@ -48,16 +51,16 @@
             <div class="col-sm-4 col-xs-12 footer__section">
                 <div class="header">NEWSLETTER / SUSCRIBITE</div>
                 <div class="content">
-                  <input type="text" name="nombre" placeholder="Nombre">
-                  <input type="text" name="email"  placeholder="Email">
-                  <button class="whiteButton">SUSCRIBIRME</button>
+                  <input type="text" name="nombre" placeholder="Nombre" [(ngModel)]="nombre">
+                  <input type="text" name="email"  placeholder="Email" [(ngModel)]="email">
+                  <a class="whiteButton">SUSCRIBIRME</a>
                 </div>
             </div>
             <div class="col-sm-4 col-xs-12 footer__section">
                 <div class="header">SUMATE A SINA</div>
                 <div class="content">
                   <p>Si estás interesado en formar parte de nuestro Staff envianos tus datos y adjuntá tu CV.</p>
-                  <button class="whiteButton">SUMARME</button>
+                  <a class="whiteButton" href="mailto:rrhh@sina.com.ar">SUMARME</a>
                 </div>
             </div>
           </div>
@@ -80,6 +83,9 @@
                 <ul>
                   <li *ngFor="let item of LinkList" class="nav-item">
                     <a class="nav-link" routerLink="{{item.url}}" routerLinkActive="active">{{item.texto}} <span class="sr-only">current</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a routerLink="como-comprar" class="nav-link"></a>
                   </li>
                   <li class="nav-item">
                     <a style="cursor: pointer" class="nav-link" (click)="registrar()">Nuevo cliente</a>
