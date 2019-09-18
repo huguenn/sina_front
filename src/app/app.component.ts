@@ -61,18 +61,6 @@ export class AppComponent implements OnInit {
     "Pequeño contribuyente eventual social", 
     "Sujeto no categorizado"
   ];
-  public reponsable_lista:Array<any> = [
-    { text: 'Consumidor final',  codigo: 'CF'},
-    { text: "Monotributista",  codigo: 'RS'},
-    { text: "Responsable inscripto",  codigo: 'RI'},
-    { text: "Exento",  codigo: 'EX'},
-    { text: "Iva exento operación de exportación",  codigo: 'EXE'},
-    { text: "Monotributista social",  codigo: 'RSS'},
-    { text: "No responsable",  codigo: 'INR'},
-    { text: "Pequeño contribuyente eventual",  codigo: 'PCE'},
-    { text: "Pequeño contribuyente eventual social",  codigo: 'PCS'},
-    { text: "Sujeto no categorizado", codigo: 'SNC'},
-  ];
 
   private cuit:any = "DNI o CUIT";
   private cativa: string = ""
