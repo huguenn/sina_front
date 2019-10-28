@@ -271,12 +271,12 @@ export class AppComponent implements OnInit {
               }
             })      
           } else {
-            console.log(this.contacto)
+            //console.log(this.contacto)
           }
         }
     }else {
       if((this._step === 1)) {
-        console.log(this.validador)
+        //console.log(this.validador)
         this.obligatorios.forEach($campo_obligatorio => {
           if(!this.contacto[$campo_obligatorio]) {
             this.validador[$campo_obligatorio] = true
@@ -400,7 +400,7 @@ export class AppComponent implements OnInit {
       if($response.response["codigo"] !== datos_locales["codigo"]) {
         window.location.reload()
       } else {
-        console.log(datos_locales, $response.response)
+        //console.log(datos_locales, $response.response)
       }
       this.auth.localSet("user",  $response.response as cliente)
       this.data.updateUser($response.response)
@@ -565,7 +565,7 @@ export class AppComponent implements OnInit {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     this.http.post(this.auth.getPath('public/cliente/recuperar_contrasena'),body.toString(), {headers, observe: 'response'})
     .subscribe(($response:any) => {
-      console.log("response", $response.body.response.mensaje)
+      //console.log("response", $response.body.response.mensaje)
       if($response.body.response.mensaje) {
         this.recuperarOk = $response.body.response.mensaje
       }
