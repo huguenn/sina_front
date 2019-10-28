@@ -275,6 +275,10 @@
                           </ng-template>
                       </ngb-panel>
                     </ngb-accordion>
+                    <div class="row" *ngIf="procesando_info_ok || procesando_info_entrega_ok">
+                      <p style="color: #057aff;">{{procesando_info_ok}}</p>
+                      <p style="color: #057aff;">{{procesando_info_entrega_ok}}</p>
+                    </div>
                     <div class="row" *ngIf="!procesando_info_entrega && !procesando_info_entrega">
                       <p style="color: red;">{{procesando_info_error}}</p>
                       <p style="color: red;">{{procesando_info_entrega_error}}</p>
