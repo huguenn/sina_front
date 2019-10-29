@@ -499,7 +499,12 @@ export class AppComponent implements OnInit {
     this.login.error    = false
     this.auth.autorizar($user, $pass)
     .then($response => {
-      if(!this.auth.localGet("login").administrativo) {
+      if(this.auth.localGet("login").primer_login) {
+        this.migrandoStatus = false
+        this.loginLoading = false
+        this.loginStatus = true
+        //this.data.toggleLoginModal2()
+      } else if(!this.auth.localGet("login").administrativo) {
         this.auth.get("cliente/datos")
         .then(($response)  =>{
           this.auth.localSet("user",  $response.response as cliente)
