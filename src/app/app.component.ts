@@ -62,6 +62,13 @@ export class AppComponent implements OnInit {
     "Sujeto no categorizado"
   ];
 
+  public migracion = {
+    email_original: "",
+    email_repetido: "",
+    pass_original: "",
+    pass_repetido: ""
+  }
+
   private cuit:any = "DNI o CUIT";
   private cativa: string = ""
   private _disabledV:string = '0';
@@ -446,6 +453,15 @@ export class AppComponent implements OnInit {
   closeFull2(event) {
     if(event.target.className === "modal__container") {
       this.carritoCancelModal() 
+    }
+  }
+  migrandoStatus: boolean = true
+  migrandoCancelModal() {
+    this.migrandoStatus = true
+  }
+  closeFull3(event) {
+    if(event.target.className === "modal__container") {
+      this.migrandoCancelModal()
     }
   }
   closeFullRepresentar(event) {
