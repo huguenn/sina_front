@@ -336,7 +336,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="card">
+                        <div *ngIf="!login.confirMsg" class="card">
                             <h3 class="card-header">¡Bienvenido! Ingrese los datos de confirmación</h3>
                             <div class="card-block" style="display: flex;">
                                 <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
@@ -354,15 +354,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card" *ngIf="login.confirMsg">
+                            <h3 class="card-header">Mensaje de confirmación</h3>
+                            <div class="card-block">
+                                <p>{{login.confirMsg}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer carrito">
                     <div class="row">
                         <div class="col-xs-12 col-md-6 footer__col">
-                            <button class="actionButton" type="button" (click)="migrandoModal()">CONFIRMAR DATOS</button>
+                            <button *ngIf="!login.confirMsg" class="actionButton" type="button" (click)="migrandoModal()">CONFIRMAR DATOS</button>
                         </div>
                         <div class="col-xs-12 col-md-6 footer__col">
-                            <button type="button" class="whiteButton" (click)="migrandoCancelModal()"> CANCELAR </button>
+                            <button type="button" class="whiteButton" (click)="migrandoCancelModal()"> {{login.confirMsg ? "CERRAR" : "CANCELAR"}} </button>
                         </div>
                     </div>
                 </div>
