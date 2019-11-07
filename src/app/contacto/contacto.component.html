@@ -24,11 +24,13 @@
           <div class="divisor__formulario__mensaje">
               <h2>Dejanos tu mensaje</h2>
               <form action="/">
-                <input class="form-control" type="text" placeholder="Nombre" required>
-                <input class="form-control" type="text" placeholder="E-mail" required>
-                <input class="form-control" type="text" placeholder="Teléfono">
-                <textarea class="form-control" rows="11" placeholder="Mensaje" required></textarea>
-                <input class="actionButton" type="submit" value="ENVIAR"/>
+                <input class="form-control" [(ngModel)]="nombre" name="nombre" type="text" placeholder="Nombre" required>
+                <input class="form-control" [(ngModel)]="email" name="email" type="email" placeholder="E-mail" required>
+                <input class="form-control" [(ngModel)]="telefono" name="telefono" type="number" placeholder="Teléfono">
+                <textarea class="form-control" [(ngModel)]="mensaje" name="mensaje" rows="11" placeholder="Mensaje" required></textarea>
+                <p style="color: #057aff;"*ngIf="respuesta">{{respuesta}}</p>
+                <p style="color: #ea4335" *ngIf="error">{{error}}</p>
+                <input class="actionButton" style="width: 100%;text-align: center;" value="ENVIAR" (click)="enviar()"/>
               </form>
           </div>
         </div>
