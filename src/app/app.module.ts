@@ -43,6 +43,7 @@ import { NosotrosComponent } from './nosotros/nosotros.component';
 import { ContactoComponent } from './contacto/contacto.component';
 import { RecuperarPassComponent } from './recuperar-pass/recuperar-pass.component';
 import { PreguntasFrecuentesComponent } from './preguntas-frecuentes/preguntas-frecuentes.component';
+import { ConfirmarDatosComponent } from './confirmar-datos/confirmar-datos.component';
 
 // router config
 const appRoutes: Routes = [
@@ -57,6 +58,11 @@ const appRoutes: Routes = [
   {
     path: 'confirmacion',
     component: ConfirmacionComponent,
+    data: { id: 1 }
+  },
+  {
+    path: 'confirmar_datos_cliente',
+    component: ConfirmarDatosComponent,
     data: { id: 1 }
   },
   {
@@ -151,7 +157,8 @@ const appRoutes: Routes = [
     NosotrosComponent,
     ContactoComponent,
     RecuperarPassComponent,
-    PreguntasFrecuentesComponent
+    PreguntasFrecuentesComponent,
+    ConfirmarDatosComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
