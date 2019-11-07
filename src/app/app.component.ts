@@ -62,6 +62,13 @@ export class AppComponent implements OnInit {
     "Sujeto no categorizado"
   ];
 
+  public migracion = {
+    email_original: "",
+    email_repetido: "",
+    pass_original: "",
+    pass_repetido: ""
+  }
+
   private cuit:any = "DNI o CUIT";
   private cativa: string = ""
   private _disabledV:string = '0';
@@ -271,12 +278,12 @@ export class AppComponent implements OnInit {
               }
             })      
           } else {
-            console.log(this.contacto)
+            //console.log(this.contacto)
           }
         }
     }else {
       if((this._step === 1)) {
-        console.log(this.validador)
+        //console.log(this.validador)
         this.obligatorios.forEach($campo_obligatorio => {
           if(!this.contacto[$campo_obligatorio]) {
             this.validador[$campo_obligatorio] = true
@@ -400,7 +407,7 @@ export class AppComponent implements OnInit {
       if($response.response["codigo"] !== datos_locales["codigo"]) {
         window.location.reload()
       } else {
-        console.log(datos_locales, $response.response)
+        //console.log(datos_locales, $response.response)
       }
       this.auth.localSet("user",  $response.response as cliente)
       this.data.updateUser($response.response)
@@ -448,6 +455,15 @@ export class AppComponent implements OnInit {
       this.carritoCancelModal() 
     }
   }
+  migrandoStatus: boolean = true
+  migrandoCancelModal() {
+    this.migrandoStatus = true
+  }
+  closeFull3(event) {
+    if(event.target.className === "modal__container") {
+      this.migrandoCancelModal()
+    }
+  }
   closeFullRepresentar(event) {
     if(event.target.className === "modal__container") {
       this.representarCancel()
@@ -483,7 +499,12 @@ export class AppComponent implements OnInit {
     this.login.error    = false
     this.auth.autorizar($user, $pass)
     .then($response => {
-      if(!this.auth.localGet("login").administrativo) {
+      if(this.auth.localGet("login").primer_login) {
+        this.migrandoStatus = false
+        this.loginLoading = false
+        this.loginStatus = true
+        //this.data.toggleLoginModal2()
+      } else if(!this.auth.localGet("login").administrativo) {
         this.auth.get("cliente/datos")
         .then(($response)  =>{
           this.auth.localSet("user",  $response.response as cliente)
@@ -516,6 +537,38 @@ export class AppComponent implements OnInit {
       console.log($catch)
       this.login.errorMsg = ($catch.error.message)
       this.login.error    = true
+    })
+  }
+  migrandoModal() {
+    this.loginLoading = true
+    this.login.error    = false
+    this.login.errorMsg = ""
+    let body = new URLSearchParams()
+
+    body.set("email", this.migracion.email_original)
+    body.set("confirmacion_email", this.migracion.email_repetido)
+    body.set("contrasena", this.migracion.pass_original)
+    body.set("confirmacion_contrasena", this.migracion.pass_repetido)
+
+    this.auth.post('public/cliente/verificacion_datos', body)
+    .then(($response)  =>{
+      this.loginLoading = false
+      console.log($response)
+      /*this.auth.localSet("user",  $response.response as cliente)
+      this.data.toggleLoginStatus(true)
+      this.auth.userTypeUpdate($response.response["numeroListaPrecios"])  */
+    })
+    .catch($error => {
+      this.loginLoading = false     
+      if(typeof $error.error.response === "string") {
+        this.login.errorMsg = $error.error.response
+      } else {
+        Object.keys($error.error.response).forEach(element => {
+          this.login.errorMsg += $error.error.response[element] + " "
+        })
+      }
+      this.login.error    = true
+      console.log($error)
     })
   }
   cerrarRepresentarCuenta() {
@@ -565,7 +618,7 @@ export class AppComponent implements OnInit {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     this.http.post(this.auth.getPath('public/cliente/recuperar_contrasena'),body.toString(), {headers, observe: 'response'})
     .subscribe(($response:any) => {
-      console.log("response", $response.body.response.mensaje)
+      //console.log("response", $response.body.response.mensaje)
       if($response.body.response.mensaje) {
         this.recuperarOk = $response.body.response.mensaje
       }

@@ -70,7 +70,7 @@ export class FilterComponent implements OnInit {
   num_subcategoria = -1
   listado_subcategorias
   mensaje:string
-  private LinkList
+  LinkList: Array<any>
   constructor(
     private menu: MenuService,
     private auth: AutenticacionService, 
@@ -78,6 +78,51 @@ export class FilterComponent implements OnInit {
     private http: HttpClient, 
     private route: ActivatedRoute) { }
   ngOnDestroy() {
+  }
+  updateMenu(id, id2, padre) {
+    this.categoriaPadre = (padre)? padre.split('-').join(' ') : ""
+    this.categoriaHijo = id2 ? id2.split('-').join(' ') : ""
+    if(!id2) {
+      this.categoriaHijo = (window.location.href.indexOf("ofertas") !== -1) ? "OFERTAS" : "NOVEDADES"
+    } else if(id) {
+      this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ", " : "") + this.categoriaHijo + " | Sina", 'Mayorista y distribuidora de '+ this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre +' con entrega a todo el país, hacé tu pedido online!')
+
+      let $categoria, $subcategoria
+      if(this.categoriaHijo && this.categoriaPadre) {
+        $subcategoria  = this.categoriaHijo
+        $categoria     = this.categoriaPadre
+      } else if(this.categoriaHijo) {
+        $categoria     = this.categoriaHijo
+      } 
+      let itemActualMenu, itemActualMenuPadre, itemActualMenuHijo
+      let padreEncabezado = $categoria
+      if(padreEncabezado.includes('   ')){
+        padreEncabezado = padreEncabezado.split('   ').join(' - ')
+      }
+      this.LinkList.forEach(($item:any) => {
+        let incluyeItem = false
+        $item.links.forEach(($item_padre) => {
+          if(padreEncabezado === $item_padre.head.texto) {
+            incluyeItem = true
+            itemActualMenuPadre = $item_padre
+          }
+        })
+        if(incluyeItem) {
+          itemActualMenu = $item
+        }
+      })
+      if($subcategoria && itemActualMenuPadre) {
+        itemActualMenuHijo = itemActualMenuPadre.items.findIndex(($item_hijo:any) => {
+          return $item_hijo.texto.toUpperCase() === $subcategoria
+        })
+      }
+      if(itemActualMenu) {
+        this.id_filtro = itemActualMenu.texto.toUpperCase()
+        this.id_categoria = itemActualMenuPadre.head
+        this.listado_subcategorias = itemActualMenuPadre.items
+        this.num_subcategoria = itemActualMenuHijo
+      }
+    }
   }
   ngOnInit() {
     let num_filtro
@@ -99,65 +144,35 @@ export class FilterComponent implements OnInit {
       }
     })
     //subscribing to data on loginStatus
+    this.route.params.subscribe(params => {
+      if(this.menu.LinkList.length) {
+        this.LinkList = this.menu.LinkList
+        this.updateMenu(params['id2'], params['id'], params['padre'])
+      } else {
+        this.menu.LinkList$.subscribe((LinkList) => {
+          this.LinkList = LinkList
+          this.updateMenu(params['id2'], params['id'], params['padre'])
+        })
+      }
+    })
     this.data.currentLogin.subscribe(
       status => {
         this.loginStatus = status
-        console.log("estatus logo", this.loginStatus)
         this.route.params.subscribe(params => {
           let id = (params['id2'])
           let id2 = (params['id'])
-          this.categoriaPadre = (params['padre'])? params['padre'].split('-').join(' ') : ""
-          this.categoriaHijo = id2 ? id2.split('-').join(' ') : ""
+
           let url_consulta = this.loginStatus ? "": "public/"
           this.mensaje = "Cargando"
           new Promise((resolve, reject) => {
             if(!id2) {
               url_consulta += (window.location.href.indexOf("ofertas") !== -1) ? "producto/listado/ofertas/" :
               (window.location.href.indexOf("novedades") !== -1) ? "producto/listado/novedades" : ""
-              this.categoriaHijo = (window.location.href.indexOf("ofertas") !== -1) ? "OFERTAS" : "NOVEDADES"
               this.auth.get(url_consulta)
                 .then($res => resolve($res.response)).catch($error => reject($error))
             } else if(id) {
-              this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ", " : "") + this.categoriaHijo + " | Sina", 'Mayorista y distribuidora de '+ this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre +' con entrega a todo el país, hacé tu pedido online!')
                 this.auth.get(url_consulta + "producto/categoria/" + (+id))
                   .then($res => {
-                    if(!this.LinkList) {
-                      this.LinkList = this.menu.LinkList
-                    }
-                    let $categoria, $subcategoria
-                    if(this.categoriaHijo && this.categoriaPadre) {
-                      $subcategoria  = this.categoriaHijo
-                      $categoria     = this.categoriaPadre
-                    } else if(this.categoriaHijo) {
-                      $categoria     = this.categoriaHijo
-                    } 
-                    let itemActualMenu, itemActualMenuPadre, itemActualMenuHijo
-                    let padreEncabezado = $categoria
-                    if(padreEncabezado.includes('   ')){
-                      padreEncabezado = padreEncabezado.split('   ').join(' - ')
-                    }
-                    itemActualMenu = this.LinkList.find(($item:any) => {
-                      let incluyeItem = false
-                      $item.links.forEach(($item_padre) => {
-                        if(padreEncabezado === $item_padre.head.texto) {
-                          incluyeItem = true
-                          itemActualMenuPadre = $item_padre
-                        }
-                      })
-                      return incluyeItem
-                    })
-                    if($subcategoria && itemActualMenuPadre) {
-                      itemActualMenuHijo = itemActualMenuPadre.items.findIndex(($item_hijo:any) => {
-                        return $item_hijo.texto === $subcategoria
-                      })
-                    }
-                    if(itemActualMenu) {
-                      this.id_filtro = itemActualMenu.texto.toUpperCase()
-                      console.log(itemActualMenuPadre)
-                      this.id_categoria = itemActualMenuPadre.head
-                      this.listado_subcategorias = itemActualMenuPadre.items
-                      this.num_subcategoria = itemActualMenuHijo
-                    }
                     resolve($res.response)
                   })
                   .catch($error => reject($error))
@@ -179,6 +194,7 @@ export class FilterComponent implements OnInit {
             }
           })
           .catch($error => {
+            console.log("$error", $error)
             this.listaResultados = []
             this.mensaje = "No hay resultado para la consulta"
           })

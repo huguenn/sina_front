@@ -117,6 +117,8 @@ export class CuentaComponent implements OnInit {
   procesando_info_entrega: boolean = false
   procesando_info_error: string = ""
   procesando_info_entrega_error: string = ""
+  procesando_info_ok: string = ""
+  procesando_info_entrega_ok: string = ""
   constructor(
     private _ngZone: NgZone,
     private data:   SharedService,
@@ -346,11 +348,15 @@ export class CuentaComponent implements OnInit {
 
     console.log(body, body_entrega)
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    this.procesando_info_ok = ""
+    this.procesando_info_entrega_ok = ""
+
     this.auth.post('cliente/actualizar',body)
     .then($response => {
       console.log("respuesta", $response)
       this.procesando_info = false
       this.procesando_info_error = ""
+      this.procesando_info_ok = $response.body.response
     })
     .catch(($error) => {
       this.procesando_info = false
@@ -368,6 +374,7 @@ export class CuentaComponent implements OnInit {
       console.log("respuesta", $response)
       this.procesando_info_entrega = false
       this.procesando_info_entrega_error ="";
+      this.procesando_info_entrega_ok = $response.body.response
     })
     .catch(($error) => {
       this.procesando_info_entrega = false
