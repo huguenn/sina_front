@@ -150,7 +150,8 @@ export class AppComponent implements OnInit {
     user: "",
     pass: "",
     error: false,
-    errorMsg: ""
+    errorMsg: "",
+    confirMsg: ""
   }
   ventana
   eventoclick($event){
@@ -553,7 +554,7 @@ export class AppComponent implements OnInit {
     this.auth.post('public/cliente/verificacion_datos', body)
     .then(($response)  =>{
       this.loginLoading = false
-      console.log($response)
+              this.login.confirMsg = ($response.body.response)
       /*this.auth.localSet("user",  $response.response as cliente)
       this.data.toggleLoginStatus(true)
       this.auth.userTypeUpdate($response.response["numeroListaPrecios"])  */
