@@ -324,6 +324,51 @@
                 </div>
             </div>                            
         </div>
+        <div class="modal__container" [ngClass]="{'modalHide': migrandoStatus}" (click)="closeFull3($event)">
+            <div role="document" class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <h4 class="modal-title">Migrando datos</h4>
+                <button aria-label="Close" class="close" type="button" (click)= "migrandoCancelModal()">
+                <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="card">
+                            <h3 class="card-header">¡Bienvenido! Ingrese los datos de confirmación</h3>
+                            <div class="card-block" style="display: flex;">
+                                <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
+                                    <input style="width: 100%; margin-bottom: 10px;" type="email" placeholder="Email" [(ngModel)]="migracion.email_original" name="migracion_email_original">
+                                    <input style="width: 100%;" type="email" placeholder="Repetir Email" [(ngModel)]="migracion.email_repetido" name="migracion_email_repetido">
+                                </div>
+                                <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
+                                    <input style="width: 100%; margin-bottom: 10px;" type="password" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" name="migracion_pass_original">
+                                    <input style="width: 100%;" type="password" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido">
+                                </div>
+                            </div>
+                            <div class="card-block">
+                                <div class="col-xs-12 col-md-12" style="float: none;">
+                                    <p style="color: #F44336; margin-top: 5px;" *ngIf="login.error">{{login.errorMsg || "Error en el logeo"}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer carrito">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button class="actionButton" type="button" (click)="migrandoModal()">CONFIRMAR DATOS</button>
+                        </div>
+                        <div class="col-xs-12 col-md-6 footer__col">
+                            <button type="button" class="whiteButton" (click)="migrandoCancelModal()"> CANCELAR </button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>                            
+        </div>
         <app-footer></app-footer>
     </div>
 </ng-sidebar-container>

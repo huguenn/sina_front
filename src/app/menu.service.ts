@@ -59,7 +59,6 @@ export class MenuService {
   	      array[indexCat].links = categorias
   	    })
   	    this.LinkListSubject.next(this.LinkList)
-        console.log("menu actualizado")
   	  },$error => {
   	    console.log("header error: ", $error)
   	  })  

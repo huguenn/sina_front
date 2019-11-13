@@ -104,9 +104,11 @@ export class AutenticacionService {
     })
     .subscribe($response => {
       this.username = $username
-      this.tokenUpdate($response["token"])
-      this.localSet("login", {username: this.username, token: this.tokenValue, administrativo: $response["administrativo"] === 1 ? true : false})
+      this.localSet("login", {username: this.username, token: this.tokenValue, administrativo: $response["administrativo"] === 1 ? true : false, primer_login: $response["primer_login"]})
+      if(!$response["primer_login"]) {
       this.loginUpdate(true)
+      }
+      this.tokenUpdate($response["token"])
       resolve($response)
     },($error) => {
       reject({error: $error["error"]})
