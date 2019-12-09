@@ -233,6 +233,7 @@ export class AppComponent implements OnInit {
     }
   }
   confirmacion: any = {
+    error: false,
     mensaje: "Se ha enviado un correo a el mail provisto para su confirmación, por favor siga los pasos del mismo.",
     action: "Volver al inicio",
     value: () => {
@@ -240,6 +241,7 @@ export class AppComponent implements OnInit {
     }
   }
   error: any = {
+    error: true,
     mensaje: "",
     action: "Volver al primer paso",
     value: () => {
@@ -291,6 +293,17 @@ export class AppComponent implements OnInit {
               }
             });
             const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+            
+            /*
+            console.log("body.toString()", body.toString())
+            this.processing.stop()     
+            
+            this.response = this.confirmacion
+
+            this.error.reset()
+            this.response = this.error
+            this.response.mensaje = "prueba"*/
+
             this.http.post(this.auth.getPath('public/cliente/nuevo'),body.toString(), {headers, observe: 'response'})
             .subscribe($response => {
               this.processing.stop()            
@@ -306,7 +319,7 @@ export class AppComponent implements OnInit {
               } catch($throw) {
                 console.log($throw)
               }
-            })      
+            })
           } else {
             //console.log(this.contacto)
           }

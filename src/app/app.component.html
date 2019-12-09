@@ -153,8 +153,10 @@
                                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                                 </div>
                                 <div class="response" *ngIf="!processing.right_now">
+                                    <img class="processing__icono" *ngIf="!response.error" src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
+                                    <img class="processing__icono" *ngIf="response.error" src="./assets/images/registro/error.png" alt="Sina" height="50">
                                     <p>{{response.mensaje}}</p>
-                                    <button  *ngIf="response.action == 'Volver al primer paso'" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>            
+                                    <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>            
                                 </div>
                             </div>
                         </div>
