@@ -24,11 +24,13 @@
 .footer__section input{
   padding: 5px 10px;
   width: 100%;
+  color: #000;
   margin: 5px auto;
 }
 .footer__section button{
   margin: 10px 0px;
   width: 100%;
+  cursor: pointer;
   text-align: center;
 }
 .footer__section .header{

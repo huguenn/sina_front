@@ -5,6 +5,10 @@
     padding: 70px;
 }
 
+.deshabilitado {
+    background: #ccc;
+    border: 1px solid #ccc;
+}
 /* TAB */
 .tab__header {
     color: #ffffff;

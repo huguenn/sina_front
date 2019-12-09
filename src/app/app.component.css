@@ -416,6 +416,13 @@
     min-height: 100px;
     margin-bottom: -20px;
 }
+.processing__icono {
+    margin: auto !important;
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    margin-bottom: 15px !important;
+}
 
 
 
