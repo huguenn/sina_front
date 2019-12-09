@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, ElementRef, Pipe, PipeTransform } from '@angular/core';
+import { NgZone, Component, OnInit, ViewChild, ChangeDetectorRef, ElementRef, Pipe, PipeTransform } from '@angular/core';
 import { SharedService, cliente, Dato } from "../app/shared.service";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { INgxMyDpOptions, IMyDateModel } from 'ngx-mydatepicker';
@@ -6,6 +6,7 @@ import { AutenticacionService } from "./autenticacion.service"
 import { DatabaseService } from "./database.service";
 import { Router, NavigationEnd } from '@angular/router';
 import { MenuService } from './menu.service';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,10 @@ import { MenuService } from './menu.service';
 })
 export class AppComponent implements OnInit {
   @ViewChild('ventana') el:ElementRef;
+  @ViewChild('responsable') ngSelectResponsable: NgSelectComponent
+  @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent
+  @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent
+
   public recuperarClave: boolean
   public recuperarOk: string
   public recuperarError: string
@@ -74,36 +79,50 @@ export class AppComponent implements OnInit {
   private _disabledV:string = '0';
   private disabled:boolean = false;
 
-  cat_selected = []
-  domicilio_provincia = []
-  envio_provincia = []
+  cat_selected: any
+  domicilio_provincia = ""
+  envio_provincia = ""
+
+
+  public seleccionar($herramienta, $codigo) {
+    let item = $herramienta.itemsList._items.find($item => $item.value === $codigo)
+    console.log("items", this.cat_selected, this.domicilio_provincia,  item)
+    $herramienta.select(item)
+    //console.log(cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
+    //this._ngZone.run(() => {this.cat_selected = cat_selected.codigo});
+  }
 
   public refreshCUIT(value:any):void {
-    this.cativa = value.text
-    this.cat_selected = [{id: value.id, text: value.text}]
-    if(value.text ==="Consumidor final"){
-      this.cuit = "DNI"
+    if(value) {
+      const responsable = this.data.reponsable_lista.find(($item) => $item.codigo === value)
+      console.log("responsable", value, responsable)
+      this.cativa = responsable.text
+      this.cat_selected = responsable.codigo
+      if(value ==="Consumidor final"){
+        this.cuit = "DNI"
+      }
+      else{
+        this.cuit = "CUIT"
+      }  
     }
-    else{
-      this.cuit = "CUIT"
-    }  
   }
   public deleteCUIT (){
-    this.cat_selected = []
+    this.cat_selected = undefined
   }
   public refreshProvincia(value:any):void {
-    this.domicilio_provincia = [{id: value.id, text: value.text}]
-    this.contacto.domicilio_provincia = value.text
+    console.log(value)
+    this.domicilio_provincia = value
+    this.contacto.domicilio_provincia = value
   }
   public deleteProvincia (){
-    this.domicilio_provincia = []
+    this.domicilio_provincia = ""
   }
   public refreshProvincia2(value:any):void {
-    this.envio_provincia = [{id: value.id, text: value.text}]
-    this.contacto.envio_domicilio_provincia = value.text
+    this.envio_provincia = value
+    this.contacto.envio_domicilio_provincia = value
   }
   public deleteProvincia2 (){
-    this.envio_provincia = []
+    this.envio_provincia = ""
   }
 
   processing = {
@@ -199,6 +218,16 @@ export class AppComponent implements OnInit {
   _anteriorStep(){
     if(this._step > 1){
       this._step --
+      if(this._step === 1) {
+        setTimeout(() => {
+          this.seleccionar(this.ngSelectResponsable, this.cat_selected)
+          this.seleccionar(this.ngSelectProvincia, this.domicilio_provincia)
+        }, 500)
+      } else if(this._step === 2) {
+        setTimeout(() => {
+          this.seleccionar(this.ngSelectProvincia2, this.envio_provincia)
+        }, 500)
+      }
     }else{
       this.registrarStatus = false
     }
@@ -227,7 +256,7 @@ export class AppComponent implements OnInit {
   _changeStep($step){
     if(this._step === 3) {
       if(this.processing.finished){
-        const Cat = this.data.reponsable_lista.find(element => element.texto === this.contacto.cativa)
+        const Cat = this.data.reponsable_lista.find(element => element.text === this.contacto.cativa)
         this.contacto["cod_categoria_iva"] = Cat ? Cat.codigo : ""
         try{
           this.no_obligatorios.forEach($item => {
@@ -321,6 +350,7 @@ export class AppComponent implements OnInit {
     this._opened = !this._opened;
   }
   constructor(
+    private _ngZone: NgZone,
     private menu: MenuService,
     private cdRef:ChangeDetectorRef, 
     private data: SharedService, 

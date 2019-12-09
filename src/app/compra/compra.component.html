@@ -527,7 +527,7 @@
                           <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
                       </div>  
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
-                        <button class="actionButton" (click)="completarCompra()">COMPLETAR COMPRA</button>
+                        <button class="actionButton" [ngClass]="{'deshabilitado': carritoLoading}" (click)="completarCompra()">COMPLETAR COMPRA</button>
                         <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}"> 
                           <p> {{completarCompraTexto}}</p>
                         </div>

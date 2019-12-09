@@ -285,30 +285,33 @@ export class CompraComponent implements OnInit {
   pedidoCorrecto = true
   completarCompraLink = ""
   public completarCompra() {
-    this.carritoLoading = true
-    this.completarCompraTexto = "Procesando pedido..."
-    let body = new URLSearchParams();
-    body.set("observaciones", this.observaciones)
-    body.set("total", this.pedido? this.updateTotal(this.carrito.subtotal): "100.01")
-    this.auth.post('pedido/confirmar', body)
-    .then($confirmado => {
-      this.completarCompraTexto = $confirmado.body.response.message
-      this.completarCompraLink = $confirmado.body.response.urlPdf
-      setTimeout(()=>{
-        this.transaccion.cambio(2)
-        this.data.cleanCarrito()
+    if(!this.carritoLoading) {
+      this.carritoLoading = true
+      this.completarCompraTexto = "Procesando pedido..."
+      let body = new URLSearchParams();
+      body.set("observaciones", this.observaciones)
+      body.set("total", this.pedido? this.updateTotal(this.carrito.subtotal): "100.01")
+      this.auth.post('pedido/confirmar', body)
+      .then($confirmado => {
+        this.completarCompraTexto = $confirmado.body.response.message
+        this.completarCompraLink = $confirmado.body.response.urlPdf
+        setTimeout(()=>{
+          this.transaccion.cambio(2)
+          this.data.cleanCarrito()
+          this.carritoLoading = false  
+        }, 1500)
+      })
+      .catch($error => {
         this.carritoLoading = false  
-      }, 1500)
-    })
-    .catch($error => {
-      try {
-        this.pedidoCorrecto = false
-        this.completarCompraTexto = $error.error.response.message
-      }catch(error){
-        console.log(error, $error, "$error.error.response.message")
-      }
-      console.log($error)
-    })
+        try {
+          this.pedidoCorrecto = false
+          this.completarCompraTexto = $error.error.response.message
+        }catch(error){
+          console.log(error, $error, "$error.error.response.message")
+        }
+        console.log($error)
+      })
+    }
   }
 
   ngOnInit() {
