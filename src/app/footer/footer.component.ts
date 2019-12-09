@@ -31,10 +31,28 @@ export class FooterComponent implements OnInit {
   SocialList = SOCIAL
   nombre: String
   email: String
-
+  suscripcion: string = "SUSCRIBIRME"
   constructor(private data: SharedService) { }
   registrar() {
     this.data.toggleLoginModal()
+  }
+  suscribir () {
+    this.suscripcion = "ENVIANDO."
+    setTimeout(() => {
+    this.suscripcion = "ENVIANDO.."
+    setTimeout(() => {
+    this.suscripcion = "ENVIANDO..."
+    setTimeout(() => {
+    this.suscripcion = "ENVIADO"
+    setTimeout(() => {
+      this.email = ""
+      this.nombre = ""
+      this.suscripcion = "SUSCRIBIRME"
+    }, 500)          
+    }, 500) 
+    }, 500) 
+    }, 1000)
+    
   }
   ngOnInit() {
   }

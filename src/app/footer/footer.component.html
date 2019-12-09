@@ -56,7 +56,7 @@
                 <div class="content">
                   <input type="text" name="nombre" placeholder="Nombre" [(ngModel)]="nombre">
                   <input type="text" name="email"  placeholder="Email" [(ngModel)]="email">
-                  <a class="whiteButton">SUSCRIBIRME</a>
+                  <a class="whiteButton" (click)="suscribir()">{{suscripcion}}</a>
                 </div>
             </div>
             <div class="col-sm-4 col-xs-12 footer__section">
