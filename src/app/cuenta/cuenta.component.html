@@ -13,7 +13,7 @@
         <div class="tab__header">
           <p>Bienvenido {{DatosUsuario.nombreFantasia}}</p>
           <ul>
-            <li [class.active]="transaccion.check(i)" 
+            <li [class.active]="transaccion.check(i)"
               (click)="transaccion.cambio(i)"
               *ngFor="let item of ListaItems; let i = index"
               ><i class="fa fa-{{item.icon}}" aria-hidden="true"></i>
@@ -23,7 +23,7 @@
         </div>
           <div class="tab__content">
             <!-- Mi cuenta Tab -->
-            <div class="tab__item" *ngIf="transaccion.paso === 0">              
+            <div class="tab__item" *ngIf="transaccion.paso === 0">
               <div class="content">
                   <div class="row tab__item__header">
                     <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
@@ -67,11 +67,11 @@
                         </ul>
                       </div>
                     </div>
-                  </div>              
+                  </div>
                 </div>
             </div>
             <!-- Mis Datos Tab -->
-            <div class="tab__item" *ngIf="transaccion.paso === 1">              
+            <div class="tab__item" *ngIf="transaccion.paso === 1">
               <div class="content">
                 <div class="row tab__item__header">
                     <p>{{DatosUsuario.codigo ? "Tu número de Cliente es " + this.DatosUsuario.codigo : "El cliente no fue "}}</p>
@@ -114,12 +114,12 @@
                           <div class="form-group row">
                             <label for="example-text-input" class="col-xs-3 col-form-label">
                                 Categoria IVA
-                            </label>  
+                            </label>
                             <div class="col-xs-9">
-                                <ng-select style="height: 32px; margin: 6px 0px;" 
+                                <ng-select style="height: 32px; margin: 6px 0px;"
                                   [clearable]="true"
                                   (change)="refreshCategoria($event)"
-                                  ng-model="DatosUsuario.codCategoriaIva" 
+                                  ng-model="DatosUsuario.codCategoriaIva"
                                   placeholder="Categoria IVA">
                                   <ng-option *ngFor="let cat of data.reponsable_lista" [value]="cat.codigo">
                                     {{cat.text}}
@@ -259,12 +259,12 @@
                               <div class="form-group row">
                                 <label for="example-text-input" class="col-xs-3 col-form-label">
                                     Transporte
-                                </label>  
+                                </label>
                                 <div class="col-xs-9">
-                                    <ng-select style="height: 32px; margin: 6px 0px;" 
+                                    <ng-select style="height: 32px; margin: 6px 0px;"
                                       [clearable]="true"
                                       (change)="refreshTransporte($event)"
-                                      ng-model="DatosUsuario.datosEnvio.codigoTransporte" 
+                                      ng-model="DatosUsuario.datosEnvio.codigoTransporte"
                                       placeholder="Medio de transporte">
                                       <ng-option *ngFor="let transporte of transporte_lista" [value]="transporte.id">
                                         {{transporte.text}}
@@ -304,17 +304,17 @@
                       </ul>
                     </div>
                   </div>
-                </div>             
+                </div>
               </div>
             </div>
             <!-- Mis Frecuentes Tab -->
-            <div class="tab__item" *ngIf="transaccion.paso === 2">              
+            <div class="tab__item" *ngIf="transaccion.paso === 2">
               <div class="content">
                 <div class="row tab__item__header">
                     <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
                   </div>
-  
+
                 <div class="row">
                   <div class="col-md-9 col-xs-12">
                     <div class="row">
@@ -341,7 +341,7 @@
                                         <span *ngIf="item.cantidad < item.cantMinima"> * La cantidad mínima es {{item.cantMinima}} unidades.</span>
                                     </div>
                                 </div>
-                          </div>          
+                          </div>
                           </div>
                           <div class="col-2">
                             <p class="misFrecuentesDescripcion">{{item.titulo}}</p>
@@ -373,7 +373,7 @@
                     </div>
                     <div class="row" *ngIf="!comprados?.length">
                       <h3 class="misFrecuentesTitle">TODAVIA NO HAY ARTICULOS PARA MOSTRAR</h3>
-                    </div>    
+                    </div>
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">
                     <div class="side">
@@ -394,11 +394,11 @@
                       </ul>
                     </div>
                   </div>
-                </div>           
+                </div>
               </div>
-            </div>  
+            </div>
             <!-- Mi ultima compra Tab -->
-            <div class="tab__item ultimaCompra" *ngIf="transaccion.paso === 3">              
+            <div class="tab__item ultimaCompra" *ngIf="transaccion.paso === 3">
               <div class="content">
                 <div class="row tab__item__header">
                     <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
@@ -442,9 +442,10 @@
                                   <div class="row misFrecuentesTotal">
                                     <div class="col-2">
                                       <button class="actionButton" (click)="repetirPregunta(compra)" style="width: 50%;">REPETIR COMPRA</button>
-                                      <a href="#">
-                                      <button class="whiteButton" style="width: 150px; padding: 5px 25px;" *ngIf="compra.urlPdf">
-                                        VER SOLICITUD  
+                                      <!--<a href="#"> -->
+                                      <a ng-href="{{ compra.urlPdf }}" *ngIf="compra.urlPdf">
+                                      <button class="whiteButton" style="width: 150px; padding: 5px 25px;">
+                                        VER SOLICITUD
                                       </button>
                                       </a>
                                       </div>
@@ -456,7 +457,7 @@
                                       <p style="margin-top: 10px;font-size: 20px;font-weight: bold;">${{formatMoney(compra.total)}}</p>
                                     </div>
                                   </div>
-                              </div>          
+                              </div>
                           </ng-template>
                         </ngb-panel>
                     </ngb-accordion>
@@ -480,7 +481,7 @@
                               <button class="whiteButton" type="button" (click)= "repetirCancelar()" >CANCELAR</button>
                             </div>
                           </div>
-                          </div>                            
+                          </div>
                     </div>
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">
@@ -502,11 +503,11 @@
                       </ul>
                     </div>
                   </div>
-                </div>             
+                </div>
               </div>
-            </div>  
+            </div>
             <!-- Cerrar sesion Tab -->
-            <div class="tab__item" *ngIf="transaccion.paso === 4">              
+            <div class="tab__item" *ngIf="transaccion.paso === 4">
                 <div class="content">
                   <div class="row tab__item__header">
                     <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
@@ -531,7 +532,7 @@
                                 <button class="whiteButton" type="button" (click)= "transaccion.cambio(0)" >CANCELAR</button>
                               </div>
                             </div>
-                            </div>                            
+                            </div>
                       </div>
                     </div>
                     <div class="col-md-3  col-xs-12 columnaSide">
@@ -553,9 +554,9 @@
                         </ul>
                       </div>
                     </div>
-                  </div>           
+                  </div>
                 </div>
-              </div>    
+              </div>
           </div>
         </div>
     </div>

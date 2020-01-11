@@ -2,7 +2,7 @@
     .container {
       width: 1400px;
     }
-  }  
+  }
 
 
 /* You can add global styles to this file, and also import other style files */
@@ -11,15 +11,15 @@
 }
 .filter__item .card div:nth-child(1){
     padding: 5px 10px;
-}    
+}
 .filter__item .card div:nth-child(1) a{
-    font-size: 20px;
-}    
+    font-size: 15px;
+}
 .filter__item .card div:nth-child(2) a{
     font-size: 18px;
     color: #000000;
     margin: 0px calc(50% - 30px);
-}    
+}
 
 
 ngx-gallery{
@@ -31,7 +31,7 @@ ngx-gallery-image{
     z-index: 0;
 }
 .ngx-gallery-thumbnail{
-    border: 2px solid #f8f8f8;    
+    border: 2px solid #f8f8f8;
 }
 
 
@@ -47,21 +47,21 @@ ngb-accordion .card {
     background-color: #ffffff;
 }
 ngb-accordion ngb-accordion .card-header {
-    border: 1px solid #ccccccc2;   
+    border: 1px solid #ccccccc2;
     background-color: #ffffff;
     font-weight: bold;
-}    
+}
 ngb-accordion ngb-accordion .card {
     margin: 15px;
-    border: none;    
+    border: none;
 }
 ngb-accordion ngb-accordion .card-body {
     margin: 15px;
     color: #9d9d9d;
-}    
+}
 ngb-accordion .card:nth-child(1) {
     margin-top: 15px;
-}    
+}
 ngb-accordion .card-header a {
     color: #000000;
     text-decoration: none;
@@ -69,16 +69,16 @@ ngb-accordion .card-header a {
 ngb-accordion .card-header span {
     position: absolute;
     right: 15px;
-}    
+}
 ngb-accordion .card .row {
     margin: 15px;
-}    
+}
 .ultimaCompra ngb-accordion .card {
     margin-top: 15px;
 }
 .form-group img {
     width: 100%;
-    margin-top: 7px;    
+    margin-top: 7px;
 }
 .form-group > label {
     margin-top: 5px;
@@ -148,7 +148,7 @@ ngb-accordion .card .row {
 }
 .message * {
     color: #ffffff;
-}    
+}
 .message .alert-success {
     background-color: #00c973;
     color: #ffffff;
@@ -177,10 +177,10 @@ ngb-accordion .card .row {
     background: #f1f1f1;
 }
 .imageSelector .container {
-    display: flex; 
-    justify-content: center; 
-    width: 100%; 
-    position: absolute; 
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: absolute;
     bottom: 10px;
 }
 .imageContainer {
@@ -228,7 +228,7 @@ ng-sidebar-container {
     .message .alert-success {
         width: 100%;
         margin: 10px 0px;
-    }        
+    }
     .carouselContainer{
         height: 30vh;
         max-height: 30vh;
@@ -245,7 +245,7 @@ ng-sidebar-container {
 .actionButton {
     background: #00c973;
     border: 2px solid #00c973;
-    padding: 5px 25px;
+    padding: 5px 10px;
     border-radius: 5px;
     color: #fff;
     margin: 5px 0px;
@@ -260,7 +260,7 @@ ng-sidebar-container {
 .whiteButton {
     background: transparent;
     border: 2px solid #0579ff;
-    padding: 8px 20px;
+    padding: 8px 15px;
     border-radius: 5px;
     color: #0579ff;
     margin: 5px 0px;
@@ -307,7 +307,7 @@ ng-sidebar-container {
 }
 .resultado__head > .img{
     height: 100%;
-    width: calc(100% - 10px);    
+    width: calc(100% - 10px);
     position: absolute;
     z-index: -1;
     background-position: center;
@@ -447,7 +447,7 @@ ng-sidebar-container {
       transform: translate(19px, 0);
     }
   }
-  
+
 
   .pull-left {
     overflow-x: hidden;
@@ -457,7 +457,7 @@ ng-sidebar-container {
 
 /* validacion */
 
-.noValidado, 
+.noValidado,
 .noValidado span {
     background: #F44336;
     color: #fff;

@@ -42,7 +42,7 @@
         margin-top: -10px;
 }
 .resultado__item img{
-    width: 80%;    
+    width: 80%;
     margin-left:    10%;
     margin-bottom:  10px;
     margin-top:     40px;
@@ -85,8 +85,8 @@
     }
 .resultado__item h3{
     font-size: 16px;
-    font-weight: bold;    
-    margin: 0px 10px;       
+    font-weight: bold;
+    margin: 0px 10px;
 }
 .resultado__item .oferta{
     color: #4579ff;
@@ -106,7 +106,7 @@
     margin: 0;
     padding-top: 15px;
     border-bottom: #057aff solid 2px;
-    width: 85%;
+    width: 100%;
     font-weight: bold;
 }
 .filter__top > .col {
@@ -129,7 +129,7 @@
     float: right;
 }
 .filter__top .dropdown-item{
-    border: none ;    
+    border: none ;
     background-color: #FFF;
 }
 .filter__top .btn-outline-primary{
@@ -142,7 +142,7 @@
     left: 403px;
     background-color: #FFF;
 }
-.filter__top .dropdown-menu.show *{    
+.filter__top .dropdown-menu.show *{
     width: 100%;
 }
 .selector .header{
@@ -179,8 +179,8 @@
 }
 .selector .content .item{
     margin: 5px 0px;
-    padding: 4px 10px;  
-    cursor: pointer;  
+    padding: 4px 10px;
+    cursor: pointer;
 }
 .selector .content .item:hover{
     background-color: #f3f3f3;
@@ -238,7 +238,7 @@
     margin-bottom: 10px;
 }
 @media (max-width: 968px) {
-    .selector .content .item{ 
+    .selector .content .item{
         padding: 5px;
     }
     .containerSidebarCategorias {

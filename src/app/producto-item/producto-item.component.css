@@ -41,7 +41,7 @@ p {
 .precio {
     display: flex;
     justify-content: start;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: baseline;
 }
 .precio > span{
@@ -74,8 +74,8 @@ p {
     }
 h3{
     font-size: 16px;
-    font-weight: bold;    
-    margin: 0px 10px;       
+    font-weight: bold;
+    margin: 0px 10px;
 }
 .oferta{
     color: #4579ff;
@@ -86,7 +86,7 @@ h3{
 .cantidad {
     display: flex;
     justify-content: space-between;
-    padding: 10px 30px;
+    padding: 10px 10px;
     padding-top: 0;
     align-items: center;
 }
@@ -151,14 +151,14 @@ h3{
         height: 25px;
         width: 25px;
         margin: 0;
-    
-    }    
+
+    }
     .precio > span{
         margin-top: 0px;
         margin-bottom: 10px;
         font-size: 10px;
         float: left;
-    }   
+    }
     .resultado__item__comprar button {
         width: calc(100% - 20px);
         margin: 0px 10px;

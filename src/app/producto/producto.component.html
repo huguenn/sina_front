@@ -46,7 +46,7 @@
       </div-->
       <!--div class="row titled">
           <p>CONDICION</p>
-          <p style="margin-top: -10px;">{{producto.condicion}}</p>  
+          <p style="margin-top: -10px;">{{producto.condicion}}</p>
       </div-->
       <div class="precio__container">
         <div class="row producto__precio" *ngIf="loginStatus === true">
@@ -75,15 +75,15 @@
                     <span *ngIf="producto.cantidad < producto['cantMinima']"> * La cantidad es menor al mínimo.</span>
                 </div>
               </div>
-            </div>  
+            </div>
           </div>
         </div>
-        
+
       </div>
       <div class="button">
           <button class="agregar actionButton" *ngIf="producto.comprado == false" (click)="newMessage(producto)">AGREGAR AL CARRITO</button>
-          <button class="agregar actionButton greeButton" *ngIf="producto.comprado == true" (click)="removeMessage(producto)">AGREGADO</button>
-      </div> 
+          <button class="agregar actionButton btn-outline-success" *ngIf="producto.comprado == true" (click)="removeMessage(producto)">AGREGADO</button>
+      </div>
     </div>
     <!--div class="col-xs-2 producto__compartir">
       <div class="row">
@@ -92,15 +92,15 @@
       <div class="row">
         <div class="item">
           <i class="fa fa-share-alt" aria-hidden="true"></i>
-          <p>Publicar en Facebook</p>          
+          <p>Publicar en Facebook</p>
         </div>
         <div class="item">
           <i class="fa fa-share" aria-hidden="true"></i>
-          <p>Enviar a un amigo</p>          
+          <p>Enviar a un amigo</p>
         </div>
         <div class="item">
           <i class="fa fa-print" aria-hidden="true"></i>
-          <p>Imprimir</p>          
+          <p>Imprimir</p>
         </div>
       </div>
     </div-->

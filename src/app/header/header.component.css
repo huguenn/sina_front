@@ -1,6 +1,6 @@
 .header{
     background-color: #057aff;
-    width: 100%;    
+    width: 100%;
     border-bottom: 4px solid #00c973;
     position: relative;
 }
@@ -31,7 +31,7 @@
     margin: 0;
     cursor: default;
 }
-    
+
 .navbar li > a:hover p,
 .navbar li > a:focus p{
         color: #057aff;
@@ -55,16 +55,16 @@
 /* header__top */
 .header__top{
     display: flex;
-    padding: 10px;
+    padding: 8px;
     justify-content: space-between;
     align-items: flex-end;
     max-height: 100px;
     transition: 1s ease max-height;
     padding-top: 0px;
-}  
+}
 .header__top .buscador p{
     font-size: 12px;
-}    
+}
 .header__top .buscador input{
     border-radius: 0px;
     min-width: 250px;
@@ -72,7 +72,7 @@
 }
 .header__top .buscador input:focus {
 }
-.navbar-fixed .buscador button,    
+.navbar-fixed .buscador button,
 .header__top .buscador button{
     height: 34px;
     margin-top: 0px;
@@ -127,9 +127,9 @@
 .navbar-fixed .controles *{
     border-radius: 0px;
     margin-bottom: 5px;
-}    
+}
 .navbar-fixed .controles input{
-    width: calc(100% - 46px);    
+    width: calc(100% - 46px);
     display: inline-block;
 }
 .navbar-fixed .controles button{
@@ -145,7 +145,7 @@
 .navbar-fixed ul > li > a:hover,
 .navbar-fixed ul > li > a:focus{
         background-color: #ffffff;
-}   
+}
 .right__form .buy span {
     top:    -4px;
     right:  -4px;
@@ -161,7 +161,7 @@
 .navbar-fixed .right__form .login *{
     display: inline-block;
     vertical-align: middle;
-}    
+}
 .header--fixed{
     position: sticky;
     z-index: 10;
@@ -171,7 +171,7 @@
 /* navbar-fixed FIXED */
 .header--fixed .navbar-fixed ul > li{
     margin-top: 0px;
-} 
+}
 .header--fixed .navbar-fixed .navbar-brand,
 .header--fixed .navbar-fixed .buscador__container{
     display: block;
@@ -203,8 +203,8 @@
 }
 .header__filter--hover{
     opacity: 1;
-    z-index: 2;  
-    display: block;  
+    z-index: 2;
+    display: block;
 }
 .header__filter .container{
     background-color: #ffffff;
@@ -230,7 +230,7 @@
     margin-bottom: 0px;
 }
 .header__filter__top > div > div{
-    border-bottom: 1px solid #ccc;    
+    border-bottom: 1px solid #ccc;
 }
 .header__filter__top .title{
     font-size: 30px;
@@ -256,7 +256,7 @@
 .header__filter__return a{
     color: #ffffff;
     font-size: 18px;
-}    
+}
 .header__filter__content{
     margin: 0 10px;
 }
@@ -339,7 +339,7 @@
 .popup .popup__header{
     width: 100%;
     padding: 10px 20px;
-}    
+}
 .popup .popup__header * {
     color: #000;
 }
@@ -360,7 +360,7 @@
     left: -120px;
 }
 .buy .popup{
-    width: 400px; 
+    width: 400px;
     right: 150px;
     max-width: calc(100vw - 20px);
 }
@@ -372,7 +372,7 @@
     overflow: hidden;
     white-space: nowrap;
     font-size: 12px;
-}    
+}
 .buy .popup .popup__lista li:focus{
     background: red;
 }
@@ -407,7 +407,7 @@
     top: 3px;
     left: 15px;
     right: auto;
-}    
+}
 .buy .popup .popup__lista p{
     width: auto;
     font-weight: bold;
@@ -415,7 +415,7 @@
     top: 6px;
     left: 73%;
     position: absolute;
-}    
+}
 
 .login .popup ul{
     width: 100%;
@@ -471,18 +471,18 @@
     }
     .navbar-fixed {
         padding-top: 7px;
-        margin-top: 0px;    
+        margin-top: 0px;
         max-height: 50px;
         align-items: center;
-    }    
+    }
     .navbar-nav {
         display: none;
     }
-    .navbar-fixed .buscador button, 
-    .header__top .buscador button, 
+    .navbar-fixed .buscador button,
+    .header__top .buscador button,
     .header .navbar-fixed .navbar-nav img:nth-child(2){
         display: none !important;
-    }     
+    }
 
     .navbar-fixed {
         padding: 0px;
@@ -491,7 +491,7 @@
         border: none;
         margin: 0;
         padding: 8px 0px;
-    }    
+    }
     .header .navbar-fixed .navbar-nav {
         width: 100vw !important;
         margin-left: calc(-8.33vw - 30px) !important;
@@ -508,7 +508,7 @@
         position: relative;
         top: 7px;
         left: auto;
-    }   
+    }
     .header--fixed {
         position: fixed;
     }
@@ -516,7 +516,7 @@
     .header--fixed .menu {
         font-size: 25px;
         margin-left: -8px;
-    } 
+    }
     .header__top .buscador {
         position: fixed;
         top: 0;
@@ -531,14 +531,14 @@
         z-index: 100;
         display: none;
     }
-   
+
     .header--fixed .navbar-fixed .col-xs-5 {
         width: 0px;
         margin: -5px;
         margin-top: 20px;
         padding: 0px;
         display: block;
-    }     
+    }
     .header.header--fixed,
     .header__top {
         padding: 0px;
@@ -550,7 +550,7 @@
         width: 100%;
         min-width: auto;
         border-radius: 15px;
-    }    
+    }
     .navbar-fixed .buscador i,
     .header__top  .buscador i {
         position: absolute;
@@ -560,14 +560,14 @@
         display: block;
         font-size: 16px;
         color: #333333;
-    }    
+    }
     .navbar-fixed .buscador i {
         top:   8px;
         right: 16px;
-    }    
+    }
     .header__top .buscador > p {
         display: none;
-    }        
+    }
     .header--fixed .controles {
         position: relative;
     }
@@ -578,7 +578,7 @@
     .navbar-fixed ul > li{
         margin: 0px 0px;
         border-bottom: 1px solid #fff;
-    }         
+    }
     .navbar-fixed ul > li > a {
         padding-top: 0px !important;
         text-align: left;
@@ -592,15 +592,15 @@
         display: none;
     }
     .top {
-        margin-top: 0px;        
+        margin-top: 0px;
     }
     .menuSidebar {
         height: 0px;
         z-index: 1;
         display: flex;
         flex-direction: column;
-        padding-bottom: 0px !important;     
-        display: none;   
+        padding-bottom: 0px !important;
+        display: none;
     }
     .menuSidebar .col-xs-5{
         display: none !important;
@@ -622,7 +622,7 @@
     .header__filter__content .column {
         margin-bottom: 0px;
         border-bottom: none;
-    } 
+    }
     .header__filter .container {
         border-radius: 0px;
         padding-bottom: 0px;
@@ -638,22 +638,22 @@
     .header__filter__content .column{
         min-height: 130px
     }
-    
+
     /* Display Block */
-    .headItem, 
+    .headItem,
     .menu,
     .header__filter__return {
         display: block;
-    }    
+    }
 
     /* Display None */
-    .header__top .navbar-brand,    
-    .header--fixed .navbar-fixed .navbar-brand,    
-    .navbar-fixed .right__form .login, 
-    .navbar-fixed .right__form .login p, 
-    .header__top .right__form .login, 
-    .header__top  .right__form .login p, 
-    .header__filter--hover img, 
+    .header__top .navbar-brand,
+    .header--fixed .navbar-fixed .navbar-brand,
+    .navbar-fixed .right__form .login,
+    .navbar-fixed .right__form .login p,
+    .header__top .right__form .login,
+    .header__top  .right__form .login p,
+    .header__filter--hover img,
     .header__filter__top {
         display: none;
     }
@@ -664,7 +664,7 @@
     .navbar-fixed .login > p,
     .header__top .login > p {
         display: none !important;
-    }  
+    }
     .buscador {
         display: none;
     }
@@ -684,8 +684,8 @@
         justify-content: space-between;
     }
     .onSearchFocus .controles input {
-        width: 100%;     
-        margin: 10px;   
+        width: 100%;
+        margin: 10px;
     }
     .onSearchFocus .controles .backButton {
         display: flex !important;
@@ -777,7 +777,7 @@
     .right__form {
         max-width: 120px;
     }
- 
+
 }
 @media screen and (min-width: 1430px){
     .right__form {
@@ -789,7 +789,7 @@
     .right__form {
         max-width: 200px;
     }
-    .navbar-fixed .login p {        
+    .navbar-fixed .login p {
         width: 110px;
     }
 }
