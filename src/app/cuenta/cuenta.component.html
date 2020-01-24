@@ -443,9 +443,9 @@
                                     <div class="col-2">
                                       <button class="actionButton" (click)="repetirPregunta(compra)" style="width: 50%;">REPETIR COMPRA</button>
                                       <!--<a href="#"> -->
-                                      <a ng-href="{{ compra.urlPdf }}" *ngIf="compra.urlPdf">
+                                      <a target="_blank" [href]="compra.urlPdf" *ngIf="compra.urlPdf">
                                       <button class="whiteButton" style="width: 150px; padding: 5px 25px;">
-                                        VER SOLICITUD
+                                        VER PEDIDO
                                       </button>
                                       </a>
                                       </div>

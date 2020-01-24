@@ -4,6 +4,24 @@
     color: #177cfb;
     font-weight: bold;
 }
+
+.ng-dropdown-panel .ng-dropdown-panel-items{
+    width: fit-content !important;
+}
+
+
+.custom__select {
+    height: 32px !important;
+    margin: 6px 0px !important;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    color: gray;
+}
+ 
+.custom__select--option {
+    width: 100px !important;
+    color: gray;
+} 
 .modal__container .modal__texto img {
     width: 100%;
     position: relative;

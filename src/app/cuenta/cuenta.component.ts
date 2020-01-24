@@ -138,7 +138,8 @@ export class CuentaComponent implements OnInit {
     this.auth.get("pedido/getUltimos")
     .then(($response)  =>{
       if($response.response) {
-        this.ultimasCompras = $response.response
+        this.ultimasCompras = $response.response;
+        console.log(this.ultimasCompras, 'ko');
         this.ultimasCompras.forEach(compra => {
           compra["fechaPedido"].date = {
             year: (new Date(compra["fechaPedido"].date).getFullYear()),

@@ -165,7 +165,8 @@
                         <p>{{datos_envio.domicilio_ciudad}} ({{datos_envio.domicilio_codigo_postal}})</p>
                         <p>{{datos_envio.domicilio_provincia}}</p>
                         <p>{{datos_envio.telefono}}</p>
-                        <p>{{cod_transporte ? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
+                        <!-- cambio -->
+                        <p>{{this.datos_envio.cod_transporte? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
                       </div> 
                       <div class="row envio__seccion__content edit" *ngIf="editingEnvio">
                         <div class="form-group row" *ngIf="!cargarTransporte">

@@ -4,7 +4,15 @@
     }
   }
 
+ng-dropdown-panel {
+    position: relative !important;
+    display: block !important;
 
+}
+
+ng-option {
+    padding: 2px !important;
+}
 /* You can add global styles to this file, and also import other style files */
 .filter__item .card{
     border-bottom: 1px solid rgb(116, 113, 113);
