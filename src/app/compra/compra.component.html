@@ -5,7 +5,7 @@
           <div class="tab__header">
             <p>{{secciones[transaccion.paso]}}</p>
             <ul>
-              <li [class.active]="transaccion.check(0)" 
+              <li [class.active]="transaccion.check(0)"
                   (click)="transaccion.cambio(0); checkCarritoInit(0);"
                   >Carrito</li>
               <li [class.active]="transaccion.check(1)"
@@ -49,13 +49,13 @@
                           <div class="border">
                             <p>Precio Unit.</p>
                           </div>
-                        </div>  
+                        </div>
                         <div class="col-4">
                           <div class="border">
                             <p>Subtotal</p>
                           </div>
                         </div>
-                        <div class="col-5"></div>  
+                        <div class="col-5"></div>
                       </div>
                       <div class="row carrito__content" *ngFor="let compra of carrito.lista">
                         <div class="col-1">
@@ -66,7 +66,7 @@
                         </div>
                         <div class="col-3">
                           <p>${{corregirPrecio(compra.precio)}}</p>
-                        </div>  
+                        </div>
                         <div class="col-4">
                           <p>${{updatePrecio(compra.precio, compra.cantidad)}}</p>
                         </div>
@@ -74,7 +74,7 @@
                           <button (click)="removeCompraItem(compra)">
                               <img width="18" src="./assets/images/iconos/Eliminar-producto.png" alt="">
                           </button>
-                        </div>  
+                        </div>
                       </div>
                     </div>
                     <div class="row" style="padding: 20px 20px;">
@@ -95,14 +95,14 @@
                                   <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                                 </li>
                               </ul>
-                            </div>                                            
-                          </div>                        
+                            </div>
+                          </div>
                         </div>
                         <div class="col-xs-12 col-md-2">
                             <button type="button" class="whiteButton" routerLink="/busqueda/{{texto_busqueda}}" >BUSCAR</button>
                         </div>
                       </div>
-                    </div>      
+                    </div>
                   </div>
                   <div class="col-xs-12 col-md-4">
                     <div class="row carrito__total">
@@ -120,7 +120,7 @@
                     </div-->
                   </div>
                 </div>
-              </div>  
+              </div>
             </div>
             <div class="tab__item" *ngIf="transaccion.paso === 1">
               <div class="content">
@@ -148,7 +148,7 @@
                           <input type="radio" id="test2"  value="1" [ngModel]="datosCompra.entrega">
                           <label for="test2"></label>
                         </div>
-                      </div>              
+                      </div>
                     </div>
                     <div class="row envio__seccion--editable" *ngIf="datosCompra.entrega === '0'">
                       <div class="row envio__seccion__header--editable">
@@ -159,15 +159,14 @@
                       </div>
                       <div class="row envio__seccion__content transporte error" *ngIf="!editingEnvio && !datosEnvio_flag">
                         <p>Debes cargar los datos de envio</p>
-                      </div> 
+                      </div>
                       <div class="row envio__seccion__content" *ngIf="!editingEnvio">
                         <p>{{datos_envio.domicilio_direccion}}</p>
                         <p>{{datos_envio.domicilio_ciudad}} ({{datos_envio.domicilio_codigo_postal}})</p>
                         <p>{{datos_envio.domicilio_provincia}}</p>
                         <p>{{datos_envio.telefono}}</p>
-                        <!-- cambio -->
-                        <p>{{this.datos_envio.cod_transporte? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
-                      </div> 
+                        <p>{{cod_transporte ? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
+                      </div>
                       <div class="row envio__seccion__content edit" *ngIf="editingEnvio">
                         <div class="form-group row" *ngIf="!cargarTransporte">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
@@ -175,6 +174,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" name="calle" [(ngModel)]="datos_envio.domicilio_direccion">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="!cargarTransporte">
@@ -183,6 +183,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" name="localidad" [(ngModel)]="datos_envio.domicilio_ciudad">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="!cargarTransporte">
@@ -191,14 +192,16 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" name="calle" [(ngModel)]="datos_envio.domicilio_codigo_postal">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>  
+                        </div>
                         <div class="form-group row" *ngIf="!cargarTransporte">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Provincia
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" name="provincia" [(ngModel)]="datos_envio.domicilio_provincia">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="!cargarTransporte">
@@ -207,6 +210,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" name="telefono" [(ngModel)]="datos_envio.telefono">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="!cargarTransporte && false">
@@ -217,52 +221,53 @@
                               <div class="emergencia">
                                   Lunes
                                   <input type="checkbox" [(ngModel)]="isChecked.entrega_lunes">
-                                  <span class="checkmark" (click)="clicked('entrega_lunes')"></span>                              
+                                  <span class="checkmark" (click)="clicked('entrega_lunes')"></span>
                               </div>
                               <div class="emergencia">
                                   Martes
                                   <input type="checkbox" [(ngModel)]="isChecked.entrega_martes">
-                                  <span class="checkmark" (click)="clicked('entrega_martes')"></span>                              
+                                  <span class="checkmark" (click)="clicked('entrega_martes')"></span>
                               </div>
                               <div class="emergencia">
                                   Miércoles
                                   <input type="checkbox" [(ngModel)]="isChecked.entrega_miercoles">
-                                  <span class="checkmark" (click)="clicked('entrega_miercoles')"></span>                              
+                                  <span class="checkmark" (click)="clicked('entrega_miercoles')"></span>
                               </div>
                               <div class="emergencia">
                                   Jueves
                                   <input type="checkbox" [(ngModel)]="isChecked.entrega_jueves">
-                                  <span class="checkmark" (click)="clicked('entrega_jueves')"></span>                              
+                                  <span class="checkmark" (click)="clicked('entrega_jueves')"></span>
                               </div>
                               <div class="emergencia">
                                   Viernes
                                   <input type="checkbox" [(ngModel)]="isChecked.entrega_viernes">
-                                  <span class="checkmark" (click)="clicked('entrega_viernes')"></span>                              
+                                  <span class="checkmark" (click)="clicked('entrega_viernes')"></span>
                               </div>
                               <div class="emergencia">
                                   Sábado
                                   <input type="checkbox" [(ngModel)]="isChecked.entrega_sabado">
-                                  <span class="checkmark" (click)="clicked('entrega_sabado')"></span>                              
+                                  <span class="checkmark" (click)="clicked('entrega_sabado')"></span>
                               </div>
                           </div>
-                        </div> 
+                        </div>
                         <div class="form-group row" *ngIf="!cargarTransporte  && false">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Horarios
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" name="telefono" [(ngModel)]="datos_envio.horario_entrega">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>   
+                        </div>
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Transporte
-                          </label>  
+                          </label>
                           <div class="col-xs-8">
-                              <ng-select style="height: 32px; margin: 6px 0px;" 
+                              <ng-select style="height: 32px; margin: 6px 0px;"
                                 [clearable]="true"
                                 (change)="refreshTransporte($event)"
-                                ng-model="initialLista[0].value" 
+                                ng-model="initialLista[0].value"
                                 placeholder="Medio de transporte">
                                 <ng-option *ngFor="let country of entrega.transporte.lista" [value]="country.id">
                                   {{country.text}}
@@ -276,6 +281,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" [(ngModel)]="datostransporte.form.nombreTransporte">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="cargarTransporte">
@@ -284,6 +290,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" [(ngModel)]="datostransporte.form.telefonoTransporte">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="cargarTransporte">
@@ -292,6 +299,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" [(ngModel)]="datostransporte.form.domicilioTransporte">
+                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
                         </div>
                         <div class="row" *ngIf="datos_envio_error !== ''">
@@ -300,7 +308,7 @@
                         <div class="row" style="text-align:right; padding: 15px;">
                           <button class="whiteButton" (click)="addTransporte()">{{cargarTransporte ? "CONFIRMAR TRANSPORTE" : "GUARDAR"}}</button>
                         </div>
-                      </div>                                     
+                      </div>
                     </div>
                     <div class="row envio__seccion" *ngIf="datosCompra.entrega === '1'">
                       <div class="row envio__seccion__header">
@@ -334,13 +342,12 @@
                                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3278.7818186963987!2d-58.267091685238306!3d-34.735893572009736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e6449263693%3A0x2487ca7b31b60673!2sMessina+Hnos+S.A.!5e0!3m2!1sen!2sar!4v1527709856965" width="480" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                                 </div>
                                 <p>Ver Mapa</p>
-                               </a>
-                             </p>
+                              </a></p>
                             </div>
                           </div>
-                      </div>              
+                      </div>
                     </div>
-  
+
                   </div>
                   <div class="col-xs-12 col-md-4">
                     <div class="row envio__seccion--editable">
@@ -359,7 +366,7 @@
                         <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
                         <p>Email: {{facturacion.datos.email}}</p>
                         <p>Teléfono: {{facturacion.datos.telefono}}</p>
-                      </div>              
+                      </div>
                       <div class="row envio__seccion__content edit" *ngIf="editingFacturacion">
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
@@ -378,7 +385,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_fantasia">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>  
+                        </div>
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               CAT. IVA.
@@ -396,7 +403,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_responsable_compras">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>    
+                        </div>
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Responsable facturacion
@@ -405,7 +412,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.facturacion_nombre_responsable">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>      
+                        </div>
                         <!--div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               {{facturacion.datos.cod_categoria_iva === "Consumidor Final" ? "DNI" : "CUIT"}}
@@ -441,7 +448,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.domicilio_provincia">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>  
+                        </div>
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Provincia
@@ -486,11 +493,11 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.telefono_celular">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>  
+                        </div>
                         <div class="row" style="text-align:right; padding: 15px;">
                           <button (click)="facturacion.update()" class="whiteButton">GUARDAR</button>
                         </div>
-                      </div>              
+                      </div>
                     </div>
                     <div class="row envio__seccion">
                       <div class="row envio__seccion__header">
@@ -502,7 +509,7 @@
                               <textarea [(ngModel)]="observaciones" class="form-control" id="exampleTextarea" rows="3"></textarea>
                           </div>
                         </div>
-                      </div>           
+                      </div>
                     </div>
                   </div>
                   <div class="col-xs-12 col-md-4">
@@ -514,17 +521,28 @@
                           <p>SUBTOTAL</p>
                           <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                           <span style="position: absolute; bottom: -7px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
-                      </div>  
-                      <div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
+                      </div>
+                      <!--div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
                           <p>ENVÍO</p>
                           <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
-                      </div>  
+                      </div-->
+					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= 5000">
+                          <p>ENVÍO GRATIS</p>
+                          <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
+                      </div>
+					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < 5000">
+                          <p>FALTA $ {{formatMoney(5000 - carrito.subtotal)}} PARA COMPLETAR EL ENVIO GRATIS</p>
+                      </div>
+					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
+						<img src="./assets/images/iconos/retiro.png" alt="">
+						<p>Retiro en tienda</p>
+					  </div>
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
                         <button class="actionButton" [ngClass]="{'deshabilitado': carritoLoading}" (click)="completarCompra()">COMPLETAR COMPRA</button>
-                        <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}"> 
+                        <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}">
                           <p> {{completarCompraTexto}}</p>
                         </div>
-                      </div>    
+                      </div>
                       <div class="row envio__header">
                         <div class="col-1">
                           <p>Cant.</p>
@@ -534,7 +552,7 @@
                         </div>
                         <div class="col-4">
                           <p>Subtotal</p>
-                        </div>  
+                        </div>
                       </div>
                       <div class="row envio__content" *ngFor="let compra of carrito.lista">
                         <div class="col-1">
@@ -545,9 +563,9 @@
                         </div>
                         <div class="col-4">
                           <p>${{compra.total.toFixed(2)}}</p>
-                        </div>  
+                        </div>
                       </div>
-      
+
                     </div>
                   </div>
                 </div>
@@ -583,7 +601,7 @@
                             <img src="./assets/images/iconos/retiro.png" alt="">
                             <p>Retiro en tienda</p>
                           </div>
-                        </div>              
+                        </div>
                       </div>
                       <div class="col-xs-12 col-md-3 envio__seccion--editable">
                         <div class="row envio__seccion__header--editable">
@@ -595,7 +613,7 @@
                           <p>{{datos_envio.domicilio_provincia}}</p>
                           <p>{{datos_envio.telefono}}</p>
                           <p>{{datos_envio.cod_transporte ? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
-                        </div>              
+                        </div>
                       </div>
                       <div class="col-xs-4 col-md-3">
                         <div class="row envio__seccion--editable">
@@ -615,7 +633,7 @@
                             <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
                             <p>Ciudad: {{facturacion.datos.domicilio_ciudad}} CP: {{facturacion.datos.domicilio_codigo_postal}}</p>
                             <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
-                          </div>              
+                          </div>
                         </div>
                       </div>
                       <div class="col-xs-12 col-md-3">
@@ -623,7 +641,7 @@
                           <div class="row envio__total">
                               <p>SUBTOTAL</p>
                               <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
-                          </div>  
+                          </div>
                         </div>
                       </div>
                   </div>
@@ -635,7 +653,7 @@
               </div>
             </div>
         </div>
-      </div>    
+      </div>
       <div>
         <p class="iva__mensaje">{{iva_usuario}}</p>
       </div>
