@@ -22,7 +22,7 @@ export class AutenticacionService {
       this.tokenValue  = $value
       this.tokenSource.next($value)
   }
-
+  
   //Observable para el estado del login
   private loginSource = new BehaviorSubject<Boolean>(false)
   public  loginStatus = this.loginSource.asObservable()
@@ -51,7 +51,9 @@ export class AutenticacionService {
 
 
   getPath($path): string{
-    return "https://sinaweb.appspot.com/" + $path
+    // return "https://sina-184018.appspot.com/" + $path
+    return 'https://sinaweb.appspot.com/' + $path
+
   }
   getParams($params) {
     let httpParams = new HttpParams();
@@ -66,7 +68,7 @@ export class AutenticacionService {
         'Content-Type':  'application/x-www-form-urlencoded',
         'X-API-TOKEN': this.tokenValue
       }),
-      params: this.getParams($data)
+      params: this.getParams($data) 
     }
     return httpOptions
   }
@@ -186,12 +188,12 @@ export class AutenticacionService {
       if(window.localStorage.getItem("carrito")){
         this.data.updateCarrito()
       }
-
+  
 
 
     if(this.checkNull(this.localGet("login"))) {
-      this.desacreditar()
-      this.loginUpdate(false)
+      this.desacreditar();
+      this.loginUpdate(false);
     }else {
       this.username = this.localGet("login").username
       this.tokenUpdate(this.localGet("login").token)

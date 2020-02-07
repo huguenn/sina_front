@@ -386,7 +386,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_fantasia">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>
+                        </div>  
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               CAT. IVA.
@@ -404,7 +404,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_responsable_compras">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>
+                        </div>    
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Responsable facturacion
@@ -413,7 +413,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.facturacion_nombre_responsable">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>
+                        </div>      
                         <!--div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               {{facturacion.datos.cod_categoria_iva === "Consumidor Final" ? "DNI" : "CUIT"}}
@@ -449,7 +449,7 @@
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.domicilio_provincia">
                             <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                           </div>
-                        </div>
+                        </div>  
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
                               Provincia
@@ -522,28 +522,17 @@
                           <p>SUBTOTAL</p>
                           <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                           <span style="position: absolute; bottom: -7px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
-                      </div>
-                      <!--div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
+                      </div>  
+                      <div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
                           <p>ENVÍO</p>
                           <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
-                      </div-->
-					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= 5000">
-                          <p>ENVÍO GRATIS</p>
-                          <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
-                      </div>
-					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < 5000">
-                          <p>FALTA $ {{formatMoney(5000 - carrito.subtotal)}} PARA COMPLETAR EL ENVIO GRATIS</p>
-                      </div>
-					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
-						<img src="./assets/images/iconos/retiro.png" alt="">
-						<p>Retiro en tienda</p>
-					  </div>
+                      </div>  
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
                         <button class="actionButton" [ngClass]="{'deshabilitado': carritoLoading}" (click)="completarCompra()">COMPLETAR COMPRA</button>
                         <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}"> 
                           <p> {{completarCompraTexto}}</p>
                         </div>
-                      </div>
+                      </div>    
                       <div class="row envio__header">
                         <div class="col-1">
                           <p>Cant.</p>
@@ -553,7 +542,7 @@
                         </div>
                         <div class="col-4">
                           <p>Subtotal</p>
-                        </div>
+                        </div>  
                       </div>
                       <div class="row envio__content" *ngFor="let compra of carrito.lista">
                         <div class="col-1">
@@ -564,9 +553,9 @@
                         </div>
                         <div class="col-4">
                           <p>${{compra.total.toFixed(2)}}</p>
-                        </div>
+                        </div>  
                       </div>
-
+      
                     </div>
                   </div>
                 </div>
@@ -602,7 +591,7 @@
                             <img src="./assets/images/iconos/retiro.png" alt="">
                             <p>Retiro en tienda</p>
                           </div>
-                        </div>
+                        </div>              
                       </div>
                       <div class="col-xs-12 col-md-3 envio__seccion--editable">
                         <div class="row envio__seccion__header--editable">
@@ -614,7 +603,7 @@
                           <p>{{datos_envio.domicilio_provincia}}</p>
                           <p>{{datos_envio.telefono}}</p>
                           <p>{{datos_envio.cod_transporte ? "Debe seleccionar un medio de transporte" : medioTransporte}}</p>
-                        </div>
+                        </div>              
                       </div>
                       <div class="col-xs-4 col-md-3">
                         <div class="row envio__seccion--editable">
@@ -642,7 +631,7 @@
                           <div class="row envio__total">
                               <p>SUBTOTAL</p>
                               <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
-                          </div>
+                          </div>  
                         </div>
                       </div>
                   </div>
@@ -654,10 +643,14 @@
               </div>
             </div>
         </div>
-      </div>
+      </div>    
       <div>
         <p class="iva__mensaje">{{iva_usuario}}</p>
       </div>
     </div>
   </div>
 </div>
+
+
+
+<app-loading *ngIf="modalLoading" (cerrarModal)="closeModal($event)" ></app-loading>

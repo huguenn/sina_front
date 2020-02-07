@@ -601,7 +601,6 @@
         flex-direction: column;
         padding-bottom: 0px !important;
         display: none;
-        margin-top: -2px;
     }
     .menuSidebar .col-xs-5{
         display: none !important;
