@@ -51,6 +51,9 @@
 .navbar li > a:hover  img:nth-child(2){
     opacity: 1 !important;
 }
+.nav-item{
+  margin-bottom: -1px
+}
 
 /* header__top */
 .header__top{
