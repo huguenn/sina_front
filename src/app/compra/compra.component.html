@@ -511,10 +511,21 @@
                           <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                           <span style="position: absolute; bottom: -7px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
                       </div>
-                      <div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
+                      <!--div class="row envio__total" style="font-weight: normal; padding-top: 0px;">
                           <p>ENVÍO</p>
                           <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
+                      </div-->
+					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= 5000">
+                          <p>ENVÍO GRATIS</p>
+                          <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
                       </div>
+					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < 5000">
+                          <p>FALTA $ {{formatMoney(5000 - carrito.subtotal)}} PARA COMPLETAR EL ENVIO GRATIS</p>
+                      </div>
+					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
+						<img src="./assets/images/iconos/retiro.png" alt="">
+						<p>Retiro en tienda</p>
+					  </div>
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
                         <button class="actionButton" [ngClass]="{'deshabilitado': carritoLoading}" (click)="completarCompra()">COMPLETAR COMPRA</button>
                         <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}">
