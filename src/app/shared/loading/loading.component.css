@@ -1,0 +1,192 @@
+.modal__container .modal__texto p {
+    margin: auto;
+    font-size: 24px;
+    color: #177cfb;
+    font-weight: bold;
+}
+
+
+
+.modal__container .modal__texto img {
+    width: 100%;
+    position: relative;
+    margin-top: 5px;
+    left: initial;
+}
+@media (max-width: 540px) {
+    .modal__texto {
+        display: none;
+    }        
+}
+.modal__registrar {
+    display: flex;
+    flex-flow: column;
+    padding: 0px 50px;
+}
+.modal__registrar input{
+    margin: 6px 0px;
+    padding: 5px;
+    border: 1px solid #dddddd;
+    border-radius: 5px;
+}
+.modal__registrar a{
+    margin-top: 10px;
+}
+.modal__container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #00000087;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    opacity: 1;
+    z-index: 100;
+    transition: 0.4s ease all;
+}
+.modal__container .modal-dialog {
+    width: 750px;
+    margin: 30px auto;
+}
+.modal__container .modal-title {
+    font-size: 16px;
+    color: #1a7cfb;
+    text-align: center;
+    font-weight: bold;
+}
+@media (max-width: 540px) {
+    .modal__container .modal-dialog {
+        width: 750px;
+        margin: 30px auto;
+    }
+    .modal__container .modal-title {
+        color: #fff;
+    }
+}
+
+.modal__container img {
+    position: absolute;
+    bottom: 15px;
+    left: 25px;
+}
+.modal__container img.desktop {
+    display: block;
+}
+.modal__container img.mobile {
+    display: none;
+}
+
+@media (max-width: 540px) {
+    .modal__container img.desktop {
+        display: none;
+    }
+    .modal__container img.mobile {
+        display: block;
+    }
+}
+.modal__container .modal-header {
+    padding-top: 30px;
+    position: relative;
+}
+.modal__container .modal-header .close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+.modal__container .modal-header,
+.modal__container .modal-footer {
+    border: none;
+}
+.modal__container .modal-footer {    
+    text-align: center;
+    padding: 30px 40px;
+}
+.modal__container .modal-footer .footer__col{
+    padding: 0px 50px;
+}    
+.modal__container .modal-footer .facebook {
+    background: #4267b2;
+    border: none;
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 10px;
+    color: #fff;
+    margin: 5px 0px;
+    transition: 0.5s ease all;
+    display: none;
+} 
+.modal__container .modal__registrar p {
+    font-weight: bold;    
+    text-align: left;
+}
+.modal__container .modal__registrar.final p {
+    font-weight: initial;
+}
+.modal__container .modal__registrar.final p.complete {
+    color: #F44336;
+}
+.modal__container .modal-footer p {
+    position: absolute;
+    top: -20px;
+    width: calc(100% - 80px);
+    font-weight: bold;
+} 
+.whiteButton {
+    width: 100%;
+    padding: 8px 10px;
+}
+.modal__container .modal-body {
+    position: relative;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    margin: 0px 25px;
+    padding-bottom: 0px;
+    text-align: center;
+}
+.modal__container .modal-body .stepsContent {
+    width: 90%; 
+    margin: auto;
+}
+@media (max-width: 540px) {
+    .modal__container .modal-body .stepsContent {
+        width: 100%;
+        margin: initial;
+        max-height: calc(100vh - 350px);
+        overflow: scroll;
+    }   
+} 
+.modalHide {
+    opacity: 0;
+    z-index: -1;
+}
+
+
+
+.modal__container .modal-body .card {
+    text-align: left;
+    border: 1px solid #ddd;
+    font-size: 18px;
+    margin: 0;
+}
+.modal__container .modal-body .card .card-header {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    background: #f5f5f5;
+}
+.modal__container .modal-body .card .card-block {
+    padding: 10px;
+}
+
+
+.modal__container .carrito .footer__col{
+    padding: 0 10px;
+}
+.modal__container .carrito .footer__col input, 
+.modal__container .carrito .footer__col button{
+        width: 100%;
+}

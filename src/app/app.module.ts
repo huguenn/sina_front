@@ -44,6 +44,7 @@ import { ContactoComponent } from './contacto/contacto.component';
 import { RecuperarPassComponent } from './recuperar-pass/recuperar-pass.component';
 import { PreguntasFrecuentesComponent } from './preguntas-frecuentes/preguntas-frecuentes.component';
 import { ConfirmarDatosComponent } from './confirmar-datos/confirmar-datos.component';
+import { LoadingComponent } from './shared/loading/loading.component';
 
 // router config
 const appRoutes: Routes = [
@@ -158,7 +159,8 @@ const appRoutes: Routes = [
     ContactoComponent,
     RecuperarPassComponent,
     PreguntasFrecuentesComponent,
-    ConfirmarDatosComponent
+    ConfirmarDatosComponent,
+    LoadingComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
