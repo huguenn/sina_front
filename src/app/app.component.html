@@ -10,7 +10,7 @@
                 <i (click)="sticky.activo = false" class="fa fa-times-circle"></i>
             </div>
         </div>
-        <app-header 
+        <app-header
             [greetMessage]="childmessage"
             [headerStatus]="menuStatus"
         ></app-header>
@@ -60,7 +60,7 @@
                                 <li (click)="this.processing.finish(); _step = 1; _changeStep(1)"[ngClass]="{'active': _step >= 1}">Solicitud de Alta</li>
                                 <li (click)="this.processing.finish(); _step = 2; _changeStep(2)"[ngClass]="{'active': _step >= 2}">Datos de Entrega</li>
                                 <li (click)="this.processing.finish(); _step = 3; _changeStep(3)"[ngClass]="{'active': _step >= 3}">Confirmación de Datos</li>
-                            </ul>                      
+                            </ul>
                             <div class="steps">
                                 <div class="steps__item"></div>
                             </div>
@@ -72,31 +72,31 @@
                                 <input [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
                                 <ng-select #responsable style="height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
                                   [clearable]="true"
-                                  bindLabel="text" 
+                                  bindLabel="text"
                                   bindValue="codigo"
                                   (change)="refreshCUIT($event)"
-                                  ng-model="cat_selected" 
+                                  ng-model="cat_selected"
                                   placeholder="CAT. IVA.*">
                                   <ng-option *ngFor="let country of data.reponsable_lista" [value]="country.codigo">
                                     {{country.text}}
                                   </ng-option>
                                 </ng-select>
 
-                                <!-- <select class="custom__select" 
+                                <!-- <select class="custom__select"
                                         #responsable
-                                        ng-model="cat_selected"  
+                                        ng-model="cat_selected"
                                         (change)="refreshCUIT($event.target.value)"
                                         placeholder="CAT. IVA.*"
                                         [ngClass]="{'noValidado': validador?.cat_selected}">
                                     <option value="0">CAT. IVA.*</option>
-                                    <option *ngFor="let country of data.reponsable_lista" 
+                                    <option *ngFor="let country of data.reponsable_lista"
                                             [value]="country.codigo"
                                             class="custom__select--option" value="1">
                                         {{ country.text }}
                                     </option>
                                 </select> -->
 
-                                
+
 
                                 <input [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit">
                                 <input [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono">
@@ -109,11 +109,11 @@
                                 </div>
                                 <input [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad">
                                 <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal">
-                                <ng-select class="cuscus"  #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="height: 32px; margin: 6px 0px;" 
+                                <ng-select class="cuscus"  #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="height: 32px; margin: 6px 0px;"
                                     [clearable]="true"
                                     [items]="provincia"
                                     (change)="refreshProvincia($event)"
-                                    ng-model="domicilio_provincia" 
+                                    ng-model="domicilio_provincia"
                                     placeholder="Provincia*"
                                     >
                                 </ng-select>
@@ -128,21 +128,21 @@
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
                                         <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion">
                                         <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero">
-                                    </div>   
+                                    </div>
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
                                             <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad">
                                             <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal">
                                     </div>
-                                    <ng-select #provincia_value2 style="height: 32px; margin: 6px 0px;" 
+                                    <ng-select #provincia_value2 style="height: 32px; margin: 6px 0px;"
                                                 placeholder="Provincia de entrega"
                                                 [clearable]="true"
                                                 [items]="provincia"
                                                 (remove)="deleteProvincia2()"
                                                 (change)="refreshProvincia2($event)"
-                                                ng-model="envio_provincia" 
+                                                ng-model="envio_provincia"
                                                 >
                                     </ng-select>
-                            </div>        
+                            </div>
                         </div>
                         <div class="row stepsContent" *ngIf="_step === 3">
                             <div class="notProcessing" *ngIf="!processing.started">
@@ -173,7 +173,7 @@
                                     <img class="processing__icono" *ngIf="!response.error" src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
                                     <img class="processing__icono" *ngIf="response.error" src="./assets/images/registro/error.png" alt="Sina" height="50">
                                     <p>{{response.mensaje}}</p>
-                                    <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>            
+                                    <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>
                                 </div>
                             </div>
                         </div>
@@ -194,7 +194,7 @@
                         <button class="btn btn-outline-dark actionButton" style="margin-bottom: 5px;"   type="button"(click)="_changeStep()">{{_step === 3 ? "REGISTRATE" : "SIGUIENTE"}}</button>
                     </div>
                 </div>
-            </div>                            
+            </div>
         </div>
         </div>
         <div class="modal__container" [ngClass]="{'modalHide': carritoStatus}" (click)="closeFull2($event)">
@@ -227,7 +227,7 @@
                                         <div class="border">
                                         <p>Precio Unitario</p>
                                         </div>
-                                    </div>  
+                                    </div>
                                     <div class="col-4">
                                         <div class="border">
                                         <p>Subtotal</p>
@@ -243,7 +243,7 @@
                                     </div>
                                     <div class="col-3">
                                         <p>${{formatMoney(compra.precio)}}</p>
-                                    </div>  
+                                    </div>
                                     <div class="col-4">
                                         <p>${{updatePrecio(compra.precio, compra.cantidad)}}</p>
                                     </div>
@@ -263,7 +263,7 @@
                     </div>
                 </div>
                 </div>
-                </div>                            
+                </div>
         </div>
         <div class="modal__container" [ngClass]="{'modalHide': !actualEmergenteFlag }" (click)="closeEmergente($event)">
                 <div role="document" class="modal-dialog">
@@ -275,8 +275,8 @@
                         </button>
                         </div>
                     </div>
-                </div>                            
-        </div>  
+                </div>
+        </div>
         <div class="modal__container" [ngClass]="{'modalHide': representarStatus}" (click)="closeFullRepresentar($event)">
             <div class="loading" [ngClass]="{'loaded': !loginLoading}">
                 <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
@@ -298,7 +298,7 @@
                                     <input type="text" placeholder="Escriba para filtrar por Nombre/Razón Social o CUIT" [(ngModel)]="filterBusqueda" style="    width: 100%;
                                     border: none;
                                     padding: 5px 10px;">
-                                </div>        
+                                </div>
                             <div class="card-block" style="max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
                                 <div class="row carrito__header">
                                     <div class="col-rep-3">
@@ -315,7 +315,7 @@
                                         <div class="border">
                                         <p>Nombre o razón social</p>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="row carrito__content" *ngFor="let cuenta of cuentasRepresentar | cuentasFilter: filterBusqueda; let $index = index" >
                                     <div class="col-rep-3">
@@ -346,7 +346,7 @@
                     </div>
                 </div>
                 </div>
-            </div>                            
+            </div>
         </div>
         <div class="modal__container" [ngClass]="{'modalHide': migrandoStatus}" (click)="closeFull3($event)">
             <div role="document" class="modal-dialog">
@@ -364,8 +364,8 @@
                             <h3 class="card-header">¡Bienvenido! Ingrese los datos de confirmación</h3>
                             <div class="card-block" style="display: flex;">
                                 <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
-                                    <input style="width: 100%; margin-bottom: 10px;" type="email" placeholder="Email" [(ngModel)]="migracion.email_original" name="migracion_email_original">
-                                    <input style="width: 100%;" type="email" placeholder="Repetir Email" [(ngModel)]="migracion.email_repetido" name="migracion_email_repetido">
+                                    <input style="width: 100%; margin-bottom: 10px;" type="text" [(ngModel)]="auth.email"  disabled="disabled">
+                                    <input style="width: 100%;" type="text" [(ngModel)]="auth.razonsocial"  disabled="disabled">
                                 </div>
                                 <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
                                     <input style="width: 100%; margin-bottom: 10px;" type="password" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" >
@@ -397,7 +397,7 @@
                     </div>
                 </div>
                 </div>
-                </div>                            
+                </div>
         </div>
         <app-footer></app-footer>
     </div>

@@ -304,8 +304,8 @@ export class AppComponent implements OnInit {
 
           /*
           console.log("body.toString()", body.toString())
-          this.processing.stop()     
-          
+          this.processing.stop()
+
           this.response = this.confirmacion
 
           this.error.reset()
@@ -603,8 +603,8 @@ export class AppComponent implements OnInit {
     this.login.errorMsg = '';
     let body = new URLSearchParams();
 
-    body.set('email', this.migracion.email_original);
-    body.set('confirmacion_email', this.migracion.email_repetido);
+    body.set('email', this.auth.email);
+    body.set('confirmacion_email', this.auth.email);
     body.set('contrasena', this.migracion.pass_original);
     body.set('confirmacion_contrasena', this.migracion.pass_repetido);
 
