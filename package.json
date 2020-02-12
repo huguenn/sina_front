@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "heroku-postbuild": "npm install"
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod --base-href=/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "heroku-postbuild": "cd src/app && npm install"
   },
   "private": true,
   "dependencies": {
