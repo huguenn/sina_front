@@ -61,7 +61,7 @@
             <h1>Nuevo Cliente</h1>
             <p>Compra más rápido y seguro.</p>
             <p>Sólo tenés que completar la solicitud de alta.</p>
-            <button class="actionButton">REGISTRARME</button>
+            <p  *ngIf="!UserLog"><button class="actionButton"> {{"Registrarse"}} </button></p>
         </div>
     </div>
 </div>
