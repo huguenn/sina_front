@@ -94,8 +94,13 @@ export class CuentaComponent implements OnInit {
 
   DatosUsuario: cliente = new cliente();
 
-  comprados = [];
+  comprados;
+
   ultimasCompras = [];
+  listadoProductos = [];
+
+
+
   /*ultimasCompras = [
     {
       fecha:"",
@@ -294,63 +299,45 @@ export class CuentaComponent implements OnInit {
   }
 
 
-  descargarLista() {
+	descargarLista()
+	{
+		this.auth.get('producto/listadoProductos')
+		.then(($response)  =>
+		{
+			if($response.response)
+			{
+				this.listadoProductos = $response.response
+				const print: any[] = []
+				print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)', 'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta'])
+				this.listadoProductos.forEach(producto =>
+				{
+					print.push
+					(
+						[
+						  producto.codigo_interno,
+						  producto.nombre + " - " + producto.nombre_adicional,
+						  producto.codigo_barras,
+						  producto.unidad_medida,
+						  producto.precio,
+						  producto.familia,
+						  producto.categoria,
+						  producto.subcategoria,
+						  producto.es_oferta
+						]
+					)
+				});
 
-    const print: any[] = [];
-
-    print.push(['Titulo', 'Titulo adicional', 'Codigo', 'Codigo de barras', 'Unidad de medida', 'Precio']);
-
-    this.comprados.forEach((item, i) => {
-      print.push(
-        [
-          item.titulo,
-          item.tituloAdicional,
-          item.codInterno,
-          item.codBarra,
-          item.unidadMedida,
-          item.precio
-        ]
-      );
-
-      if (this.comprados.length === (i + 1)) {
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
-        XLSX.writeFile(wb, 'Listado de precios.xlsx');
-      }
-    });
-
-
-
-
-
-
-    // this.http.get(this.auth.getPath('producto/listaPrecio'), this.auth.getFileHeader(null))
-    // .subscribe(
-    //   (res: any) => {
-    //     var file = new Blob([res], {type: 'application/vnd.ms-excel'});
-    //     var fileURL = URL.createObjectURL(file);
-    //     const iframe = document.createElement('iframe');
-    //     iframe.style.display = 'none';
-    //     iframe.src = fileURL;
-    //     document.body.appendChild(iframe);
-    //     //iframe.contentWindow.print();
-    //   },
-    //   (error) => {
-    //     try {
-    //       if(error['error']['error'] === 'Token no valido') {
-    //         this.auth.desacreditar();
-    //       }else {
-    //         console.log(error);
-    //       }
-    //     } catch (error) {
-    //       this.auth.desacreditar();
-    //       console.log('error_persistente', error);
-    //     }
-    //   }
-    // );
-
-  }
+				const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print)
+				const wb: XLSX.WorkBook = XLSX.utils.book_new()
+				XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1')
+				XLSX.writeFile(wb, 'Listado de productos.xlsx')
+			}
+		})
+		.catch($error =>
+		{
+			console.log($error);
+		});
+	}
   guardarDatos() {
     this.procesando_info = true;
     this.procesando_info_entrega = true;
