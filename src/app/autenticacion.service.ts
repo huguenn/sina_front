@@ -13,6 +13,9 @@ export class AutenticacionService {
   public  username:     string
   private token:        string
   private password:     string
+  public  razonsocial:  string
+  public  email:     	string
+
 
   //Observable para el estado del login
   private tokenSource = new BehaviorSubject<string>("")
@@ -22,7 +25,7 @@ export class AutenticacionService {
       this.tokenValue  = $value
       this.tokenSource.next($value)
   }
-  
+
   //Observable para el estado del login
   private loginSource = new BehaviorSubject<Boolean>(false)
   public  loginStatus = this.loginSource.asObservable()
@@ -68,7 +71,7 @@ export class AutenticacionService {
         'Content-Type':  'application/x-www-form-urlencoded',
         'X-API-TOKEN': this.tokenValue
       }),
-      params: this.getParams($data) 
+      params: this.getParams($data)
     }
     return httpOptions
   }
@@ -107,9 +110,15 @@ export class AutenticacionService {
     .subscribe($response => {
       this.username = $username
       this.localSet("login", {username: this.username, token: this.tokenValue, administrativo: $response["administrativo"] === 1 ? true : false, primer_login: $response["primer_login"]})
-      if(!$response["primer_login"]) {
+	  if(!$response["primer_login"]) {
       this.loginUpdate(true)
       }
+	  else
+	  {
+		this.email = $response["email"];
+		this.razonsocial = $response["razon_social"];
+	  }
+
       this.tokenUpdate($response["token"])
       resolve($response)
     },($error) => {
@@ -188,7 +197,7 @@ export class AutenticacionService {
       if(window.localStorage.getItem("carrito")){
         this.data.updateCarrito()
       }
-  
+
 
 
     if(this.checkNull(this.localGet("login"))) {
