@@ -87,6 +87,8 @@ export class CuentaComponent implements OnInit {
   sub: Subscription;
   ListaCompras;
   ListaItems = Items;
+
+  desplegar = 'none';
   loginStatus:boolean = false;
   private _success = new Subject<string>();
   staticAlertClosed = false;
@@ -301,6 +303,7 @@ export class CuentaComponent implements OnInit {
 
 	descargarLista()
 	{
+		(document.querySelector('#loaderFile') as HTMLElement).style.display = 'block'
 		this.auth.get('producto/listadoProductos')
 		.then(($response)  =>
 		{
@@ -332,6 +335,8 @@ export class CuentaComponent implements OnInit {
 				XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1')
 				XLSX.writeFile(wb, 'Listado de productos.xlsx')
 			}
+			(document.querySelector('#loaderFile') as HTMLElement).style.display = 'none'
+
 		})
 		.catch($error =>
 		{

@@ -55,6 +55,10 @@
                             <i class="fa fa-download" aria-hidden="true"></i>
                             <p>LISTA DE PRECIOS</p>
                         </button>
+						<div class="text-center" id="loaderFile" style="display:none;">
+							generando archivo, por favor espere
+							<img src="./assets/images/loader/ajax-loader.gif" />
+						</div>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
                             <div class="list">
@@ -290,7 +294,7 @@
                       <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
                         <button (click)="descargarLista()" class="whiteButton">
                           <i class="fa fa-download" aria-hidden="true"></i>
-                          <p>LISTA DE PRECIOS</p>
+                          <p>LISTA DE PRECIOS2</p>
                       </button>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
@@ -367,7 +371,7 @@
                         <div class="col-md-3 col-xs-12">
                             <button (click)="descargarLista()" class="whiteButton">
                                 <i class="fa fa-download" aria-hidden="true"></i>
-                            <p>LISTA DE PRECIOS</p>
+                            <p>LISTA DE PRECIOS3</p>
                           </button>
                         </div>
                     </div>
@@ -380,7 +384,7 @@
                       <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
                       <button (click)="descargarLista()" class="whiteButton">
                           <i class="fa fa-download" aria-hidden="true"></i>
-                          <p>LISTA DE PRECIOS</p>
+                          <p>LISTA DE PRECIOS4</p>
                       </button>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
@@ -489,7 +493,7 @@
                       <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
                       <button (click)="descargarLista()" class="whiteButton">
                           <i class="fa fa-download" aria-hidden="true"></i>
-                          <p>LISTA DE PRECIOS</p>
+                          <p>LISTA DE PRECIOS5</p>
                       </button>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
@@ -540,7 +544,7 @@
                         <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
                         <button (click)="descargarLista()" class="whiteButton">
                             <i class="fa fa-download" aria-hidden="true"></i>
-                            <p>LISTA DE PRECIOS</p>
+                            <p>LISTA DE PRECIOS6</p>
                         </button>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
