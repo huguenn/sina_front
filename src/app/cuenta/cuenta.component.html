@@ -55,6 +55,11 @@
                             <i class="fa fa-download" aria-hidden="true"></i>
                             <p>LISTA DE PRECIOS</p>
                         </button>
+						<div class="text-center" id="loaderFile" style="display:none;">
+							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+						</div>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
                             <div class="list">
@@ -291,7 +296,12 @@
                         <button (click)="descargarLista()" class="whiteButton">
                           <i class="fa fa-download" aria-hidden="true"></i>
                           <p>LISTA DE PRECIOS</p>
-                      </button>
+						</button>
+						<div class="text-center" id="loaderFile" style="display:none;">
+							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+						</div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
                           <div class="list">
@@ -367,8 +377,13 @@
                         <div class="col-md-3 col-xs-12">
                             <button (click)="descargarLista()" class="whiteButton">
                                 <i class="fa fa-download" aria-hidden="true"></i>
-                            <p>LISTA DE PRECIOS</p>
-                          </button>
+								<p>LISTA DE PRECIOS</p>
+							</button>
+							<div class="text-center" id="loaderFile" style="display:none;">
+								<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+								<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+								<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+							</div>
                         </div>
                     </div>
                     <div class="row" *ngIf="!comprados?.length">
@@ -382,6 +397,11 @@
                           <i class="fa fa-download" aria-hidden="true"></i>
                           <p>LISTA DE PRECIOS</p>
                       </button>
+					  <div class="text-center" id="loaderFile" style="display:none;">
+							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+						</div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
                           <div class="list">
@@ -491,6 +511,11 @@
                           <i class="fa fa-download" aria-hidden="true"></i>
                           <p>LISTA DE PRECIOS</p>
                       </button>
+					  <div class="text-center" id="loaderFile" style="display:none;">
+							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+						</div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
                           <div class="list">
@@ -542,6 +567,11 @@
                             <i class="fa fa-download" aria-hidden="true"></i>
                             <p>LISTA DE PRECIOS</p>
                         </button>
+						<div class="text-center" id="loaderFile" style="display:none;">
+							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+						</div>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
                             <div class="list">
