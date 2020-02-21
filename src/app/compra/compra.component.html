@@ -505,6 +505,15 @@
                     <div class="row carrito__titulo">
                       <p>RESUMEN DE TU SOLICITUD</p>
                     </div>
+
+
+                    <div class="row envio">
+                      <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < 5000">
+                                    <p>TE FALTAN $ <strong> {{formatMoney(5000 - carrito.subtotal)}} </strong> PARA TENER EL <strong>ENVIO GRATIS</strong></p>
+                      </div>
+                    </div>
+
+
                     <div class="row envio">
                       <div class="row envio__total">
                           <p>SUBTOTAL</p>
@@ -519,9 +528,7 @@
                           <p>ENVÍO GRATIS</p>
                           <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
                       </div>
-					  <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < 5000">
-                          <p>FALTA $ {{formatMoney(5000 - carrito.subtotal)}} PARA COMPLETAR EL ENVIO GRATIS</p>
-                      </div>
+
 					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
 						<img src="./assets/images/iconos/retiro.png" alt="">
 						<p>Retiro en tienda</p>
