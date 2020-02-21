@@ -17,11 +17,11 @@
     border-radius: 4px;
     color: gray;
 }
- 
+
 .custom__select--option {
     width: 100px !important;
     color: gray;
-} 
+}
 .modal__container .modal__texto img {
     width: 100%;
     position: relative;
@@ -31,7 +31,7 @@
 @media (max-width: 540px) {
     .modal__texto {
         display: none;
-    }        
+    }
 }
 .modal__registrar {
     display: flex;
@@ -114,13 +114,13 @@
 .modal__container .modal-footer {
     border: none;
 }
-.modal__container .modal-footer {    
+.modal__container .modal-footer {
     text-align: center;
     padding: 30px 40px;
 }
 .modal__container .modal-footer .footer__col{
     padding: 0px 50px;
-}    
+}
 .modal__container .modal-footer .facebook {
     background: #4267b2;
     border: none;
@@ -131,9 +131,9 @@
     margin: 5px 0px;
     transition: 0.5s ease all;
     display: none;
-} 
+}
 .modal__container .modal__registrar p {
-    font-weight: bold;    
+    font-weight: bold;
     text-align: left;
 }
 .modal__container .modal__registrar.final p {
@@ -147,7 +147,7 @@
     top: -20px;
     width: calc(100% - 80px);
     font-weight: bold;
-} 
+}
 .whiteButton {
     width: 100%;
     padding: 8px 10px;
@@ -161,7 +161,7 @@
     text-align: center;
 }
 .modal__container .modal-body .stepsContent {
-    width: 90%; 
+    width: 90%;
     margin: auto;
 }
 @media (max-width: 540px) {
@@ -170,8 +170,8 @@
         margin: initial;
         max-height: calc(100vh - 350px);
         overflow: scroll;
-    }   
-} 
+    }
+}
 .modalHide {
     opacity: 0;
     z-index: -1;
@@ -237,7 +237,7 @@
 .modal__container .carrito .footer__col{
     padding: 0 10px;
 }
-.modal__container .carrito .footer__col input, 
+.modal__container .carrito .footer__col input,
 .modal__container .carrito .footer__col button{
         width: 100%;
 }
@@ -276,7 +276,7 @@
     border: 1px solid #d5d5d5;
 }
 
-.col-rep-1, 
+.col-rep-1,
 .col-rep-2,
 .col-rep-3,
 .col-rep-4,
@@ -299,7 +299,7 @@
 /******pregress bar******/
 .steps {
     width: 90%;
-    margin: auto; 
+    margin: auto;
     height: 90px;
 }
 .steps__bar {
@@ -398,7 +398,7 @@
 }
 .mensaje a:hover {
     background: #fff;
-    color: #32e795;   
+    color: #32e795;
 }
 .mensaje i {
     position: absolute;
@@ -414,7 +414,7 @@
     }
 }
 .mensaje__activo {
-    max-height: 130px;    
+    max-height: 130px;
     opacity: 1;
 }
 .loading {
@@ -442,7 +442,9 @@
     margin-bottom: 15px !important;
 }
 
-
+.modal-header {
+    padding: 5px;
+}
 
 textarea {
     width: 100%;
