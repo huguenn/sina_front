@@ -7,6 +7,12 @@
 producto h2{
     font-size: 30px;
 }
+
+.actionButton.btn-outline-success{
+  background-color: #fff;
+  color: #00c973;
+}
+
 .producto__header {
     margin: 0px;
     border-bottom: 1px solid #ccc;
@@ -28,7 +34,7 @@ producto h2{
 .producto__path * {
     display: inline-block;
     color: #ccc;
-} 
+}
 .producto__path span p:first-child {
     margin: 5px 15px;
     color: #0579ff;
@@ -57,7 +63,7 @@ producto h2{
 }
 .producto__compartir .item p{
     display: inline-block;
-}   
+}
 .producto__compartir .item i{
     margin: 5px;
 }
@@ -87,7 +93,7 @@ producto h2{
 .producto__descripcion .title .social i:hover {
     color: #0579ff;
 }
-.producto__descripcion .titled p:first-child{ 
+.producto__descripcion .titled p:first-child{
     font-size: 40px;
 }
 .producto__descripcion .codigo {

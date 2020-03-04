@@ -12,6 +12,10 @@ p {
     text-align: center;
 }
 
+.actionButton.btn-outline-success{
+  background-color: #fff;
+  color: #00c973;  
+}
 .resultado__item__content p:first-child {
     margin-top: 5px;
 }
