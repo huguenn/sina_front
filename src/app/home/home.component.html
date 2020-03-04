@@ -47,9 +47,13 @@
         <a (click)="registrar()">
             <img src="./assets/images/home/banner/banners web-04.png" alt="Registrarse" title="Registrarse" />
         </a>
-        <a hfre="#">
-            <img src="./assets/images/home/banner/banners web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios" />
+
+        <a (click)="descargarLista()">
+        <div id="div1"><img id="rel1" src="./assets/images/home/banner/banners web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios"/>
+        <div id="loaderFile" style="display:none;"><img id="rel2" src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
+        </div></div>
         </a>
+
     </div>
     <div class="row" style="padding: 15px;">
         {{iva_usuario}}
@@ -64,7 +68,7 @@
             <p  *ngIf="!UserLog">
                 <button class="whiteButton" type="button" [routerLink]="['/']" (click)="registrarStatus = !registrarStatus">REGISTRATE</button>
                 <!-- PREVIO
-                <button class="actionButton"> {{"Registrarse"}} </button> 
+                <button class="actionButton"> {{"Registrarse"}} </button>
                 -->
             </p>
         </div>

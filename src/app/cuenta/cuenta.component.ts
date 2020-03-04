@@ -176,6 +176,7 @@ export class CuentaComponent implements OnInit {
       this.router.navigate(['/']);
     });
   }
+  
   public refreshTransporte(value:any):void {
     //this.medioTransporte = value.text
     this.DatosUsuario.datosEnvio.codigoTransporte = value;
@@ -343,6 +344,8 @@ export class CuentaComponent implements OnInit {
 			console.log($error);
 		});
 	}
+
+
   guardarDatos() {
     this.procesando_info = true;
     this.procesando_info_entrega = true;

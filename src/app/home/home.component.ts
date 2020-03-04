@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators/map';
 import { AutenticacionService } from '../autenticacion.service';
 //componente del producto
 import { ProductoItemComponent } from "../producto-item/producto-item.component"
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-home',
@@ -20,13 +21,15 @@ export class HomeComponent implements OnInit {
   private _success = new Subject<string>();
   public iva_usuario: string = ""
   staticAlertClosed = false;
-  successMessage: string; 
+  successMessage: string;
   loginStatus:boolean = false
   listaResultados;
+  listadoProductos = [];
   carousel__item: number = 0
   carousel__max:  number = 0
   public imageSources: string[] = [];
   message:string;
+
   constructor(private data: SharedService, private http:HttpClient, private db: DatabaseService, private auth: AutenticacionService) {
     setInterval(() => {
       this.carousel__item = this.carousel__item < this.carousel__max - 1 ? this.carousel__item + 1 : 0
@@ -34,18 +37,18 @@ export class HomeComponent implements OnInit {
     this.data.updatePageTitle()
   }
   mapOrder (array, order, key) {
-  
+
     array.sort( function (a, b) {
       var A = a[key], B = b[key];
-      
+
       if (order.indexOf(A) > order.indexOf(B)) {
         return 1;
       } else {
         return -1;
       }
-      
+
     });
-    
+
     return array;
   };
   sliderOrder = []
@@ -54,7 +57,7 @@ export class HomeComponent implements OnInit {
     setTimeout(() => this.staticAlertClosed = true, 5000);
     this._success.subscribe((message) => this.successMessage = message);
     debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
-    
+
     //subscribing to data on loginStatus
     this.data.currentLogin.subscribe(
       status => {
@@ -77,7 +80,7 @@ export class HomeComponent implements OnInit {
             console.log($error)
             this.auth.desacreditar()
             window.location.reload()
-          })  
+          })
           this.auth.get($public + "producto/listado/novedades")
           .then(($response)  =>{
             var ofertas1 = $response.response.slice(0,4);
@@ -88,7 +91,7 @@ export class HomeComponent implements OnInit {
           })
           .catch($error => {
             console.log($error)
-          })        
+          })
 
         });
 
@@ -110,14 +113,14 @@ export class HomeComponent implements OnInit {
           this.imageSources.push(element["img"])
         })
         this.carousel__max = sliders.length
-      })  
+      })
     })
     this.data.currentUser.subscribe($user => {
       console.log("actualizacion de usuario")
       if ($user) {
         switch($user["codCategoriaIva"]) {
-          case "CF": 
-          case "INR": 
+          case "CF":
+          case "INR":
           case "RSS": this.iva_usuario = "LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA"; break;
           case "RI":
           case "EX":
@@ -132,11 +135,54 @@ export class HomeComponent implements OnInit {
 
   }
   alertClicked(){
-    this.successMessage = null; 
+    this.successMessage = null;
     this.data.toggleCarritoShow()
   }
   registrar() {
     this.data.toggleLoginModal()
   }
-}
 
+  descargarLista()
+  {
+    (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block'
+    this.auth.get('producto/listadoProductos')
+    .then(($response)  =>
+    {
+      if($response.response)
+      {
+        this.listadoProductos = $response.response
+        const print: any[] = []
+        print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)', 'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta'])
+        this.listadoProductos.forEach(producto =>
+        {
+          print.push
+          (
+            [
+              producto.codigo_interno,
+              producto.nombre + " - " + producto.nombre_adicional,
+              producto.codigo_barras,
+              producto.unidad_medida,
+              producto.precio,
+              producto.familia,
+              producto.categoria,
+              producto.subcategoria,
+              producto.es_oferta
+            ]
+          )
+        });
+
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print)
+        const wb: XLSX.WorkBook = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1')
+        XLSX.writeFile(wb, 'Listado de productos.xlsx')
+      }
+
+      (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none'
+
+    })
+    .catch($error =>
+    {
+      console.log($error);
+    });
+  }
+}
