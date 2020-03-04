@@ -66,7 +66,7 @@
             <p>Compra más rápido y seguro.</p>
             <p>Sólo tenés que completar la solicitud de alta.</p>
             <p  *ngIf="!UserLog">
-                <button class="whiteButton" type="button" [routerLink]="['/']" (click)="registrarStatus = !registrarStatus">REGISTRATE</button>
+                <button class="whiteButton" type="button" (click)="registrar()" >REGISTRATE</button>
                 <!-- PREVIO
                 <button class="actionButton"> {{"Registrarse"}} </button>
                 -->
