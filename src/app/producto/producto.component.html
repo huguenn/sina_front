@@ -51,7 +51,7 @@
       <div class="precio__container">
         <div class="row producto__precio" *ngIf="loginStatus === true">
           <div class="col-md-4 col-xs-6 titled">
-            <p>$ {{producto.precio}}</p>
+            <p>$ {{producto.precio | number : '.2'}}</p>
           </div>
           <div class="precio__container__mobile" *ngIf="loginStatus === true">
             <p>{{iva_usuario}}</p>

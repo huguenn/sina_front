@@ -505,11 +505,9 @@
                     <div class="row carrito__titulo">
                       <p>RESUMEN DE TU SOLICITUD</p>
                     </div>
-
-
-                    <div class="row envio">
+                    <div class="row envio" style="margin-bottom: 10px;">
                       <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < 5000">
-                                    <p>TE FALTAN $ <strong> {{formatMoney(5000 - carrito.subtotal)}} </strong> PARA TENER EL <strong>ENVIO GRATIS</strong></p>
+                       <p>TE FALTAN $<strong> {{formatMoney(5000 - carrito.subtotal)}} </strong> PARA TENER EL <strong>ENVIO GRATIS</strong></p>
                       </div>
                     </div>
 

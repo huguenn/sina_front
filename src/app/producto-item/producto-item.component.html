@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="precio" *ngIf="sesion || item.oferta">
-      <p>${{item.precio_mostrado}}</p>
+      <p>${{item.precio_mostrado | number : '.2'}}</p>
       <span style="margin-left: 5px">{{iva_usuario}}</span>
     </div>
     <!--div class="side">
