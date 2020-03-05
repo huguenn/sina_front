@@ -9,6 +9,14 @@
     width: fit-content !important;
 }
 
+.modal-title.movil{
+  display: none;
+}
+
+.steps.movil{
+  display: none;
+}
+
 
 .custom__select {
     height: 32px !important;
@@ -76,9 +84,6 @@
         width: 750px;
         margin: 30px auto;
     }
-    .modal__container .modal-title {
-        color: #fff;
-    }
 }
 
 .modal__container img {
@@ -99,6 +104,15 @@
     }
     .modal__container img.mobile {
         display: block;
+    }
+    #pasostitle{
+      display: none;
+    }
+    .modal-title.movil, .steps.movil{
+      display: block;
+    }
+    .modal-title.desktop, .steps.desktop{
+      display: none;
     }
 }
 .modal__container .modal-header {
@@ -300,7 +314,7 @@
 .steps {
     width: 90%;
     margin: auto;
-    height: 90px;
+    height: auto;
 }
 .steps__bar {
     counter-reset: step;

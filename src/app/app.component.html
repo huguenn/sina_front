@@ -24,7 +24,8 @@
               <div class="modal-header">
                 <img class="desktop" src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <img class="mobile" src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
-              <h4 class="modal-title">{{registrarStatus ? "Registrando nuevo usuario" : "Bienvenido / Bienvenida"}}</h4>
+              <h4 class="modal-title desktop">{{registrarStatus ? "Registrando nuevo usuario" : "Bienvenido / Bienvenida"}}</h4>
+              <h4 class="modal-title movil">{{registrarStatus ? "Registro en 3 pasos" : "Bienvenido / Bienvenida"}}</h4>
               <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
               <span aria-hidden="true">×</span>
               </button>
@@ -52,10 +53,10 @@
                       </div>
                     </div>
                     <div class="row" *ngIf="registrarStatus" >
-                        <div class="row">
+                        <div class="row" id="pasostitle">
                             <p>Registrate en 3 simples pasos</p>
                         </div>
-                        <div class="steps">
+                        <div class="steps desktop">
                             <ul class="steps__bar">
                                 <li (click)="this.processing.finish(); _step = 1; _changeStep(1)"[ngClass]="{'active': _step >= 1}">Solicitud de Alta</li>
                                 <li (click)="this.processing.finish(); _step = 2; _changeStep(2)"[ngClass]="{'active': _step >= 2}">Datos de Entrega</li>
@@ -65,6 +66,19 @@
                                 <div class="steps__item"></div>
                             </div>
                         </div>
+
+                        <div class="steps movil">
+                            <ul class="steps__bar">
+                                <li (click)="this.processing.finish(); _step = 1; _changeStep(1)"[ngClass]="{'active': _step >= 1}"></li>
+                                <li (click)="this.processing.finish(); _step = 2; _changeStep(2)"[ngClass]="{'active': _step >= 2}"></li>
+                                <li (click)="this.processing.finish(); _step = 3; _changeStep(3)"[ngClass]="{'active': _step >= 3}"></li>
+                            </ul>
+                            <div class="steps">
+                                <div class="steps__item"></div>
+                            </div>
+                        </div>
+
+
                         <div *ngIf="_step === 1" class="row stepsContent">
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 10px">
                                 <input [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
@@ -402,4 +416,3 @@
         <app-footer></app-footer>
     </div>
 </ng-sidebar-container>
-       
