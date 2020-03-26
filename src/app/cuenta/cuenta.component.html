@@ -14,7 +14,7 @@
           <p>Bienvenido {{DatosUsuario.nombreFantasia}}</p>
           <ul>
             <li [class.active]="transaccion.check(i)"
-              (click)="transaccion.cambio(i)"
+              (click)="cambioTab(i)"
               *ngFor="let item of ListaItems; let i = index"
               ><i class="fa fa-{{item.icon}}" aria-hidden="true"></i>
               <span>{{item.texto}}</span>
@@ -61,7 +61,7 @@
             							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
             						</div>
                         <ul>
-                          <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
+                          <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                             <div class="list">
                               <div class="img"><img src="{{item.model}}" alt=""></div>
                               <p>
@@ -81,14 +81,14 @@
                 <div class="row tab__item__header">
                     <p>{{DatosUsuario.codigo ? "Tu número de Cliente es " + this.DatosUsuario.codigo : "El cliente no fue "}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
-                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-9 col-xs-12">
                     <ngb-accordion #acc="ngbAccordion" activeIds="datos0">
                       <ngb-panel id="datos0">
                         <ng-template ngbPanelTitle>
                           <div class="header">
-                            Datos fiscales <span>&#x25B2;</span>
+                            Datos fiscales <span>&#x25bc;</span>
                           </div>
                         </ng-template>
                         <ng-template ngbPanelContent >
@@ -97,7 +97,7 @@
                                 Razon social
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" name="razon_social" [(ngModel)]="DatosUsuario.razonSocial" >
+                              <input disabled class="form-control" type="text" name="razon_social" [ngModel]="DatosUsuario.razonSocial" >
                             </div>
                           </div>
                           <div class="form-group row">
@@ -113,7 +113,7 @@
                                 CUIT/DNI
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" name="cuit" [(ngModel)]="DatosUsuario.cuit">
+                              <input disabled class="form-control" type="text" name="cuit" [ngModel]="DatosUsuario.cuit">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -121,7 +121,7 @@
                                 Categoria IVA
                             </label>
                             <div class="col-xs-9">
-                                <ng-select style="height: 32px; margin: 6px 0px;"
+                                <ng-select #responsable style="max-height: 32px; margin: 6px 0px;"
                                   [clearable]="true"
                                   (change)="refreshCategoria($event)"
                                   ng-model="DatosUsuario.codCategoriaIva"
@@ -137,7 +137,7 @@
                                 Telefono
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.telefono}}">
+                              <input class="form-control" type="text" value="{{DatosUsuario.telefono}}" [(ngModel)]="DatosUsuario.telefono">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -145,7 +145,7 @@
                                 Celular
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.telefonoCelular}}">
+                              <input class="form-control" type="text" value="{{DatosUsuario.telefonoCelular}}" [(ngModel)]="DatosUsuario.telefonoCelular">
                             </div>
                           </div>
                         <div class="form-group row">
@@ -169,7 +169,16 @@
                                   Provincia
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_provincia" [(ngModel)]="DatosUsuario.domicilio.provincia">
+                                <ng-select #provincia_value style="max-height: 32px; margin: 6px 0px;"
+                                  [clearable]="true"
+                                  (change)="refreshProvincia($event)"
+                                  ng-model="DatosUsuario.domicilio.provincia"
+                                  placeholder="Provincia"
+                                >
+                                <ng-option *ngFor="let prov of data.provincia_lista" [value]="prov">
+                                  {{prov}}
+                                </ng-option>
+                                </ng-select>
                               </div>
                             </div>
                             <div class="form-group row">
@@ -217,7 +226,7 @@
                       <ngb-panel id="datos0">
                         <ng-template ngbPanelTitle>
                           <div class="header">
-                            Datos de entrega <span>&#x25B2;</span>
+                            Datos de entrega <span>&#x25bc;</span>
                           </div>
                         </ng-template>
                         <ng-template ngbPanelContent *ngFor="let item of datosFiscales">
@@ -242,7 +251,16 @@
                                     Provincia
                                 </label>
                                 <div class="col-xs-9">
-                                  <input class="form-control" type="text" name="entrega_domicilio_provincia" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.provincia">
+                                  <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
+                                    [clearable]="true"
+                                    (change)="refreshProvincia2($event)"
+                                    ng-model="DatosUsuario.datosEnvio.domicilioEntrega.provincia"
+                                    placeholder="Provincia"
+                                  >
+                                  <ng-option *ngFor="let prov of data.provincia_lista" [value]="prov">
+                                    {{prov}}
+                                  </ng-option>
+                                  </ng-select>
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -266,7 +284,7 @@
                                     Transporte
                                 </label>
                                 <div class="col-xs-9">
-                                    <ng-select style="height: 32px; margin: 6px 0px;"
+                                    <ng-select #transporte style="max-height: 32px; margin: 6px 0px;"
                                       [clearable]="true"
                                       (change)="refreshTransporte($event)"
                                       ng-model="DatosUsuario.datosEnvio.codigoTransporte"
@@ -303,7 +321,7 @@
 							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                       <ul>
-                        <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
+                        <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
                             <div class="img"><img src="{{item.model}}" alt=""></div>
                             <p>
@@ -403,7 +421,7 @@
 							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                       <ul>
-                        <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
+                        <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
                             <div class="img"><img src="{{item.model}}" alt=""></div>
                             <p>
@@ -517,7 +535,7 @@
 							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                       <ul>
-                        <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
+                        <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
                             <div class="img"><img src="{{item.model}}" alt=""></div>
                             <p>
@@ -573,7 +591,7 @@
 							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                         <ul>
-                          <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="transaccion.cambio(i)">
+                          <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                             <div class="list">
                               <div class="img"><div class="img"><img src="{{item.model}}" alt=""></div></div>
                               <p>

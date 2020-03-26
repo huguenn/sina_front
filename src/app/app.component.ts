@@ -22,7 +22,12 @@ export class AppComponent implements OnInit {
 
 
   public recuperarClave: boolean;
-  public validation: boolean = false;
+  public validationCheckPassword: boolean = false;
+  public validationPassword: boolean = false;
+  public validationEmail: boolean = false;
+  public validationCUIT: boolean = false;
+  public validationTelefono: boolean = false;
+  public validationCelular: boolean = false;
   public recuperarOk: string;
   public recuperarError: string;
   public usuario = {
@@ -90,7 +95,8 @@ export class AppComponent implements OnInit {
   public seleccionar($herramienta, $codigo) {
     let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
     console.log('items', this.cat_selected, this.domicilio_provincia, item);
-    $herramienta.select(item);
+    if(item)
+      $herramienta.select(item);
     //console.log(cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
     //this._ngZone.run(() => {this.cat_selected = cat_selected.codigo});
   }
@@ -108,10 +114,10 @@ export class AppComponent implements OnInit {
       console.log('responsable', value, responsable);
       this.cativa = responsable.text;
       this.cat_selected = responsable.codigo;
-  }
-
-
-
+    } else {
+      console.log(value);
+      delete this.cat_selected;
+    }
 
   }
   public deleteCUIT() {
@@ -253,7 +259,7 @@ export class AppComponent implements OnInit {
     mensaje: '',
     action: 'Volver al primer paso',
     value: () => {
-      this.processing.finish(); this._step = (1);
+      this.processing.finish(); this._changeStep(1);
     },
     reset: () => {
       this.error.mensaje = '';
@@ -264,7 +270,8 @@ export class AppComponent implements OnInit {
   obligatorios = ['razon_social', 'domicilio_ciudad', 'email', 'cuit', 'telefono', 'contrasena'];
   no_obligatorios = ['nombre_fantasia'];
   _changeStep($step) {
-    if (this._step === 3) {
+    // console.log('$step: '+$step, '_step: '+this._step);
+    if (this._step === 3 && !$step) {
       if (this.processing.finished) {
         const Cat = this.data.reponsable_lista.find(element => element.text === this.cativa);
         this.contacto['cod_categoria_iva'] = Cat ? Cat.codigo : '';
@@ -333,44 +340,136 @@ export class AppComponent implements OnInit {
         }
       }
     } else {
-      if ((this._step === 1)) {
+      if (this._step === 1) {
 
         if(this.contacto.contrasena !== this.contacto.contrasenaRepetida) {
-          this.validation = true;
-          return;
+          this.validationCheckPassword = true;
+          this.validador['checkcontrasena'] = true;
+          // return;
         } else {
-          this.validation = false;
+          this.validationCheckPassword = false;
+          delete this.validador['checkcontrasena'];
         }
+
         //console.log(this.validador)
+        // Aca paso por cada campo obligatorio
         this.obligatorios.forEach($campo_obligatorio => {
           if (!this.contacto[$campo_obligatorio]) {
             this.validador[$campo_obligatorio] = true;
           } else {
             delete this.validador[$campo_obligatorio];
           }
-          if ($campo_obligatorio === 'email') {
-            if (this.contacto[$campo_obligatorio].includes('@')) {
+
+          // Chequeo que el cuit contenga solo números, sin puntos ni guiones
+          if ($campo_obligatorio === 'cuit' && this.contacto[$campo_obligatorio]) {
+            var cuitRegExp = new RegExp(/^\d+$/); // numeros del 0 al 9
+            if (cuitRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
+              this.validationCUIT = false;
             } else {
               this.validador[$campo_obligatorio] = true;
+              this.validationCUIT = true;
+            }
+          }
+
+          // Chequeo el telefono
+          if ($campo_obligatorio === 'telefono' && this.contacto[$campo_obligatorio]) {
+            var telefonoRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
+            if (telefonoRegExp.test(this.contacto[$campo_obligatorio])) {
+              delete this.validador[$campo_obligatorio];
+              this.validationTelefono = false;
+            } else {
+              this.validador[$campo_obligatorio] = true;
+              this.validationTelefono = true;
+            }
+          }
+
+          // Chequeo que el email contenga los caracteres necesarios
+          if ($campo_obligatorio === 'email'  && this.contacto[$campo_obligatorio]) {
+            var emailRegExp = new RegExp(/^[^\.][^\s@#!]+@[^\s@.#!]+\.[^\s@.]+\.*[^\s@.]+$/); // expresion simple como algo + @ + algo + . + algo (OPCIONAL: + . + algo)
+            if (emailRegExp.test(this.contacto[$campo_obligatorio])) {
+              delete this.validador[$campo_obligatorio];
+              this.validationEmail = false;
+            } else {
+              this.validador[$campo_obligatorio] = true;
+              this.validationEmail = true;
+            }
+          }
+
+          // Chequeo la constraseña
+          if ($campo_obligatorio === 'contrasena' && this.contacto[$campo_obligatorio]) {
+            var passwordRegExp = new RegExp(/.{6,}/); // 6 caracteres o mas
+            if (passwordRegExp.test(this.contacto[$campo_obligatorio])) {
+              delete this.validador[$campo_obligatorio];
+              this.validationPassword = false;
+            } else {
+              this.validador[$campo_obligatorio] = true;
+              this.validationPassword = true;
             }
           }
 
         });
-        if (Object.keys(this.cat_selected).length === 0) {
-          this.validador['cat_selected'] = true;
+        
+        // Chequeo el celular si es que tiene algo escrito porque no es obligatorio
+        if (this.contacto['telefono_celular']) {
+          var celularRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
+          if (celularRegExp.test(this.contacto['telefono_celular'])) {
+            delete this.validador['telefono_celular'];
+            this.validationCelular = false;
+          } else {
+            this.validador['telefono_celular'] = true;
+            this.validationCelular = true;
+          }
         } else {
-          delete this.validador['cat_selected'];
+          delete this.validador['telefono_celular'];
+          this.validationCelular = false;
         }
-        if (Object.keys(this.domicilio_provincia).length === 0) {
-          this.validador['domicilio_provincia'] = true;
+
+        if (this.cat_selected && Object.keys(this.cat_selected).length !== 0) {
+          delete this.validador['cat_selected'];
         } else {
+          this.validador['cat_selected'] = true;
+        }
+        if (this.domicilio_provincia && Object.keys(this.domicilio_provincia).length !== 0) {
           delete this.validador['domicilio_provincia'];
+        } else {
+          this.validador['domicilio_provincia'] = true;
         }
       }
       if (Object.keys(this.validador).length === 0 && this.validador.constructor === Object) {
         this._step = $step ? $step : (this._step < 3 ? this._step + 1 : 3);
+        if (this._step === 1) {
+          setTimeout(() => {
+            this.seleccionar(this.ngSelectResponsable, this.cat_selected);
+            this.seleccionar(this.ngSelectProvincia, this.domicilio_provincia);
+          }, 500);
+        }
+        if (this._step === 2) {
+          setTimeout(() => {
+            if (this.envio_provincia) {
+              this.seleccionar(this.ngSelectProvincia2, this.envio_provincia);
+            }
+          }, 500);
+        }
       }
+    }
+  }
+
+  public _toggleRegistrarStatus() {
+    this.registrarStatus = !this.registrarStatus;
+
+    if (this._step === 1) {
+      setTimeout(() => {
+        this.seleccionar(this.ngSelectResponsable, this.cat_selected);
+        this.seleccionar(this.ngSelectProvincia, this.domicilio_provincia);
+      }, 500);
+    }
+    if (this._step === 2) {
+      setTimeout(() => {
+        if (this.envio_provincia) {
+          this.seleccionar(this.ngSelectProvincia2, this.envio_provincia);
+        }
+      }, 500);
     }
   }
 

@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import 'rxjs/add/operator/toPromise';
 import { reject } from 'q';
 import { SharedService } from "./shared.service";
+import { environment } from './../environments/environment';
 
 
 @Injectable()
@@ -54,8 +55,11 @@ export class AutenticacionService {
 
 
   getPath($path): string{
-    // return "https://sina-184018.appspot.com/" + $path
-    return 'https://sinaweb.appspot.com/' + $path
+    if(environment.production) {
+      // return "https://sina-184018.appspot.com/" + $path
+      return 'https://sinaweb.appspot.com/' + $path
+    }
+    return 'http://127.0.0.1:8080/' + $path
 
   }
   getParams($params) {
@@ -109,15 +113,16 @@ export class AutenticacionService {
     })
     .subscribe($response => {
       this.username = $username
-      this.localSet("login", {username: this.username, token: this.tokenValue, administrativo: $response["administrativo"] === 1 ? true : false, primer_login: $response["primer_login"]})
-	  if(!$response["primer_login"]) {
-      this.loginUpdate(true)
+      this.localSet("login", {username: this.username, token: $response["token"], administrativo: $response["administrativo"] === 1 ? true : false, primer_login: $response["primer_login"]})
+      this.localSet("fecha", Date.now()) 
+      if(!$response["primer_login"]) {
+        this.loginUpdate(true)
       }
-	  else
-	  {
-		this.email = $response["email"];
-		this.razonsocial = $response["razon_social"];
-	  }
+      else
+      {
+        this.email = $response["email"];
+        this.razonsocial = $response["razon_social"];
+      }
 
       this.tokenUpdate($response["token"])
       resolve($response)
@@ -131,6 +136,14 @@ export class AutenticacionService {
     })
   }
   get($url): Promise<any>{
+    var ahora = Date.now();
+    // checkeo si el token se genero entre 19 dias (1641600000) y 21 dias (1814400000) en el pasado
+    if(this.localGet("login") !== "") {
+      if((ahora - this.localGet("fecha") > 1641600000) && (ahora - this.localGet("fecha") < 1814400000)) {
+        console.log("Ya pasaron aprox 20 días del ultimo token")
+        // TODO: hacer refresh acá
+      }
+    }
     return new Promise((resolve, reject) => {
       this.http.get(this.getPath($url),this.getHeader({}))
     .subscribe($response => {
@@ -151,6 +164,14 @@ export class AutenticacionService {
 
 
   post($url, $body): Promise<any>{
+    var ahora = Date.now();
+    // checkeo si el token se genero entre 19 dias y 21 dias en el pasado
+    if(this.localGet("login") !== "") {
+      if((ahora - this.localGet("fecha") > 1641600000) && (ahora - this.localGet("fecha") < 1814400000)) {
+        console.log("Ya pasaron aprox 20 días del ultimo token")
+        // TODO: hacer refresh acá
+      }
+    }
     const headers = new HttpHeaders({
       'Content-Type':  'application/x-www-form-urlencoded',
       'X-API-TOKEN': this.tokenValue
@@ -167,6 +188,7 @@ export class AutenticacionService {
   desacreditar() {
     this.localSet("user", "")
     this.localSet("login", "")
+    this.localSet("fecha", "")
     this.loginUpdate(false)
     this.username = ""
     this.password = ""

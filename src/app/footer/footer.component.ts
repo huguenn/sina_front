@@ -32,7 +32,7 @@ export class FooterComponent implements OnInit {
   nombre: String
   email: String
   suscripcion: string = "SUSCRIBIRME"
-  constructor(private data: SharedService) { }
+  constructor(public data: SharedService) { }
   registrar() {
     this.data.toggleLoginModal()
   }

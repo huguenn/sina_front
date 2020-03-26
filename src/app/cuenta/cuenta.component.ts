@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubjectSubscriber, Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operator/debounceTime';
@@ -9,6 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService, cliente } from '../shared.service';
 import { AutenticacionService } from '../autenticacion.service';
 import * as XLSX from 'xlsx';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 
 const datosFis: Datos[] = [
@@ -70,6 +71,11 @@ const Items = [
   styleUrls: ['./cuenta.component.css']
 })
 export class CuentaComponent implements OnInit {
+  @ViewChild('responsable') ngSelectResponsable: NgSelectComponent;
+  @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
+  @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
+  @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
+  
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
     var c = isNaN(c = Math.abs(c)) ? 2 : c,
       d = d == undefined ? ',' : d,
@@ -177,13 +183,18 @@ export class CuentaComponent implements OnInit {
     });
   }
   
+  public refreshCategoria(value:any):void {
+    this.DatosUsuario.codCategoriaIva = value;
+  }
+  public refreshProvincia(value:any):void {
+    this.DatosUsuario.domicilio.provincia = value;
+  }
+  public refreshProvincia2(value:any):void {
+    this.DatosUsuario.datosEnvio.domicilioEntrega.provincia = value;
+  }
   public refreshTransporte(value:any):void {
     //this.medioTransporte = value.text
     this.DatosUsuario.datosEnvio.codigoTransporte = value;
-  }
-  public refreshCategoria(value:any):void {
-    //this.medioTransporte = value.text
-    this.DatosUsuario.codCategoriaIva = value;
   }
   repetirPregunta($item) {
     this.repetirFlag = true;
@@ -231,28 +242,47 @@ export class CuentaComponent implements OnInit {
           this.loginStatus = status;
         }
       );
+      // Esto se está llamando dos veces seguidas, no se por que aun (cold observer? que deberia ser hot?)
       this.data.currentUser.subscribe(($user:any) => {
         if ($user) {
           this.DatosUsuario = $user;
           new Promise(($acepto, $rechazo) => {
             this.auth.get('public/cliente/envio/getAll').then((result)=> {
-                result.response.forEach(transporte => {
-                  this.transporte_lista.push({
-                    id: transporte.codigo,
-                    text: transporte.nombre
-                  });
+              result.response.forEach(transporte => {
+                this.transporte_lista.push({
+                  id: transporte.codigo,
+                  text: transporte.nombre
                 });
-                this.DatosUsuario.datosEnvio.codigoTransporte = (this.transporte_lista.find((transporte)=>{
-                  return transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte;
-                })).text;
+              });
+              // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
+              this.DatosUsuario.datosEnvio.codigoTransporte = (this.transporte_lista.find((transporte)=>{
+                return transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte;
+              })).text;
               $acepto('ok');
             }).catch((error)=> $rechazo(error));
           })
           .then($respuesta => {
             console.log('okerso', this.transporte_lista, this.initialLista);
+            if(this.transaccion.paso === 1) {
+              setTimeout(() => {
+                if(this.DatosUsuario.codCategoriaIva) {
+                  this.seleccionariva(this.ngSelectResponsable, this.DatosUsuario.codCategoriaIva);
+                }
+                if(this.DatosUsuario.domicilio.provincia) {
+                  this.seleccionarprovincia(this.ngSelectProvincia, this.DatosUsuario.domicilio.provincia);
+                }
+                if(this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
+                  this.seleccionarprovincia2(this.ngSelectProvincia2, this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
+                }
+                if(this.DatosUsuario.datosEnvio.nombreTransporte) {
+                  this.seleccionartransporte(this.ngSelectTransporte, this.DatosUsuario.datosEnvio.nombreTransporte);
+                }
+              }, 500);
+            }
           })
           .catch($error => {
             console.log('public/cliente/envio/getAll: ', this.transporte_lista, this.initialLista);
+            console.log($error);
           });
           switch($user['codCategoriaIva']) {
             case 'CF':
@@ -268,7 +298,53 @@ export class CuentaComponent implements OnInit {
           }
         }
       });
-
+  }
+  cambioTab(i) {
+    this.transaccion.cambio(i);
+    if (i === 1) {
+      setTimeout(() => {
+        if(this.DatosUsuario.codCategoriaIva) {
+          this.seleccionariva(this.ngSelectResponsable, this.DatosUsuario.codCategoriaIva);
+        }
+        if(this.DatosUsuario.domicilio.provincia) {
+          this.seleccionarprovincia(this.ngSelectProvincia, this.DatosUsuario.domicilio.provincia);
+        }
+        if(this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
+          this.seleccionarprovincia2(this.ngSelectProvincia2, this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
+        }
+        if(this.DatosUsuario.datosEnvio.nombreTransporte) {
+          this.seleccionartransporte(this.ngSelectTransporte, this.DatosUsuario.datosEnvio.nombreTransporte);
+        }
+      }, 500);
+    }
+  }
+  public seleccionariva($herramienta, $codigo) {
+    if($herramienta) {
+      let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      if(item)
+        $herramienta.select(item);
+    }
+  }
+  public seleccionarprovincia($herramienta, $codigo) {
+    if($herramienta) {
+      let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      if(item)
+        $herramienta.select(item);
+    }
+  }
+  public seleccionarprovincia2($herramienta, $codigo) {
+    if($herramienta) {
+      let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      if(item)
+        $herramienta.select(item);
+    }
+  }
+  public seleccionartransporte($herramienta, $codigo) {
+    if($herramienta) {
+      let item = $herramienta.itemsList._items.find($item => $item.label.trim() === $codigo);
+      if(item)
+        $herramienta.select(item);
+    }
   }
   closeFull(event) {
     if(event.target.className === 'modal__container') {
@@ -352,20 +428,17 @@ export class CuentaComponent implements OnInit {
 
     let body = new URLSearchParams();
     let body_entrega = new URLSearchParams();
-    body.set('razon_social', this.DatosUsuario.razonSocial);
     body.set('nombre_fantasia', this.DatosUsuario.nombreFantasia);
-    body.set('cuit', this.DatosUsuario.cuit);
     body.set('telefono', this.DatosUsuario.telefono);
     body.set('telefono_celular', this.DatosUsuario.telefonoCelular);
-    body.set('body_entrega', this.DatosUsuario.telefonoCelular);
     body.set('cod_categoria_iva', this.DatosUsuario.codCategoriaIva);
     body.set('domicilio_direccion', this.DatosUsuario.domicilio.direccion);
     body.set('domicilio_ciudad', this.DatosUsuario.domicilio.ciudad);
     body.set('domicilio_provincia', this.DatosUsuario.domicilio.provincia);
     body.set('domicilio_codigo_postal', this.DatosUsuario.domicilio.codPostal);
-    body.set('nombre_responsable_facturacion', this.DatosUsuario.nombreResponsableFacturacion);
-    body.set('email_facturacion', this.DatosUsuario.emailFacturacion);
-    body.set('telefono_facturacion', this.DatosUsuario.telefonoFacturacion);
+    body.set('facturacion_nombre_responsable', this.DatosUsuario.nombreResponsableFacturacion);
+    body.set('facturacion_email', this.DatosUsuario.emailFacturacion);
+    body.set('facturacion_telefono', this.DatosUsuario.telefonoFacturacion);
     body.set('descripcion', this.DatosUsuario.descripcion);
 
 
@@ -377,7 +450,7 @@ export class CuentaComponent implements OnInit {
     body_entrega.set('cod_transporte', this.DatosUsuario.datosEnvio.codigoTransporte);
 
     console.log(body, body_entrega);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
     this.procesando_info_ok = '';
     this.procesando_info_entrega_ok = '';
 
@@ -389,6 +462,7 @@ export class CuentaComponent implements OnInit {
       this.procesando_info_ok = $response.body.response;
     })
     .catch(($error) => {
+      console.log($error);
       this.procesando_info = false;
       this.procesando_info_error = '';
       try {

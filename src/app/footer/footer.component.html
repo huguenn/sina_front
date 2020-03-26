@@ -23,7 +23,7 @@
                   <li class="nav-item">
                     <a routerLink="como-comprar" class="nav-link"></a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" *ngIf="!data.statusLogin">
                     <a style="cursor: pointer" class="nav-link" (click)="registrar()">Nuevo cliente</a>
                   </li>
                   <li class="nav-item">
@@ -90,7 +90,7 @@
                   <li class="nav-item">
                     <a routerLink="como-comprar" class="nav-link"></a>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item" *ngIf="!data.statusLogin">
                     <a style="cursor: pointer" class="nav-link" (click)="registrar()">Nuevo cliente</a>
                   </li>      
                   <li class="nav-item">

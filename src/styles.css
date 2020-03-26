@@ -466,12 +466,15 @@ ng-sidebar-container {
 /* validacion */
 
 .noValidado,
-.noValidado span {
+.noValidado > .ng-select-container {
     background: #F44336;
-    color: #fff;
+    color: #fff !important;
 }
 .noValidado::placeholder {
-    color: white;
+    color: #fff;
+}
+.noValidado .ng-placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
 @media screen and (max-width: 768px){

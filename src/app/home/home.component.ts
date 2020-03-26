@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   carousel__max:  number = 0
   public imageSources: string[] = [];
   message:string;
+  UserLog   : boolean;
 
   constructor(private data: SharedService, private http:HttpClient, private db: DatabaseService, private auth: AutenticacionService) {
     setInterval(() => {
@@ -63,6 +64,7 @@ export class HomeComponent implements OnInit {
       status => {
         this.loginStatus = status
         //getting data via get request
+        // TODO: Esto esta hardcodeado foerte o soy yo?
         this.http.get('assets/data/resultadosHome.json')
         .subscribe(res => {
           this.listaResultados = res["Resultados"];
@@ -79,7 +81,8 @@ export class HomeComponent implements OnInit {
           .catch($error => {
             console.log($error)
             this.auth.desacreditar()
-            window.location.reload()
+            // TODO: Este reload me dejaba en loop infinito la web en el celular
+            // window.location.reload()
           })
           this.auth.get($public + "producto/listado/novedades")
           .then(($response)  =>{

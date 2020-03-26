@@ -58,9 +58,9 @@
                         </div>
                         <div class="steps desktop">
                             <ul class="steps__bar">
-                                <li (click)="this.processing.finish(); _step = 1; _changeStep(1)"[ngClass]="{'active': _step >= 1}">Solicitud de Alta</li>
-                                <li (click)="this.processing.finish(); _step = 2; _changeStep(2)"[ngClass]="{'active': _step >= 2}">Datos de Entrega</li>
-                                <li (click)="this.processing.finish(); _step = 3; _changeStep(3)"[ngClass]="{'active': _step >= 3}">Confirmación de Datos</li>
+                                <li [ngClass]="{'active': _step >= 1}">Solicitud de Alta</li>
+                                <li [ngClass]="{'active': _step >= 2}">Datos de Entrega</li>
+                                <li [ngClass]="{'active': _step >= 3}">Confirmación de Datos</li>
                             </ul>
                             <div class="steps">
                                 <div class="steps__item"></div>
@@ -69,9 +69,9 @@
 
                         <div class="steps movil">
                             <ul class="steps__bar">
-                                <li (click)="this.processing.finish(); _step = 1; _changeStep(1)"[ngClass]="{'active': _step >= 1}"></li>
-                                <li (click)="this.processing.finish(); _step = 2; _changeStep(2)"[ngClass]="{'active': _step >= 2}"></li>
-                                <li (click)="this.processing.finish(); _step = 3; _changeStep(3)"[ngClass]="{'active': _step >= 3}"></li>
+                                <li [ngClass]="{'active': _step >= 1}"></li>
+                                <li [ngClass]="{'active': _step >= 2}"></li>
+                                <li [ngClass]="{'active': _step >= 3}"></li>
                             </ul>
                             <div class="steps">
                                 <div class="steps__item"></div>
@@ -80,11 +80,12 @@
 
 
                         <div *ngIf="_step === 1" class="row stepsContent">
-                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 10px">
+                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
                                 <input [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
                                 <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia">
                                 <input [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
-                                <ng-select #responsable style="height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
+                                <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
+                                <ng-select #responsable style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
                                   [clearable]="true"
                                   bindLabel="text"
                                   bindValue="codigo"
@@ -113,31 +114,35 @@
 
 
                                 <input [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit">
+                                <span *ngIf="validationCUIT" style="color: red;">Solo usar números en el campo CUIT/DNI</span>
                                 <input [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono">
-                                <input type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular">
+                                <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
+                                <input [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular">
+                                <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
                             </div>
-                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 10px">
+                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
                                 <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
                                     <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion">
                                     <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero">
                                 </div>
                                 <input [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad">
                                 <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal">
-                                <ng-select class="cuscus"  #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="height: 32px; margin: 6px 0px;"
+                                <ng-select #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
                                     [clearable]="true"
                                     [items]="provincia"
                                     (change)="refreshProvincia($event)"
                                     ng-model="domicilio_provincia"
                                     placeholder="Provincia*"
-                                    >
+                                >
                                 </ng-select>
-                                <input [ngClass]="{'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*">
-                                <input [ngClass]="{'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*">
-                                <span *ngIf="validation" style="color: red;">Las contraseñas no son iguales</span>
+                                <input [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*">
+                                <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
+                                <input [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*">
+                                <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
                             </div>
                         </div>
                         <div class="row stepsContent" *ngIf="_step === 2">
-                            <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 10px">
+                            <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 5px">
                                     <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras">
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
                                         <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion">
@@ -147,7 +152,7 @@
                                             <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad">
                                             <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal">
                                     </div>
-                                    <ng-select #provincia_value2 style="height: 32px; margin: 6px 0px;"
+                                    <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
                                                 placeholder="Provincia de entrega"
                                                 [clearable]="true"
                                                 [items]="provincia"
@@ -197,7 +202,7 @@
                     <div class="row" *ngIf="!registrarStatus">
                         <div class="col-xs-12 col-md-6 footer__col">
                             <p>Aun no tienes usuario:</p>
-                            <button class="whiteButton" type="button" [routerLink]="['/']" (click)="registrarStatus = !registrarStatus">REGISTRATE</button>
+                            <button class="whiteButton" type="button" [routerLink]="['/']" (click)="_toggleRegistrarStatus()">REGISTRATE</button>
                         </div>
                         <div class="col-xs-12 col-md-6 footer__col">
                             <button type="button" class="facebook"> CONTINUAR CON FACEBOOK </button>

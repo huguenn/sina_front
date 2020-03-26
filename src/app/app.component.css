@@ -72,6 +72,7 @@
 .modal__container .modal-dialog {
     width: 750px;
     margin: 30px auto;
+    max-height: 100vh;
 }
 .modal__container .modal-title {
     font-size: 16px;
@@ -80,6 +81,9 @@
     font-weight: bold;
 }
 @media (max-width: 540px) {
+    .modal__container {
+        padding-bottom: 30%;
+    }
     .modal__container .modal-dialog {
         width: 750px;
         margin: 30px auto;
@@ -98,6 +102,21 @@
     display: none;
 }
 
+@media (max-width: 992px) {
+    .modal-title.movil, .steps.movil{
+      display: block;
+    }
+    .modal-title.desktop, .steps.desktop{
+      display: none;
+    }
+    #pasostitle{
+      display: none;
+    }
+    .modal-footer {
+        padding-top: 1px !important;
+    }
+}
+
 @media (max-width: 540px) {
     .modal__container img.desktop {
         display: none;
@@ -113,6 +132,9 @@
     }
     .modal-title.desktop, .steps.desktop{
       display: none;
+    }
+    .modal-footer {
+        padding-top: 15px !important;
     }
 }
 .modal__container .modal-header {
@@ -130,7 +152,7 @@
 }
 .modal__container .modal-footer {
     text-align: center;
-    padding: 30px 40px;
+    padding: 15px 40px;
 }
 .modal__container .modal-footer .footer__col{
     padding: 0px 50px;
@@ -168,7 +190,7 @@
 }
 .modal__container .modal-body {
     position: relative;
-    padding: 15px;
+    padding: 8px 15px;
     border-top: 1px solid #ddd;
     margin: 0px 25px;
     padding-bottom: 0px;
@@ -237,7 +259,7 @@
 }
 .modal__container .modal-body .card .card-header {
     border-bottom: 1px solid #ddd;
-    padding: 10px;
+    padding: 5px 10px;
     font-size: 18px;
     font-weight: bold;
     margin: 0;
@@ -359,7 +381,6 @@
 }
 .steps__bar li.active {
     color: #1a7cfb;
-    cursor: pointer;
 }
 .steps__bar li.active:before {
     border-color: #1a7cfb;
