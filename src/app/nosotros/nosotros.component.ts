@@ -11,6 +11,6 @@ export class NosotrosComponent implements OnInit {
   constructor(private data: SharedService) { }
 
   ngOnInit() {
-    this.data.updatePageTitle()
+    this.data.updatePageTitle();
   }
 }

@@ -61,7 +61,9 @@ export class AppComponent implements OnInit {
     actividad: ''
   };
 
-  public provincia = ['Ciudad de Buenos Aires', 'Buenos Aires', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba', 'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén', 'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán', 'Otra'];
+  public provincia = ['Ciudad de Buenos Aires', 'Buenos Aires', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba',
+    'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén',
+    'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán', 'Otra'];
   public reponsable: Array<string> = [
     'Consumidor final',
     'Monotributista',
@@ -93,12 +95,13 @@ export class AppComponent implements OnInit {
 
 
   public seleccionar($herramienta, $codigo) {
-    let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
-    console.log('items', this.cat_selected, this.domicilio_provincia, item);
-    if(item)
+    const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+    this.data.log('seleccionar items app:', this.cat_selected, this.domicilio_provincia, item);
+    if (item) {
       $herramienta.select(item);
-    //console.log(cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
-    //this._ngZone.run(() => {this.cat_selected = cat_selected.codigo});
+    // this.data.log('seleccionar items app:', cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
+    // this._ngZone.run(() => {this.cat_selected = cat_selected.codigo});
+    }
   }
 
   public refreshCUIT(value: any): void {
@@ -108,14 +111,14 @@ export class AppComponent implements OnInit {
       this.cuit = 'CUIT (Solo numeros)*';
     }
 
-    if(value) {
-      console.log(value);
+    if (value) {
+      this.data.log('refreshcuit value app:', value);
       const responsable = this.data.reponsable_lista.find(($item) => $item.codigo === value);
-      console.log('responsable', value, responsable);
+      this.data.log('refreshcuit responsable app:', value, responsable);
       this.cativa = responsable.text;
       this.cat_selected = responsable.codigo;
     } else {
-      console.log(value);
+      this.data.log('refreshcuit no value app:', value);
       delete this.cat_selected;
     }
 
@@ -124,7 +127,7 @@ export class AppComponent implements OnInit {
     this.cat_selected = undefined;
   }
   public refreshProvincia(value: any): void {
-    console.log(value);
+    this.data.log('refreshprovincia value app:', value);
     this.domicilio_provincia = value;
     this.contacto.domicilio_provincia = value;
   }
@@ -193,22 +196,25 @@ export class AppComponent implements OnInit {
         this.menu.notifyOther(true);
       }
     } else {
-      if (!('path' in Event.prototype))
+      if (!('path' in Event.prototype)) {
         Object.defineProperty(Event.prototype, 'path', {
           get: function () {
-            var path = [];
-            var currentElem = this.target;
+            const path = [];
+            let currentElem = this.target;
             while (currentElem) {
               path.push(currentElem);
               currentElem = currentElem.parentElement;
             }
-            if (path.indexOf(window) === -1 && path.indexOf(document) === -1)
+            if (path.indexOf(window) === -1 && path.indexOf(document) === -1) {
               path.push(document);
-            if (path.indexOf(window) === -1)
+            }
+            if (path.indexOf(window) === -1) {
               path.push(window);
+            }
             return path;
           }
         });
+      }
       if (!$event.path.some($element => ($element.className === 'buy' || $element.className === 'login'))) {
         this.menu.notifyOther(true);
       }
@@ -270,7 +276,7 @@ export class AppComponent implements OnInit {
   obligatorios = ['razon_social', 'domicilio_ciudad', 'email', 'cuit', 'telefono', 'contrasena'];
   no_obligatorios = ['nombre_fantasia'];
   _changeStep($step) {
-    // console.log('$step: '+$step, '_step: '+this._step);
+    // this.data.log('_changestep app', '$step: '+$step, '_step: '+this._step);
     if (this._step === 3 && !$step) {
       if (this.processing.finished) {
         const Cat = this.data.reponsable_lista.find(element => element.text === this.cativa);
@@ -294,7 +300,7 @@ export class AppComponent implements OnInit {
         }
         if (!validando) {
           this.processing.start();
-          let body = new URLSearchParams();
+          const body = new URLSearchParams();
 
           Object.keys(this.contacto).forEach(element => {
             if (!element.includes('domicilio_direccion')) {
@@ -310,14 +316,15 @@ export class AppComponent implements OnInit {
           const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
           /*
-          console.log("body.toString()", body.toString())
+          this.data.log('_changestep body.toString() app', body.toString())
           this.processing.stop()
 
           this.response = this.confirmacion
 
           this.error.reset()
           this.response = this.error
-          this.response.mensaje = "prueba"*/
+          this.response.mensaje = "prueba"
+          */
 
           this.http.post(this.auth.getPath('public/cliente/nuevo'), body.toString(), { headers, observe: 'response' })
             .subscribe($response => {
@@ -332,26 +339,25 @@ export class AppComponent implements OnInit {
                   this.response.mensaje += $error.error.response.error[element] + ' ';
                 });
               } catch ($throw) {
-                console.log($throw);
+                this.data.log('postnuevocliente error app', $throw);
               }
             });
         } else {
-          //console.log(this.contacto)
+          // this.data.log('no validado error app', this.contacto)
         }
       }
     } else {
       if (this._step === 1) {
 
-        if(this.contacto.contrasena !== this.contacto.contrasenaRepetida) {
+        if (this.contacto.contrasena !== this.contacto.contrasenaRepetida) {
           this.validationCheckPassword = true;
           this.validador['checkcontrasena'] = true;
-          // return;
         } else {
           this.validationCheckPassword = false;
           delete this.validador['checkcontrasena'];
         }
 
-        //console.log(this.validador)
+        // this.data.log('step1 validador app', this.validador)
         // Aca paso por cada campo obligatorio
         this.obligatorios.forEach($campo_obligatorio => {
           if (!this.contacto[$campo_obligatorio]) {
@@ -362,7 +368,7 @@ export class AppComponent implements OnInit {
 
           // Chequeo que el cuit contenga solo números, sin puntos ni guiones
           if ($campo_obligatorio === 'cuit' && this.contacto[$campo_obligatorio]) {
-            var cuitRegExp = new RegExp(/^\d+$/); // numeros del 0 al 9
+            const cuitRegExp = new RegExp(/^\d+$/); // numeros del 0 al 9
             if (cuitRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
               this.validationCUIT = false;
@@ -374,7 +380,7 @@ export class AppComponent implements OnInit {
 
           // Chequeo el telefono
           if ($campo_obligatorio === 'telefono' && this.contacto[$campo_obligatorio]) {
-            var telefonoRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
+            const telefonoRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
             if (telefonoRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
               this.validationTelefono = false;
@@ -386,7 +392,7 @@ export class AppComponent implements OnInit {
 
           // Chequeo que el email contenga los caracteres necesarios
           if ($campo_obligatorio === 'email'  && this.contacto[$campo_obligatorio]) {
-            var emailRegExp = new RegExp(/^[^\.][^\s@#!]+@[^\s@.#!]+\.[^\s@.]+\.*[^\s@.]+$/); // expresion simple como algo + @ + algo + . + algo (OPCIONAL: + . + algo)
+            const emailRegExp = new RegExp(/^[^\.][^\s@#!]+@[^\s@.#!]+\.[^\s@.]+\.*[^\s@.]+$/); // expresion simple como algo + @ + algo + . + algo (OPCIONAL: + . + algo)
             if (emailRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
               this.validationEmail = false;
@@ -398,7 +404,7 @@ export class AppComponent implements OnInit {
 
           // Chequeo la constraseña
           if ($campo_obligatorio === 'contrasena' && this.contacto[$campo_obligatorio]) {
-            var passwordRegExp = new RegExp(/.{6,}/); // 6 caracteres o mas
+            const passwordRegExp = new RegExp(/.{6,}/); // 6 caracteres o mas
             if (passwordRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
               this.validationPassword = false;
@@ -409,10 +415,10 @@ export class AppComponent implements OnInit {
           }
 
         });
-        
+
         // Chequeo el celular si es que tiene algo escrito porque no es obligatorio
         if (this.contacto['telefono_celular']) {
-          var celularRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
+          const celularRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
           if (celularRegExp.test(this.contacto['telefono_celular'])) {
             delete this.validador['telefono_celular'];
             this.validationCelular = false;
@@ -494,37 +500,37 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    //subscribing to data on carrito
+    // subscribing to data on carrito
     this.data.currentMessage.subscribe(
       message => {
         this.childmessage = message;
       }
     );
-    //subscribing to data on sidebar
+    // subscribing to data on sidebar
     this.data.currentSide.subscribe(
       status => {
         this._opened = status;
       }
     );
-    //subscribing to data on loginStatus
+    // subscribing to data on loginStatus
     this.data.currentModal.subscribe(
       status => {
         this.loginStatus = status;
       }
     );
-    //subscribing to data on CarritoStatus
+    // subscribing to data on CarritoStatus
     this.data.currentModal2.subscribe(
       status => {
         this.carritoStatus = status;
       }
     );
-    //subscribing to data on representarStatus
+    // subscribing to data on representarStatus
     this.data.currentRepresentar.subscribe(
       status => {
         this.representarStatus = status;
       }
     );
-    //subscribing to router change
+    // subscribing to router change
     this.router.events.subscribe(val => {
       if (this.actualRoute !== val['url']) {
         this.actualRoute = (val['url']);
@@ -538,13 +544,13 @@ export class AppComponent implements OnInit {
       this.el.nativeElement.parentElement.scrollTop = 0;
     });
 
-    //subscribing to data on Firebase
+    // subscribing to data on Firebase
     this.db.getDocument('sticky').subscribe(value => {
       if (value) {
         this.sticky = value;
       }
     });
-    //subscribing to data on Firebase
+    // subscribing to data on Firebase
     this.db.getCollection('emergentes').subscribe(value => {
       if (value) {
         this.emergentes = value;
@@ -552,34 +558,37 @@ export class AppComponent implements OnInit {
       }
     });
 
-    //binding interval
+    // binding interval
     setInterval(() => {
       this.menuStatus = this.el.nativeElement.parentElement.scrollTop;
     }, 100);
 
-    //reading user data
-    this.auth.get('cliente/datos')
-      .then(($response) => {
-        const datos_locales = this.auth.localGet('user');
-        if ($response.response['codigo'] !== datos_locales['codigo']) {
-          window.location.reload();
-        } else {
-          //console.log(datos_locales, $response.response)
-        }
-        this.auth.localSet('user', $response.response as cliente);
-        this.data.updateUser($response.response);
-        //this.auth.userTypeUpdate($response.response["numeroListaPrecios"])
-      })
-      .catch($error => {
-        console.log($error);
-      });
+    // reading user data
+    if (this.auth.localGet('login')) {
+      this.auth.get('cliente/datos')
+        .then(($response) => {
+          const datos_locales = this.auth.localGet('user');
+          if ($response.response['codigo'] !== datos_locales['codigo']) {
+            window.location.reload(); // podría caer en un loop infinito aca? no hay ningun localset que lo pare?
+          } else {
+            // this.data.log('getclientedatos error codigouser app', datos_locales, $response.response)
+          }
+          this.auth.localSet('user', $response.response as cliente);
+          this.data.updateUser($response.response);
+          // this.auth.userTypeUpdate($response.response["numeroListaPrecios"])
+        })
+        .catch($error => {
+          this.data.log('problemas con el login/token app', this.auth.localGet('login'));
+          this.data.log('getdatoscliente error app', $error);
+        });
+    }
 
   }
 
   find_index() {
-    var item = this.actualRoute === '/' ? 'home' : this.actualRoute;
+    const item = this.actualRoute === '/' ? 'home' : this.actualRoute;
     if (item) {
-      var index = this.emergentes.findIndex(($element) => {
+      const index = this.emergentes.findIndex(($element) => {
         return item.indexOf($element.seccion) !== -1;
       });
       if (this.actualRoute.indexOf('confirmacion') === -1) {
@@ -636,7 +645,7 @@ export class AppComponent implements OnInit {
   }
 
   updatePrecio($precio, $cantidad): string {
-    var subtotal = $precio * $cantidad;
+    const subtotal = $precio * $cantidad;
     return this.formatMoney(subtotal);
   }
   closeModal() {
@@ -660,7 +669,7 @@ export class AppComponent implements OnInit {
           this.migrandoStatus = false;
           this.loginLoading = false;
           this.loginStatus = true;
-          //this.data.toggleLoginModal2()
+          // this.data.toggleLoginModal2()
         } else if (!this.auth.localGet('login').administrativo) {
           this.auth.get('cliente/datos')
             .then(($response) => {
@@ -671,7 +680,7 @@ export class AppComponent implements OnInit {
             })
             .catch($error => {
               this.loginLoading = false;
-              console.log($error);
+              this.data.log('loginmodal error app', $error);
             });
         } else {
           this.auth.get('cliente/getAll')
@@ -684,14 +693,14 @@ export class AppComponent implements OnInit {
             })
             .catch($error => {
               this.loginLoading = false;
-              console.log($error);
+              this.data.log('clientegetall error app', $error);
             });
 
         }
       })
       .catch($catch => {
         this.loginLoading = false;
-        console.log($catch);
+        this.data.log('loginmodal error app', $catch);
         this.login.errorMsg = ($catch.error.message);
         this.login.error = true;
       });
@@ -700,7 +709,7 @@ export class AppComponent implements OnInit {
     this.loginLoading = true;
     this.login.error = false;
     this.login.errorMsg = '';
-    let body = new URLSearchParams();
+    const body = new URLSearchParams();
 
     body.set('email', this.auth.email);
     body.set('confirmacion_email', this.auth.email);
@@ -725,7 +734,7 @@ export class AppComponent implements OnInit {
           });
         }
         this.login.error = true;
-        console.log($error);
+        this.data.log('postverificaciondatos error app', $error);
       });
   }
   cerrarRepresentarCuenta() {
@@ -734,13 +743,13 @@ export class AppComponent implements OnInit {
   representarCuenta(cuenta) {
     this.cuentaRespuesta = 'Esperando respuesta...';
     if (cuenta) {
-      let body = new URLSearchParams();
+      const body = new URLSearchParams();
       body.set('cuit_cliente', cuenta.cuit);
       this.auth.post('auth/admin/representar', body)
         .then($response => {
           this.cuentaRespuesta = $response.body.response;
           setTimeout(() => {
-            let login = this.auth.localGet('login');
+            const login = this.auth.localGet('login');
             login.token = $response.body.token;
             this.auth.localSet('login', login);
             this.auth.tokenUpdate($response.body.token);
@@ -751,7 +760,7 @@ export class AppComponent implements OnInit {
                 this.representarCancel();
                 window.location.reload(true);
               })
-              .catch($error => console.log($error));
+              .catch($error => this.data.log('representarcuenta error app', $error));
           }, 1000);
         })
         .catch(($error) => {
@@ -769,13 +778,13 @@ export class AppComponent implements OnInit {
     }
   }
   enterRecuperarEvento() {
-    let body = new URLSearchParams();
+    const body = new URLSearchParams();
     body.set('email', this.login.user);
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     this.http.post(this.auth.getPath('public/cliente/recuperar_contrasena'), body.toString(), { headers, observe: 'response' })
       .subscribe(($response: any) => {
-        //console.log("response", $response.body.response.mensaje)
+        // this.data.log('recuperarcontraseña response app', $response.body.response.mensaje)
         if ($response.body.response.mensaje) {
           this.recuperarOk = $response.body.response.mensaje;
         }
@@ -785,7 +794,7 @@ export class AppComponent implements OnInit {
             this.recuperarError += $error.error.response.error[element] + ' ';
           });
         } catch ($throw) {
-          console.log($throw);
+          this.data.log('recuperarcontraseña error app', $throw);
         }
       });
   }
@@ -793,7 +802,7 @@ export class AppComponent implements OnInit {
     this.recuperarOk = '';
     this.recuperarError = '';
     if ($event.keyCode == 13) {
-      //this.loginModal(this.login.user, this.login.pass)
+      // this.loginModal(this.login.user, this.login.pass)
       this.enterRecuperarEvento();
 
     }
@@ -816,7 +825,8 @@ export class AppComponent implements OnInit {
   }
   filterBusqueda: string;
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+      let s, i, j;
+      c = isNaN(c = Math.abs(c)) ? 2 : c,
       d = d == undefined ? ',' : d,
       t = t == undefined ? '.' : t,
       s = n < 0 ? '-' : '',
@@ -833,8 +843,8 @@ export class AppComponent implements OnInit {
 })
 export class BusquedaCuentaPipe implements PipeTransform {
   transform(items: any[], searchText: string): any[] {
-    if (!items) return [];
-    if (!searchText) return items;
+    if (!items) { return []; }
+    if (!searchText) { return items; }
 
     searchText = searchText.toLowerCase();
     return items.filter(it => {

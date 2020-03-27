@@ -1,25 +1,25 @@
-import { BrowserModule }    from '@angular/platform-browser';
-import { NgModule }         from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
-import { AppComponent }     from './app.component';
-import { HeaderComponent }  from './header/header.component';
-import { HomeComponent }    from './home/home.component';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
+import { HomeComponent } from './home/home.component';
 import { RouterModule, Routes } from '@angular/router';
-import { PopoverModule } from "ngx-popover";
+import { PopoverModule } from 'ngx-popover';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { NgxMyDatePickerModule } from 'ngx-mydatepicker';
-import { SharedService } from "../app/shared.service";
-import { AutenticacionService } from "./autenticacion.service"
+import { SharedService } from '../app/shared.service';
+import { AutenticacionService } from './autenticacion.service';
 import { MenuService } from './menu.service';
-import { FormsModule } from '@angular/forms'
-import { HttpModule }      from '@angular/http';
-import { HttpClientModule }      from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { SidebarModule } from 'ng-sidebar';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 
-//bootstrap
-import { NgbModule }          from '@ng-bootstrap/ng-bootstrap';
+// bootstrap
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FooterComponent } from './footer/footer.component';
 import { FilterComponent } from './filter/filter.component';
 import { ProductoComponent } from './producto/producto.component';
@@ -30,7 +30,7 @@ import { MyFilterPipe } from './my-filter.pipe';
 import { BusquedaCuentaPipe } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
-//firebase
+// firebase
 import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
@@ -48,13 +48,13 @@ import { LoadingComponent } from './shared/loading/loading.component';
 
 // router config
 const appRoutes: Routes = [
-  { 
-    path: '',    
-    component: HomeComponent 
+  {
+    path: '',
+    component: HomeComponent
   },
-  { 
-    path: 'home', 
-    component: HomeComponent 
+  {
+    path: 'home',
+    component: HomeComponent
   },
   {
     path: 'confirmacion',
@@ -144,7 +144,7 @@ const appRoutes: Routes = [
     HomeComponent,
     FooterComponent,
     FilterComponent,
-    ProductoComponent, 
+    ProductoComponent,
     MyFilterPipe,
     CuentaComponent,
     CompraComponent,

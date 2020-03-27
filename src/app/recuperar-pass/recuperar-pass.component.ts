@@ -11,79 +11,79 @@ import { SharedService } from '../shared.service';
   styleUrls: ['./recuperar-pass.component.css']
 })
 export class RecuperarPassComponent implements OnInit {
-	sub: Subscription
-	respuesta: string = ""
-	tokenCode:string = ""
-	password:string = ""
-	password_re:string = ""
-	volviendoAlHome: boolean = false
-	constructor(
-	private route:  ActivatedRoute,
-	private router: Router,
-	private http:   HttpClient,
-	private auth:   AutenticacionService,
-	private data: SharedService
-	) {
+    sub: Subscription;
+    respuesta: string = '';
+    tokenCode: string = '';
+    password: string = '';
+    password_re: string = '';
+    volviendoAlHome: boolean = false;
+    constructor(
+    private route:  ActivatedRoute,
+    private router: Router,
+    private http:   HttpClient,
+    private auth:   AutenticacionService,
+    private data: SharedService
+    ) {
 
-	}
+    }
 
-	ngOnInit() {
-	    this.data.updatePageTitle("Recuperar de contraseña | Sina")
-	    this.data.closeLoginModal()
-	    this.sub = this.route
-	    .queryParams
-	    .subscribe(params => {
-	      if(params['codigo']) {
-	      	this.tokenCode = params['codigo']
-	      }
-	    });
-	}
-	ngOnDestroy() {
-		this.sub.unsubscribe();
-	}
-	confirmarClaveKey($event) {
-		if($event.keyCode == 13) {
-			this.confirmarClave()
-		}
-	}
-	volver_home() {
-		this.data.toggleLoginModal()
-		this.router.navigate(["/"])
-	}
-	confirmarClave() {
-		/*this.auth.get()
-		.then(($response)  =>{
-		  this.respuesta = $response.response
-		})
-		.catch($error => {
-		  this.respuesta = $error.error.response
-		  console.log($error)
-		}) */   
-		this.respuesta= "Esperando respuesta"
+    ngOnInit() {
+        this.data.updatePageTitle('Recuperar de contraseña | Sina');
+        this.data.closeLoginModal();
+        this.sub = this.route
+        .queryParams
+        .subscribe(params => {
+          if (params['codigo']) {
+              this.tokenCode = params['codigo'];
+          }
+        });
+    }
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
+    confirmarClaveKey($event) {
+        if ($event.keyCode == 13) {
+            this.confirmarClave();
+        }
+    }
+    volver_home() {
+        this.data.toggleLoginModal();
+        this.router.navigate(['/']);
+    }
+    confirmarClave() {
+        /*this.auth.get()
+        .then(($response)  =>{
+          this.respuesta = $response.response
+        })
+        .catch($error => {
+          this.respuesta = $error.error.response
+          this.data.log('confirmarclave error recuperar-pass', $error)
+        }) */
+        this.respuesta = 'Esperando respuesta';
 
-		let body = new URLSearchParams();
-		body.set("password", this.password);
-		body.set("password_re", this.password_re);
+        const body = new URLSearchParams();
+        body.set('password', this.password);
+        body.set('password_re', this.password_re);
 
-		const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
-		this.http.post(this.auth.getPath('public/cliente/cambiar_contrasena/' + this.tokenCode),body.toString(), {headers, observe: 'response'})
-		.subscribe(($response:any) => {
-		  this.respuesta = ($response.body.response)
-		  this.volviendoAlHome = true
+        const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        this.http.post(this.auth.getPath('public/cliente/cambiar_contrasena/' + this.tokenCode), body.toString(), {headers, observe: 'response'})
+        .subscribe(($response: any) => {
+          this.respuesta = ($response.body.response);
+          this.volviendoAlHome = true;
 
-		  //if($response.body.response.mensaje) {
-		    //this.respuesta = $response.body.response.mensaje
-		  //}
-		},($error) => {
-		  /*try {
-		    Object.keys($error.error.response.error).forEach(element => {
-		      this.recuperarError += $error.error.response.error[element] + " "
-		    })
-		  } catch($throw) {
-		    console.log($throw)
-		  }*/
-		  this.respuesta = ($error.error.response)
-		})  
-	}
-}  
+          // if($response.body.response.mensaje) {
+            // this.respuesta = $response.body.response.mensaje
+          // }
+        }, ($error) => {
+          /*try {
+            Object.keys($error.error.response.error).forEach(element => {
+              this.recuperarError += $error.error.response.error[element] + " "
+            })
+          } catch($throw) {
+            this.data.log('confirmarclave error recuperar-pass', $throw)
+          }*/
+          this.respuesta = ($error.error.response);
+        });
+    }
+}
 

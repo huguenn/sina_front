@@ -11,7 +11,7 @@ export class ComoComprarComponent implements OnInit {
   constructor(private data: SharedService) { }
 
   ngOnInit() {
-    this.data.updatePageTitle()
+    this.data.updatePageTitle();
   }
 
 }

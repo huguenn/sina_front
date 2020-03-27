@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedService, cliente } from "../shared.service";
+import { SharedService, cliente } from '../shared.service';
 import {
   DatosTransaccion,
   clienteActualizar,
   clientEnvioActualizarDatos
-} from "../data";
+} from '../data';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AutenticacionService } from '../autenticacion.service';
 import {Observable} from 'rxjs/Observable';
@@ -44,8 +44,8 @@ export class CompraComponent implements OnInit {
     update: () => {
       this.editingFacturacion = !this.editingFacturacion;
       return new Promise((resolve, reject) => {
-        let body = new URLSearchParams();
-        for (let dato in this.facturacion.datos) {
+        const body = new URLSearchParams();
+        for (const dato in this.facturacion.datos) {
           body.set(dato, this.facturacion.datos[dato]);
         }
         this.auth.post('cliente/actualizar', body)
@@ -53,7 +53,7 @@ export class CompraComponent implements OnInit {
           resolve($response.body.response);
         })
         .catch(($error) => {
-          console.log($error);
+          this.data.log('updatecliente error compra:', $error);
           reject($error);
         });
       });
@@ -68,25 +68,25 @@ export class CompraComponent implements OnInit {
   datos_envio: clientEnvioActualizarDatos = new clientEnvioActualizarDatos();
 
   carrito = {
-    hora: "16 Sep 14:05",
+    hora: '16 Sep 14:05',
     subtotal: 0,
     lista: [
     ]
   };
   datostransporte = {
     data: {
-      calle: "",
-      localidad: "",
-      provincia: "",
-      telefono: "",
-      codigoTransporte: "",
-      horarioEntrega: "",
-      nombreTransporte: ""
+      calle: '',
+      localidad: '',
+      provincia: '',
+      telefono: '',
+      codigoTransporte: '',
+      horarioEntrega: '',
+      nombreTransporte: ''
     },
     form: {
-      nombreTransporte: "",
-      domicilioTransporte: "",
-      telefonoTransporte: ""
+      nombreTransporte: '',
+      domicilioTransporte: '',
+      telefonoTransporte: ''
     },
     cargar: ($calle, $localidad, $provincia, $telefono, $codigo)  => {
       this.datostransporte.data.calle     = $calle;
@@ -99,7 +99,7 @@ export class CompraComponent implements OnInit {
     update: () => {
       this.datosEnvio_flag = true;
       return new Promise((resolve, reject) => {
-        let body = new URLSearchParams();
+        const body = new URLSearchParams();
         const datos = this.datos_envio.enviar();
         Object.keys(datos).forEach(key => {
           body.set(key, datos[key]);
@@ -109,7 +109,7 @@ export class CompraComponent implements OnInit {
           resolve($response.body.response);
         })
         .catch(($error) => {
-          console.log($error);
+          this.data.log('actualizardatosenvio error compra:', $error);
           reject($error);
         });
     });
@@ -117,7 +117,7 @@ export class CompraComponent implements OnInit {
   add: () => {
     this.datosEnvio_flag = true;
     return new Promise((resolve, reject) => {
-      let body = new URLSearchParams();
+      const body = new URLSearchParams();
       Object.keys(this.datostransporte.form).forEach(key => {
         body.set(key, this.datostransporte.form[key]);
       });
@@ -126,108 +126,108 @@ export class CompraComponent implements OnInit {
         resolve($response.body.response);
       })
       .catch(($error) => {
-        console.log($error);
+        this.data.log('envionuevotransporte error compra:', $error);
         reject($error);
       });
   });
   }
 };
   retiro: boolean = true;
-  dia: string = "";
+  dia: string = '';
   retiroHora = new Date();
   retiroHora1 = new Date();
-  fechaUpdate($event){
+  fechaUpdate($event) {
     this.retiroHora = $event;
-    var dias = $event.split("-");
+    const dias = $event.split('-');
     this.dia = this.diaSemana(dias[2], dias[1], dias[0]);
   }
-  fechaUpdate1($event){
-    var hora = $event.split(":");
+  fechaUpdate1($event) {
+    const hora = $event.split(':');
     this.retiroHora1.setHours(parseInt(hora[0]));
     this.retiroHora1.setMinutes(parseInt(hora[1]));
     switch (this.dia) {
-      case "Domingo": 
+      case 'Domingo':
         this.retiro = false;
         break;
-      case "Sabado":
-        if (parseInt(hora[0]) >= 8 && parseInt(hora[0]) < 11){
+      case 'Sabado':
+        if (parseInt(hora[0]) >= 8 && parseInt(hora[0]) < 11) {
           this.retiro = true;
-        }else if (parseInt(hora[0]) === 11){
+        }else if (parseInt(hora[0]) === 11) {
           this.retiro = parseInt(hora[1]) >= 30 ? false : true;
         }
         break;
       default:
-        if (parseInt(hora[0]) >= 8 && parseInt(hora[0]) < 16){
+        if (parseInt(hora[0]) >= 8 && parseInt(hora[0]) < 16) {
           this.retiro = true;
-          if (parseInt(hora[0]) >= 12 && parseInt(hora[0]) < 14){
+          if (parseInt(hora[0]) >= 12 && parseInt(hora[0]) < 14) {
             this.retiro = false;
-          }else{
+          } else {
             this.retiro = true;
           }
-        }else if (parseInt(hora[0]) === 16){
+        } else if (parseInt(hora[0]) === 16) {
           this.retiro = parseInt(hora[1]) >= 30 ? false : true;
-        }else{
+        } else {
           this.retiro = false;
         }
         break;
     }
-    
+
   }
 
-  //Formato dia
-  diaSemana(dia, mes, anio): string{
-    var dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-    var dt = new Date(mes + ' ' + dia + ', ' + anio + ' 12:00:00');
-    return dias[dt.getUTCDay()];    
+  // Formato dia
+  diaSemana(dia, mes, anio): string {
+    const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const dt = new Date(mes + ' ' + dia + ', ' + anio + ' 12:00:00');
+    return dias[dt.getUTCDay()];
   }
   /////////////
   mapa: false;
   datosCompra = {
-    entrega: "0",
+    entrega: '0',
     medio: {
-      nombre: "",
-      telefono: "",
-      direccion: ""
+      nombre: '',
+      telefono: '',
+      direccion: ''
     },
     envio : {
-      calle: "",
-      localidad: "",
-      provincia: "",
-      telefono: "",
+      calle: '',
+      localidad: '',
+      provincia: '',
+      telefono: '',
     }
   };
   editingEnvio: boolean = false;
   editingTransporte: boolean = false;
   editingFacturacion: boolean = false;
-  
+
   subtotal: number = 0;
   facturacion__toogle = false;
   facturacion__envio = false;
 
   secciones = [
-    "Mi compra",
-    "Datos de envío",
-    "Confirmación"
+    'Mi compra',
+    'Datos de envío',
+    'Confirmación'
   ];
   initialLista = [];
-  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router) { 
-    
+  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router) {
+
     this.transaccion = new DatosTransaccion(0);
     this.dia = this.diaSemana(this.retiroHora.getDate(), this.retiroHora.getMonth(), this.retiroHora.getFullYear());
-    if (this.data.user){
+    if (this.data.user) {
       this.user = this.data.user as cliente;
-      this.auth.get("public/cliente/envio/getAll").then((result) => {
+      this.auth.get('public/cliente/envio/getAll').then((result) => {
         result.response.forEach(transporte => {
           this.entrega.transporte.lista.push({
             id: transporte.codigo,
             text: transporte.nombre
           });
         });
-        this.entrega.transporte.lista.push({id: "FFF", text: "INGRESAR NUEVO TRANSPORTE"});
-        this.initialLista.push(this.entrega.transporte.lista.find((transporte) => { 
+        this.entrega.transporte.lista.push({id: 'FFF', text: 'INGRESAR NUEVO TRANSPORTE'});
+        this.initialLista.push(this.entrega.transporte.lista.find((transporte) => {
           return transporte.id === this.user.datosEnvio.codigoTransporte;
         }));
-      }).catch((error) => console.log("public/cliente/envio/getAll: ", error));
+      }).catch((error) => this.data.log('public/cliente/envio/getAll error compra:', error));
 
       if (this.user.datosEnvio) {
         this.medioTransporte = this.user.datosEnvio.nombreTransporte;
@@ -240,58 +240,58 @@ export class CompraComponent implements OnInit {
             this.user.datosEnvio.domicilioEntrega.provincia,
             this.user.datosEnvio.telefono,
             this.user.datosEnvio.codigoTransporte
-          );  
-        }else{
+          );
+        }else {
           this.datostransporte.cargar(
-          "",
-          "",
-          "",
+          '',
+          '',
+          '',
           this.user.datosEnvio.telefono,
           this.user.datosEnvio.codigoTransporte
         );
         }
       }
       this.datosCompra = {
-        entrega: "0",
+        entrega: '0',
         medio: {
-          nombre: "",
-          telefono: "",
-          direccion: ""
+          nombre: '',
+          telefono: '',
+          direccion: ''
         },
           envio:   {
-          calle:      this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.direccion : "",
-          localidad:  this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.ciudad : "",
-          provincia:  this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.provincia : "",
-          telefono:   this.user.telefonoFacturacion ? this.user.telefonoFacturacion : ""
+          calle:      this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.direccion : '',
+          localidad:  this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.ciudad : '',
+          provincia:  this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.provincia : '',
+          telefono:   this.user.telefonoFacturacion ? this.user.telefonoFacturacion : ''
         },
       };
       this.facturacion.cargar(this.user);
     }
   }
   cargarTransporte: boolean = false;
-  medioTransporte:  string = "";
+  medioTransporte:  string = '';
   datosEnvio_flag:       boolean = false;
   public refreshTransporte(value: any): void {
     this.medioTransporte = value.text;
     this.datos_envio.cod_transporte = value.id;
-    if (value.text === "INGRESAR NUEVO TRANSPORTE") {
+    if (value.text === 'INGRESAR NUEVO TRANSPORTE') {
       this.cargarTransporte = true;
-    }else{
+    }else {
       this.cargarTransporte = false;
     }
   }
-  observaciones = "";
+  observaciones = '';
   pedido: boolean = true;
-  completarCompraTexto = "";
+  completarCompraTexto = '';
   pedidoCorrecto = true;
-  completarCompraLink = "";
+  completarCompraLink = '';
   public completarCompra() {
     if (!this.carritoLoading) {
       this.carritoLoading = true;
-      this.completarCompraTexto = "Procesando pedido...";
-      let body = new URLSearchParams();
-      body.set("observaciones", this.observaciones);
-      body.set("total", this.pedido ? this.updateTotal(this.carrito.subtotal) : "100.01");
+      this.completarCompraTexto = 'Procesando pedido...';
+      const body = new URLSearchParams();
+      body.set('observaciones', this.observaciones);
+      body.set('total', this.pedido ? this.updateTotal(this.carrito.subtotal) : '100.01');
       this.auth.post('pedido/confirmar', body)
       .then($confirmado => {
         this.completarCompraTexto = $confirmado.body.response.message;
@@ -299,18 +299,18 @@ export class CompraComponent implements OnInit {
         setTimeout(() => {
           this.transaccion.cambio(2);
           this.data.cleanCarrito();
-          this.carritoLoading = false;  
+          this.carritoLoading = false;
         }, 1500);
       })
       .catch($error => {
-        this.carritoLoading = false;  
+        this.carritoLoading = false;
         try {
           this.pedidoCorrecto = false;
           this.completarCompraTexto = $error.error.response.message;
-        }catch (error){
-          console.log(error, $error, "$error.error.response.message");
+        }catch (error) {
+          this.data.log('completarcompra error compra:', error, $error, '$error.error.response.message');
         }
-        console.log($error);
+        this.data.log('confirmarpedido error compra:', $error);
       });
     }
   }
@@ -320,27 +320,27 @@ export class CompraComponent implements OnInit {
     this.checkCarritoInit(0);
     this.data.currentUser.subscribe($user => {
       if ($user) {
-        switch ($user["codCategoriaIva"]) {
-          case "CF": 
-          case "INR": 
-          case "RSS": this.iva_usuario = "LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA"; break;
-          case "RI":
-          case "EX":
-          case "PCE":
-          case "PCS":
-          case "EXE":
-          case "SNC":
-          default: this.iva_usuario = "LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA";
+        switch ($user['codCategoriaIva']) {
+          case 'CF':
+          case 'INR':
+          case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+          case 'RI':
+          case 'EX':
+          case 'PCE':
+          case 'PCS':
+          case 'EXE':
+          case 'SNC':
+          default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
         }
       }
     });
   }
   removeCompraItem($item) {
     this.data.removeMessage($item);
-    this.updateValue();      
+    this.updateValue();
   }
-  updateValue(){
-    var $carrito = 0;
+  updateValue() {
+    let $carrito = 0;
     for (let index = 0; index < this.carrito.lista.length; index++) {
       const precio = this.carrito.lista[index].precio;
       const cantidad = this.carrito.lista[index].cantidad;
@@ -350,38 +350,40 @@ export class CompraComponent implements OnInit {
 
   }
   updatePrecio($precio, $cantidad): string {
-    var subtotal = $precio * $cantidad; 
+    const subtotal = $precio * $cantidad;
     return this.corregirPrecio(subtotal);
   }
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-      d = d == undefined ? "," : d,
-      t = t == undefined ? "." : t,
-      s = n < 0 ? "-" : "",
+      let s, i, j;
+      c = isNaN(c = Math.abs(c)) ? 2 : c,
+      d = d == undefined ? ',' : d,
+      t = t == undefined ? '.' : t,
+      s = n < 0 ? '-' : '',
       i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
       j = (j = i.length) > 3 ? j % 3 : 0;
-  
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : "");
-  }  
+
+    return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) +
+      (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
+  }
   corregirPrecio($precio): string {
   return this.formatMoney($precio);
   }
   updateTotal($precio): string {
-    var subtotal = $precio;
+    const subtotal = $precio;
     return this.formatMoney(subtotal);
   }
-  selectedForma($input){
+  selectedForma($input) {
     this.datosCompra.entrega = $input;
   }
-  datos_envio_error: string = "";
+  datos_envio_error: string = '';
   addTransporte() {
     if (this.cargarTransporte) {
       this.datostransporte.add().then((response) => {
-        this.datos_envio_error = "";
+        this.datos_envio_error = '';
         this.cargarTransporte = false;
-        console.log(response);
+        this.data.log('addtransporte response compra:', response);
         const temp_transporte = {
-          id: response["codigo"],
+          id: response['codigo'],
           text: this.datostransporte.form.nombreTransporte
         };
         this.entrega.transporte.lista.push(temp_transporte);
@@ -390,16 +392,16 @@ export class CompraComponent implements OnInit {
       }).catch((error) => {
         Object.values(error.error.response).forEach($error_item => this.datos_envio_error += $error_item);
       });
-      //this.transaccion.cambio(2)
-    }else{
+      // this.transaccion.cambio(2)
+    }else {
       this.datostransporte.update().then((response) => {
-        this.datos_envio_error = "";
+        this.datos_envio_error = '';
         this.editingEnvio = false;
       }).catch((error) => {
         if (error.error) {
           Object.values(error.error.response).forEach($error_item => this.datos_envio_error += $error_item);
         } else {
-          this.datos_envio_error = "Hubo un problema en la carga de los datos, aguarde un momento y vuelva a intentar.";
+          this.datos_envio_error = 'Hubo un problema en la carga de los datos, aguarde un momento y vuelva a intentar.';
         }
     });
 
@@ -408,21 +410,20 @@ export class CompraComponent implements OnInit {
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  printString(body){
+  printString(body) {
     return this.auth.post('carrito/agregar_item', body);
   }
   carritoLoading: boolean = false;
 
 
-  async printAll()
-   {
+  async printAll() {
     this.carritoLoading = false;
     this.modalLoading = true;
     for (let i = 0; i < this.carrito.lista.length; i++) {
-        let $compra = this.carrito.lista[i];
-        let body = new URLSearchParams();
-        body.set("id_producto", $compra.id);
-        body.set("cantidad", $compra.cantidad);
+        const $compra = this.carrito.lista[i];
+        const body = new URLSearchParams();
+        body.set('id_producto', $compra.id);
+        body.set('cantidad', $compra.cantidad);
         const a = await this.printString(body);
     }
     await this.delay(1000);
@@ -431,7 +432,7 @@ export class CompraComponent implements OnInit {
     this.modalLoading = false;
 }
 
-  //Finalizar Compra
+  // Finalizar Compra
   finalizarCompra() {
     this.printAll();
   }
@@ -451,23 +452,23 @@ export class CompraComponent implements OnInit {
     this.datos_envio[$dia] = this.isChecked[$dia] ? 1 : 0;
 
   }
-  texto_busqueda: string = "";
+  texto_busqueda: string = '';
   ResultadoBusqueda: any;
   buscarPalabra(event) {
     if (event.target.value.length >= 3) {
-      let body = new URLSearchParams();
-      body.set("frase", this.texto_busqueda);
+      const body = new URLSearchParams();
+      body.set('frase', this.texto_busqueda);
       this.auth.post('producto/busqueda', body)
       .then($response => {
           this.ResultadoBusqueda = $response.body.response.slice(0, 6);
       })
-      .catch((error) => console.log("error: ", error));
+      .catch((error) => this.data.log('buscarpalabra error compra:', error));
     }
   }
   enterBusqueda(event) {
     if (event.keyCode == 13) {
-      this.router.navigate(["/busqueda/" + this.texto_busqueda]);
-      //this.cerrarBusqueda()
+      this.router.navigate(['/busqueda/' + this.texto_busqueda]);
+      // this.cerrarBusqueda()
     }
   }
   cerrarBusqueda(msg) {
@@ -476,19 +477,19 @@ export class CompraComponent implements OnInit {
     this.ResultadoBusqueda = [];
   }
   descargarPedido($pedido) {
-    console.log($pedido);
+    this.data.log('descargarpedido pedido compra:', $pedido);
   }
 
   checkCarritoInit($value) {
     if ($value === 0) {
       this.carritoLoading = true;
-      this.auth.get("carrito/eliminar").then((result) => {
+      this.auth.get('carrito/eliminar').then((result) => {
         this.carrito.lista = this.data.lista;
-        this.updateValue();      
+        this.updateValue();
         this.carritoLoading = false;
-      }).catch((error) => console.log("carrito/eliminar: ", error));
+      }).catch((error) => this.data.log('carrito/eliminar error compra:', error));
       this.carrito.lista = this.data.lista;
-      this.updateValue();      
+      this.updateValue();
       this.carritoLoading = false;
     }
   }

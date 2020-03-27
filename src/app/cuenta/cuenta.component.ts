@@ -75,9 +75,10 @@ export class CuentaComponent implements OnInit {
   @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
   @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
   @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
-  
+
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+      let s, i, j;
+      c = isNaN(c = Math.abs(c)) ? 2 : c,
       d = d == undefined ? ',' : d,
       t = t == undefined ? '.' : t,
       s = n < 0 ? '-' : '',
@@ -95,7 +96,7 @@ export class CuentaComponent implements OnInit {
   ListaItems = Items;
 
   desplegar = 'none';
-  loginStatus:boolean = false;
+  loginStatus: boolean = false;
   private _success = new Subject<string>();
   staticAlertClosed = false;
   successMessage: string;
@@ -140,20 +141,20 @@ export class CuentaComponent implements OnInit {
     private router: Router,
     private http:   HttpClient,
     private auth:   AutenticacionService
-    ){
+  ) {
     this.transaccion = new DatosTransaccion(0);
 
     this.http.get('assets/data/cuenta.json')
     .subscribe(res => {
       this.ListaCompras = res['lista'];
-      //this.comprados    = res["comprados"]
-      //this.ultimasCompras = res["ultimasCompras"]
+      // this.comprados    = res["comprados"]
+      // this.ultimasCompras = res["ultimasCompras"]
     });
     this.auth.get('pedido/getUltimos')
-    .then(($response)  =>{
-      if($response.response) {
+    .then(($response)  => {
+      if ($response.response) {
         this.ultimasCompras = $response.response;
-        console.log(this.ultimasCompras, 'ko');
+        this.data.log('getultimospedidos response cuenta:', this.ultimasCompras, 'ko');
         this.ultimasCompras.forEach(compra => {
           compra['fechaPedido'].date = {
             year: (new Date(compra['fechaPedido'].date).getFullYear()),
@@ -164,44 +165,52 @@ export class CuentaComponent implements OnInit {
       }
     })
     .catch($error => {
-      console.log($error);
+      this.data.log('getultimospedidos error cuenta:', $error);
       this.router.navigate(['/']);
     });
     this.auth.get('producto/productosMasPedidos')
     .then(($response) => {
-      if($response.response) {
+      if ($response.response) {
         this.comprados = $response.response;
-        console.log(this.comprados);
+        this.data.log('productosmaspedidos response cuenta:', this.comprados);
         this.comprados.forEach(producto => {
           producto.cantidad = +producto['cantSugerida'];
         });
       }
     })
     .catch($error => {
-      console.log($error);
+      this.data.log('productosmaspedidos error cuenta:', $error);
       this.router.navigate(['/']);
     });
   }
-  
-  public refreshCategoria(value:any):void {
-    this.DatosUsuario.codCategoriaIva = value;
+
+  public refreshCategoria(value: any): void {
+    if (this.DatosUsuario) {
+      this.DatosUsuario.codCategoriaIva = value;
+    }
   }
-  public refreshProvincia(value:any):void {
-    this.DatosUsuario.domicilio.provincia = value;
+  public refreshProvincia(value: any): void {
+    if (this.DatosUsuario.domicilio) {
+      this.DatosUsuario.domicilio.provincia = value;
+    }
   }
-  public refreshProvincia2(value:any):void {
-    this.DatosUsuario.datosEnvio.domicilioEntrega.provincia = value;
+  public refreshProvincia2(value: any): void {
+    if (this.DatosUsuario.datosEnvio.domicilioEntrega) {
+      this.DatosUsuario.datosEnvio.domicilioEntrega.provincia = value;
+    }
   }
-  public refreshTransporte(value:any):void {
-    //this.medioTransporte = value.text
-    this.DatosUsuario.datosEnvio.codigoTransporte = value;
+  public refreshTransporte(value: any): void {
+    // this.medioTransporte = value.text
+    if (this.DatosUsuario.datosEnvio) {
+      this.DatosUsuario.datosEnvio.codigoTransporte = value;
+    }
   }
   repetirPregunta($item) {
     this.repetirFlag = true;
     this.repetirTemp = $item;
   }
   repetirTemp = [];
-  repetirFlag:boolean = false;
+  repetirFlag: boolean = false;
   repetirCancelar() {
     this.repetirTemp = [];
     this.repetirFlag = false;
@@ -209,8 +218,8 @@ export class CuentaComponent implements OnInit {
   repetirCompra() {
     const $item = this.repetirTemp;
     this.data.cleanCarrito();
-    if(this.ultimasCompras.length > 0) {
-      if($item['items'].length > 0) {
+    if (this.ultimasCompras.length > 0) {
+      if ($item['items'].length > 0) {
         $item['items'].forEach(compra => {
           const precio = +compra.producto.precio;
           const cantidad = +compra.cantidad;
@@ -221,7 +230,7 @@ export class CuentaComponent implements OnInit {
     }
   }
   closeRepetir(event) {
-    if(event.target.className === 'modal__container') {
+    if (event.target.className === 'modal__container') {
       this.repetirCancelar();
     }
   }
@@ -229,25 +238,25 @@ export class CuentaComponent implements OnInit {
     this.data.updatePageTitle();
     setTimeout(() => this.staticAlertClosed = true, 5000);
     this._success.subscribe((message) => this.successMessage = message);
-    //debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
+    // debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
 
     this.sub = this.route
       .queryParams
       .subscribe(params => {
         this.transaccion.cambio(+params['tab'] || 0);
       });
-      //subscribing to data on loginStatus
+      // subscribing to data on loginStatus
       this.data.currentLogin.subscribe(
         status => {
           this.loginStatus = status;
         }
       );
       // Esto se está llamando dos veces seguidas, no se por que aun (cold observer? que deberia ser hot?)
-      this.data.currentUser.subscribe(($user:any) => {
+      this.data.currentUser.subscribe(($user: any) => {
         if ($user) {
           this.DatosUsuario = $user;
           new Promise(($acepto, $rechazo) => {
-            this.auth.get('public/cliente/envio/getAll').then((result)=> {
+            this.auth.get('public/cliente/envio/getAll').then((result) => {
               result.response.forEach(transporte => {
                 this.transporte_lista.push({
                   id: transporte.codigo,
@@ -255,36 +264,36 @@ export class CuentaComponent implements OnInit {
                 });
               });
               // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
-              this.DatosUsuario.datosEnvio.codigoTransporte = (this.transporte_lista.find((transporte)=>{
-                return transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte;
+              this.DatosUsuario.datosEnvio.codigoTransporte = (this.transporte_lista.find((transporte) => {
+                return (this.DatosUsuario.datosEnvio && transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte);
               })).text;
               $acepto('ok');
-            }).catch((error)=> $rechazo(error));
+            }).catch((error) => $rechazo(error));
           })
           .then($respuesta => {
-            console.log('okerso', this.transporte_lista, this.initialLista);
-            if(this.transaccion.paso === 1) {
+            this.data.log('userenviogetall response cuenta:', 'okerso', this.transporte_lista, this.initialLista);
+            if (this.transaccion.paso === 1) {
               setTimeout(() => {
-                if(this.DatosUsuario.codCategoriaIva) {
+                if (this.DatosUsuario.codCategoriaIva) {
                   this.seleccionariva(this.ngSelectResponsable, this.DatosUsuario.codCategoriaIva);
                 }
-                if(this.DatosUsuario.domicilio.provincia) {
+                if (this.DatosUsuario.domicilio.provincia) {
                   this.seleccionarprovincia(this.ngSelectProvincia, this.DatosUsuario.domicilio.provincia);
                 }
-                if(this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
+                if (this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
                   this.seleccionarprovincia2(this.ngSelectProvincia2, this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
                 }
-                if(this.DatosUsuario.datosEnvio.nombreTransporte) {
+                if (this.DatosUsuario.datosEnvio.nombreTransporte) {
                   this.seleccionartransporte(this.ngSelectTransporte, this.DatosUsuario.datosEnvio.nombreTransporte);
                 }
               }, 500);
             }
           })
           .catch($error => {
-            console.log('public/cliente/envio/getAll: ', this.transporte_lista, this.initialLista);
-            console.log($error);
+            this.data.log('public/cliente/envio/getAll error cuenta:', this.transporte_lista, this.initialLista);
+            this.data.log('oninit error cuentacomponent:', $error);
           });
-          switch($user['codCategoriaIva']) {
+          switch ($user['codCategoriaIva']) {
             case 'CF':
             case 'INR':
             case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
@@ -303,51 +312,55 @@ export class CuentaComponent implements OnInit {
     this.transaccion.cambio(i);
     if (i === 1) {
       setTimeout(() => {
-        if(this.DatosUsuario.codCategoriaIva) {
+        if (this.DatosUsuario.codCategoriaIva) {
           this.seleccionariva(this.ngSelectResponsable, this.DatosUsuario.codCategoriaIva);
         }
-        if(this.DatosUsuario.domicilio.provincia) {
+        if (this.DatosUsuario.domicilio.provincia) {
           this.seleccionarprovincia(this.ngSelectProvincia, this.DatosUsuario.domicilio.provincia);
         }
-        if(this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
+        if (this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
           this.seleccionarprovincia2(this.ngSelectProvincia2, this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
         }
-        if(this.DatosUsuario.datosEnvio.nombreTransporte) {
+        if (this.DatosUsuario.datosEnvio.nombreTransporte) {
           this.seleccionartransporte(this.ngSelectTransporte, this.DatosUsuario.datosEnvio.nombreTransporte);
         }
       }, 500);
     }
   }
   public seleccionariva($herramienta, $codigo) {
-    if($herramienta) {
-      let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
-      if(item)
+    if ($herramienta) {
+      const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      if (item) {
         $herramienta.select(item);
+      }
     }
   }
   public seleccionarprovincia($herramienta, $codigo) {
-    if($herramienta) {
-      let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
-      if(item)
+    if ($herramienta) {
+      const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      if (item) {
         $herramienta.select(item);
+      }
     }
   }
   public seleccionarprovincia2($herramienta, $codigo) {
-    if($herramienta) {
-      let item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
-      if(item)
+    if ($herramienta) {
+      const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      if (item) {
         $herramienta.select(item);
+      }
     }
   }
   public seleccionartransporte($herramienta, $codigo) {
-    if($herramienta) {
-      let item = $herramienta.itemsList._items.find($item => $item.label.trim() === $codigo);
-      if(item)
+    if ($herramienta) {
+      const item = $herramienta.itemsList._items.find($item => $item.label.trim() === $codigo);
+      if (item) {
         $herramienta.select(item);
+      }
     }
   }
   closeFull(event) {
-    if(event.target.className === 'modal__container') {
+    if (event.target.className === 'modal__container') {
       this.transaccion.cambio(0);
     }
   }
@@ -359,16 +372,16 @@ export class CuentaComponent implements OnInit {
     this.sub.unsubscribe();
   }
   newMessage(msg) {
-    if(this.loginStatus === true) {
-      if(msg.cantidad){
-        if((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)){
-          if(!this.data.lista.some(articulo_carrito => articulo_carrito.id === msg.id)) {
+    if (this.loginStatus === true) {
+      if (msg.cantidad) {
+        if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
+          if (!this.data.lista.some(articulo_carrito => articulo_carrito.id === msg.id)) {
             msg.comprado = true;
             this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id);
           } else {
             msg.comprado = true;
           }
-        }else{
+        }else {
           msg['incompleto'] = true;
         }
       }
@@ -378,56 +391,52 @@ export class CuentaComponent implements OnInit {
   }
 
 
-	descargarLista()
-	{
-		(document.querySelector('#loaderFile') as HTMLElement).style.display = 'block'
-		this.auth.get('producto/listadoProductos')
-		.then(($response)  =>
-		{
-			if($response.response)
-			{
-				this.listadoProductos = $response.response
-				const print: any[] = []
-				print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)', 'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta'])
-				this.listadoProductos.forEach(producto =>
-				{
-					print.push
-					(
-						[
-						  producto.codigo_interno,
-						  producto.nombre + " - " + producto.nombre_adicional,
-						  producto.codigo_barras,
-						  producto.unidad_medida,
-						  producto.precio,
-						  producto.familia,
-						  producto.categoria,
-						  producto.subcategoria,
-						  producto.es_oferta
-						]
-					)
-				});
+  descargarLista() {
+    (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
+    this.auth.get('producto/listadoProductos')
+    .then(($response)  => {
+      if ($response.response) {
+        this.listadoProductos = $response.response;
+        const print: any[] = [];
+        print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)',
+          'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta']);
+        this.listadoProductos.forEach(producto => {
+          print.push
+          (
+            [
+              producto.codigo_interno,
+              producto.nombre + ' - ' + producto.nombre_adicional,
+              producto.codigo_barras,
+              producto.unidad_medida,
+              producto.precio,
+              producto.familia,
+              producto.categoria,
+              producto.subcategoria,
+              producto.es_oferta
+            ]
+          );
+        });
 
-				const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print)
-				const wb: XLSX.WorkBook = XLSX.utils.book_new()
-				XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1')
-				XLSX.writeFile(wb, 'Listado de productos.xlsx')
-			}
-			(document.querySelector('#loaderFile') as HTMLElement).style.display = 'none'
+        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
+        XLSX.writeFile(wb, 'Listado de productos.xlsx');
+      }
+      (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
 
-		})
-		.catch($error =>
-		{
-			console.log($error);
-		});
-	}
+    })
+    .catch($error => {
+      this.data.log('descargarlista error cuenta:', $error);
+    });
+  }
 
 
   guardarDatos() {
     this.procesando_info = true;
     this.procesando_info_entrega = true;
 
-    let body = new URLSearchParams();
-    let body_entrega = new URLSearchParams();
+    const body = new URLSearchParams();
+    const body_entrega = new URLSearchParams();
     body.set('nombre_fantasia', this.DatosUsuario.nombreFantasia);
     body.set('telefono', this.DatosUsuario.telefono);
     body.set('telefono_celular', this.DatosUsuario.telefonoCelular);
@@ -449,46 +458,46 @@ export class CuentaComponent implements OnInit {
     body_entrega.set('telefono', this.DatosUsuario.datosEnvio.telefono);
     body_entrega.set('cod_transporte', this.DatosUsuario.datosEnvio.codigoTransporte);
 
-    console.log(body, body_entrega);
+    this.data.log('guardardatos body cuenta:', body, body_entrega);
 
     this.procesando_info_ok = '';
     this.procesando_info_entrega_ok = '';
 
-    this.auth.post('cliente/actualizar',body)
+    this.auth.post('cliente/actualizar', body)
     .then($response => {
-      console.log('respuesta', $response);
+      this.data.log('updatecliente response cuenta:', $response);
       this.procesando_info = false;
       this.procesando_info_error = '';
       this.procesando_info_ok = $response.body.response;
     })
     .catch(($error) => {
-      console.log($error);
+      this.data.log('updatecliente error cuenta:', $error);
       this.procesando_info = false;
       this.procesando_info_error = '';
       try {
         Object.values($error.error.response).forEach(element => {
           this.procesando_info_error += element + ' ';
         });
-      } catch($throw) {
-        console.log($throw);
+      } catch ($throw) {
+        this.data.log('updatecliente error cuenta:', $throw);
       }
     });
-    this.auth.post('cliente/envio/actualizar_datos',body_entrega)
+    this.auth.post('cliente/envio/actualizar_datos', body_entrega)
     .then($response => {
-      console.log('respuesta', $response);
+      this.data.log('updatedatosenvio response cuenta:', $response);
       this.procesando_info_entrega = false;
-      this.procesando_info_entrega_error ='';
+      this.procesando_info_entrega_error = '';
       this.procesando_info_entrega_ok = $response.body.response;
     })
     .catch(($error) => {
       this.procesando_info_entrega = false;
-      this.procesando_info_entrega_error ='';
+      this.procesando_info_entrega_error = '';
       try {
         Object.values($error.response).forEach(element => {
           this.procesando_info_entrega_error += element + ' ';
         });
-      } catch($throw) {
-        console.log($throw);
+      } catch ($throw) {
+        this.data.log('updatedatosenvio error cuenta:', $throw);
       }
     });
   }

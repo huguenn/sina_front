@@ -11,8 +11,8 @@ import { SharedService } from '../shared.service';
   styleUrls: ['./confirmacion.component.css']
 })
 export class ConfirmacionComponent implements OnInit {
-  sub: Subscription
-  respuesta: string = "Esperando respuesta"
+  sub: Subscription;
+  respuesta: string = 'Esperando respuesta';
   constructor(
     private route:  ActivatedRoute,
     private router: Router,
@@ -22,20 +22,20 @@ export class ConfirmacionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.data.updatePageTitle()
-    this.data.closeLoginModal()
+    this.data.updatePageTitle();
+    this.data.closeLoginModal();
     this.sub = this.route
     .queryParams
     .subscribe(params => {
-      if(params['codigo'] || 0) {
-        this.auth.get("public/cliente/confirmar_email/" + params['codigo'])
-        .then(($response)  =>{
-          this.respuesta = $response.response
+      if (params['codigo'] || 0) {
+        this.auth.get('public/cliente/confirmar_email/' + params['codigo'])
+        .then(($response)  => {
+          this.respuesta = $response.response;
         })
         .catch($error => {
-          this.respuesta = $error.error.response
-          console.log($error)
-        })        
+          this.respuesta = $error.error.response;
+          this.data.log('oninit confirmarmail error confirmacion', $error);
+        });
 
       }
     });

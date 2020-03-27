@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
-import { SharedService } from "../shared.service";
+import { SharedService } from '../shared.service';
 import { Subject } from 'rxjs/Subject';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 import { HttpClient } from '@angular/common/http';
-import { Producto, ProductoCompleto } from "../data";
+import { Producto, ProductoCompleto } from '../data';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AutenticacionService } from '../autenticacion.service';
 
@@ -13,81 +13,82 @@ import { AutenticacionService } from '../autenticacion.service';
   templateUrl: './producto.component.html',
   styleUrls: ['./producto.component.css']
 })
-export class ProductoComponent implements OnInit {  
-  private _success = new Subject<string>()
-  public iva_usuario: string = ""
-  staticAlertClosed = false
-  successMessage: string
-  loginStatus: boolean = false
-  fullPath = []
-  galleryOptions: NgxGalleryOptions[]
-  galleryImages: NgxGalleryImage[]
-  producto : ProductoCompleto = new ProductoCompleto()
-  relacionados: Producto[] = new Producto()[4]
-  tipo_usuario:Boolean = false
+export class ProductoComponent implements OnInit {
+  private _success = new Subject<string>();
+  public iva_usuario: string = '';
+  staticAlertClosed = false;
+  successMessage: string;
+  loginStatus: boolean = false;
+  fullPath = [];
+  galleryOptions: NgxGalleryOptions[];
+  galleryImages: NgxGalleryImage[];
+  producto: ProductoCompleto = new ProductoCompleto();
+  relacionados: Producto[] = new Producto()[4];
+  tipo_usuario: Boolean = false;
 
-  full_link: string = ""
+  full_link: string = '';
     constructor(private data: SharedService, private http: HttpClient, private route: ActivatedRoute, private auth: AutenticacionService) {}
-  respuesta = ($response)  =>{
-      this.relacionados = $response.response.productosRelacionados
+  respuesta = ($response)  => {
+      this.relacionados = $response.response.productosRelacionados;
       this.relacionados.forEach(item => {
-        item["categoria"] = {
-          nombre: "PRODUCTO RELACIONADO"
-        }
-      })
-      this.producto = $response.response
-      this.full_link = "http://www.sina.com.ar/producto/" + (this.producto["categoria"] ? this.producto["categoria"].nombre.split(' ').join('-').toUpperCase() : "") + "/" + this.producto["id"]
-      this.producto.cantidad = this.producto["cantSugerida"] ? this.producto["cantSugerida"] : 1
-      this.producto.comprado = false
-      this.fullPath = ["Limpieza", this.producto["categoria"].padre.nombre, this.producto["categoria"].nombre]
+        item['categoria'] = {
+          nombre: 'PRODUCTO RELACIONADO'
+        };
+      });
+      this.producto = $response.response;
+      this.full_link = 'http://www.sina.com.ar/producto/'
+        + (this.producto['categoria'] ? this.producto['categoria'].nombre.split(' ').join('-').toUpperCase() : '') + '/' + this.producto['id'];
+      this.producto.cantidad = this.producto['cantSugerida'] ? this.producto['cantSugerida'] : 1;
+      this.producto.comprado = false;
+      this.fullPath = ['Limpieza', this.producto['categoria'].padre.nombre, this.producto['categoria'].nombre];
       this.galleryImages = [
         {
-        small: this.producto["urlImagen"],
-        medium: this.producto["urlImagen"],
-        big: this.producto["urlImagen"],
+        small: this.producto['urlImagen'],
+        medium: this.producto['urlImagen'],
+        big: this.producto['urlImagen'],
         },
         {
-        small: this.producto["urlImagen"],
-        medium: this.producto["urlImagen"],
-        big: this.producto["urlImagen"],
+        small: this.producto['urlImagen'],
+        medium: this.producto['urlImagen'],
+        big: this.producto['urlImagen'],
         },
         {
-        small: this.producto["urlImagen"],
-        medium: this.producto["urlImagen"],
-        big: this.producto["urlImagen"],
+        small: this.producto['urlImagen'],
+        medium: this.producto['urlImagen'],
+        big: this.producto['urlImagen'],
         },
         {
-        small: this.producto["urlImagen"],
-        medium: this.producto["urlImagen"],
-        big: this.producto["urlImagen"],
-        }]  
+        small: this.producto['urlImagen'],
+        medium: this.producto['urlImagen'],
+        big: this.producto['urlImagen'],
+        }];
     }
     ngOnInit(): void {
-      this.data.updatePageTitle('Sina', 'Comprá con entrega a todo el país, hacé tu pedido online!')
-      this.auth.userTypeStatus.subscribe( response => {this.tipo_usuario = response, error => { console.log(error)}})
-      //subscribing to data on loginStatus
+      this.data.updatePageTitle('Sina', 'Comprá con entrega a todo el país, hacé tu pedido online!');
+      this.auth.userTypeStatus.subscribe( response => {this.tipo_usuario = response, error => { this.data.log('usertypestatus error producto', error); }; });
+      // subscribing to data on loginStatus
       this.data.currentLogin.subscribe(
         status => {
-          this.loginStatus = status
+          this.loginStatus = status;
           this.route.params.subscribe(params => {
-            let id = (+params['id2'])
-            let id2 = (params['id'])
-            this.data.updatePageTitle(id2, 'Comprá ' + id2 + ' con entrega a todo el país, hacé tu pedido online!')    
-            let $public = this.loginStatus ? "" : "public/"
-            this.auth.get($public + "producto/detalles/" + id)
+            const id = (+params['id2']);
+            const id2 = (params['id']);
+            this.data.updatePageTitle(id2, 'Comprá ' + id2 + ' con entrega a todo el país, hacé tu pedido online!');
+            const $public = this.loginStatus ? '' : 'public/';
+            this.auth.get($public + 'producto/detalles/' + id)
             .then(this.respuesta)
             .catch($error => {
-              console.log($error)
-            })  
-          });    
+              this.data.log('currentloginstatus error producto', $error);
+            });
+          });
         }
-      )
-      //getting data via get request
+      );
+      // getting data via get request
       /*this.http.get('assets/data/producto.json')
       .subscribe(res => {
         var response = res as any
           //this.producto = response.detalles
-          this.relacionados = response.relacionados  
+          this.relacionados = response.relacionados
           this.relacionados.forEach((value, index, array) => value.comprado = false)
         });*/
 
@@ -115,7 +116,7 @@ export class ProductoComponent implements OnInit {
           }
       ];
 
-    this.galleryImages = []
+    this.galleryImages = [];
 
     setTimeout(() => this.staticAlertClosed = true, 2000);
     this._success.subscribe((message) => this.successMessage = message);
@@ -123,44 +124,44 @@ export class ProductoComponent implements OnInit {
 
     this.data.currentUser.subscribe($user => {
       if ($user) {
-        switch($user["codCategoriaIva"]) {
-          case "CF": 
-          case "INR": 
-          case "RSS": this.iva_usuario = "UNIT I.V.A. incluido"; break;
-          case "RI":
-          case "EX":
-          case "PCE":
-          case "PCS":
-          case "EXE":
-          case "SNC":
-          default: this.iva_usuario = "UNIT + I.V.A."
+        switch ($user['codCategoriaIva']) {
+          case 'CF':
+          case 'INR':
+          case 'RSS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+          case 'RI':
+          case 'EX':
+          case 'PCE':
+          case 'PCS':
+          case 'EXE':
+          case 'SNC':
+          default: this.iva_usuario = 'UNIT + I.V.A.';
         }
       }
-    })
+    });
 
   }
   newMessage(msg) {
-    const precio = msg.precio
-    if(this.loginStatus === true) {
-      if(msg.cantidad){
-        if((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)){
+    const precio = msg.precio;
+    if (this.loginStatus === true) {
+      if (msg.cantidad) {
+        if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
           msg.comprado = true;
           this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, precio * (+msg.cantidad), msg.id);
-          this._success.next(`Agregado al Carrito!`);      
-        }else{
-          msg["incompleto"] = true;
+          this._success.next(`Agregado al Carrito!`);
+        } else {
+          msg['incompleto'] = true;
         }
       }
-    }else {
-      this.data.toggleLoginModal()
+    } else {
+      this.data.toggleLoginModal();
     }
   }
-  removeMessage(msg){
-    if(this.loginStatus === true) {
-      this.data.removeMessage(msg);    
+  removeMessage(msg) {
+    if (this.loginStatus === true) {
+      this.data.removeMessage(msg);
       msg.comprado = false;
-    }else {
-      this.data.toggleLoginModal()
+    } else {
+      this.data.toggleLoginModal();
     }
   }
 }
