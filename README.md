@@ -36,7 +36,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running prod build locally
 
-Run `lite-server --baseDir="dist"`
+Run `lite-server --baseDir="dist"`. If needed try installing lite-server globally (`npm install lite-server -g`).
 
 ## Running unit tests
 

@@ -118,9 +118,9 @@ export class ProductoComponent implements OnInit {
 
     this.galleryImages = [];
 
-    setTimeout(() => this.staticAlertClosed = true, 2000);
+    setTimeout(() => this.staticAlertClosed = true, 5000);
     this._success.subscribe((message) => this.successMessage = message);
-    debounceTime.call(this._success, 2000).subscribe(() => this.successMessage = null);
+    debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
 
     this.data.currentUser.subscribe($user => {
       if ($user) {
@@ -140,6 +140,12 @@ export class ProductoComponent implements OnInit {
     });
 
   }
+
+  alertClicked() {
+    this.successMessage = null;
+    this.data.toggleCarritoShow();
+  }
+  
   newMessage(msg) {
     const precio = msg.precio;
     if (this.loginStatus === true) {

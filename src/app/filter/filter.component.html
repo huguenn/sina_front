@@ -1,6 +1,9 @@
 <div class="row message">
   <div class="container">
-      <ngb-alert *ngIf="successMessage" type="success" (close)="successMessage = null">{{ successMessage }}</ngb-alert>
+    <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
+      {{ successMessage }}
+      <button class="actionButton transparentButton" [routerLink]="['/compra']">VER TODOS</button>
+    </ngb-alert>
   </div>
 </div>
 <div class="container filter">

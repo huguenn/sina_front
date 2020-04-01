@@ -554,6 +554,7 @@
     box-shadow: 0px 1px 1px 0px #ccc;
     z-index: 1;
     padding-top: 30px;
+    border: 1px solid #dcdcdc;
 }
 .mapa__content span {
     position: absolute;
@@ -625,6 +626,49 @@
     }
 
 }
+
+@keyframes rotate {
+	100% {
+		transform: rotate(1turn);
+	}
+}
+
+.borde__animado {
+    position: relative;
+	z-index: 0;
+	overflow: hidden;
+    padding: 20px 30px;
+    background: #0579ff;
+    font-size: 16px;
+    width: 100%;
+    left: 15px;
+}
+.borde__animado::before {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    left: -50%;
+    top: -50%;
+    width: 200%;
+    height: 200%;
+    background-color: #00c973;
+    background-repeat: no-repeat;
+    background-size: 50% 50%, 50% 50%;
+    background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+    background-image: linear-gradient(#00c973, #00c973), linear-gradient(#0579ff, #0579ff), linear-gradient(#00c973, #00c973), linear-gradient(#0579ff, #0579ff);
+    animation: rotate 4s linear infinite;
+}
+.borde__animado::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    left: 6px;
+    top: 6px;
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+    background: #f8f8f8;
+}
+
 
 /* filtros */
 .emergencia {

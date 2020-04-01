@@ -292,6 +292,11 @@ export class CompraComponent implements OnInit {
       const body = new URLSearchParams();
       body.set('observaciones', this.observaciones);
       body.set('total', this.pedido ? this.updateTotal(this.carrito.subtotal) : '100.01');
+      if (this.datosCompra.entrega === '1') {
+        body.set('retiro_tienda', this.datosCompra.entrega);
+        body.set('dia_retiro', this.retiroHora + ' (' + this.dia + ')');
+        body.set('hora_retiro', this.retiroHora1.getHours() + ':' + this.retiroHora1.getMinutes());
+      }
       this.auth.post('pedido/confirmar', body)
       .then($confirmado => {
         this.completarCompraTexto = $confirmado.body.response.message;

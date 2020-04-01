@@ -210,9 +210,14 @@ export class FilterComponent implements OnInit {
     });
     this.FilterItem[0].head.state = true;
 
-    setTimeout(() => this.staticAlertClosed = true, 2000);
+    setTimeout(() => this.staticAlertClosed = true, 5000);
     this._success.subscribe((message) => this.successMessage = message);
-    debounceTime.call(this._success, 2000).subscribe(() => this.successMessage = null);
+    debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
+  }
+
+  alertClicked() {
+    this.successMessage = null;
+    this.data.toggleCarritoShow();
   }
 
   itemFilterClick(index) {

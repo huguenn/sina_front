@@ -264,9 +264,12 @@ export class CuentaComponent implements OnInit {
                 });
               });
               // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
-              this.DatosUsuario.datosEnvio.codigoTransporte = (this.transporte_lista.find((transporte) => {
+              var findTransporte = this.transporte_lista.find((transporte) => {
                 return (this.DatosUsuario.datosEnvio && transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte);
-              })).text;
+              });
+              if(findTransporte) {
+                this.DatosUsuario.datosEnvio.codigoTransporte = findTransporte.text;
+              }
               $acepto('ok');
             }).catch((error) => $rechazo(error));
           })
@@ -291,7 +294,7 @@ export class CuentaComponent implements OnInit {
           })
           .catch($error => {
             this.data.log('public/cliente/envio/getAll error cuenta:', this.transporte_lista, this.initialLista);
-            this.data.log('oninit error cuentacomponent:', $error);
+            this.data.log('oninit error cuenta:', $error);
           });
           switch ($user['codCategoriaIva']) {
             case 'CF':
@@ -308,6 +311,12 @@ export class CuentaComponent implements OnInit {
         }
       });
   }
+
+  alertClicked() {
+    this.successMessage = null;
+    this.data.toggleCarritoShow();
+  }
+  
   cambioTab(i) {
     this.transaccion.cambio(i);
     if (i === 1) {
