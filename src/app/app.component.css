@@ -81,12 +81,9 @@
     font-weight: bold;
 }
 @media (max-width: 540px) {
-    .modal__container {
-        padding-bottom: 30%;
-    }
     .modal__container .modal-dialog {
         width: 750px;
-        margin: 30px auto;
+        margin: 0px auto 30px auto;
     }
 }
 
@@ -204,7 +201,7 @@
     .modal__container .modal-body .stepsContent {
         width: 100%;
         margin: initial;
-        max-height: calc(100vh - 350px);
+        max-height: 32vh;
         overflow: scroll;
     }
 }

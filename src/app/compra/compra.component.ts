@@ -294,8 +294,14 @@ export class CompraComponent implements OnInit {
       body.set('total', this.pedido ? this.updateTotal(this.carrito.subtotal) : '100.01');
       if (this.datosCompra.entrega === '1') {
         body.set('retiro_tienda', this.datosCompra.entrega);
-        body.set('dia_retiro', this.retiroHora + ' (' + this.dia + ')');
-        body.set('hora_retiro', this.retiroHora1.getHours() + ':' + this.retiroHora1.getMinutes());
+        const retiroDate = new Date(this.retiroHora);
+        const diaRetiro = retiroDate.getDate() + 1;
+        const mesRetiro = retiroDate.getMonth() + 1;
+        const anioRetiro = retiroDate.getFullYear();
+        const fechaRetiro = diaRetiro + '/' + mesRetiro + '/' + anioRetiro + ' (' + this.dia + ')';
+        const horaRetiro = this.retiroHora1.getHours() + ':' + this.retiroHora1.getMinutes();
+        body.set('dia_retiro', fechaRetiro);
+        body.set('hora_retiro', horaRetiro);
       }
       this.auth.post('pedido/confirmar', body)
       .then($confirmado => {
