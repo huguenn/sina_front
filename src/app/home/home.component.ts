@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
   message: string;
   UserLog: boolean;
 
-  constructor(private data: SharedService, private http: HttpClient, private db: DatabaseService, private auth: AutenticacionService) {
+  constructor(public data: SharedService, private http: HttpClient, private db: DatabaseService, private auth: AutenticacionService) {
     setInterval(() => {
       this.carousel__item = this.carousel__item < this.carousel__max - 1 ? this.carousel__item + 1 : 0;
     }, 4000);

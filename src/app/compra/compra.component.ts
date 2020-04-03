@@ -345,6 +345,7 @@ export class CompraComponent implements OnInit {
         }
       }
     });
+    this.fechaUpdate(this.retiroHora.getFullYear() + '-' + (this.retiroHora.getMonth() + 1) + '-' + this.retiroHora.getDate());
   }
   removeCompraItem($item) {
     this.data.removeMessage($item);
