@@ -380,7 +380,7 @@ export class AppComponent implements OnInit {
 
           // Chequeo el telefono
           if ($campo_obligatorio === 'telefono' && this.contacto[$campo_obligatorio]) {
-            const telefonoRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
+            const telefonoRegExp = new RegExp(/^[^A-z-][\d-]+[^A-z-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
             if (telefonoRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
               this.validationTelefono = false;
@@ -418,7 +418,7 @@ export class AppComponent implements OnInit {
 
         // Chequeo el celular si es que tiene algo escrito porque no es obligatorio
         if (this.contacto['telefono_celular']) {
-          const celularRegExp = new RegExp(/^[^-][\d-]+[^-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
+          const celularRegExp = new RegExp(/^[^A-z-][\d-]+[^A-z-]$/); // numeros del 0 al 9 y guiones entre ellos (no al principio ni al final)
           if (celularRegExp.test(this.contacto['telefono_celular'])) {
             delete this.validador['telefono_celular'];
             this.validationCelular = false;
@@ -834,6 +834,22 @@ export class AppComponent implements OnInit {
       j = (j = i.length) > 3 ? j % 3 : 0;
 
     return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) + (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
+  }
+
+  focusResponsable() {
+    if (window.outerWidth && window.outerWidth < 540) {
+      this.ngSelectResponsable.elementRef.nativeElement.querySelector("input").blur();
+    }
+  }
+  focusProvincia() {
+    if (window.outerWidth && window.outerWidth < 540) {
+      this.ngSelectProvincia.elementRef.nativeElement.querySelector("input").blur();
+    }
+  }
+  focusProvincia2() {
+    if (window.outerWidth && window.outerWidth < 540) {
+      this.ngSelectProvincia2.elementRef.nativeElement.querySelector("input").blur();
+    }
   }
 
 }

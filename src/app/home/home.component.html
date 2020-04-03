@@ -59,7 +59,7 @@
         {{iva_usuario}}
     </div>
 </div>
-<div class="row nuevocliente">
+<div class="row nuevocliente" *ngIf="!data.statusLogin">
     <div class="container">
         <div class="contain">
             <h1>Nuevo Cliente</h1>

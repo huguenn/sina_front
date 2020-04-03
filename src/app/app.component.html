@@ -86,15 +86,17 @@
                                 <input [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
                                 <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
                                 <ng-select #responsable style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
-                                  [clearable]="true"
-                                  bindLabel="text"
-                                  bindValue="codigo"
-                                  (change)="refreshCUIT($event)"
-                                  ng-model="cat_selected"
-                                  placeholder="CAT. IVA.*">
-                                  <ng-option *ngFor="let country of data.reponsable_lista" [value]="country.codigo">
+                                    [clearable]="true"
+                                    bindLabel="text"
+                                    bindValue="codigo"
+                                    (change)="refreshCUIT($event)"
+                                    ng-model="cat_selected"
+                                    placeholder="CAT. IVA.*"
+                                    (focus)="focusResponsable()"
+                                >
+                                    <ng-option *ngFor="let country of data.reponsable_lista" [value]="country.codigo">
                                     {{country.text}}
-                                  </ng-option>
+                                    </ng-option>
                                 </ng-select>
 
                                 <!-- <select class="custom__select"
@@ -133,6 +135,7 @@
                                     (change)="refreshProvincia($event)"
                                     ng-model="domicilio_provincia"
                                     placeholder="Provincia*"
+                                    (focus)="focusProvincia()"
                                 >
                                 </ng-select>
                                 <input [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*">
@@ -153,13 +156,14 @@
                                             <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal">
                                     </div>
                                     <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
-                                                placeholder="Provincia de entrega"
-                                                [clearable]="true"
-                                                [items]="provincia"
-                                                (remove)="deleteProvincia2()"
-                                                (change)="refreshProvincia2($event)"
-                                                ng-model="envio_provincia"
-                                                >
+                                        placeholder="Provincia de entrega"
+                                        [clearable]="true"
+                                        [items]="provincia"
+                                        (remove)="deleteProvincia2()"
+                                        (change)="refreshProvincia2($event)"
+                                        ng-model="envio_provincia"
+                                        (focus)="focusProvincia2()"
+                                    >
                                     </ng-select>
                             </div>
                         </div>
