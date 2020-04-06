@@ -83,7 +83,7 @@
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
                                 <input [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
                                 <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia">
-                                <input [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
+                                <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
                                 <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
                                 <ng-select #responsable style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
                                     [clearable]="true"
@@ -115,11 +115,11 @@
 
 
 
-                                <input [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit">
+                                <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit">
                                 <span *ngIf="validationCUIT" style="color: red;">Solo usar números en el campo CUIT/DNI</span>
-                                <input [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono">
+                                <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono">
                                 <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
-                                <input [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular">
+                                <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular">
                                 <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
                             </div>
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
@@ -138,9 +138,9 @@
                                     (focus)="focusProvincia()"
                                 >
                                 </ng-select>
-                                <input [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*">
+                                <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*">
                                 <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
-                                <input [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*">
+                                <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*">
                                 <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
                             </div>
                         </div>
@@ -195,7 +195,7 @@
                                 <div class="response" *ngIf="!processing.right_now">
                                     <img class="processing__icono" *ngIf="!response.error" src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
                                     <img class="processing__icono" *ngIf="response.error" src="./assets/images/registro/error.png" alt="Sina" height="50">
-                                    <p>{{response.mensaje}}</p>
+                                    <pre>{{response.mensaje}}</pre>
                                     <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>
                                 </div>
                             </div>

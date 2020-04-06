@@ -19,6 +19,12 @@ export class AppComponent implements OnInit {
   @ViewChild('responsable') ngSelectResponsable: NgSelectComponent;
   @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
   @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
+  @ViewChild('input_email') inputEmail: ElementRef;
+  @ViewChild('input_cuit') inputCuit: ElementRef;
+  @ViewChild('input_telefono') inputTelefono: ElementRef;
+  @ViewChild('input_celular') inputCelular: ElementRef;
+  @ViewChild('input_contrasena') inputContrasena: ElementRef;
+  @ViewChild('input_check_contrasena') inputCheckContrasena: ElementRef;
 
 
   public recuperarClave: boolean;
@@ -336,7 +342,7 @@ export class AppComponent implements OnInit {
               this.response = this.error;
               try {
                 Object.keys($error.error.response.error).forEach(element => {
-                  this.response.mensaje += $error.error.response.error[element] + ' ';
+                  this.response.mensaje += $error.error.response.error[element] + '\n';
                 });
               } catch ($throw) {
                 this.data.log('postnuevocliente error app', $throw);
@@ -352,6 +358,7 @@ export class AppComponent implements OnInit {
         if (this.contacto.contrasena !== this.contacto.contrasenaRepetida) {
           this.validationCheckPassword = true;
           this.validador['checkcontrasena'] = true;
+          this.inputCheckContrasena.nativeElement.focus();
         } else {
           this.validationCheckPassword = false;
           delete this.validador['checkcontrasena'];
@@ -375,6 +382,7 @@ export class AppComponent implements OnInit {
             } else {
               this.validador[$campo_obligatorio] = true;
               this.validationCUIT = true;
+              this.inputCuit.nativeElement.focus();
             }
           }
 
@@ -387,6 +395,7 @@ export class AppComponent implements OnInit {
             } else {
               this.validador[$campo_obligatorio] = true;
               this.validationTelefono = true;
+              this.inputTelefono.nativeElement.focus();
             }
           }
 
@@ -399,6 +408,7 @@ export class AppComponent implements OnInit {
             } else {
               this.validador[$campo_obligatorio] = true;
               this.validationEmail = true;
+              this.inputEmail.nativeElement.focus();
             }
           }
 
@@ -411,6 +421,7 @@ export class AppComponent implements OnInit {
             } else {
               this.validador[$campo_obligatorio] = true;
               this.validationPassword = true;
+              this.inputContrasena.nativeElement.focus();
             }
           }
 
@@ -425,6 +436,7 @@ export class AppComponent implements OnInit {
           } else {
             this.validador['telefono_celular'] = true;
             this.validationCelular = true;
+            this.inputCelular.nativeElement.focus();
           }
         } else {
           delete this.validador['telefono_celular'];

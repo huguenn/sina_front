@@ -184,6 +184,7 @@
 .whiteButton {
     width: 100%;
     padding: 8px 10px;
+    font-size: 90%;
 }
 .modal__container .modal-body {
     position: relative;
@@ -201,6 +202,7 @@
     .modal__container .modal-body .stepsContent {
         width: 100%;
         margin: initial;
+        min-height: 100px;
         max-height: 32vh;
         overflow: scroll;
     }
@@ -464,7 +466,6 @@
 .processing {
     position: relative;
     min-height: 100px;
-    margin-bottom: -20px;
 }
 .processing__icono {
     margin: auto !important;
