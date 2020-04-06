@@ -81,7 +81,7 @@
 
                         <div *ngIf="_step === 1" class="row stepsContent">
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
-                                <input [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
+                                <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
                                 <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia">
                                 <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
                                 <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
@@ -127,7 +127,7 @@
                                     <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion">
                                     <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero">
                                 </div>
-                                <input [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad">
+                                <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad">
                                 <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal">
                                 <ng-select #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
                                     [clearable]="true"

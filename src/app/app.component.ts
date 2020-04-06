@@ -19,9 +19,11 @@ export class AppComponent implements OnInit {
   @ViewChild('responsable') ngSelectResponsable: NgSelectComponent;
   @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
   @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
+  @ViewChild('input_razon_social') inputRazonSocial: ElementRef;
   @ViewChild('input_email') inputEmail: ElementRef;
   @ViewChild('input_cuit') inputCuit: ElementRef;
   @ViewChild('input_telefono') inputTelefono: ElementRef;
+  @ViewChild('input_ciudad') inputCiudad: ElementRef;
   @ViewChild('input_celular') inputCelular: ElementRef;
   @ViewChild('input_contrasena') inputContrasena: ElementRef;
   @ViewChild('input_check_contrasena') inputCheckContrasena: ElementRef;
@@ -369,6 +371,24 @@ export class AppComponent implements OnInit {
         this.obligatorios.forEach($campo_obligatorio => {
           if (!this.contacto[$campo_obligatorio]) {
             this.validador[$campo_obligatorio] = true;
+            if($campo_obligatorio === 'contrasena') {
+              this.inputContrasena.nativeElement.focus();
+            }
+            if($campo_obligatorio === 'domicilio_ciudad') {
+              this.inputCiudad.nativeElement.focus();
+            }
+            if($campo_obligatorio === 'telefono') {
+              this.inputTelefono.nativeElement.focus();
+            }
+            if($campo_obligatorio === 'cuit') {
+              this.inputCuit.nativeElement.focus();
+            }
+            if($campo_obligatorio === 'email') {
+              this.inputEmail.nativeElement.focus();
+            }
+            if($campo_obligatorio === 'razon_social') {
+              this.inputRazonSocial.nativeElement.focus();
+            }
           } else {
             delete this.validador[$campo_obligatorio];
           }
@@ -447,11 +467,13 @@ export class AppComponent implements OnInit {
           delete this.validador['cat_selected'];
         } else {
           this.validador['cat_selected'] = true;
+          this.ngSelectResponsable.elementRef.nativeElement.querySelector("input").focus();
         }
         if (this.domicilio_provincia && Object.keys(this.domicilio_provincia).length !== 0) {
           delete this.validador['domicilio_provincia'];
         } else {
           this.validador['domicilio_provincia'] = true;
+          this.ngSelectProvincia.elementRef.nativeElement.querySelector("input").focus();
         }
       }
       if (Object.keys(this.validador).length === 0 && this.validador.constructor === Object) {
