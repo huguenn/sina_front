@@ -195,7 +195,7 @@
                                 <div class="response" *ngIf="!processing.right_now">
                                     <img class="processing__icono" *ngIf="!response.error" src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
                                     <img class="processing__icono" *ngIf="response.error" src="./assets/images/registro/error.png" alt="Sina" height="50">
-                                    <pre>{{response.mensaje}}</pre>
+                                    <pre style="white-space: pre-line;">{{response.mensaje}}</pre>
                                     <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>
                                 </div>
                             </div>
@@ -205,7 +205,7 @@
                 <div class="modal-footer">
                     <div class="row" *ngIf="!registrarStatus">
                         <div class="col-xs-12 col-md-6 footer__col">
-                            <p>Aun no tienes usuario:</p>
+                            <p style="text-align: left; margin-top: 5px;">Aun no tenes usuario:</p>
                             <button class="whiteButton" type="button" [routerLink]="['/']" (click)="_toggleRegistrarStatus()">REGISTRATE</button>
                         </div>
                         <div class="col-xs-12 col-md-6 footer__col">

@@ -58,7 +58,7 @@
 }
 @media (max-width: 540px) {
     .modal__container .modal-dialog {
-        width: 750px;
+        width: 100%;
         margin: 30px auto;
     }
     .modal__container .modal-title {
