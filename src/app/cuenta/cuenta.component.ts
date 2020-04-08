@@ -156,10 +156,11 @@ export class CuentaComponent implements OnInit {
         this.ultimasCompras = $response.response;
         this.data.log('getultimospedidos response cuenta:', this.ultimasCompras, 'ko');
         this.ultimasCompras.forEach(compra => {
+          const fechaP = new Date(compra['fechaPedido'].date);
           compra['fechaPedido'].date = {
-            year: (new Date(compra['fechaPedido'].date).getFullYear()),
-            date: (new Date(compra['fechaPedido'].date).getDate()),
-            month: (new Date(compra['fechaPedido'].date).getMonth())
+            year: fechaP.getFullYear(),
+            date: fechaP.getDate(),
+            month: fechaP.getMonth()+1
           };
         });
       }
