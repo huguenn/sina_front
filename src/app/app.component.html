@@ -79,7 +79,7 @@
                         </div>
 
 
-                        <div *ngIf="_step === 1" class="row stepsContent">
+                        <div *ngIf="_step === 1" class="row stepsContent" [ngClass]="{'focusingPassword': focusingPassword}">
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
                                 <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
                                 <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia">
@@ -138,9 +138,9 @@
                                     (focus)="focusProvincia()"
                                 >
                                 </ng-select>
-                                <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*">
+                                <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
-                                <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*">
+                                <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
                             </div>
                         </div>
@@ -195,7 +195,7 @@
                                 <div class="response" *ngIf="!processing.right_now">
                                     <img class="processing__icono" *ngIf="!response.error" src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
                                     <img class="processing__icono" *ngIf="response.error" src="./assets/images/registro/error.png" alt="Sina" height="50">
-                                    <pre style="white-space: pre-line;">{{response.mensaje}}</pre>
+                                    <pre style="white-space: pre-line; word-break: normal;">{{response.mensaje}}</pre>
                                     <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>
                                 </div>
                             </div>

@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   @ViewChild('input_contrasena') inputContrasena: ElementRef;
   @ViewChild('input_check_contrasena') inputCheckContrasena: ElementRef;
 
+  public focusingPassword: boolean;
 
   public recuperarClave: boolean;
   public validationCheckPassword: boolean = false;
@@ -884,6 +885,13 @@ export class AppComponent implements OnInit {
     if (window.outerWidth && window.outerWidth < 540) {
       this.ngSelectProvincia2.elementRef.nativeElement.querySelector("input").blur();
     }
+  }
+
+  passwordFocused() {
+    this.focusingPassword = true;
+  }
+  passwordBlured() {
+    this.focusingPassword = false;
   }
 
 }
