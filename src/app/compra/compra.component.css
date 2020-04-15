@@ -257,7 +257,7 @@
     .carrito__total__mobile {
         display: block;
         margin: auto;
-        margin-top: 35px;
+        margin-top: 20px;
     }
     .carrito__header .col-2 {
         width: calc(78% - 140px);
@@ -331,8 +331,6 @@
     }
     .carrito__total__mobile {
         display: block;
-        margin: auto;
-        margin-top: 35px;
     }
 
     .carrito__total__mobile {
@@ -345,7 +343,7 @@
         margin: 0px;
     }
     .carrito__header .col-1 {
-        min-width: 45px;
+        min-width: 43px;
         padding: 0px 2px;
     }
     .carrito__content__mobile .row {
@@ -435,7 +433,7 @@
     display: inline-block;
     vertical-align: middle;
 }
-.envio__total p {
+.envio__total__confirmar p {
     position: absolute;
     bottom: 20px;
 }
@@ -445,6 +443,11 @@
     right: 20px;
     font-size: 30px;
     margin: 0px;
+}
+.envio__total h3 {
+    position: absolute;
+    right: 20px;
+    padding-top: 4px;
 }
 .envio__content:hover {
     background-color: #f8f8f8;

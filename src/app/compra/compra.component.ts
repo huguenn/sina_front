@@ -299,7 +299,9 @@ export class CompraComponent implements OnInit {
         const mesRetiro = retiroDate.getMonth() + 1;
         const anioRetiro = retiroDate.getFullYear();
         const fechaRetiro = diaRetiro + '/' + mesRetiro + '/' + anioRetiro + ' (' + this.dia + ')';
-        const horaRetiro = this.retiroHora1.getHours() + ':' + this.retiroHora1.getMinutes();
+        const hora = this.retiroHora1.getHours() < 10 ? '0' + this.retiroHora1.getHours() : this.retiroHora1.getHours();
+        const minutos = this.retiroHora1.getMinutes() < 10 ? '0' + this.retiroHora1.getMinutes() : this.retiroHora1.getMinutes();
+        const horaRetiro = hora + ':' + minutos;
         body.set('dia_retiro', fechaRetiro);
         body.set('hora_retiro', horaRetiro);
       }

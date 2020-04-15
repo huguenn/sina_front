@@ -26,7 +26,7 @@
                   <div class="row">
                   <div class="col-xs-12 col-md-4 show__mobile">
                     <div class="row carrito__total__mobile">
-                      <div class="row envio__total">
+                      <div class="row envio__total envio__total__confirmar">
                         <p>SUBTOTAL</p>
                         <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                         <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
@@ -146,7 +146,7 @@
                   </div>
                   <div class="col-xs-12 col-md-4 show__web">
                     <div class="row carrito__total">
-                      <div class="row envio__total">
+                      <div class="row envio__total envio__total__confirmar">
                         <p>SUBTOTAL</p>
                         <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                         <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
@@ -547,13 +547,13 @@
 
                     <div class="row envio">
                       <div class="row envio__total">
-                          <p>SUBTOTAL</p>
+                          <p style="padding-bottom: 10px;">SUBTOTAL</p>
                           <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                           <span style="position: absolute; bottom: -30px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
                       </div>
 					            <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= 5000">
-                          <p>ENVÍO</p>
-                          <h2 style="font-size: 16px; font-weight: normal;">$ 0,00</h2>
+                          <p style="padding-top: 22px;">ENVÍO</p>
+                          <h3 style="font-size: 16px; font-weight: normal;">$ 0,00</h3>
                       </div>
 
 					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
