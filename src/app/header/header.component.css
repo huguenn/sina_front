@@ -856,7 +856,7 @@
     margin-left: -10px;
     width: calc(33.33333333% + 10px);
 }
-.item_selected a{
+.item_selected a {
     color: #fff !important;
 }
 .header__filter__content .item_selected span {
