@@ -73,8 +73,6 @@
     min-width: 250px;
     width: calc(100% - 60px);
 }
-.header__top .buscador input:focus {
-}
 .navbar-fixed .buscador button,
 .header__top .buscador button{
     height: 34px;
@@ -368,9 +366,9 @@
     max-width: calc(100vw - 20px);
 }
 .buy .popup .popup__lista li{
-    padding: 8px 65px;
-    width: 100%;
-    padding-right: 30%;
+    padding: 8px 60px;
+    max-width: 100%;
+    padding-right: 35%;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -389,7 +387,7 @@
 }
 .buy .popup .popup__lista .eliminar{
     top: 5px;
-    right: 15px;
+    right: 8px;
     position: absolute;
     cursor: pointer;
     display: block;
@@ -408,7 +406,7 @@
 }
 .buy .popup .popup__lista input{
     top: 3px;
-    left: 15px;
+    left: 8px;
     right: auto;
 }
 .buy .popup .popup__lista p{
@@ -416,7 +414,7 @@
     font-weight: bold;
     font-size: 14px;
     top: 6px;
-    left: 73%;
+    left: 66%;
     position: absolute;
 }
 
@@ -573,10 +571,6 @@
     }
     .header--fixed .controles {
         position: relative;
-    }
-    .header__top .buscador .controles *{
-        /*display: inline-block;
-        vertical-align: middle;*/
     }
     .navbar-fixed ul > li{
         margin: 0px 0px;
