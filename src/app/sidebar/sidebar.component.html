@@ -54,7 +54,7 @@
                 <li *ngFor="let item of LinkList; let itemIndex = index" class="nav-item">
                     <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)">
                         <img width="30" src="{{item.img1}}" alt="">
-                        <p>{{item.texto}}</p>
+                        <p style="width: 45%;">{{item.texto}}</p><span style="float: right; padding-top: 5px; min-width: 15px;">&#8827;</span>
                     </a>
                     <div class="subcategorias column" [ngClass]="{'toggleSubCategorias': (LinkIndex === (itemIndex + 1))}">
                         <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)">Volver</a>

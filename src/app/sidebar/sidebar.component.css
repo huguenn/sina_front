@@ -22,7 +22,9 @@
 .subcategorias ul,
 .sidenavMenu .listado .items {
     list-style-type: none;    
-    padding: 0px 15px;
+    padding: 0px 0px;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
 }
 .sidenavMenu .listado .items > li{
     padding: 6px 0px;
