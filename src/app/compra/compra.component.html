@@ -6,13 +6,11 @@
             <p>{{secciones[transaccion.paso]}}</p>
             <ul>
               <li [class.active]="transaccion.check(0)"
-                  (click)="transaccion.cambio(0); checkCarritoInit(0);"
                   >Carrito</li>
               <li [class.active]="transaccion.check(1)"
-                  (click)="finalizarCompra()"
                   >Envío y facturación</li>
               <li [class.active]="transaccion.check(2)"
-              >Confirmacion</li>
+                  >Confirmacion</li>
             </ul>
           </div>
           <div class="tab__content">
@@ -537,7 +535,7 @@
                     </div>
                     <div class="row" [ngClass]="{'borde__animado' : carrito.subtotal < 5000, 'envio' : carrito.subtotal >= 5000}" style="margin-bottom: 10px;">
                       <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < 5000">
-                        <p>TE FALTAN $ <strong>{{formatMoney(5000 - carrito.subtotal)}}</strong> PARA TENER EL <strong>ENVÍO GRATIS</strong></p>
+                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(5000 - carrito.subtotal)}}</strong> PARA TENER EL <strong style="padding-bottom: 3px">ENVÍO GRATIS</strong></p>
                       </div>
                       <div class="row envio__total text-center" style="font-weight: normal;" *ngIf="carrito.subtotal >= 5000">
                         <p>ENVÍO GRATIS &#10004;</p>
@@ -638,25 +636,23 @@
                           <p>{{this.datos_envio.cod_transporte ? medioTransporte : "Debe seleccionar un medio de transporte"}}</p>
                         </div>
                       </div>
-                      <div class="col-xs-4 col-md-3">
-                        <div class="row envio__seccion--editable">
-                          <div class="row envio__seccion__header--editable">
-                            <p>DATOS DE FACTURACIÓN</p>
-                          </div>
-                          <div class="row envio__seccion__content">
-                            <p>Razón Social: {{facturacion.datos.razon_social}}</p>
-                            <p>Nombre de fantasía: {{facturacion.datos.nombre_fantasia}}</p>
-                            <p>Categoría IVA: {{facturacion.datos.cod_categoria_iva}}</p>
-                            <p>Telefono: {{facturacion.datos.telefono}}</p>
-                            <p>Telefono celular: {{facturacion.datos.telefono_celular}}</p>
-                            <p>Nombre responsable de compras: {{facturacion.datos.nombre_responsable_compras}}</p>
-                            <p>Nombre responsable de facturación: {{facturacion.datos.facturacion_nombre_responsable}}</p>
-                            <p>Email de facturación: {{facturacion.datos.facturacion_email}}</p>
-                            <p>Telefono de facturación: {{facturacion.datos.facturacion_telefono}}</p>
-                            <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
-                            <p>Ciudad: {{facturacion.datos.domicilio_ciudad}} CP: {{facturacion.datos.domicilio_codigo_postal}}</p>
-                            <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
-                          </div>
+                      <div class="col-xs-12 col-md-3 envio__seccion--editable">
+                        <div class="row envio__seccion__header--editable">
+                          <p>DATOS DE FACTURACIÓN</p>
+                        </div>
+                        <div class="row envio__seccion__content">
+                          <p>Razón Social: {{facturacion.datos.razon_social}}</p>
+                          <p>Nombre de fantasía: {{facturacion.datos.nombre_fantasia}}</p>
+                          <p>Categoría IVA: {{facturacion.datos.cod_categoria_iva}}</p>
+                          <p>Telefono: {{facturacion.datos.telefono}}</p>
+                          <p>Telefono celular: {{facturacion.datos.telefono_celular}}</p>
+                          <p>Nombre responsable de compras: {{facturacion.datos.nombre_responsable_compras}}</p>
+                          <p>Nombre responsable de facturación: {{facturacion.datos.facturacion_nombre_responsable}}</p>
+                          <p>Email de facturación: {{facturacion.datos.facturacion_email}}</p>
+                          <p>Telefono de facturación: {{facturacion.datos.facturacion_telefono}}</p>
+                          <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
+                          <p>Ciudad: {{facturacion.datos.domicilio_ciudad}} CP: {{facturacion.datos.domicilio_codigo_postal}}</p>
+                          <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
                         </div>
                       </div>
                       <div class="col-xs-12 col-md-3">
@@ -686,4 +682,4 @@
 
 
 
-<app-loading *ngIf="modalLoading" (cerrarModal)="closeModal($event)" ></app-loading>
+<app-loading *ngIf="modalLoading" ></app-loading>

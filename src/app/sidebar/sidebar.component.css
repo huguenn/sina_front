@@ -28,6 +28,7 @@
 }
 .sidenavMenu .listado .items > li{
     padding: 6px 0px;
+    padding-top: 9px;
     border-bottom: 1px solid #e1e1e1;
 }    
 .sidenavMenu .listado .items > li:last-child {
@@ -80,6 +81,9 @@
 }
 .subcategorias .section {
     margin: 10px 0px;
+    margin-bottom: 7px;
+    border-bottom: 1px solid #00a651;
+    padding-bottom: 2px;
 }
 .subcategorias .section .title {
     font-weight: bold;

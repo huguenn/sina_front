@@ -508,7 +508,7 @@ export class CompraComponent implements OnInit {
     }
   }
 
-  closeModal(event: boolean) {
+  closeModal(event: string) {
     this.modalLoading = false;
     }
 }

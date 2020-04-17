@@ -7,7 +7,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class LoadingComponent implements OnInit {
 
-  @Output() cerrarModal: EventEmitter<boolean> = new EventEmitter();
+  // @Output() cerrarModal: EventEmitter<boolean> = new EventEmitter();
 
   constructor() { }
 
@@ -15,7 +15,7 @@ export class LoadingComponent implements OnInit {
   }
 
   cerrar() {
-    this.cerrarModal.emit(true);
+    // this.cerrarModal.emit(true);
   }
 
 

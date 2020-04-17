@@ -51,8 +51,8 @@
         </div>
         <div class="row listado">
             <ul class="items">
-                <li *ngFor="let item of LinkList; let itemIndex = index" class="nav-item">
-                    <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)">
+                <li *ngFor="let item of LinkList; let itemIndex = index" class="nav-item" style="min-height: 51px;">
+                    <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)" style="margin: auto;">
                         <img width="30" src="{{item.img1}}" alt="">
                         <p style="width: 45%;">{{item.texto}}</p><span style="float: right; padding-top: 5px; min-width: 15px;">&#8827;</span>
                     </a>
@@ -60,41 +60,41 @@
                         <a class="nav-link" (click)="changeStyleClick(itemIndex + 1)">Volver</a>
                         <div class="section" *ngFor="let section of item.links; let ItemIndexLink = index;">
                                 <a *ngIf="(LinkIndexHija === 0) && (section.items.length === 0)" (click)="changeStyleClickHija(ItemIndexLink + 1, section)" [routerLink]="section.head.link" class="title" style="
-                                    max-width: 100%;
-                                    display: block;
+                                    width: 90%;
+                                    display: inline-block;
                                     text-overflow: ellipsis;
                                     overflow: hidden;
                                     white-space: nowrap;
                                     "
-                                >{{section.head.texto}}</a>
+                                >{{section.head.texto}}</a><span *ngIf="(LinkIndexHija === 0) && (section.items.length === 0)" style="float: right; min-width: 15px; color: rgb(51, 122, 183);">&#8827;</span>
                                 <a *ngIf="(LinkIndexHija === 0) && (section.items.length !== 0)" (click)="changeStyleClickHija(ItemIndexLink + 1, section)" class="title" style="
-                                    max-width: 100%;
-                                    display: block;
+                                    width: 90%;
+                                    display: inline-block;
                                     text-overflow: ellipsis;
                                     overflow: hidden;
                                     white-space: nowrap;
                                     "
-                                >{{section.head.texto}}</a>
+                                >{{section.head.texto}}</a><span *ngIf="(LinkIndexHija === 0) && (section.items.length !== 0)" style="float: right; min-width: 15px; color: rgb(51, 122, 183);">&#8827;</span>
                                 <!--div *ngFor="let itemHija of section.items; let ItemIndexHija = index;" class="subcategorias column" [ngClass]="{'toggleSubCategorias__hija': (LinkIndexHija === (ItemIndexHija + 1))}" style="top: 0px;"-->        
                                 <div *ngFor="let itemHija of section.items; let ItemIndexHija = index;" class="subcategorias column" [ngClass]="{'toggleSubCategorias__hija': (LinkIndexHija === (ItemIndexLink + 1))}" style="top: 0px;">
                                     <a class="nav-link" (click)="closeHija()">Volver</a>
                                     <div class="section" *ngFor="let itemHija of section.items;" >
                                         <a (click)="toggleSideBar()"[routerLink]="itemHija?.link" class="title" style="
-                                                max-width: 100%;
-                                                display: block;
+                                                width: 90%;
+                                                display: inline-block;
                                                 text-overflow: ellipsis;
                                                 overflow: hidden;
                                                 white-space: nowrap;
-                                            ">{{itemHija.texto}}</a>                     
+                                            ">{{itemHija.texto}}</a><span style="float: right; min-width: 15px; color: rgb(51, 122, 183);">&#8827;</span>
                                     </div>
                                     <div class="section">
                                         <a (click)="toggleSideBar()"[routerLink]="section.head?.link" class="title" style="
-                                                max-width: 100%;
-                                                display: block;
+                                                width: 90%;
+                                                display: inline-block;
                                                 text-overflow: ellipsis;
                                                 overflow: hidden;
                                                 white-space: nowrap;
-                                            ">VER TODO</a>                     
+                                            ">VER TODO</a><span style="float: right; min-width: 15px; color: rgb(51, 122, 183);">&#8827;</span>
                                     </div>
                                     <li class="nav-item">
                                       <a class="nav-link" routerLink="" (click)="itemClicked()"></a>
