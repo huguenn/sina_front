@@ -1,5 +1,5 @@
 import { NgZone, Component, OnInit, ViewChild, ChangeDetectorRef, ElementRef, Pipe, PipeTransform } from '@angular/core';
-import { SharedService, cliente, Dato } from '../app/shared.service';
+import { SharedService, cliente, Dato, Configuracion } from '../app/shared.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { INgxMyDpOptions, IMyDateModel } from 'ngx-mydatepicker';
 import { AutenticacionService } from './autenticacion.service';
@@ -170,18 +170,18 @@ export class AppComponent implements OnInit {
     }
   };
 
-  sticky: any = {
-    activo: false,
-    call_to_action: '',
-    link: '#',
-    mensaje: '',
-    inicio: '',
-    fin: '',
-    permanente: false
-  };
+  // sticky: any = {
+  //   activo: false,
+  //   call_to_action: '',
+  //   link: '#',
+  //   mensaje: '',
+  //   inicio: '',
+  //   fin: '',
+  //   permanente: false
+  // };
   emergentes = [];
   actualRoute = '/';
-  actualEmergente: any = {};
+  // actualEmergente: any = {};
   actualEmergenteFlag: boolean = false;
 
   message: string;
@@ -190,6 +190,7 @@ export class AppComponent implements OnInit {
   loginStatus: boolean = true;
   carritoStatus: boolean;
   representarStatus: boolean;
+  config: any;
   registrarStatus: boolean = false;
   login: any = {
     user: '',
@@ -579,19 +580,59 @@ export class AppComponent implements OnInit {
       this.el.nativeElement.parentElement.scrollTop = 0;
     });
 
-    // subscribing to data on Firebase
-    this.db.getDocument('sticky').subscribe(value => {
-      if (value) {
-        this.sticky = value;
+    // subscribing to config change
+    this.data.currentConfig.subscribe(
+      configuracion => {
+        this.config = configuracion;
+        if(this.config.ventanaEmergenteActivo) {
+          this.find_index();
+        }
       }
-    });
-    // subscribing to data on Firebase
-    this.db.getCollection('emergentes').subscribe(value => {
-      if (value) {
-        this.emergentes = value;
-        this.find_index();
+    )
+
+    // reading config data
+    this.auth.get('public/configuracion')
+    .then(($response) => {
+      this.data.log('response publicconfiguracion app', $response);
+      if($response.response) {
+        const ahora = new Date();
+        const fechaDesde = $response.response.stickyHeaderDesde ? new Date($response.response.stickyHeaderDesde.date) : ahora;
+        const fechaHasta = $response.response.stickyHeaderHasta ? new Date($response.response.stickyHeaderHasta.date) : ahora;
+        const permanente = $response.response.stickyHeaderPermanente === '1' ? true : false;
+        const c = {
+          montoEnvioGratis: Number.parseInt($response.response.montoEnvioGratis, 10),
+          stickyHeaderTitulo: $response.response.stickyHeaderTitulo,
+          stickyHeaderCta: $response.response.stickyHeaderCta,
+          stickyHeaderLink: $response.response.stickyHeaderLink,
+          stickyHeaderDesde: fechaDesde,
+          stickyHeaderHasta: fechaHasta,
+          stickyHeaderActivo: permanente ? ($response.response.stickyHeaderActivo === '1' ? true : false) : ($response.response.stickyHeaderActivo === '1'  && ahora > fechaDesde && ahora < fechaHasta ? true : false),
+          stickyHeaderPermanente: permanente,
+          ventanaEmergenteTitulo: $response.response.ventanaEmergenteTitulo,
+          ventanaEmergenteImagen: $response.response.ventanaEmergenteImagen,
+          ventanaEmergenteActivo: $response.response.ventanaEmergenteActivo === '1' ? true : false,
+        }
+        this.data.updateConfiguracion(c);
       }
+    })
+    .catch($error => {
+      this.data.log('problemas con la configuracion app');
+      this.data.log('getconfiguracion error app', $error);
     });
+
+    // subscribing to data on Firebase DEPRECATED
+    // this.db.getDocument('sticky').subscribe(value => {
+    //   if (value) {
+    //     this.sticky = value;
+    //   }
+    // });
+    // subscribing to data on Firebase DEPRECATED
+    // this.db.getCollection('emergentes').subscribe(value => {
+    //   if (value) {
+    //     this.emergentes = value;
+    //     this.find_index();
+    //   }
+    // });
 
     // binding interval
     setInterval(() => {
@@ -623,14 +664,14 @@ export class AppComponent implements OnInit {
   find_index() {
     const item = this.actualRoute === '/' ? 'home' : this.actualRoute;
     if (item) {
-      const index = this.emergentes.findIndex(($element) => {
-        return item.indexOf($element.seccion) !== -1;
-      });
+      // const index = this.emergentes.findIndex(($element) => {
+      //   return item.indexOf($element.seccion) !== -1;
+      // });
       if (this.actualRoute.indexOf('confirmacion') === -1) {
-        if (index !== -1) {
+        // if (index !== -1) {
           if (this.carritoStatus && this.loginStatus) {
             if (!this.auth.localGet('actualEmergenteFlag')) {
-              this.actualEmergente = this.emergentes[index];
+              // this.actualEmergente = this.emergentes[index];
               this.actualEmergenteFlag = true;
               this.auth.localSet('actualEmergenteFlag', true);
             }
@@ -638,7 +679,7 @@ export class AppComponent implements OnInit {
             this.actualEmergenteFlag = false;
             this.auth.localSet('actualEmergenteFlag', false);
           }
-        }
+        // }
       } else {
         this.actualEmergenteFlag = false;
         this.data.closeLoginModal();

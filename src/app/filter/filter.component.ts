@@ -71,6 +71,7 @@ export class FilterComponent implements OnInit {
   listado_subcategorias;
   mensaje: string;
   LinkList: Array<any>;
+  public ordenamiento: string;
   constructor(
     private menu: MenuService,
     private auth: AutenticacionService,
@@ -296,5 +297,14 @@ export class FilterComponent implements OnInit {
     }else {
       this.paginado.disable();
     }
+  }
+
+  ordenPorNombre() {
+    this.ordenamiento = 'nombre';
+    // this.listaResultados = this.listaResultados.map(arr => arr.sort((a,b) => a.titulo < b));
+  }
+  ordenPorPrecio() {
+    this.ordenamiento = 'precio';
+    // this.listaResultados = this.listaResultados.sort((a,b) => a.precio < b.precio);
   }
 }

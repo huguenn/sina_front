@@ -66,7 +66,34 @@ export class cliente {
   telefonoCelular:      string;
   telefonoFacturacion:  string;
 }
-
+export class Configuracion {
+  montoEnvioGratis:       Number;
+  stickyHeaderTitulo:     String;
+  stickyHeaderCta:        string;
+  stickyHeaderLink:       string;
+  stickyHeaderDesde:      Date;
+  stickyHeaderHasta:      Date;
+  stickyHeaderActivo:     boolean;
+  stickyHeaderPermanente: boolean;
+  ventanaEmergenteTitulo: string;
+  ventanaEmergenteImagen: string;
+  ventanaEmergenteActivo: boolean;
+  constructor(montoEnvioGratis: number, stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string,
+    stickyHeaderDesde: Date, stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean,
+    ventanaEmergenteTitulo: string, ventanaEmergenteImagen: string, ventanaEmergenteActivo: boolean) {
+      this.montoEnvioGratis = montoEnvioGratis;
+      this.stickyHeaderTitulo = stickyHeaderTitulo;
+      this.stickyHeaderCta = stickyHeaderCta;
+      this.stickyHeaderLink = stickyHeaderLink;
+      this.stickyHeaderDesde = stickyHeaderDesde;
+      this.stickyHeaderHasta = stickyHeaderHasta;
+      this.stickyHeaderActivo = stickyHeaderActivo;
+      this.stickyHeaderPermanente = stickyHeaderPermanente;
+      this.ventanaEmergenteTitulo = ventanaEmergenteTitulo;
+      this.ventanaEmergenteImagen = ventanaEmergenteImagen;
+      this.ventanaEmergenteActivo = ventanaEmergenteActivo;
+  }
+}
 
 
 @Injectable()
@@ -80,6 +107,7 @@ export class SharedService {
   statusRepresentar = true;
   statusLogin     = false;
   statusCarrito   = false;
+  configuracion = [];
 
   public reponsable_lista: Array<any> = [
     { text: 'Consumidor final',  codigo: 'CF'},
@@ -151,6 +179,10 @@ export class SharedService {
   // observable carritoPopup
   private carritoPopup  = new BehaviorSubject<boolean>(false);
   currentCarrito        = this.carritoPopup.asObservable();
+
+  //observable configuracion
+  private configuracionSource = new BehaviorSubject<Configuracion[]>([]);
+  currentConfig               = this.configuracionSource.asObservable();
 
   // constructor
   constructor(private title: Title, private meta: Meta) { }
@@ -284,6 +316,11 @@ export class SharedService {
 
     this.title.setTitle($title);
     this.meta.addTag({ name: 'description', content: $meta_content });
+  }
+
+  updateConfiguracion(config) {
+    this.configuracion = config;
+    this.configuracionSource.next(this.configuracion);
   }
 
   public log(...args) {

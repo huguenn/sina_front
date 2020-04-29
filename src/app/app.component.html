@@ -3,11 +3,18 @@
         <app-sidebar></app-sidebar>
     </ng-sidebar>
     <div ng-sidebar-content class="ventana" #ventana (click)="eventoclick($event)">
-        <div class="mensaje" [ngClass]="{'mensaje__activo': sticky.activo}">
+        <!-- <div class="mensaje" [ngClass]="{'mensaje__activo': sticky.activo}"> DEPRECATED
             <div class="container">
                 <p>{{sticky.mensaje}}</p>
                 <a class="actionButton" href={{sticky.link}}>{{sticky.call_to_action}}</a>
                 <i (click)="sticky.activo = false" class="fa fa-times-circle"></i>
+            </div>
+        </div> -->
+        <div class="mensaje" [ngClass]="{'mensaje__activo': config.stickyHeaderActivo}">
+            <div class="container">
+                <p>{{config.stickyHeaderTitulo}}</p>
+                <a class="actionButton" href={{config.stickyHeaderLink}}>{{config.stickyHeaderCta}}</a>
+                <i (click)="config.stickyHeaderActivo = false" class="fa fa-times-circle"></i>
             </div>
         </div>
         <app-header
@@ -292,7 +299,7 @@
                 <div role="document" class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header" style="padding: 0;">
-                            <img [src]="actualEmergente['img'] || ''" alt="Sina" style="position: relative; bottom: 0px; left: 0px; width: 100%;">
+                            <img [src]="config.ventanaEmergenteImagen || ''" alt="Sina" style="position: relative; bottom: 0px; left: 0px; width: 100%;">
                             <button aria-label="Close" class="close" type="button" (click)= "closeEmergente2()">
                             <span aria-hidden="true">×</span>
                         </button>
