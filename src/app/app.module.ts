@@ -31,9 +31,7 @@ import { BusquedaCuentaPipe } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 // firebase
-import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { ProductoItemComponent } from './producto-item/producto-item.component';
 import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
 import { ShareButtonsModule } from 'ngx-sharebuttons';
@@ -163,8 +161,6 @@ const appRoutes: Routes = [
     LoadingComponent
   ],
   imports: [
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
     NgSelectModule,
     FormsModule,
     PopoverModule,

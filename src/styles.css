@@ -203,6 +203,9 @@ ngb-accordion .card .row {
 .imageContainer img.activeItem {
     opacity: 1;
 }
+.imageContainer img.notActiveItem {
+    z-index: -1;
+}
 .imageContainerItem {
     height: 20px;
     width: 20px;

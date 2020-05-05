@@ -12,7 +12,10 @@
 <div class="carouselContainer">
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     <div class="imageContainer" *ngFor="let item of imageSources; let $index = index">
-        <img [src]="item" alt="item" [ngClass]="{'activeItem': $index === carousel__item}" style="width: 100%;">
+        <a *ngIf="item.link" [href]="item.link">
+            <img [src]="item.imagen" alt="item" [ngClass]="$index === carousel__item ? 'activeItem' : 'notActiveItem'" style="width: 100%;">
+        </a>
+        <img *ngIf="!item.link" [src]="item.imagen" alt="item" [ngClass]="$index === carousel__item ? 'activeItem' : 'notActiveItem'" style="width: 100%;">
     </div>
     <div class="imageSelector">
         <div class="container">

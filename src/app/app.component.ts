@@ -3,7 +3,6 @@ import { SharedService, cliente, Dato, Configuracion } from '../app/shared.servi
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { INgxMyDpOptions, IMyDateModel } from 'ngx-mydatepicker';
 import { AutenticacionService } from './autenticacion.service';
-import { DatabaseService } from './database.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { MenuService } from './menu.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
@@ -12,7 +11,6 @@ import { NgSelectComponent } from '@ng-select/ng-select';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [DatabaseService]
 })
 export class AppComponent implements OnInit {
   @ViewChild('ventana') el: ElementRef;
@@ -525,7 +523,6 @@ export class AppComponent implements OnInit {
     private data: SharedService,
     private http: HttpClient,
     private auth: AutenticacionService,
-    private db: DatabaseService,
     private router: Router) {
     this.recuperarClave = false;
     this.recuperarOk = '';
@@ -552,6 +549,11 @@ export class AppComponent implements OnInit {
     this.data.currentModal.subscribe(
       status => {
         this.loginStatus = status;
+        if(status && this.config) {
+          if(this.config.ventanaEmergenteActivo) {
+            this.find_index();
+          }
+        }
       }
     );
     // subscribing to data on CarritoStatus
@@ -570,8 +572,10 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(val => {
       if (this.actualRoute !== val['url']) {
         this.actualRoute = (val['url']);
-        if (this.emergentes.length) {
-          this.find_index();
+        if(this.config) {
+          if(this.config.ventanaEmergenteActivo) {
+            this.find_index();
+          }
         }
       }
       if (!(val instanceof NavigationEnd)) {
@@ -588,7 +592,7 @@ export class AppComponent implements OnInit {
           this.find_index();
         }
       }
-    )
+    );
 
     // reading config data
     this.auth.get('public/configuracion')
@@ -611,6 +615,36 @@ export class AppComponent implements OnInit {
           ventanaEmergenteTitulo: $response.response.ventanaEmergenteTitulo,
           ventanaEmergenteImagen: $response.response.ventanaEmergenteImagen,
           ventanaEmergenteActivo: $response.response.ventanaEmergenteActivo === '1' ? true : false,
+          bannerUnoActivo: $response.response.bannerUnoActivo === '1' ? true : false,
+          bannerUnoTitulo: $response.response.bannerUnoTitulo,
+          bannerUnoLink: $response.response.bannerUnoLink,
+          bannerUnoImagen: $response.response.bannerUnoImagen,
+          bannerDosActivo: $response.response.bannerDosActivo === '1' ? true : false,
+          bannerDosTitulo: $response.response.bannerDosTitulo,
+          bannerDosLink: $response.response.bannerDosLink,
+          bannerDosImagen: $response.response.bannerDosImagen,
+          bannerTresActivo: $response.response.bannerTresActivo === '1' ? true : false,
+          bannerTresTitulo: $response.response.bannerTresTitulo,
+          bannerTresLink: $response.response.bannerTresLink,
+          bannerTresImagen: $response.response.bannerTresImagen,
+          bannerCuatroActivo: $response.response.bannerCuatroActivo === '1' ? true : false,
+          bannerCuatroTitulo: $response.response.bannerCuatroTitulo,
+          bannerCuatroLink: $response.response.bannerCuatroLink,
+          bannerCuatroImagen: $response.response.bannerCuatroImagen,
+          bannerCincoActivo: $response.response.bannerCincoActivo === '1' ? true : false,
+          bannerCincoTitulo: $response.response.bannerCincoTitulo,
+          bannerCincoLink: $response.response.bannerCincoLink,
+          bannerCincoImagen: $response.response.bannerCincoImagen,
+          bannerSeisActivo: $response.response.bannerSeisActivo === '1' ? true : false,
+          bannerSeisTitulo: $response.response.bannerSeisTitulo,
+          bannerSeisLink: $response.response.bannerSeisLink,
+          bannerSeisImagen: $response.response.bannerSeisImagen,
+          bannerOfertasTitulo: $response.response.bannerOfertasTitulo,
+          bannerOfertasImagen: $response.response.bannerOfertasImagen,
+          bannerNovedadesTitulo: $response.response.bannerNovedadesTitulo,
+          bannerNovedadesImagen: $response.response.bannerNovedadesImagen,
+          bannerCampaniasTitulo: $response.response.bannerCampaniasTitulo,
+          bannerCampaniasImagen: $response.response.bannerCampaniasImagen,
         }
         this.data.updateConfiguracion(c);
       }
@@ -619,20 +653,6 @@ export class AppComponent implements OnInit {
       this.data.log('problemas con la configuracion app');
       this.data.log('getconfiguracion error app', $error);
     });
-
-    // subscribing to data on Firebase DEPRECATED
-    // this.db.getDocument('sticky').subscribe(value => {
-    //   if (value) {
-    //     this.sticky = value;
-    //   }
-    // });
-    // subscribing to data on Firebase DEPRECATED
-    // this.db.getCollection('emergentes').subscribe(value => {
-    //   if (value) {
-    //     this.emergentes = value;
-    //     this.find_index();
-    //   }
-    // });
 
     // binding interval
     setInterval(() => {

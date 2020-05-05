@@ -448,7 +448,9 @@ export class CompraComponent implements OnInit {
 
   // Finalizar Compra
   finalizarCompra() {
-    this.printAll();
+    if(this.carrito.lista.length) {
+      this.printAll();
+    }
   }
   isChecked = {
     entrega_lunes:     false,
