@@ -182,6 +182,7 @@ export class HomeComponent implements OnInit {
 
   descargarLista() {
     (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
+    (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'block';
     this.auth.get('producto/listadoProductos')
     .then(($response)  => {
       if ($response.response) {
@@ -213,6 +214,7 @@ export class HomeComponent implements OnInit {
       }
 
       (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
+      (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'none';
 
     })
     .catch($error => {

@@ -52,9 +52,10 @@
         </a>
 
         <a (click)="descargarLista()">
-        <div id="div1"><img id="rel1" src="./assets/images/home/banner/banners web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios"/>
-        <div id="loaderFile" style="display:none;"><img id="rel2" src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
-        </div></div>
+            <div id="div1"><img id="rel1" src="./assets/images/home/banner/banners web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios"/>
+                <div id="loaderFile" style="display: none; position: relative; left: calc(50% - 20px); margin-top: 10px; max-width: 40px;"><img id="rel2" src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/></div>
+                <div id="loaderFileMsg" style="display: none; position: relative; margin-top: 10px;">Generando archivo Por favor espere</div>
+            </div>
         </a>
 
     </div>

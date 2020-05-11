@@ -7,7 +7,6 @@
 }
 
 #div1 { position:relative; }
-#loaderFile { position:absolute; top:50%; left:50%; }
 
 
 /*custom bootstrap column*/
@@ -93,6 +92,7 @@
 .banner_final a img{
     max-width: 190px;
     width: 100%;
+    cursor: pointer;
 }
 
 @media (max-width: 992px) {
