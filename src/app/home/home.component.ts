@@ -177,48 +177,54 @@ export class HomeComponent implements OnInit {
     this.data.toggleCarritoShow();
   }
   registrar() {
-    this.data.toggleLoginModal();
+    if(!this.loginStatus) {
+      this.data.toggleLoginModal();
+    }
   }
 
   descargarLista() {
-    (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
-    (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'block';
-    this.auth.get('producto/listadoProductos')
-    .then(($response)  => {
-      if ($response.response) {
-        this.listadoProductos = $response.response;
-        const print: any[] = [];
-        print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)',
-          'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta']);
-        this.listadoProductos.forEach(producto => {
-          print.push
-          (
-            [
-              producto.codigo_interno,
-              producto.nombre + ' - ' + producto.nombre_adicional,
-              producto.codigo_barras,
-              producto.unidad_medida,
-              producto.precio,
-              producto.familia,
-              producto.categoria,
-              producto.subcategoria,
-              producto.es_oferta
-            ]
-          );
-        });
+    if(this.loginStatus) {
+      (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
+      (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'block';
+      this.auth.get('producto/listadoProductos')
+      .then(($response)  => {
+        if ($response.response) {
+          this.listadoProductos = $response.response;
+          const print: any[] = [];
+          print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)',
+            'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta']);
+          this.listadoProductos.forEach(producto => {
+            print.push
+            (
+              [
+                producto.codigo_interno,
+                producto.nombre + ' - ' + producto.nombre_adicional,
+                producto.codigo_barras,
+                producto.unidad_medida,
+                producto.precio,
+                producto.familia,
+                producto.categoria,
+                producto.subcategoria,
+                producto.es_oferta
+              ]
+            );
+          });
 
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
-        XLSX.writeFile(wb, 'Listado de productos.xlsx');
-      }
+          const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print);
+          const wb: XLSX.WorkBook = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
+          XLSX.writeFile(wb, 'Listado de productos.xlsx');
+        }
 
-      (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
-      (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'none';
+        (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
+        (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'none';
 
-    })
-    .catch($error => {
-      this.data.log('descargarlista error home:', $error);
-    });
+      })
+      .catch($error => {
+        this.data.log('descargarlista error home:', $error);
+      });
+    } else {
+      this.data.toggleLoginModal();
+    }
   }
 }
