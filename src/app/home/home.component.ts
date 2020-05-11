@@ -67,6 +67,16 @@ export class HomeComponent implements OnInit {
         this.http.get('assets/data/resultadosHome.json')
         .subscribe(res => {
           this.listaResultados = res['Resultados'];
+
+          if(this.config) {
+            this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+            this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+            this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+            this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+            this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+            this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+          }
+          
           // this.listaResultados[2].lista = [];
           const $public = this.loginStatus ? '' : 'public/';
           this.auth.get($public + 'producto/listado/ofertas')
@@ -76,6 +86,15 @@ export class HomeComponent implements OnInit {
             this.listaResultados[0].lista = JSON.parse(JSON.stringify(ofertas1));
             this.listaResultados[2].lista[0] = JSON.parse(JSON.stringify(ofertas2[0]));
             this.listaResultados[2].lista[1] = JSON.parse(JSON.stringify(ofertas2[1]));
+
+            if(this.config) {
+              this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+              this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+              this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+              this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+              this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+              this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+            }
           })
           .catch($error => {
             this.data.log('getresultadoshome.json error home:', $error);
@@ -132,22 +151,22 @@ export class HomeComponent implements OnInit {
         this.config = configuracion;
 
         if(this.config.bannerUnoActivo) {
-          this.imageSources[0] = {imagen: this.config.bannerUnoImagen, link: this.config.bannerUnoLink};
+          this.imageSources.push({imagen: this.config.bannerUnoImagen, link: this.config.bannerUnoLink});
         }
         if(this.config.bannerDosActivo) {
-          this.imageSources[1] = {imagen: this.config.bannerDosImagen, link: this.config.bannerDosLink};
+          this.imageSources.push({imagen: this.config.bannerDosImagen, link: this.config.bannerDosLink});
         }
         if(this.config.bannerTresActivo) {
-          this.imageSources[2] = {imagen: this.config.bannerTresImagen, link: this.config.bannerTresLink};
+          this.imageSources.push({imagen: this.config.bannerTresImagen, link: this.config.bannerTresLink});
         }
         if(this.config.bannerCuatroActivo) {
-          this.imageSources[3] = {imagen: this.config.bannerCuatroImagen, link: this.config.bannerCuatroLink};
+          this.imageSources.push({imagen: this.config.bannerCuatroImagen, link: this.config.bannerCuatroLink});
         }
         if(this.config.bannerCincoActivo) {
-          this.imageSources[4] = {imagen: this.config.bannerCincoImagen, link: this.config.bannerCincoLink};
+          this.imageSources.push({imagen: this.config.bannerCincoImagen, link: this.config.bannerCincoLink});
         }
         if(this.config.bannerSeisActivo) {
-          this.imageSources[5] = {imagen: this.config.bannerSeisImagen, link: this.config.bannerSeisLink};
+          this.imageSources.push({imagen: this.config.bannerSeisImagen, link: this.config.bannerSeisLink});
         }
       }
     );
