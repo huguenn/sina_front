@@ -307,7 +307,7 @@ ng-sidebar-container {
     flex-wrap: wrap;
 }
 .resultado__head{
-    background-color: #00c9737d;
+    /* background-color: #00c9737d; */
     min-height: 297px;
     overflow: hidden;
     display: flex;
