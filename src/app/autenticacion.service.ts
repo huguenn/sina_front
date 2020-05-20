@@ -2,7 +2,7 @@ import { Inject, Injectable, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ResponseContentType } from '@angular/http';
 import { HttpHeaders, HttpParams, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/toPromise';
 import { reject } from 'q';
 import { SharedService } from './shared.service';
@@ -53,7 +53,6 @@ export class AutenticacionService {
     this.userTypeSource.next(this.userTypeValue);
   }
 
-
   getPath($path): string {
     if (environment.production) {
       return 'https://sinaweb.appspot.com/' + $path;
@@ -61,6 +60,7 @@ export class AutenticacionService {
     return 'http://127.0.0.1:8080/' + $path;
 
   }
+
   getParams($params) {
     let httpParams = new HttpParams();
     Object.keys($params).forEach(function (key) {
@@ -68,6 +68,7 @@ export class AutenticacionService {
     });
     return httpParams;
   }
+
   getHeader($data) {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -92,6 +93,7 @@ export class AutenticacionService {
   localSet($item, $data) {
     window.localStorage.setItem($item, JSON.stringify($data));
   }
+
   localGet($item) {
     const data = window.localStorage.getItem($item);
     if (data === '') {
@@ -100,6 +102,7 @@ export class AutenticacionService {
       return JSON.parse(data);
     }
   }
+
   /**********************************/
   /*********      LOGIN      ********/
   /**********************************/
@@ -109,30 +112,69 @@ export class AutenticacionService {
       this.http.post(this.getPath('auth/login'), {
       username: $username,
       password: $password
-    })
-    .subscribe($response => {
-      this.username = $username;
-      this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
-        primer_login: $response['primer_login']});
-      this.localSet('fecha', Date.now());
-      if (!$response['primer_login']) {
-        this.loginUpdate(true);
-      } else {
-        this.email = $response['email'];
-        this.razonsocial = $response['razon_social'];
-      }
+      })
+      .subscribe($response => {
+        this.username = $username;
+        this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
+          primer_login: $response['primer_login']});
+        this.localSet('fecha', Date.now());
 
-      this.tokenUpdate($response['token']);
-      resolve($response);
-    }, ($error) => {
-      reject({error: $error['error']});
-      /*let dialogRef = this.dialog.open(LoginDialog, {
-        width: '400px',
-        data: { login: $error.json(), title: "Error en el logueo"}
-      });*/
-    });
+        this.tokenUpdate($response['token']);
+
+        // reading carrito data
+        this.get('carrito')
+        .then($responseCarrito => {
+          this.data.log('response getcarrito autenticacion', $responseCarrito);
+          if ($responseCarrito.response) {
+            for(var item of $responseCarrito.response.items) {
+              let prod = item.producto;
+              this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id);
+            }
+          }
+
+          if (!$response['primer_login']) {
+            this.loginUpdate(true);
+          } else {
+            this.email = $response['email'];
+            this.razonsocial = $response['razon_social'];
+          }
+        })
+        .catch($error => {
+          this.data.log('error getcarrito autenticacion', $error);
+
+          if (!$response['primer_login']) {
+            this.loginUpdate(true);
+          } else {
+            this.email = $response['email'];
+            this.razonsocial = $response['razon_social'];
+          }
+        });
+
+        resolve($response);
+      }, ($error) => {
+        reject({error: $error['error']});
+        /*let dialogRef = this.dialog.open(LoginDialog, {
+          width: '400px',
+          data: { login: $error.json(), title: "Error en el logueo"}
+        });*/
+      });
     });
   }
+
+  desacreditar() {
+    this.localSet('user', '');
+    this.localSet('login', '');
+    this.localSet('fecha', '');
+    this.loginUpdate(false);
+    this.username = '';
+    this.password = '';
+    this.tokenUpdate('');
+  }
+
+  /**********************************/
+  /*********      LOGIN      ********/
+  /**********************************/
+
   get($url): Promise<any> {
     const ahora = Date.now();
     // checkeo si el token se genero entre 19 dias (1641600000) y 21 dias (1814400000) en el pasado
@@ -144,22 +186,20 @@ export class AutenticacionService {
     }
     return new Promise((resolve, reject) => {
       this.http.get(this.getPath($url), this.getHeader({}))
-    .subscribe($response => {
-      /*this.username = $username
-      this.localSet("login", {username: this.username, token: this.tokenValue,})
-      this.loginUpdate(true)*/
-      resolve($response);
-    }, ($error) => {
-      reject({error: $error['error']});
-      /*let dialogRef = this.dialog.open(LoginDialog, {
-        width: '400px',
-        data: { login: $error.json(), title: "Error en el logueo"}
-      });*/
-    });
+      .subscribe($response => {
+        /*this.username = $username
+        this.localSet("login", {username: this.username, token: this.tokenValue,})
+        this.loginUpdate(true)*/
+        resolve($response);
+      }, ($error) => {
+        reject({error: $error['error']});
+        /*let dialogRef = this.dialog.open(LoginDialog, {
+          width: '400px',
+          data: { login: $error.json(), title: "Error en el logueo"}
+        });*/
+      });
     });
   }
-
-
 
   post($url, $body): Promise<any> {
     const ahora = Date.now();
@@ -176,58 +216,58 @@ export class AutenticacionService {
     });
     return new Promise((resolve, reject) => {
       this.http.post(this.getPath($url), $body.toString(), {headers, observe: 'response'})
-    .subscribe($response => {
-      resolve($response);
-    }, ($error) => {
-      reject({error: $error['error']});
-    });
+      .subscribe($response => {
+        resolve($response);
+      }, ($error) => {
+        reject({error: $error['error']});
+      });
     });
   }
-  desacreditar() {
-    this.localSet('user', '');
-    this.localSet('login', '');
-    this.localSet('fecha', '');
-    this.loginUpdate(false);
-    this.username = '';
-    this.password = '';
-    this.tokenUpdate('');
-  }
-  /**********************************/
-  /*********      LOGIN      ********/
-  /**********************************/
-
 
   checkNull ($value) {
     return $value === null || $value === '';
   }
+
   constructor(private http: HttpClient, private data: SharedService ) {
 
-      // initialization of user on localStorage
-      if (this.checkNull(this.localGet('user'))) {
-        this.data.toggleLoginModal();
-      }else {
-        if (localStorage.getItem('user')) {
-          const user = JSON.parse(localStorage.getItem('user'));
-          if (user !== '') {
-            this.data.updateUser(user);
-            this.userTypeUpdate(user['numeroListaPrecios']);
-          }
+    // initialization of user on localStorage
+    if (this.checkNull(this.localGet('user'))) {
+      this.data.toggleLoginModal();
+    }else {
+      if (localStorage.getItem('user')) {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user !== '') {
+          this.data.updateUser(user);
+          this.userTypeUpdate(user['numeroListaPrecios']);
         }
       }
-      if (window.localStorage.getItem('carrito')) {
-        this.data.updateCarrito();
-      }
-
+    }
+    // reading carrito data
 
 
     if (this.checkNull(this.localGet('login'))) {
       this.desacreditar();
       this.loginUpdate(false);
-    }else {
+    } else {
       this.username = this.localGet('login').username;
       this.tokenUpdate(this.localGet('login').token);
       this.loginUpdate(true);
       this.titleUpdate('Dashboard');
+
+      // reading carrito data
+      this.get('carrito')
+      .then($response => {
+        this.data.log('response getcarrito autenticacion', $response);
+        if ($response.response) {
+          for(var item of $response.response.items) {
+            let prod = item.producto;
+            this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id);
+          }
+        }
+      })
+      .catch($error => {
+        this.data.log('error getcarrito autenticacion', $error);
+      });
     }
   }
 }

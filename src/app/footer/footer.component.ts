@@ -17,7 +17,7 @@ const SOCIAL: Link[] = [
   { url: 'https://www.facebook.com/MessinaHnos',    texto: 'Facebook', urlImg: '/assets/images/iconos/facebook.png' },
   { url: 'https://www.instagram.com/messinahnos/',   texto: 'Instagram', urlImg: '/assets/images/iconos/instagram.png' },
   { url: 'https://twitter.com/MessinaHnos',     texto: 'Twitter', urlImg: '/assets/images/iconos/twitter.png' },
-  { url: 'https://www.youtube.com', texto: 'Youtube', urlImg: '/assets/images/iconos/youtube.png' }
+  { url: 'https://www.youtube.com/channel/UCXeHXMr9oWN-d-mHPU9VRuQ', texto: 'Youtube', urlImg: '/assets/images/iconos/youtube.png' }
 ];
 
 

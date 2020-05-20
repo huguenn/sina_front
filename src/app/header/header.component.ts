@@ -1,10 +1,9 @@
-import { Component, OnInit, HostListener, Input, ViewChild} from '@angular/core';
+import { Component, OnInit, OnChanges, AfterViewInit, HostListener, Input, ViewChild, ElementRef} from '@angular/core';
 import { SharedService, cliente } from '../shared.service';
 import { Dato } from '../shared.service';
-import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
+import {  } from '@angular/core/src/metadata/lifecycle_hooks';
 import { PopoverModule, PopoverContent, Popover } from 'ngx-popover';
 import { CompraItem, Carrito, Link, MenuItem, MenuSection } from '../data';
-
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -13,6 +12,8 @@ import { element } from 'protractor';
 import { link } from 'fs';
 import { Router } from '@angular/router';
 import { MenuService } from '../menu.service';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Rx';
 
 
 const COMPRA: Carrito = {
@@ -34,10 +35,15 @@ const COMPRA: Carrito = {
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnChanges {
+export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
   @Input() greetMessage: Dato[];
   @Input() headerStatus: Number;
 
+  @ViewChild('inputCantidadHeader') inputCantidadHeader: ElementRef;
+  inputSubHeader: Subscription;
+  @ViewChild('inputCantidadHeaderVerde') inputCantidadHeaderVerde: ElementRef;
+  inputSubHeaderVerde: Subscription;
+  
   menuToggle = false;
   CompraList = COMPRA;
   LinkList  = [];
@@ -56,6 +62,8 @@ export class HeaderComponent implements OnChanges {
   // user Data
   UserName: string;
   UserJob: string;
+  
+  actualRoute = '/';
 
   menuSelectedItem = 0;
 
@@ -174,6 +182,61 @@ export class HeaderComponent implements OnChanges {
     });
 
   }
+
+  ngOnInit() {
+    // subscribing to router change
+    this.router.events.subscribe(val => {
+      if (this.actualRoute !== val['url']) {
+        this.actualRoute = (val['url']);
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.inputSubHeader = Observable.fromEvent(this.inputCantidadHeader.nativeElement, 'input')
+      .debounceTime(1000)
+      .subscribe(
+        () => {
+          const body = new URLSearchParams();
+          let array = [];
+          for(let item of this.data.lista) {
+            array.push({id_producto: item.id, cantidad: item.cantidad});
+          }
+          body.set('lista', JSON.stringify(array));
+
+          this.auth.post('carrito/update_cantidades', body)
+          .then($response => {
+            this.data.log('response carritoupdatecantidades header debounced', $response);
+          })
+          .catch($error => {
+            this.data.log('error carritoupdatecantidades header debounced', $error);
+          });
+        }
+      );
+      this.inputSubHeaderVerde = Observable.fromEvent(this.inputCantidadHeaderVerde.nativeElement, 'input')
+      .debounceTime(1000)
+      .subscribe(
+        () => {
+          const body = new URLSearchParams();
+          let array = [];
+          for(let item of this.data.lista) {
+            array.push({id_producto: item.id, cantidad: item.cantidad});
+          }
+          body.set('lista', JSON.stringify(array));
+
+          this.auth.post('carrito/update_cantidades', body)
+          .then($response => {
+            this.data.log('response carritoupdatecantidades header debounced verde', $response);
+          })
+          .catch($error => {
+            this.data.log('error carritoupdatecantidades header debounced verde', $error);
+          });
+        }
+      );
+    }, 2000);
+  }
+
   representado: boolean = false;
   // auxiliar value
   lastInput: Boolean = false;
@@ -273,7 +336,16 @@ export class HeaderComponent implements OnChanges {
     this.data.toggleSideBar();
   }
   removeMessage(msg) {
-    this.data.removeMessage(msg);
+    const body = new URLSearchParams();
+    body.set('id_producto', msg.id);
+    this.auth.post('carrito/eliminar_item', body)
+    .then($response => {
+      this.data.log('response carritoeliminaritem header', $response);
+      this.data.removeMessage(msg);
+    })
+    .catch($error => {
+      this.data.log('error carritoeliminaritem header', $error);
+    });
   }
   listFilter($array) {
     if ($array.length > 8) {

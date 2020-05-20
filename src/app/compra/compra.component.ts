@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnChanges, ViewChild, ElementRef } from '@angular/core';
 import { SharedService, cliente } from '../shared.service';
 import {
   DatosTransaccion,
@@ -7,15 +7,24 @@ import {
 } from '../data';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AutenticacionService } from '../autenticacion.service';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/defer';
 import { Router } from '@angular/router';
+import { debounceTime } from 'rxjs/operator/debounceTime';
+import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
+import { Subscription } from 'rxjs/Subscription';
+import { GoogleAnalyticsService } from "../google-analytics.service";
+
 @Component({
   selector: 'app-compra',
   templateUrl: './compra.component.html',
   styleUrls: ['./compra.component.css'],
+  providers: [GoogleAnalyticsService],
 })
-export class CompraComponent implements OnInit {
+export class CompraComponent implements OnInit, AfterViewInit {
+  @ViewChild('inputCantidad') inputCantidad: ElementRef;
+  inputSub: Subscription;
   public modalLoading: boolean = false;
   iva_usuario: string = '';
   user: cliente;
@@ -201,6 +210,7 @@ export class CompraComponent implements OnInit {
   editingFacturacion: boolean = false;
 
   subtotal: number = 0;
+  total: number = 0;
   facturacion__toogle = false;
   facturacion__envio = false;
 
@@ -210,7 +220,7 @@ export class CompraComponent implements OnInit {
     'Confirmación'
   ];
   initialLista = [];
-  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router) {
+  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router, private googleAnalyticsService: GoogleAnalyticsService) {
 
     this.transaccion = new DatosTransaccion(0);
     this.dia = this.diaSemana(this.retiroHora.getDate(), this.retiroHora.getMonth(), this.retiroHora.getFullYear());
@@ -268,9 +278,11 @@ export class CompraComponent implements OnInit {
       this.facturacion.cargar(this.user);
     }
   }
+
   cargarTransporte: boolean = false;
   medioTransporte:  string = '';
   datosEnvio_flag:       boolean = false;
+
   public refreshTransporte(value: any): void {
     this.medioTransporte = value.text;
     this.datos_envio.cod_transporte = value.id;
@@ -280,11 +292,13 @@ export class CompraComponent implements OnInit {
       this.cargarTransporte = false;
     }
   }
+
   observaciones = '';
   pedido: boolean = true;
   completarCompraTexto = '';
   pedidoCorrecto = true;
   completarCompraLink = '';
+
   public completarCompra() {
     if (!this.carritoLoading) {
       this.carritoLoading = true;
@@ -307,6 +321,18 @@ export class CompraComponent implements OnInit {
       }
       this.auth.post('pedido/confirmar', body)
       .then($confirmado => {
+        let productos = this.carrito.lista;
+        let respuesta;
+
+        if($confirmado.body) {
+          respuesta = $confirmado.body.response;
+        }
+
+        if(respuesta) {
+          this.total = respuesta.total;
+          this.googleAnalyticsService.nuevoPedido(respuesta.id_pedido, respuesta.total, productos);
+        }
+
         this.completarCompraTexto = $confirmado.body.response.message;
         this.completarCompraLink = $confirmado.body.response.urlPdf;
         setTimeout(() => {
@@ -330,7 +356,7 @@ export class CompraComponent implements OnInit {
 
   ngOnInit() {
     this.data.updatePageTitle();
-    this.checkCarritoInit(0);
+    this.data.currentMessage.subscribe(() => this.checkCarritoInit(0));
     this.data.currentUser.subscribe($user => {
       if ($user) {
         switch ($user['codCategoriaIva']) {
@@ -349,9 +375,43 @@ export class CompraComponent implements OnInit {
     });
     this.fechaUpdate(this.retiroHora.getFullYear() + '-' + (this.retiroHora.getMonth() + 1) + '-' + this.retiroHora.getDate());
   }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.inputSub = Observable.fromEvent(this.inputCantidad.nativeElement, 'input')
+      .debounceTime(1000)
+      .subscribe(
+        () => {
+          const body = new URLSearchParams();
+          let array = [];
+          for(let item of this.carrito.lista) {
+            array.push({id_producto: item.id, cantidad: item.cantidad});
+          }
+          body.set('lista', JSON.stringify(array));
+
+          this.auth.post('carrito/update_cantidades', body)
+          .then($response => {
+            this.data.log('response carritoupdatecantidades compra debounced', $response);
+          })
+          .catch($error => {
+            this.data.log('error carritoupdatecantidades compra debounced', $error);
+          });
+        }
+      );
+    },2000);
+  }
+
   removeCompraItem($item) {
-    this.data.removeMessage($item);
-    this.updateValue();
+    const body = new URLSearchParams();
+    body.set('id_producto', $item.id);
+    this.auth.post('carrito/eliminar_item', body)
+    .then($response => {
+      this.data.log('response carritoeliminaritem compra', $response);
+      this.data.removeMessage($item);
+      this.updateValue();
+    })
+    .catch($error => {
+      this.data.log('error carritoeliminaritem compra', $error);
+    });
   }
   updateValue() {
     let $carrito = 0;
@@ -424,32 +484,41 @@ export class CompraComponent implements OnInit {
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-  printString(body) {
-    return this.auth.post('carrito/agregar_item', body);
-  }
   carritoLoading: boolean = false;
 
 
   async printAll() {
-    this.carritoLoading = false;
-    this.modalLoading = true;
-    for (let i = 0; i < this.carrito.lista.length; i++) {
-        const $compra = this.carrito.lista[i];
-        const body = new URLSearchParams();
-        body.set('id_producto', $compra.id);
-        body.set('cantidad', $compra.cantidad);
-        const a = await this.printString(body);
-    }
-    await this.delay(1000);
     this.transaccion.cambio(1);
-    this.carritoLoading = false;
-    this.modalLoading = false;
 }
 
   // Finalizar Compra
   finalizarCompra() {
     if(this.carrito.lista.length) {
-      this.printAll();
+      
+      // this.carritoLoading = true;
+      this.modalLoading = true;
+
+      const body = new URLSearchParams();
+      let array = [];
+      for(let item of this.carrito.lista) {
+        array.push({id_producto: item.id, cantidad: item.cantidad});
+      }
+      body.set('lista', JSON.stringify(array));
+
+      this.auth.post('carrito/update_cantidades', body)
+      .then($response => {
+        this.data.log('response carritoupdatecantidades compra', $response);
+        this.printAll();
+
+        this.carritoLoading = false;
+        this.modalLoading = false;
+      })
+      .catch($error => {
+        this.data.log('error carritoupdatecantidades compra', $error);
+
+        this.carritoLoading = false;
+        this.modalLoading = false;
+      });
     }
   }
   isChecked = {
@@ -499,11 +568,6 @@ export class CompraComponent implements OnInit {
   checkCarritoInit($value) {
     if ($value === 0) {
       this.carritoLoading = true;
-      this.auth.get('carrito/eliminar').then((result) => {
-        this.carrito.lista = this.data.lista;
-        this.updateValue();
-        this.carritoLoading = false;
-      }).catch((error) => this.data.log('carrito/eliminar error compra:', error));
       this.carrito.lista = this.data.lista;
       this.updateValue();
       this.carritoLoading = false;
@@ -512,5 +576,5 @@ export class CompraComponent implements OnInit {
 
   closeModal(event: string) {
     this.modalLoading = false;
-    }
+  }
 }

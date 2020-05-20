@@ -2,7 +2,7 @@
   <div class="imgContainer">
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     <div class="imagen">
-      <img [src]="item.urlImagen" alt="">
+      <img *ngIf="item.urlImagen" [src]="item.urlImagen" alt="">
     </div>
   </div>
   <div class="tituloContainer">

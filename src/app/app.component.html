@@ -241,7 +241,7 @@
                     <div class="row">
                         <div class="card">
                             <h3 class="card-header">{{childmessage.length}} compras pendientes</h3>
-                            <div class="card-block" style="overflow-y: scroll; height: 350px; overflow-x: hidden;">
+                            <div #inputCantidad class="card-block" style="overflow-y: scroll; height: 350px; overflow-x: hidden;">
                                 <div class="row carrito__header">
                                     <div class="col-1">
                                         <div class="border">
@@ -266,7 +266,7 @@
                                 </div>
                                 <div class="row carrito__content" *ngFor="let compra of childmessage">
                                     <div class="col-1">
-                                        <input type="number" name="cantidad" id="cantidad" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
+                                        <input type="number" name="cantidad" id="cantidad" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
                                     </div>
                                     <div class="col-2">
                                         <p>{{compra.descripcion}}</p>

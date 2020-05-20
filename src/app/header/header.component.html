@@ -37,7 +37,7 @@
             </div>
           </form>    
         </div>
-        <div class="col-md-4 col-xs-2 right__form" style="max-width: none;">
+        <div #inputCantidadHeader class="col-md-4 col-xs-2 right__form" style="max-width: none;">
           <div class="login" (click)="toggle('cuenta')">
             <img src="./assets/images/header/user.png" alt="User" width="40">
             <p *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> <b>{{representado ? "Representado" : UserJob || "Registrarse"}} </b></p>
@@ -87,7 +87,7 @@
               </a>
             </div>
           </div>
-          <div class="buy">
+          <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
             <div style="cursor: pointer" (click)="toggle('compra')">
               <span class="badge badge-default badge-pill">{{greetMessage?.length}}</span>              
               <img src="./assets/images/header/carrito.png" alt="Carrito" width="40">
@@ -106,7 +106,7 @@
                   <li *ngFor="let item of listFilter(greetMessage)" class="list-group-item justify-content-between">
                     {{item.descripcion}}
                     <p>${{updatePrecio(item.precio, item.cantidad)}}</p>                    
-                    <input [(ngModel)]="item.cantidad" type="number">
+                    <input (input)="data.updateMessage()" [(ngModel)]="item.cantidad" type="number">
                     <div class="eliminar">
                       <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
                       <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
@@ -186,7 +186,7 @@
               </div>
             </form>
           </div>   
-          <div class="col-xs-2 col-md-3 right__form">
+          <div #inputCantidadHeaderVerde class="col-xs-2 col-md-3 right__form">
             <div class="login" (click)="toggle2('cuenta')">
               <img src="./assets/images/header/user__verde.png" alt="User" width="40">
               <p style="color: #fff" *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> {{UserJob || "Registrarse"}} </p>
@@ -203,7 +203,7 @@
                 </div>  
               </div>
             </div>    
-            <div class="buy">
+            <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
               <div style="cursor: pointer" (click)="toggle2('compra')">
                 <span class="badge badge-default badge-pill">{{greetMessage?.length}}</span>                              
                 <img src="./assets/images/iconos/carrito--verde.png" alt="Carrito" width="40">
@@ -222,7 +222,7 @@
                     <li *ngFor="let item of listFilter(greetMessage)" [ngClass]="{'selected': true}" class="list-group-item justify-content-between">
                       {{item.descripcion}}
                       <p>${{updatePrecio(item.precio, item.cantidad)}}</p>
-                      <input type="number" [(ngModel)]="item.cantidad">
+                      <input (input)="data.updateMessage()" [(ngModel)]="item.cantidad" type="number">
                       <div class="eliminar">
                         <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
                         <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">

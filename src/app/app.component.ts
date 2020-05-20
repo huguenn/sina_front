@@ -6,11 +6,16 @@ import { AutenticacionService } from './autenticacion.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { MenuService } from './menu.service';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import 'rxjs/add/observable/fromEvent';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Rx';
+import { GoogleAnalyticsService } from './google-analytics.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  providers: [GoogleAnalyticsService],
 })
 export class AppComponent implements OnInit {
   @ViewChild('ventana') el: ElementRef;
@@ -25,6 +30,8 @@ export class AppComponent implements OnInit {
   @ViewChild('input_celular') inputCelular: ElementRef;
   @ViewChild('input_contrasena') inputContrasena: ElementRef;
   @ViewChild('input_check_contrasena') inputCheckContrasena: ElementRef;
+  @ViewChild('inputCantidad') inputCantidad: ElementRef;
+  inputSub: Subscription;
 
   public focusingPassword: boolean;
 
@@ -337,6 +344,7 @@ export class AppComponent implements OnInit {
           this.http.post(this.auth.getPath('public/cliente/nuevo'), body.toString(), { headers, observe: 'response' })
             .subscribe($response => {
               this.processing.stop();
+              this.googleAnalyticsService.nuevoCliente();
               this.response = this.confirmacion;
             }, ($error) => {
               this.processing.stop();
@@ -523,7 +531,8 @@ export class AppComponent implements OnInit {
     private data: SharedService,
     private http: HttpClient,
     private auth: AutenticacionService,
-    private router: Router) {
+    private router: Router, 
+    private googleAnalyticsService: GoogleAnalyticsService) {
     this.recuperarClave = false;
     this.recuperarOk = '';
     this.recuperarError = '';
@@ -550,9 +559,7 @@ export class AppComponent implements OnInit {
       status => {
         this.loginStatus = status;
         if(status && this.config) {
-          if(this.config.ventanaEmergenteActivo) {
-            this.find_index();
-          }
+          this.find_index();
         }
       }
     );
@@ -573,9 +580,7 @@ export class AppComponent implements OnInit {
       if (this.actualRoute !== val['url']) {
         this.actualRoute = (val['url']);
         if(this.config) {
-          if(this.config.ventanaEmergenteActivo) {
-            this.find_index();
-          }
+          this.find_index();
         }
       }
       if (!(val instanceof NavigationEnd)) {
@@ -588,9 +593,7 @@ export class AppComponent implements OnInit {
     this.data.currentConfig.subscribe(
       configuracion => {
         this.config = configuracion;
-        if(this.config.ventanaEmergenteActivo) {
-          this.find_index();
-        }
+        this.find_index();
       }
     );
 
@@ -678,7 +681,6 @@ export class AppComponent implements OnInit {
           this.data.log('getdatoscliente error app', $error);
         });
     }
-
   }
 
   find_index() {
@@ -690,14 +692,43 @@ export class AppComponent implements OnInit {
       if (this.actualRoute.indexOf('confirmacion') === -1) {
         // if (index !== -1) {
           if (this.carritoStatus && this.loginStatus) {
-            if (!this.auth.localGet('actualEmergenteFlag')) {
-              // this.actualEmergente = this.emergentes[index];
-              this.actualEmergenteFlag = true;
-              this.auth.localSet('actualEmergenteFlag', true);
+            if(this.config.ventanaEmergenteActivo) {
+              if (!this.auth.localGet('actualEmergenteFlag')) {
+                // this.actualEmergente = this.emergentes[index];
+                this.actualEmergenteFlag = true;
+                this.auth.localSet('actualEmergenteFlag', true);
+              }
             }
           } else {
             this.actualEmergenteFlag = false;
             this.auth.localSet('actualEmergenteFlag', false);
+            
+            if(!this.carritoStatus) {
+              setTimeout(() => {
+                if(this.inputCantidad) {
+                  this.inputSub = Observable.fromEvent(this.inputCantidad.nativeElement, 'input')
+                  .debounceTime(1000)
+                  .subscribe(
+                    () => {
+                      const body = new URLSearchParams();
+                      let array = [];
+                      for(let item of this.data.lista) {
+                        array.push({id_producto: item.id, cantidad: item.cantidad});
+                      }
+                      body.set('lista', JSON.stringify(array));
+          
+                      this.auth.post('carrito/update_cantidades', body)
+                      .then($response => {
+                        this.data.log('response carritoupdatecantidades compra debounced', $response);
+                      })
+                      .catch($error => {
+                        this.data.log('error carritoupdatecantidades compra debounced', $error);
+                      });
+                    }
+                  );
+                }
+              },2000);
+            }
           }
         // }
       } else {
@@ -907,10 +938,11 @@ export class AppComponent implements OnInit {
     this.data.toggleLoginModal2();
   }
   carritoCancelModal() {
-    window.localStorage.setItem('carrito', JSON.stringify([]));
-    this.data.lista = [];
-    this.data.updateMessage();
     this.data.toggleLoginModal2();
+    this.auth.get('carrito/eliminar').then((result) => {
+      this.data.cleanCarrito();
+      this.data.updateMessage([]);
+    }).catch((error) => this.data.log('carrito/eliminar error app:', error));
   }
 
   ckeckItem($item) {

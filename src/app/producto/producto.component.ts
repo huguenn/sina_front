@@ -40,7 +40,7 @@ export class ProductoComponent implements OnInit {
         + (this.producto['categoria'] ? this.producto['categoria'].nombre.split(' ').join('-').toUpperCase() : '') + '/' + this.producto['id'];
       this.producto.cantidad = this.producto['cantSugerida'] ? this.producto['cantSugerida'] : 1;
       this.producto.comprado = false;
-      this.fullPath = ['Limpieza', this.producto['categoria'].padre.nombre, this.producto['categoria'].nombre];
+      this.fullPath = ['Limpieza', this.producto['categoria'] ? this.producto['categoria'].padre.nombre : '', this.producto['categoria'] ? this.producto['categoria'].nombre : ''];
       this.galleryImages = [
         {
         small: this.producto['urlImagen'],

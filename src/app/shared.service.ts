@@ -95,7 +95,6 @@ export class Configuracion {
   }
 }
 
-
 @Injectable()
 export class SharedService {
   // localdata
@@ -214,13 +213,11 @@ export class SharedService {
         if (user !== '') {
           this.user = user;
           this.userSource.next(this.user);
-          const carrito = JSON.parse(localStorage.getItem('carrito'));
-          if (carrito) {
-            if (carrito.length !== 0) {
+          setTimeout(() => {
+            if (this.lista.length !== 0) {
               this.toggleLoginModal2();
-              this.log(JSON.parse(localStorage.getItem('carrito')));
             }
-          }
+          }, 1200);
         }
       }else {
       }
@@ -233,12 +230,15 @@ export class SharedService {
     this.statusCarrito = !this.statusCarrito;
     this.carritoPopup.next(this.statusCarrito);
   }
-  updateMessage() {
-    this.messageSource.next([]);
+  updateMessage($next?) {
+    if($next)
+      this.messageSource.next($next);
+    else {
+      this.messageSource.next(this.lista);
+    }
   }
   changeMessage(cantidad: Number, descripcion: String, precio: number, total: number, id: number, enable?: boolean) {
     this.lista.push(new Dato(cantidad, descripcion, precio, total, id));
-    window.localStorage.setItem('carrito', JSON.stringify(this.lista));
     this.messageSource.next(this.lista);
   }
   checkObjectValues(a, b) {
@@ -286,16 +286,9 @@ export class SharedService {
     } catch (e) {
       if (e !== BreakException) { throw e; }
     }
-    window.localStorage.setItem('carrito', JSON.stringify(this.lista));
-    this.messageSource.next(this.lista);
-  }
-  updateCarrito() {
-    const carrito = JSON.parse(localStorage.getItem('carrito'));
-    this.lista = carrito;
     this.messageSource.next(this.lista);
   }
   cleanCarrito() {
-    localStorage.setItem('carrito', JSON.stringify([]));
     this.lista = [];
     this.messageSource.next(this.lista);
   }
