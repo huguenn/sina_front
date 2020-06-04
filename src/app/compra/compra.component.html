@@ -191,7 +191,7 @@
                     <div class="row envio__seccion--editable" *ngIf="datosCompra.entrega === '0'">
                       <div class="row envio__seccion__header--editable">
                         <p>DATOS DE ENVÍO</p>
-                        <button (click)="editingEnvio = !editingEnvio">
+                        <button (click)="toggleEditingEnvio()">
                           <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
                         </button>
                       </div>
@@ -296,12 +296,12 @@
                               Transporte
                           </label>
                           <div class="col-xs-8">
-                              <ng-select style="height: 32px; margin: 6px 0px;"
+                              <ng-select #transporte style="height: 32px; margin: 6px 0px;"
                                 [clearable]="true"
                                 (change)="refreshTransporte($event)"
                                 ng-model="initialLista[0].value"
                                 placeholder="Medio de transporte">
-                                <ng-option *ngFor="let country of entrega.transporte.lista" [value]="country.id">
+                                <ng-option *ngFor="let country of entrega.transporte.lista" [value]="country">
                                   {{country.text}}
                                 </ng-option>
                               </ng-select>
@@ -659,7 +659,7 @@
                         <div class="row envio">
                           <div class="row envio__total">
                               <p>TOTAL</p>
-                              <h3>$ {{total}}</h3>
+                              <h3>$ {{total.toFixed(2)}}</h3>
                           </div>
                         </div>
                       </div>

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
 import { AutenticacionService } from '../autenticacion.service';
 import { SharedService } from '../shared.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-confirmacion',

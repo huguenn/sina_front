@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
   @ViewChild('input_razon_social') inputRazonSocial: ElementRef;
   @ViewChild('input_email') inputEmail: ElementRef;
+  @ViewChild('input_check_email') inputCheckEmail: ElementRef;
   @ViewChild('input_cuit') inputCuit: ElementRef;
   @ViewChild('input_telefono') inputTelefono: ElementRef;
   @ViewChild('input_ciudad') inputCiudad: ElementRef;
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit {
   public focusingPassword: boolean;
 
   public recuperarClave: boolean;
+  public validationCheckEmail: boolean = false;
   public validationCheckPassword: boolean = false;
   public validationPassword: boolean = false;
   public validationEmail: boolean = false;
@@ -56,6 +58,7 @@ export class AppComponent implements OnInit {
     razon_social: '',
     nombre_fantasia: '',
     email: '',
+    emailRepetido: '',
     contrasena: '',
     contrasenaRepetida: '',
     domicilio_ciudad: '',
@@ -372,6 +375,15 @@ export class AppComponent implements OnInit {
         } else {
           this.validationCheckPassword = false;
           delete this.validador['checkcontrasena'];
+        }
+
+        if (this.contacto.email !== this.contacto.emailRepetido) {
+          this.validationCheckEmail = true;
+          this.validador['checkemail'] = true;
+          this.inputCheckEmail.nativeElement.focus();
+        } else {
+          this.validationCheckEmail = false;
+          delete this.validador['checkemail'];
         }
 
         // this.data.log('step1 validador app', this.validador)
@@ -733,7 +745,9 @@ export class AppComponent implements OnInit {
         // }
       } else {
         this.actualEmergenteFlag = false;
-        this.data.closeLoginModal();
+        setTimeout(() => {
+          this.data.closeLoginModal();
+        }, 1000);
       }
     }
   }

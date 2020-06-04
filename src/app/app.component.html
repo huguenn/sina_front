@@ -147,6 +147,8 @@
                                 </ng-select>
                                 <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
+                                <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido">
+                                <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
                                 <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
                             </div>

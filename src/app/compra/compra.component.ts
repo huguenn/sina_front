@@ -15,6 +15,7 @@ import { debounceTime } from 'rxjs/operator/debounceTime';
 import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
 import { Subscription } from 'rxjs/Subscription';
 import { GoogleAnalyticsService } from "../google-analytics.service";
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-compra',
@@ -23,6 +24,7 @@ import { GoogleAnalyticsService } from "../google-analytics.service";
   providers: [GoogleAnalyticsService],
 })
 export class CompraComponent implements OnInit, AfterViewInit {
+  @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   inputSub: Subscription;
   public modalLoading: boolean = false;
@@ -141,10 +143,12 @@ export class CompraComponent implements OnInit, AfterViewInit {
   });
   }
 };
-  retiro: boolean = true;
+  retiro: boolean = false;
   dia: string = '';
-  retiroHora = new Date();
-  retiroHora1 = new Date();
+  hoy = new Date();
+  hoyMediodia = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), this.hoy.getDate(), 13, 0);
+  retiroHora = this.hoyMediodia;
+  retiroHora1 = this.hoyMediodia;
   fechaUpdate($event) {
     this.retiroHora = $event;
     const dias = $event.split('-');
@@ -187,7 +191,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
   diaSemana(dia, mes, anio): string {
     const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const dt = new Date(mes + ' ' + dia + ', ' + anio + ' 12:00:00');
-    return dias[dt.getUTCDay()];
+    return dias[dt.getDay()];
   }
   /////////////
   mapa: false;
@@ -223,7 +227,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
   constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router, private googleAnalyticsService: GoogleAnalyticsService) {
 
     this.transaccion = new DatosTransaccion(0);
-    this.dia = this.diaSemana(this.retiroHora.getDate(), this.retiroHora.getMonth(), this.retiroHora.getFullYear());
+    this.dia = this.diaSemana(this.retiroHora.getDate(), this.retiroHora.toLocaleString('default', { month: 'long' }), this.retiroHora.getFullYear());
     if (this.data.user) {
       this.user = this.data.user as cliente;
       this.auth.get('public/cliente/envio/getAll').then((result) => {
@@ -300,7 +304,10 @@ export class CompraComponent implements OnInit, AfterViewInit {
   completarCompraLink = '';
 
   public completarCompra() {
-    if (!this.carritoLoading) {
+    if(this.datosCompra.entrega === '0') {
+      this.retiro = true;
+    }
+    if (!this.carritoLoading && this.retiro) {
       this.carritoLoading = true;
       this.completarCompraTexto = 'Procesando pedido...';
       const body = new URLSearchParams();
@@ -309,7 +316,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
       if (this.datosCompra.entrega === '1') {
         body.set('retiro_tienda', this.datosCompra.entrega);
         const retiroDate = new Date(this.retiroHora);
-        const diaRetiro = retiroDate.getDate() + 1;
+        const diaRetiro = retiroDate.getUTCDate();
         const mesRetiro = retiroDate.getMonth() + 1;
         const anioRetiro = retiroDate.getFullYear();
         const fechaRetiro = diaRetiro + '/' + mesRetiro + '/' + anioRetiro + ' (' + this.dia + ')';
@@ -398,6 +405,15 @@ export class CompraComponent implements OnInit, AfterViewInit {
         }
       );
     },2000);
+  }
+
+  public seleccionartransporte($herramienta, $codigo) {
+    if ($herramienta) {
+      const item = $herramienta.itemsList._items.find($item => $item.value.id === $codigo);
+      if (item) {
+        $herramienta.select(item);
+      }
+    }
   }
 
   removeCompraItem($item) {
@@ -576,5 +592,17 @@ export class CompraComponent implements OnInit, AfterViewInit {
 
   closeModal(event: string) {
     this.modalLoading = false;
+  }
+
+  toggleEditingEnvio() {
+    this.editingEnvio = !this.editingEnvio;
+
+    if(this.editingEnvio) {
+      setTimeout(() => {
+        if (this.datos_envio.cod_transporte) {
+          this.seleccionartransporte(this.ngSelectTransporte, this.datos_envio.cod_transporte);
+        }
+      }, 500);
+    }
   }
 }
