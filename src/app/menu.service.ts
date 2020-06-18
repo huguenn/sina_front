@@ -27,7 +27,7 @@ export class MenuService {
         .subscribe(($response)  => {
           this.LinkList.forEach((categoria, indexCat, array) => {
             const categorias = [];
-            const links = $response['response'][categoria.texto.toUpperCase()];
+            const links = $response['response'][categoria.texto];
             if (links) {
               for (const sub_link in links) {
                 if (links.hasOwnProperty(sub_link)) {
@@ -74,7 +74,7 @@ export class MenuService {
 
   convertLink= ($subcategoria) => {
     try {
-      const texto = $subcategoria.nombre.split(' ').join('-').toUpperCase() + '/' + $subcategoria.id;
+      const texto = $subcategoria.nombre.split(' ').join('-') + '/' + $subcategoria.id;
       return texto;
     } catch ($error) {
       this.data.log('convertirlink Alguno de los datos de la subcategoria esta incompleto menu');
@@ -83,7 +83,7 @@ export class MenuService {
   }
   convertLink2= ($categoria, $subcategoria) => {
     try {
-      const texto = $categoria.nombre.split(' ').join('-').toUpperCase()  + '/' +  $subcategoria.nombre.split(' ').join('-').toUpperCase() + '/' + $subcategoria.id;
+      const texto = $categoria.nombre.split(' ').join('-') + '/' +  $subcategoria.nombre.split(' ').join('-') + '/' + $subcategoria.id;
       return texto;
     } catch ($error) {
       this.data.log('convertirlink2 Alguno de los datos de la subcategoria esta incompleto menu');

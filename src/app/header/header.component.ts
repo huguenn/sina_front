@@ -103,7 +103,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
     }
   }
   clickBusqueda(item) {
-    const ruta = '/articulo/' + (item.categoria ? item.categoria.nombre.split(' ').join('-').toUpperCase() : '') + '/' + item['id'];
+    const ruta = '/articulo/' + (item.categoria ? item.categoria.nombre.split(' ').join('-') : '') + '/' + item['id'];
     this.router.navigate([ruta]);
     this.cerrarBusqueda();
 
@@ -124,7 +124,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
   cerrarBusqueda() {
     this.ResultadoBusqueda = [];
   }
-  constructor(private menu: MenuService, private router: Router, private data: SharedService, private auth: AutenticacionService) {
+  constructor(private menu: MenuService, private router: Router, public data: SharedService, private auth: AutenticacionService) {
     this.MenuClass = '';
     this.menu.notifyObservable$.subscribe($cambio => {
       if ($cambio) {

@@ -52,7 +52,7 @@ export class SidebarComponent implements OnInit {
   }
   convertLink= ($subcategoria) => {
     try {
-      const texto = $subcategoria.nombre.split(' ').join('-').toUpperCase() + '/' + $subcategoria.id;
+      const texto = $subcategoria.nombre.split(' ').join('-') + '/' + $subcategoria.id;
       return texto;
     } catch ($error) {
       this.data.log('Alguno de los datos de la subcategoria esta incompleto error sidebar');
@@ -61,7 +61,7 @@ export class SidebarComponent implements OnInit {
   }
   convertLink2= ($categoria, $subcategoria) => {
     try {
-      const texto = $categoria.nombre.split(' ').join('-').toUpperCase()  + '/' +  $subcategoria.nombre.split(' ').join('-').toUpperCase() + '/' + $subcategoria.id;
+      const texto = $categoria.nombre.split(' ').join('-')  + '/' +  $subcategoria.nombre.split(' ').join('-') + '/' + $subcategoria.id;
       return texto;
     } catch ($error) {
       this.data.log('Alguno de los datos de la subcategoria esta incompleto 2 error sidebar');

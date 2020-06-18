@@ -10,6 +10,7 @@ import { AutenticacionService } from '../autenticacion.service';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/defer';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
@@ -224,7 +225,8 @@ export class CompraComponent implements OnInit, AfterViewInit {
     'Confirmación'
   ];
   initialLista = [];
-  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router, private googleAnalyticsService: GoogleAnalyticsService) {
+  config: any;
+  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router, private location: Location, private googleAnalyticsService: GoogleAnalyticsService) {
 
     this.transaccion = new DatosTransaccion(0);
     this.dia = this.diaSemana(this.retiroHora.getDate(), this.retiroHora.toLocaleString('default', { month: 'long' }), this.retiroHora.getFullYear());
@@ -343,6 +345,8 @@ export class CompraComponent implements OnInit, AfterViewInit {
         this.completarCompraTexto = $confirmado.body.response.message;
         this.completarCompraLink = $confirmado.body.response.urlPdf;
         setTimeout(() => {
+          this.data.rutaActual = '/compra/finalizada';
+          this.location.go('/compra/finalizada');
           this.transaccion.cambio(2);
           this.data.cleanCarrito();
           this.carritoLoading = false;
@@ -363,6 +367,12 @@ export class CompraComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.data.updatePageTitle();
+    // subscribing to config change
+    this.data.currentConfig.subscribe(
+      configuracion => {
+        this.config = configuracion;
+      }
+    );
     this.data.currentMessage.subscribe(() => this.checkCarritoInit(0));
     this.data.currentUser.subscribe($user => {
       if ($user) {
@@ -524,6 +534,13 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.auth.post('carrito/update_cantidades', body)
       .then($response => {
         this.data.log('response carritoupdatecantidades compra', $response);
+        if(this.carrito.subtotal < this.config.montoEnvio) {
+          this.datosCompra.entrega = '1';
+        } else {
+          this.datosCompra.entrega = '0';
+        }
+        this.location.go('/compra/envio');
+        this.data.rutaActual = '/compra/envio';
         this.printAll();
 
         this.carritoLoading = false;
@@ -574,7 +591,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
   }
   cerrarBusqueda(msg) {
     const precio = msg.precio;
-    this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, precio, precio * (+msg.cantidad), msg.id);
+    this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, precio, precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
     this.ResultadoBusqueda = [];
   }
   descargarPedido($pedido) {
@@ -586,6 +603,8 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.carritoLoading = true;
       this.carrito.lista = this.data.lista;
       this.updateValue();
+      this.data.rutaActual = '/compra/carrito';
+      this.location.go('/compra/carrito');
       this.carritoLoading = false;
     }
   }

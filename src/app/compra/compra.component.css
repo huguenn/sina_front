@@ -404,10 +404,10 @@
 /* Carrito */
 .envio {
     border: 1px solid #ccc;
-    padding: 20px 30px;
+    padding: 5px 30px;
     background: #f8f8f8;
     color: #ccc;
-    margin: 0px;
+    /* margin: 0px; */
     font-size: 16px;
 }
 .envio p {
@@ -600,7 +600,7 @@
 }
 .tab__item__header p{
     border-bottom: 2px solid #ccc;
-    padding: 5px 0px;
+    padding: 5px 5px;
     margin-bottom: 50px;
 }
 .tab__item__header button{
@@ -862,8 +862,8 @@
     padding: 20px 30px;
     background: #0579ff;
     font-size: 16px;
-    width: 100%;
-    left: 15px;
+    /* width: 100%;
+    left: 15px; */
 }
 .borde__animado::before {
     content: '';

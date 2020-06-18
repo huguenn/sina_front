@@ -591,6 +591,7 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(val => {
       if (this.actualRoute !== val['url']) {
         this.actualRoute = (val['url']);
+        this.data.rutaActual = (val['url']);
         if(this.config) {
           this.find_index();
         }
@@ -619,7 +620,10 @@ export class AppComponent implements OnInit {
         const fechaHasta = $response.response.stickyHeaderHasta ? new Date($response.response.stickyHeaderHasta.date) : ahora;
         const permanente = $response.response.stickyHeaderPermanente === '1' ? true : false;
         const c = {
+          montoMinimo: Number.parseInt($response.response.montoMinimo, 10),
+          montoEnvio: Number.parseInt($response.response.montoEnvio, 10),
           montoEnvioGratis: Number.parseInt($response.response.montoEnvioGratis, 10),
+          costoEnvio: Number.parseInt($response.response.costoEnvio, 10),
           stickyHeaderTitulo: $response.response.stickyHeaderTitulo,
           stickyHeaderCta: $response.response.stickyHeaderCta,
           stickyHeaderLink: $response.response.stickyHeaderLink,
@@ -670,9 +674,9 @@ export class AppComponent implements OnInit {
     });
 
     // binding interval
-    setInterval(() => {
-      this.menuStatus = this.el.nativeElement.parentElement.scrollTop;
-    }, 100);
+    // setInterval(() => {
+    //   this.menuStatus = this.el.nativeElement.parentElement.scrollTop;
+    // }, 100);
 
     // reading user data
     if (this.auth.localGet('login')) {

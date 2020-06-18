@@ -43,6 +43,7 @@ import { RecuperarPassComponent } from './recuperar-pass/recuperar-pass.componen
 import { PreguntasFrecuentesComponent } from './preguntas-frecuentes/preguntas-frecuentes.component';
 import { ConfirmarDatosComponent } from './confirmar-datos/confirmar-datos.component';
 import { LoadingComponent } from './shared/loading/loading.component';
+import { CategoriasComponent } from './categorias/categorias.component';
 
 // router config
 const appRoutes: Routes = [
@@ -94,22 +95,47 @@ const appRoutes: Routes = [
     component: FilterComponent
   },
   {
-    path: ':id/:id2',
-    component: FilterComponent,
-    data: { title: 'Other text' }
-  },
-  {
-    path: ':padre/:id/:id2',
-    component: FilterComponent,
-    data: { title: 'Other text' }
-  },
-  {
     path: 'ofertas',
     component: FilterComponent,
     data: { title: 'Other text' }
   },
   {
     path: 'novedades',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Limpieza',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Bazar',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Textil',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Liquidos',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Jardin y riego',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Profesional',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: 'Mas productos',
     component: FilterComponent,
     data: { title: 'Other text' }
   },
@@ -123,13 +149,34 @@ const appRoutes: Routes = [
     data: { id: 1 }
   },
   {
-    path: 'compra',
+    path: 'compra/carrito',
     component: CompraComponent,
     data: { id: 1 },
   },
-  { path: '',
-    redirectTo: '/heroes',
-    pathMatch: 'full'
+  {
+    path: 'compra/envio',
+    component: CompraComponent,
+    data: { id: 1 },
+  },
+  {
+    path: 'compra/finalizada',
+    component: CompraComponent,
+    data: { id: 1 },
+  },
+  {
+    path: 'productos',
+    component: CategoriasComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: ':id/:id2',
+    component: FilterComponent,
+    data: { title: 'Other text' }
+  },
+  {
+    path: ':padre/:id/:id2',
+    component: FilterComponent,
+    data: { title: 'Other text' }
   },
   { path: '**', component: FilterComponent }
 ];
@@ -158,7 +205,8 @@ const appRoutes: Routes = [
     RecuperarPassComponent,
     PreguntasFrecuentesComponent,
     ConfirmarDatosComponent,
-    LoadingComponent
+    LoadingComponent,
+    CategoriasComponent,
   ],
   imports: [
     NgSelectModule,

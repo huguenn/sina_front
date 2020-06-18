@@ -28,7 +28,7 @@ export class RecuperarPassComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.data.updatePageTitle('Recuperar de contraseña | Sina');
+        this.data.updatePageTitle('Recuperar contraseña | Sina');
         this.data.closeLoginModal();
         this.sub = this.route
         .queryParams

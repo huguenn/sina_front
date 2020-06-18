@@ -32,12 +32,12 @@ export class ProductoComponent implements OnInit {
       this.relacionados = $response.response.productosRelacionados;
       this.relacionados.forEach(item => {
         item['categoria'] = {
-          nombre: 'PRODUCTO RELACIONADO'
+          nombre: 'Producto relacionado'
         };
       });
       this.producto = $response.response;
       this.full_link = 'http://www.sina.com.ar/producto/'
-        + (this.producto['categoria'] ? this.producto['categoria'].nombre.split(' ').join('-').toUpperCase() : '') + '/' + this.producto['id'];
+        + (this.producto['categoria'] ? this.producto['categoria'].nombre.split(' ').join('-') : '') + '/' + this.producto['id'];
       this.producto.cantidad = this.producto['cantSugerida'] ? this.producto['cantSugerida'] : 1;
       this.producto.comprado = false;
       this.fullPath = ['Limpieza', this.producto['categoria'] ? this.producto['categoria'].padre.nombre : '', this.producto['categoria'] ? this.producto['categoria'].nombre : ''];
@@ -152,7 +152,7 @@ export class ProductoComponent implements OnInit {
       if (msg.cantidad) {
         if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
           msg.comprado = true;
-          this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, precio * (+msg.cantidad), msg.id);
+          this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
           this._success.next(`Agregado al Carrito!`);
         } else {
           msg['incompleto'] = true;

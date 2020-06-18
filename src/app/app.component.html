@@ -29,8 +29,8 @@
               </div>
               <div class="modal-content">
               <div class="modal-header">
-                <img class="desktop" src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
-                <img class="mobile" src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
+                <img class="desktop" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <img class="mobile" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
               <h4 class="modal-title desktop">{{registrarStatus ? "Registrando nuevo usuario" : "Bienvenido / Bienvenida"}}</h4>
               <h4 class="modal-title movil">{{registrarStatus ? "Registro en 3 pasos" : "Bienvenido / Bienvenida"}}</h4>
               <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
@@ -40,7 +40,7 @@
               <div class="modal-body">
                   <div class="row" style="display: flex; align-items: center;" *ngIf="!registrarStatus">
                       <div class="col-xs-12 col-md-6 modal__texto">
-                        <img src="./assets/images/home/login.png" alt="Sina">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/home/login.png" alt="Sina">
                       </div>
                       <div class="col-xs-12 col-md-6 modal__registrar" *ngIf="!recuperarClave">
                         <p>Si ya tenes usuario:</p>
@@ -202,8 +202,8 @@
                                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                                 </div>
                                 <div class="response" *ngIf="!processing.right_now">
-                                    <img class="processing__icono" *ngIf="!response.error" src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
-                                    <img class="processing__icono" *ngIf="response.error" src="./assets/images/registro/error.png" alt="Sina" height="50">
+                                    <img class="processing__icono" *ngIf="!response.error" [ngClass]="'lazyload'" data-src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
+                                    <img class="processing__icono" *ngIf="response.error" [ngClass]="'lazyload'" data-src="./assets/images/registro/error.png" alt="Sina" height="50">
                                     <pre style="white-space: pre-line; word-break: normal;">{{response.mensaje}}</pre>
                                     <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>
                                 </div>
@@ -233,7 +233,7 @@
             <div role="document" class="modal-dialog" style="width: 950px;">
                 <div class="modal-content">
                 <div class="modal-header">
-                <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <h4 class="modal-title">Tiene un carrito pendiente</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "carritoCancelModal()">
                 <span aria-hidden="true">×</span>
@@ -316,7 +316,7 @@
             <div role="document" class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <h4 class="modal-title">Cuentas disponibles para representación</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "representarCancel()">
                 <span aria-hidden="true">×</span>
@@ -384,7 +384,7 @@
             <div role="document" class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <h4 class="modal-title">Migrando datos</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "migrandoCancelModal()">
                 <span aria-hidden="true">×</span>

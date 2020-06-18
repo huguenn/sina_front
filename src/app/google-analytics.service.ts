@@ -30,8 +30,8 @@ export class GoogleAnalyticsService {
       ga('ecommerce:addItem', {
         'id': p.id,                     // Transaction ID. Required.
         'name': p.descripcion,          // Product name. Required.
-        // 'sku': 'DD23444',                // SKU/code.
-        // 'category': 'Textil',            // Category or variation.
+        'sku': p.sku,                   // SKU/code.
+        'category': p.categoria,        // Category or variation.
         'price': p.precio,              // Unit price.
         'quantity': p.cantidad          // Quantity.
       });

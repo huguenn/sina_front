@@ -274,7 +274,7 @@
     margin-top: 25px;
 }
 .header__filter__content .title{
-    font-size: 12px;
+    /* font-size: 12px; */
     font-weight: 600;
     color: #000;
     cursor: pointer;
@@ -305,7 +305,7 @@
     width: calc(100% - 40px);
 }
 .header__filter__content .item a{
-    font-size: 11px;
+    font-size: 13x;
     color: #000;
     padding: 0 10px;
     margin-left: -10px;
@@ -320,7 +320,7 @@
 }
 .header__filter__content .item li:last-child {
     font-weight: bold;
-    font-size: 9px;
+    font-size: 10px;
 }
 .login > img,
 .login > p,
@@ -781,7 +781,7 @@
         max-width: 120px;
     }
     .buscador__container {
-        width: calc(100% - 950px);
+        width: calc(100% - 1000px);
     }
     .right__form {
         max-width: 200px;

@@ -2,13 +2,13 @@
     <div class="container">
         <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
             {{ successMessage }}
-            <button class="actionButton transparentButton" [routerLink]="['/compra']">VER TODOS</button>
+            <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
         </ngb-alert>
     </div>
 </div>
 <div class="container producto">
   <div class="row producto__header" style="position: relative;">
-    <img src="./assets/images/iconos/oferta.png" alt="">
+    <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.png" alt="">
     <p> OFERTA DEL MES </p>
     <h1 style="    position: absolute;
     right: 0;
@@ -26,7 +26,7 @@
   <div class="row">
     <div class="col-xs-12 col-md-6 imagen__visor" style="max-height: 350px;display: flex;">
       <!--ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div-->
-      <img [src]="producto['urlImagen']" alt="">
+      <img [ngClass]="'lazyload'" [attr.data-src]="producto['urlImagen']" alt="">
     </div>
     <div class="col-xs-12 col-md-6 producto__descripcion">
       <div class="row title">

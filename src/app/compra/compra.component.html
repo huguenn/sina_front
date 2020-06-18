@@ -1,6 +1,6 @@
 <div class="row" style="background: #f8f8f8; margin: 0;">
   <div class="container">
-    <div class="row" style="padding: 60px 45px;    padding-bottom: 0;">
+    <div class="row" style="padding: 5px 45px;    padding-bottom: 0;">
         <div class="tab">
           <div class="tab__header">
             <p>{{secciones[transaccion.paso]}}</p>
@@ -18,19 +18,29 @@
               <div class="content">
                   <div class="row tab__item__header">
                     <p>Tu código de Cliente es {{facturacion.datos.codigoCliente}}</p>
-                    <button (click)="finalizarCompra()">Siguiente &#62;</button>
+                    <button *ngIf="carrito.subtotal > config.montoMinimo" (click)="finalizarCompra()">Siguiente &#62;</button>
                     <span>{{secciones[transaccion.paso]}}</span>
                   </div>
                   <div class="row">
                   <div class="col-xs-12 col-md-4 show__mobile">
-                    <div class="row carrito__total__mobile">
+                    <div class="row carrito__total__mobile" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px;">
+                      <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < config.montoEnvioGratis">
+                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(config.montoEnvioGratis - carrito.subtotal)}}</strong> PARA TENER EL <strong style="padding-bottom: 3px">ENVÍO GRATIS</strong></p>
+                      </div>
+                      <div class="row envio__total text-center" style="font-weight: normal;" *ngIf="carrito.subtotal >= config.montoEnvioGratis">
+                        <p>ENVÍO GRATIS &#10004;</p>
+                      </div>
+                    </div>
+                    <div class="row carrito__total__mobile" style="margin-top: 10px !important;">
                       <div class="row envio__total envio__total__confirmar">
                         <p>SUBTOTAL</p>
                         <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                         <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
                       </div>
                       <div class="row compra__confirm" style="margin-top: 5px;">
-                        <button class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                        <button *ngIf="carrito.subtotal >= config.montoMinimo" class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                        <p *ngIf="carrito.subtotal < config.montoMinimo" style="margin-top: 30px; padding: 0px 12px; color: red;">La compra actual no supera el monto mínimo de $ {{formatMoney(config.montoMinimo)}}</p>
+                        <p *ngIf="carrito.subtotal >= config.montoMinimo && carrito.subtotal < config.montoEnvio" style="margin-top: 30px;">*Unicamente retiro en mostrador</p>
                       </div>
                     </div>
                     <!--div class="row carrito__busqueda">
@@ -87,8 +97,8 @@
                         </div>
                         <div class="col-5">
                           <button class="eliminar" (click)="removeCompraItem(compra)">
-                              <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" alt="">
-                              <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" alt="">
+                              <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" alt="">
+                              <img class="eliminar--hover" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto-hover.png" alt="">
                           </button>
                         </div>
                       </div>
@@ -108,8 +118,8 @@
                           </div>
                           <div class="col-5">
                             <button class="eliminar" (click)="removeCompraItem(compra)">
-                                <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" alt="">
-                                <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" alt="">
+                                <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" alt="">
+                                <img class="eliminar--hover" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto-hover.png" alt="">
                             </button>
                           </div>
                         </div>
@@ -128,7 +138,7 @@
                             <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                               <ul>
                                 <li *ngFor="let item of ResultadoBusqueda" (click)="cerrarBusqueda(item)">
-                                  <img class="busqueda__icono" src="{{item.urlImagen}}" alt="">
+                                  <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" alt="">
                                   <p class="busqueda__titulo">{{item.titulo}}</p>
                                   <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                                 </li>
@@ -143,13 +153,24 @@
                     </div>
                   </div>
                   <div class="col-xs-12 col-md-4 show__web">
+                    <div class="row carrito__total" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px;">
+                      <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < config.montoEnvioGratis">
+                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(config.montoEnvioGratis - carrito.subtotal)}}</strong> PARA TENER EL <strong style="padding-bottom: 3px">ENVÍO GRATIS</strong></p>
+                      </div>
+                      <div class="row envio__total text-center" style="font-weight: normal;" *ngIf="carrito.subtotal >= config.montoEnvioGratis">
+                        <p>ENVÍO GRATIS &#10004;</p>
+                      </div>
+                    </div>
+                    
                     <div class="row carrito__total">
                       <div class="row envio__total envio__total__confirmar">
                         <p>SUBTOTAL</p>
                         <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                         <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
                       </div>
-                      <button class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                      <button *ngIf="carrito.subtotal > config.montoMinimo" class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                      <p *ngIf="carrito.subtotal < config.montoMinimo" style="margin-top: 30px; padding: 0px 30px; color: red;">La compra actual no supera el monto mínimo de $ {{formatMoney(config.montoMinimo)}}</p>
+                      <p *ngIf="carrito.subtotal >= config.montoMinimo && carrito.subtotal < config.montoEnvio" style="margin-top: 30px;">*Unicamente retiro en mostrador</p>
                     </div>
                     <!--div class="row carrito__busqueda">
                       <h3>¿TENÉS UN CUPÓN?</h3>
@@ -174,14 +195,14 @@
                         <p>FORMA DE ENTREGA</p>
                       </div>
                       <div class="row">
-                        <div class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('0')">
-                          <img src="./assets/images/iconos/camion.png" alt="">
+                        <div *ngIf="this.carrito.subtotal >= this.config.montoEnvio" class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('0')">
+                          <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/camion.png" alt="">
                           <p>Envío</p>
                           <input type="radio" id="test1" value="0" [ngModel]="datosCompra.entrega" checked>
                           <label for="test1"></label>
                         </div>
                         <div class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('1')">
-                          <img src="./assets/images/iconos/retiro.png" alt="">
+                          <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.png" alt="">
                           <p>Retiro en tienda</p>
                           <input type="radio" id="test2"  value="1" [ngModel]="datosCompra.entrega">
                           <label for="test2"></label>
@@ -192,7 +213,7 @@
                       <div class="row envio__seccion__header--editable">
                         <p>DATOS DE ENVÍO</p>
                         <button (click)="toggleEditingEnvio()">
-                          <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          <img width="20" [ngClass]="'lazyload'" data-src="./assets/images/iconos/lapiz.png" alt="">
                         </button>
                       </div>
                       <div class="row envio__seccion__content transporte error" *ngIf="!editingEnvio && !datosEnvio_flag">
@@ -368,7 +389,7 @@
                               <a>
                                 <div class="mapa__content" *ngIf="mapa">
                                     <span (click)="mapa = !mapa">x</span>
-                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3278.7818186963987!2d-58.267091685238306!3d-34.735893572009736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e6449263693%3A0x2487ca7b31b60673!2sMessina+Hnos+S.A.!5e0!3m2!1sen!2sar!4v1527709856965" width="480" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                                    <iframe [ngClass]="'lazyload'" data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3278.7818186963987!2d-58.267091685238306!3d-34.735893572009736!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32e6449263693%3A0x2487ca7b31b60673!2sMessina+Hnos+S.A.!5e0!3m2!1sen!2sar!4v1527709856965" width="480" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                                 </div>
                                 <p style="cursor: pointer;" (click)="mapa = !mapa">Ver Mapa</p>
                               </a>
@@ -533,15 +554,6 @@
                     <div class="row carrito__titulo">
                       <p>RESUMEN DE TU PEDIDO</p>
                     </div>
-                    <div class="row" [ngClass]="{'borde__animado' : carrito.subtotal < 5000, 'envio' : carrito.subtotal >= 5000}" style="margin-bottom: 10px;">
-                      <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < 5000">
-                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(5000 - carrito.subtotal)}}</strong> PARA TENER EL <strong style="padding-bottom: 3px">ENVÍO GRATIS</strong></p>
-                      </div>
-                      <div class="row envio__total text-center" style="font-weight: normal;" *ngIf="carrito.subtotal >= 5000">
-                        <p>ENVÍO GRATIS &#10004;</p>
-                      </div>
-                    </div>
-
 
                     <div class="row envio">
                       <div class="row envio__total">
@@ -549,13 +561,17 @@
                           <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
                           <span style="position: absolute; bottom: -30px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
                       </div>
-					            <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= 5000">
+					            <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= config.montoEnvioGratis && datosCompra.entrega === '0'">
                           <p style="padding-top: 22px;">ENVÍO</p>
                           <h3 style="font-size: 16px; font-weight: normal;">$ 0,00</h3>
                       </div>
+					            <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal < config.montoEnvioGratis && datosCompra.entrega === '0'">
+                          <p style="padding-top: 22px;">ENVÍO</p>
+                          <h3 style="font-size: 16px; font-weight: normal;">$ {{config.costoEnvio}}</h3>
+                      </div>
 
 					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
-						<img src="./assets/images/iconos/retiro.png" alt="" style="height: 50px; margin-right: 10px;">
+						<img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.png" alt="" style="height: 50px; margin-right: 10px;">
 						<p>Retiro en tienda</p>
 					  </div>
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
@@ -605,7 +621,7 @@
                         <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank">
                           <button class="actionButton">IMPRIMIR PEDIDO</button>
                         </a>
-                        <img src="./assets/images/header/logo_mobile_azul.png" alt="">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="">
                       </div>
                     </div>
                     <div class="row confirmacion">
@@ -615,11 +631,11 @@
                         </div>
                         <div class="row">
                           <div class="envio__seccion__opcion" *ngIf="datosCompra.entrega === '0'">
-                            <img src="./assets/images/iconos/camion.png" alt="">
+                            <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/camion.png" alt="">
                             <p>Envío</p>
                           </div>
                           <div class="envio__seccion__opcion" *ngIf="datosCompra.entrega === '1'">
-                            <img src="./assets/images/iconos/retiro.png" alt="">
+                            <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.png" alt="">
                             <p>Retiro en tienda</p>
                           </div>
                         </div>

@@ -2,7 +2,7 @@
     <div class="container">
         <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
             {{ successMessage }}
-            <button class="actionButton transparentButton" [routerLink]="['/compra']">VER TODOS</button>
+            <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
         </ngb-alert>
     </div>
 </div>
@@ -42,18 +42,18 @@
 <div class="container">
     <div class="banner_final row">
         <a routerLink="preguntas-frecuentes">
-            <img src="./assets/images/home/banner/banners web-02.png" alt="Preguntas frecuentes" title="Preguntas frecuentes" />
+            <img [ngClass]="'lazyload'" data-src="https://storage.googleapis.com/sina-web-gcloud/images/banners%20web-02.png" alt="Preguntas frecuentes" title="Preguntas frecuentes" />
         </a>
         <a routerLink="envios">
-            <img src="./assets/images/home/banner/banners web-03.png" alt="Envíos" title="Envíos" />
+            <img [ngClass]="'lazyload'" data-src="https://storage.googleapis.com/sina-web-gcloud/images/banners%20web-03.png" alt="Envíos" title="Envíos" />
         </a>
         <a (click)="registrar()">
-            <img src="./assets/images/home/banner/banners web-04.png" alt="Registrarse" title="Registrarse" />
+            <img [ngClass]="'lazyload'" data-src="https://storage.googleapis.com/sina-web-gcloud/images/banners%20web-04.png" alt="Registrarse" title="Registrarse" />
         </a>
 
         <a (click)="descargarLista()">
-            <div id="div1"><img id="rel1" src="./assets/images/home/banner/banners web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios"/>
-                <div id="loaderFile" style="display: none; position: relative; left: calc(50% - 20px); margin-top: 10px; max-width: 40px;"><img id="rel2" src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/></div>
+            <div id="div1"><img id="rel1" [ngClass]="'lazyload'" data-src="https://storage.googleapis.com/sina-web-gcloud/images/banners%20web-01.png" alt="Descargar lista de precios" title="Descargar lista de precios"/>
+                <div id="loaderFile" style="display: none; position: relative; left: calc(50% - 20px); margin-top: 10px; max-width: 40px;"><img id="rel2" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/></div>
                 <div id="loaderFileMsg" style="display: none; position: relative; margin-top: 10px;">Generando archivo Por favor espere</div>
             </div>
         </a>

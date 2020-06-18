@@ -6,13 +6,13 @@
             <i (click)="toggleMenu()" class="fa fa-bars" aria-hidden="true"></i>          
           </div>    
           <a class="navbar-brand" [routerLink]="['/']">
-            <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
-            <img src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="40">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="40">
           </a>
         </div>    
         <div class="col-xs-8 col-md-6" style="max-width: auto;">
             <a class="logoMobile" [routerLink]="['/']">
-              <img src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
             </a>  
           <form class="buscador form-inline ">
             <div class="controles">
@@ -22,13 +22,13 @@
               <!--(keyup)="buscarPalabra($event)" -->
               <input (focusout)="focusoutFunction()" (keydown)="enterBusqueda($event)" class="form-control" type="text" placeholder="Buscar" [(ngModel)]="texto_busqueda" name="texto_busqueda">
               <button class="btn btn-outline-sucess"  routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
-                  <img src="./assets/images/header/buscador.png" alt="Sina" width="20">
+                  <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.png" alt="Sina" width="20">
               </button>
               <i class="fa fa-search" aria-hidden="true"></i>
               <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                 <ul>
                   <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
-                    <img class="busqueda__icono" src="{{item.urlImagen}}" alt="">
+                    <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" alt="">
                     <p class="busqueda__titulo">{{item.titulo}}</p>
                     <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                   </li>
@@ -39,7 +39,7 @@
         </div>
         <div #inputCantidadHeader class="col-md-4 col-xs-2 right__form" style="max-width: none;">
           <div class="login" (click)="toggle('cuenta')">
-            <img src="./assets/images/header/user.png" alt="User" width="40">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user.png" alt="User" width="40">
             <p *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> <b>{{representado ? "Representado" : UserJob || "Registrarse"}} </b></p>
             <p  *ngIf="!UserLog"> {{"Iniciar sesión"}} <br> {{"Registrarse"}} </p>
             <div class="contPop">
@@ -61,7 +61,7 @@
               border-radius: 25px;
               margin: 0px 5px;
               padding: 8px;" routerLink="contacto">
-              <img src="./assets/images/header/phone.png" alt="telefono" width="24">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/phone.png" alt="telefono" width="24">
             </div>
           </div>
           <div class="whatsapp">
@@ -71,7 +71,7 @@
               border-radius: 25px;
               padding: 8px;">
               <a target="_blank" href="https://wa.me/5491123145727?text=Hola">
-                <img src="./assets/images/header/whatsapp.png" alt="whatsapp" width="24">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/whatsapp.png" alt="whatsapp" width="24">
               </a>
             </div>
           </div>
@@ -83,14 +83,14 @@
               margin: 0px 5px;
               padding: 8px;">
               <a href="mailto:infoweb@sina.com.ar">
-                <img src="./assets/images/header/email.png" alt="email" width="24">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/email.png" alt="email" width="24">
               </a>
             </div>
           </div>
           <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
             <div style="cursor: pointer" (click)="toggle('compra')">
               <span class="badge badge-default badge-pill">{{greetMessage?.length}}</span>              
-              <img src="./assets/images/header/carrito.png" alt="Carrito" width="40">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/carrito.png" alt="Carrito" width="40">
             </div>
             <div class="contPop">
               <div class="popup" *ngIf="popup.compra">
@@ -108,13 +108,13 @@
                     <p>${{updatePrecio(item.precio, item.cantidad)}}</p>                    
                     <input (input)="data.updateMessage()" [(ngModel)]="item.cantidad" type="number">
                     <div class="eliminar">
-                      <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
-                      <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
+                      <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
+                      <img class="eliminar--hover" width="18"  [ngClass]="'lazyload'"data-src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
                     </div>
                   </li>
                   </ul>          
                 </div>
-                <div class="popup__mas" routerLink="compra" (click)="toggle('compra')">
+                <div class="popup__mas" routerLink="/compra/carrito" (click)="toggle('compra')">
                   <p>Ver todos</p>
                 </div>
               </div>
@@ -132,7 +132,7 @@
       </nav>
   </div>
 </div>
-<div class="header" [ngClass]="headerPosition">
+<div class="header" [ngClass]="headerPosition" *ngIf="data.rutaActual.indexOf('compra/envio') === -1">
     <div class="container" [ngClass]="SideState">
       <nav class="navbar navbar-fixed" [ngClass]="SearchFocus">
           <div class="col-xs-2" style="display: flex; align-items: center;">
@@ -140,15 +140,15 @@
               <i (click)="toggleMenu()" class="fa fa-bars" aria-hidden="true"></i>          
             </div>    
             <a class="navbar-brand" [routerLink]="['/']">
-              <img src="./assets/images/header/logo.png" alt="Sina" width="140">
-              <img src="./assets/images/header/icono_mobile_blanco.png" alt="Sina" height="34">              
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.png" alt="Sina" width="140">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/icono_mobile_blanco.png" alt="Sina" height="34">              
             </a>
             <ul class="nav navbar-nav">
-              <li *ngFor="let item of LinkList; let itemIndex = index" class="nav-item" (mouseover)="changeStyle($event, itemIndex)" (mouseout)="changeStyle($event, itemIndex)">
+              <li *ngFor="let item of LinkList; let itemIndex = index" style="cursor: pointer;" class="nav-item" routerLink="{{'/' + MenuTitle}}" (mouseover)="changeStyle($event, itemIndex)" (mouseout)="changeStyle($event, itemIndex)">
                 <a class="nav-link" (click)="changeStyleClick(itemIndex)">
                   <div class="cont">
-                    <img height="30" src="{{item.img1}}" alt="">
-                    <img height="30" src="{{item.img2}}" alt="">
+                    <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img1" alt="">
+                    <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img2" alt="">
                   </div>
                   <p class="iconoMenu">{{item.texto}}</p>
                 </a>
@@ -157,7 +157,7 @@
           </div>
           <div class="col-xs-8 buscador__container">
             <a class="logoMobile" [routerLink]="['/']">
-              <img src="./assets/images/header/logo.png" alt="Sina" height="34">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.png" alt="Sina" height="34">
             </a>  
             <form class="buscador form-inline ">
               <div class="controles">
@@ -167,7 +167,7 @@
                 <!-- removing (keyup)="buscarPalabra($event)" -->
                 <input  [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)"  name="texto_busqueda" (focus)="focusFunction()" (focusout)="focusoutFunction()" class="form-control" type="text" placeholder="Buscar">
                 <button class="btn btn-outline-sucess" type="submit" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
-                    <img src="./assets/images/header/buscador.png" alt="Sina" width="20">
+                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.png" alt="Sina" width="20">
                 </button>
                 <i class="fa fa-search" aria-hidden="true"></i>                    
                 <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0" style="
@@ -177,7 +177,7 @@
                   font-size: 13px;">
                   <ul>
                     <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
-                      <img class="busqueda__icono" src="{{item.urlImagen}}" alt="">
+                      <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" alt="">
                       <p class="busqueda__titulo">{{item.titulo}}</p>
                       <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                     </li>
@@ -188,7 +188,7 @@
           </div>   
           <div #inputCantidadHeaderVerde class="col-xs-2 col-md-3 right__form">
             <div class="login" (click)="toggle2('cuenta')">
-              <img src="./assets/images/header/user__verde.png" alt="User" width="40">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.png" alt="User" width="40">
               <p style="color: #fff" *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> {{UserJob || "Registrarse"}} </p>
               <p style="color: #fff" *ngIf="!UserLog"> {{"Iniciar sesión"}} <br> {{"Registrarse"}} </p>
               <div class="contPop">
@@ -206,7 +206,7 @@
             <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
               <div style="cursor: pointer" (click)="toggle2('compra')">
                 <span class="badge badge-default badge-pill">{{greetMessage?.length}}</span>                              
-                <img src="./assets/images/iconos/carrito--verde.png" alt="Carrito" width="40">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/carrito--verde.png" alt="Carrito" width="40">
               </div>
               <div class="contPop">
                 <div class="popup" *ngIf="popup2.compra">
@@ -224,13 +224,13 @@
                       <p>${{updatePrecio(item.precio, item.cantidad)}}</p>
                       <input (input)="data.updateMessage()" [(ngModel)]="item.cantidad" type="number">
                       <div class="eliminar">
-                        <img class="eliminar--initial" width="18" src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
-                        <img class="eliminar--hover" width="18" src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
+                        <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
+                        <img class="eliminar--hover" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
                       </div>    
                     </li>
                     </ul>          
                   </div>
-                  <div class="popup__mas" routerLink="compra" (click)="toggle2('compra')">
+                  <div class="popup__mas" routerLink="/compra/carrito" (click)="toggle2('compra')">
                     <p>Ver todos</p>
                   </div>
                 </div>
@@ -273,7 +273,7 @@
             </div>
             <ul class="nav navbar-nav item" *ngIf="section.items.length">
               <li *ngFor="let item of section.items| slice:0:3" class="nav-item">
-                <a class="nav-link" routerLink="{{item.link}}" (click)="itemClicked()">{{item.texto}}</a>
+                <a class="nav-link" style="font-size: 12px;" routerLink="{{item.link}}" (click)="itemClicked()">{{item.texto}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" routerLink="{{section.head?.link}}" (click)="itemClicked()">VER MÁS...</a>

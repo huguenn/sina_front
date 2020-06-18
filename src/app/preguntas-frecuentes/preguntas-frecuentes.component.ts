@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-preguntas-frecuentes',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PreguntasFrecuentesComponent implements OnInit {
 
-  constructor() { }
+  constructor(private data: SharedService) { }
+
+  config: any;
 
   ngOnInit() {
+    // subscribing to config change
+    this.data.currentConfig.subscribe(
+      configuracion => {
+        this.config = configuracion;
+      }
+    );
   }
 
 }

@@ -2,7 +2,7 @@
   <div class="container">
     <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
       {{ successMessage }}
-      <button class="actionButton transparentButton" [routerLink]="['/compra']">VER TODOS</button>
+      <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
     </ngb-alert>
   </div>
 </div>
@@ -43,7 +43,7 @@
                               <p>{{DatosUsuario.categoriaIva}}</p>
                               <p>CUIL {{DatosUsuario.cuit}}</p>
                             </div>
-                            <img src="./assets/images/producto/1.png" alt="" />
+                            <img [ngClass]="'lazyload'" data-src="./assets/images/producto/1.png" alt="" />
                             <span>Escobón Escobillón Sina®</span>
                         </div>
                       </div>
@@ -58,12 +58,12 @@
             						<div class="text-center" id="loaderFile" style="display:none;">
             							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
             							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-            							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+            							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
             						</div>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                             <div class="list">
-                              <div class="img"><img src="{{item.model}}" alt=""></div>
+                              <div class="img"><img [ngClass]="'lazyload'" [attr.data-src]="item.model" alt=""></div>
                               <p>
                                 {{item.texto}}
                               </p>
@@ -318,12 +318,12 @@
 						<div class="text-center" id="loaderFile" style="display:none;">
 							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
 							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
-                            <div class="img"><img src="{{item.model}}" alt=""></div>
+                            <div class="img"><img [ngClass]="'lazyload'" [attr.data-src]="item.model" alt=""></div>
                             <p>
                               {{item.texto}}
                             </p>
@@ -382,7 +382,8 @@
                               <p>${{formatMoney(item.precio * (+item.cantidad))}}</p>
                             </div>
                             <div class="col-5">
-                              <button class="whiteButton" (click)="newMessage(item)">AGREGAR</button>
+                              <button *ngIf="!item.comprado" class="whiteButton" (click)="newMessage(item)">AGREGAR</button>
+                              <button *ngIf="item.comprado" class="whiteButton">AGREGADO</button>
                             </div>
                           </div>
                         </div>
@@ -400,7 +401,7 @@
 							<div class="text-center" id="loaderFile" style="display:none;">
 								<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
 								<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-								<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+								<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
 							</div>
                         </div>
                     </div>
@@ -418,12 +419,12 @@
 					  <div class="text-center" id="loaderFile" style="display:none;">
 							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
 							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
-                            <div class="img"><img src="{{item.model}}" alt=""></div>
+                            <div class="img"><img [ngClass]="'lazyload'" [attr.data-src]="item.model" alt=""></div>
                             <p>
                               {{item.texto}}
                             </p>
@@ -532,12 +533,12 @@
 					  <div class="text-center" id="loaderFile" style="display:none;">
 							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
 							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
-                            <div class="img"><img src="{{item.model}}" alt=""></div>
+                            <div class="img"><img [ngClass]="'lazyload'" [attr.data-src]="item.model" alt=""></div>
                             <p>
                               {{item.texto}}
                             </p>
@@ -588,12 +589,12 @@
 						<div class="text-center" id="loaderFile" style="display:none;">
 							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
 							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img src="./assets/images/loader/ajax-loader.gif" /></div>
+							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
 						</div>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                             <div class="list">
-                              <div class="img"><div class="img"><img src="{{item.model}}" alt=""></div></div>
+                              <div class="img"><div class="img"><img [ngClass]="'lazyload'" [attr.data-src]="item.model" alt=""></div></div>
                               <p>
                                 {{item.texto}}
                               </p>

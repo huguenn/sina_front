@@ -9,12 +9,16 @@ export class Dato {
   precio: number;
   total: number;
   id: number;
-  constructor(cantidad: Number, descripcion: String, precio: number, total: number, id: number) {
+  sku: string;
+  categoria: string;
+  constructor(cantidad: Number, descripcion: String, precio: number, total: number, id: number, sku: string, categoria: string) {
     this.cantidad     = cantidad;
     this.descripcion  = descripcion;
     this.precio       = precio;
     this.total        = total;
     this.id           = id;
+    this.sku          = sku;
+    this.categoria    = categoria;
   }
 }
 export class domicilio {
@@ -67,7 +71,10 @@ export class cliente {
   telefonoFacturacion:  string;
 }
 export class Configuracion {
+  montoMinimo:            Number;
+  montoEnvio:             Number;
   montoEnvioGratis:       Number;
+  costoEnvio:             Number;
   stickyHeaderTitulo:     String;
   stickyHeaderCta:        string;
   stickyHeaderLink:       string;
@@ -78,10 +85,14 @@ export class Configuracion {
   ventanaEmergenteTitulo: string;
   ventanaEmergenteImagen: string;
   ventanaEmergenteActivo: boolean;
-  constructor(montoEnvioGratis: number, stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string,
+  constructor(montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
+    stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string,
     stickyHeaderDesde: Date, stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean,
     ventanaEmergenteTitulo: string, ventanaEmergenteImagen: string, ventanaEmergenteActivo: boolean) {
+      this.montoMinimo = montoMinimo;
+      this.montoEnvio = montoEnvio;
       this.montoEnvioGratis = montoEnvioGratis;
+      this.costoEnvio = costoEnvio;
       this.stickyHeaderTitulo = stickyHeaderTitulo;
       this.stickyHeaderCta = stickyHeaderCta;
       this.stickyHeaderLink = stickyHeaderLink;
@@ -107,6 +118,7 @@ export class SharedService {
   statusLogin     = false;
   statusCarrito   = false;
   configuracion = [];
+  rutaActual = '';
 
   public reponsable_lista: Array<any> = [
     { text: 'Consumidor final',  codigo: 'CF'},
@@ -237,8 +249,8 @@ export class SharedService {
       this.messageSource.next(this.lista);
     }
   }
-  changeMessage(cantidad: Number, descripcion: String, precio: number, total: number, id: number, enable?: boolean) {
-    this.lista.push(new Dato(cantidad, descripcion, precio, total, id));
+  changeMessage(cantidad: Number, descripcion: String, precio: number, total: number, id: number, sku: string, categoria: string, enable?: boolean) {
+    this.lista.push(new Dato(cantidad, descripcion, precio, total, id, sku, categoria));
     this.messageSource.next(this.lista);
   }
   checkObjectValues(a, b) {
@@ -260,7 +272,7 @@ export class SharedService {
         if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
           if (!this.lista.some(articulo_carrito => articulo_carrito.id === msg.id)) {
             msg.comprado = true;
-            this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id);
+            this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
             return {value: true, text: `Agregado al Carrito!`};
           } else {
             msg.comprado = true;
@@ -299,8 +311,8 @@ export class SharedService {
     this.loginStatus.next(this.statusLogin);
   }
 
-  updatePageTitle($title: string = 'Articulos de limpieza por mayor, articulos de bazar | Sina',
-    $meta_content: string = 'Fábrica, mayorista y distribuidora de artículos de limpieza y bazar con entrega a todo el país, hacé tu pedido online!') {
+  updatePageTitle($title: string = 'Productos de limpieza por mayor, fabrica de productos de limpieza | Sina',
+    $meta_content: string = 'Fábrica mayorista y distribuidora de artículos de limpieza y bazar con entrega a todo el país, hacé tu pedido online!') {
     /**
      * Configura el titulo de la pagina.
      * @param $title  Titulo de la pagina.

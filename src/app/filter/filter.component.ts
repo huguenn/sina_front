@@ -60,12 +60,13 @@ export class FilterComponent implements OnInit {
   successMessage: string;
   staticAlertClosed = false;
   listaResultados;
+  listaOriginal;
   FilterItem = undefined;
   term = '';
   categoriaPadre = undefined;
   categoriaHijo = undefined;
   id_filtro = '';
-  id_categoria = undefined;
+  id_categoria = [];
   id_subcategoria = '';
   num_subcategoria = -1;
   listado_subcategorias;
@@ -81,6 +82,7 @@ export class FilterComponent implements OnInit {
   ngOnDestroy() {
   }
   updateMenu(id, id2, padre) {
+    this.ordenamiento = '';
     this.categoriaPadre = (padre) ? padre.split('-').join(' ') : '';
     this.categoriaHijo = id2 ? id2.split('-').join(' ') : '';
     if (!id2) {
@@ -115,13 +117,14 @@ export class FilterComponent implements OnInit {
       });
       if ($subcategoria && itemActualMenuPadre) {
         itemActualMenuHijo = itemActualMenuPadre.items.findIndex(($item_hijo: any) => {
-          return $item_hijo.texto.toUpperCase() === $subcategoria;
+          return $item_hijo.texto === $subcategoria;
         });
       }
       if (itemActualMenu) {
-        this.id_filtro = itemActualMenu.texto.toUpperCase();
-        this.id_categoria = itemActualMenuPadre.head;
+        this.id_filtro = itemActualMenu.texto;
         this.listado_subcategorias = itemActualMenuPadre.items;
+        this.id_categoria = [];
+        this.id_categoria.push({link: itemActualMenuPadre.head.link, texto:itemActualMenuPadre.head.texto,  listado_subcategorias: this.listado_subcategorias});
         this.num_subcategoria = itemActualMenuHijo;
       }
     }
@@ -168,8 +171,37 @@ export class FilterComponent implements OnInit {
           this.mensaje = 'Cargando';
           new Promise((resolve, reject) => {
             if (!id2) {
-              url_consulta += (window.location.href.indexOf('ofertas') !== -1) ? 'producto/listado/ofertas/' :
-              (window.location.href.indexOf('novedades') !== -1) ? 'producto/listado/novedades' : '';
+              const path = window.location.href;
+              // url_consulta += (window.location.href.indexOf('ofertas') !== -1) ? 'producto/listado/ofertas/' :
+              // (window.location.href.indexOf('novedades') !== -1) ? 'producto/listado/novedades' : '';
+              if (path.indexOf('ofertas') !== -1) {
+                url_consulta += 'producto/listado/ofertas/';
+              } else if (path.indexOf('novedades') !== -1) {
+                url_consulta += 'producto/listado/novedades';
+              } else if (path.indexOf('Limpieza') !== -1) {
+                url_consulta += 'producto/categoriapadre/Limpieza';
+                this.id_filtro = 'Limpieza';
+              } else if (path.indexOf('Bazar') !== -1) {
+                url_consulta += 'producto/categoriapadre/Bazar';
+                this.id_filtro = 'Bazar';
+              } else if (path.indexOf('Textil') !== -1) {
+                url_consulta += 'producto/categoriapadre/Textil';
+                this.id_filtro = 'Textil';
+              } else if (path.indexOf('Liquidos') !== -1) {
+                url_consulta += 'producto/categoriapadre/Liquidos';
+                this.id_filtro = 'Liquidos';
+              } else if (path.indexOf('Jardin%20y%20riego') !== -1) {
+                url_consulta += 'producto/categoriapadre/Jardin-y-riego';
+                this.id_filtro = 'Jardin y riego';
+              } else if (path.indexOf('Profesional') !== -1) {
+                url_consulta += 'producto/categoriapadre/Profesional';
+                this.id_filtro = 'Profesional';
+              } else if (path.indexOf('Mas%20productos') !== -1) {
+                url_consulta += 'producto/categoriapadre/Mas-productos';
+                this.id_filtro = 'Mas productos';
+              } else {
+                url_consulta += '';
+              }
               this.auth.get(url_consulta)
                 .then($res => resolve($res.response)).catch($error => reject($error));
             } else if (id) {
@@ -188,12 +220,71 @@ export class FilterComponent implements OnInit {
             }
           }).then(($response)  => {
             this.listaResultados = $response;
+            this.listaOriginal = $response;
             this.paginado.init();
-            if (!this.listaResultados.length) {
-              this.mensaje = 'No hay resultado para la consulta';
-            } else {
-              this.mensaje = '';
-            }
+
+            setTimeout(() => {
+
+              const path = window.location.href;
+              if (path.indexOf('Limpieza') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[0].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else if (path.indexOf('Bazar') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[1].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else if (path.indexOf('Textil') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[2].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else if (path.indexOf('Liquidos') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[3].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else if (path.indexOf('Jardin%20y%20riego') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[4].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else if (path.indexOf('Profesional') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[5].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else if (path.indexOf('Mas%20productos') !== -1 && this.LinkList) {
+                this.modoVista = 'Paginado';
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                for(let subcat of this.LinkList[6].links) {
+                  this.id_categoria.push({link: subcat.head.link, texto: subcat.head.texto, listado_subcategorias: subcat.items});
+                }
+              } else {
+                this.paginado.disable(); // Para poner listado por default, en lugar de paginado
+              }
+              
+              if (!this.listaResultados.length) {
+                this.mensaje = 'No hay resultado para la consulta';
+              } else {
+                this.mensaje = '';
+              }
+            }, 1000)
           })
           .catch($error => {
             this.data.log('getlistadoofertas error filter', $error);
@@ -239,7 +330,7 @@ export class FilterComponent implements OnInit {
       if (msg.cantidad) {
         if (msg.cantidad % msg.indice === 0 &&  msg.cantidad > msg.minimo) {
           msg.comprado = true;
-          this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.texto1, msg.precio, msg.precio, msg.id);
+          this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.texto1, msg.precio, msg.precio, msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
           this._success.next(`Agregado al Carrito!`);
         } else {
           msg['incompleto'] = true;
@@ -289,7 +380,7 @@ export class FilterComponent implements OnInit {
     }
   };
 
-  modoVista: string = 'Paginado';
+  modoVista: string = 'Listado'; // Cambio default de Paginado a Listado
   cambiarVista($vista) {
     this.modoVista = $vista;
     if ($vista === 'Paginado') {
@@ -297,14 +388,60 @@ export class FilterComponent implements OnInit {
     }else {
       this.paginado.disable();
     }
+    if(this.ordenamiento && this.ordenamiento.startsWith('nombre')) {
+      this.ordenPorNombre();
+    }
+    if(this.ordenamiento && this.ordenamiento.startsWith('precio')) {
+      this.ordenPorPrecio();
+    }
   }
 
   ordenPorNombre() {
-    this.ordenamiento = 'nombre';
-    // this.listaResultados = this.listaResultados.map(arr => arr.sort((a,b) => a.titulo < b));
+    if(this.modoVista && this.modoVista === 'Paginado') {
+      if(this.ordenamiento && this.ordenamiento === 'nombreDESCP') {
+        this.ordenamiento = 'nombreASCP';
+        this.paginado.original = this.listaOriginal.sort((a,b) => { if(a.titulo === b.titulo) {return 0;} else {return a.titulo < b.titulo ? 1:-1} });
+        this.paginado.actualizar();
+      }
+      else {
+        this.ordenamiento = 'nombreDESCP';
+        this.paginado.original = this.listaOriginal.sort((a,b) => { if(a.titulo === b.titulo) {return 0;} else {return a.titulo > b.titulo ? 1:-1} });
+        this.paginado.actualizar();
+      }
+    }
+    if(this.modoVista && this.modoVista === 'Listado') {
+      if(this.ordenamiento && this.ordenamiento === 'nombreDESCL') {
+        this.ordenamiento = 'nombreASCL';
+        this.listaResultados = this.listaResultados.sort((a,b) => { if(a.titulo === b.titulo) {return 0;} else {return a.titulo < b.titulo ? 1:-1} });
+      }
+      else {
+        this.ordenamiento = 'nombreDESCL';
+        this.listaResultados = this.listaResultados.sort((a,b) => { if(a.titulo === b.titulo) {return 0;} else {return a.titulo > b.titulo ? 1:-1} });
+      }
+    }
   }
   ordenPorPrecio() {
-    this.ordenamiento = 'precio';
-    // this.listaResultados = this.listaResultados.sort((a,b) => a.precio < b.precio);
+    if(this.modoVista && this.modoVista === 'Paginado') {
+      if(this.ordenamiento && this.ordenamiento === 'precioDESCP') {
+        this.ordenamiento = 'precioASCP';
+        this.paginado.original = this.listaOriginal.sort((a,b) => { return b.precio - a.precio });
+        this.paginado.actualizar();
+      }
+      else {
+        this.ordenamiento = 'precioDESCP';
+        this.paginado.original = this.listaOriginal.sort((a,b) => { return a.precio - b.precio });
+        this.paginado.actualizar();
+      }
+    }
+    if(this.modoVista && this.modoVista === 'Listado') {
+      if(this.ordenamiento && this.ordenamiento === 'precioDESCL') {
+        this.ordenamiento = 'precioASCL';
+        this.listaResultados = this.listaResultados.sort((a,b) => { return b.precio - a.precio });
+      }
+      else {
+        this.ordenamiento = 'precioDESCL';
+        this.listaResultados = this.listaResultados.sort((a,b) => { return a.precio - b.precio });
+      }
+    }
   }
 }

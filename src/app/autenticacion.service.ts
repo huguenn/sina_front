@@ -128,7 +128,7 @@ export class AutenticacionService {
           if ($responseCarrito.response) {
             for(var item of $responseCarrito.response.items) {
               let prod = item.producto;
-              this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id);
+              this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '');
             }
           }
 
@@ -242,8 +242,6 @@ export class AutenticacionService {
         }
       }
     }
-    // reading carrito data
-
 
     if (this.checkNull(this.localGet('login'))) {
       this.desacreditar();
@@ -261,7 +259,7 @@ export class AutenticacionService {
         if ($response.response) {
           for(var item of $response.response.items) {
             let prod = item.producto;
-            this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id);
+            this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '');
           }
         }
       })

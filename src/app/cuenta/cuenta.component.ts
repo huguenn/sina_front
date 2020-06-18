@@ -217,16 +217,68 @@ export class CuentaComponent implements OnInit {
     this.repetirFlag = false;
   }
   repetirCompra() {
+    let delay: number;
     const $item = this.repetirTemp;
-    this.data.cleanCarrito();
     if (this.ultimasCompras.length > 0) {
       if ($item['items'].length > 0) {
-        $item['items'].forEach(compra => {
-          const precio = +compra.producto.precio;
-          const cantidad = +compra.cantidad;
-          this.data.changeMessage(cantidad ? cantidad : 1, compra.producto.titulo, precio, precio * (cantidad), compra.producto.id);
+        this.auth.get('carrito/eliminar').then((result) => {
+          this.data.cleanCarrito();
+          this.data.updateMessage([]);
+
+          $item['items'].forEach(compra => {
+            if(delay < 1000) {
+              delay+=100;
+            }
+  
+            const body = new URLSearchParams();
+            body.set('id_producto', compra.producto.id);
+            body.set('cantidad', compra.cantidad);
+            this.auth.post('carrito/agregar_item', body)
+            .then($response => {
+              this.data.log('response carritoagregaritem cuenta', $response);
+              
+              const response = this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1, compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id, compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '');
+            })
+            .catch($error => {
+              this.data.log('error carritoagregaritem cuenta', $error);
+              // compra.producto.comprado = true;
+            });
+          });
+
+          setTimeout(() => {
+            this.router.navigate(['/compra/carrito']);
+          }, delay);
+        
+        }).catch((error) => {
+          this.data.log('carrito/eliminar error cuenta:', error);
+
+          this.data.cleanCarrito();
+          this.data.updateMessage([]);
+
+          $item['items'].forEach(compra => {
+            if(delay < 1000) {
+              delay+=100;
+            }
+  
+            const body = new URLSearchParams();
+            body.set('id_producto', compra.producto.id);
+            body.set('cantidad', compra.cantidad);
+            this.auth.post('carrito/agregar_item', body)
+            .then($response => {
+              this.data.log('response carritoagregaritem cuenta', $response);
+              
+              const response = this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1, compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id, compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '');
+            })
+            .catch($error => {
+              this.data.log('error carritoagregaritem cuenta', $error);
+              // compra.producto.comprado = true;
+            });
+          });
+
+          setTimeout(() => {
+            this.router.navigate(['/compra/carrito']);
+          }, delay);
         });
-        this.router.navigate(['/compra/']);
       }
     }
   }
@@ -239,7 +291,7 @@ export class CuentaComponent implements OnInit {
     this.data.updatePageTitle();
     setTimeout(() => this.staticAlertClosed = true, 5000);
     this._success.subscribe((message) => this.successMessage = message);
-    // debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
+    debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
 
     this.sub = this.route
       .queryParams
@@ -383,18 +435,23 @@ export class CuentaComponent implements OnInit {
   }
   newMessage(msg) {
     if (this.loginStatus === true) {
-      if (msg.cantidad) {
-        if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
-          if (!this.data.lista.some(articulo_carrito => articulo_carrito.id === msg.id)) {
-            msg.comprado = true;
-            this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id);
-          } else {
-            msg.comprado = true;
-          }
-        }else {
-          msg['incompleto'] = true;
+      const body = new URLSearchParams();
+      body.set('id_producto', msg.id);
+      body.set('cantidad', msg.cantidad);
+      this.auth.post('carrito/agregar_item', body)
+      .then($response => {
+        this.data.log('response carritoagregaritem cuenta', $response);
+        
+        const response = this.data.addMessage(msg);
+        if (response.value) {
+          this._success.next(response.text);
         }
-      }
+      })
+      .catch($error => {
+        this.data.log('error carritoagregaritem cuenta', $error);
+        this._success.next(`Ya se encuentra en el Carrito!`);
+        msg.comprado = true;
+      });
     }else {
       this.data.toggleLoginModal();
     }
@@ -446,7 +503,6 @@ export class CuentaComponent implements OnInit {
     this.procesando_info_entrega = true;
 
     const body = new URLSearchParams();
-    const body_entrega = new URLSearchParams();
     body.set('nombre_fantasia', this.DatosUsuario.nombreFantasia);
     body.set('telefono', this.DatosUsuario.telefono);
     body.set('telefono_celular', this.DatosUsuario.telefonoCelular);
@@ -459,16 +515,14 @@ export class CuentaComponent implements OnInit {
     body.set('facturacion_email', this.DatosUsuario.emailFacturacion);
     body.set('facturacion_telefono', this.DatosUsuario.telefonoFacturacion);
     body.set('descripcion', this.DatosUsuario.descripcion);
+    body.set('envio_domicilio_direccion', this.DatosUsuario.datosEnvio.domicilioEntrega.direccion);
+    body.set('envio_domicilio_ciudad', this.DatosUsuario.datosEnvio.domicilioEntrega.ciudad);
+    body.set('envio_domicilio_provincia', this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
+    body.set('envio_domicilio_codigo_postal', this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
+    body.set('envio_telefono', this.DatosUsuario.datosEnvio.telefono);
+    body.set('envio_cod_transporte', this.DatosUsuario.datosEnvio.codigoTransporte);
 
-
-    body_entrega.set('domicilio_direccion', this.DatosUsuario.datosEnvio.domicilioEntrega.direccion);
-    body_entrega.set('domicilio_ciudad', this.DatosUsuario.datosEnvio.domicilioEntrega.ciudad);
-    body_entrega.set('domicilio_provincia', this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
-    body_entrega.set('domicilio_codigo_postal', this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
-    body_entrega.set('telefono', this.DatosUsuario.datosEnvio.telefono);
-    body_entrega.set('cod_transporte', this.DatosUsuario.datosEnvio.codigoTransporte);
-
-    this.data.log('guardardatos body cuenta:', body, body_entrega);
+    this.data.log('guardardatos body cuenta:', body);
 
     this.procesando_info_ok = '';
     this.procesando_info_entrega_ok = '';
@@ -476,38 +530,30 @@ export class CuentaComponent implements OnInit {
     this.auth.post('cliente/actualizar', body)
     .then($response => {
       this.data.log('updatecliente response cuenta:', $response);
+
       this.procesando_info = false;
       this.procesando_info_error = '';
-      this.procesando_info_ok = $response.body.response;
+      this.procesando_info_ok = $response.body.response_datos;
+
+      this.procesando_info_entrega = false;
+      this.procesando_info_entrega_error = '';
+      this.procesando_info_entrega_ok = $response.body.response_envio;
     })
     .catch(($error) => {
       this.data.log('updatecliente error cuenta:', $error);
+
       this.procesando_info = false;
       this.procesando_info_error = '';
+
+      this.procesando_info_entrega = false;
+      this.procesando_info_entrega_error = '';
+
       try {
-        Object.values($error.error.response).forEach(element => {
+        Object.values($error.error.response_datos).forEach(element => {
           this.procesando_info_error += element + ' ';
         });
       } catch ($throw) {
         this.data.log('updatecliente error cuenta:', $throw);
-      }
-    });
-    this.auth.post('cliente/envio/actualizar_datos', body_entrega)
-    .then($response => {
-      this.data.log('updatedatosenvio response cuenta:', $response);
-      this.procesando_info_entrega = false;
-      this.procesando_info_entrega_error = '';
-      this.procesando_info_entrega_ok = $response.body.response;
-    })
-    .catch(($error) => {
-      this.procesando_info_entrega = false;
-      this.procesando_info_entrega_error = '';
-      try {
-        Object.values($error.response).forEach(element => {
-          this.procesando_info_entrega_error += element + ' ';
-        });
-      } catch ($throw) {
-        this.data.log('updatedatosenvio error cuenta:', $throw);
       }
     });
   }
