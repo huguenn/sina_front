@@ -435,23 +435,29 @@ export class CuentaComponent implements OnInit {
   }
   newMessage(msg) {
     if (this.loginStatus === true) {
-      const body = new URLSearchParams();
-      body.set('id_producto', msg.id);
-      body.set('cantidad', msg.cantidad);
-      this.auth.post('carrito/agregar_item', body)
-      .then($response => {
-        this.data.log('response carritoagregaritem cuenta', $response);
-        
-        const response = this.data.addMessage(msg);
-        if (response.value) {
-          this._success.next(response.text);
+      if (msg.cantidad) {
+        if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
+          const body = new URLSearchParams();
+          body.set('id_producto', msg.id);
+          body.set('cantidad', msg.cantidad);
+          this.auth.post('carrito/agregar_item', body)
+          .then($response => {
+            this.data.log('response carritoagregaritem cuenta', $response);
+            
+            const response = this.data.addMessage(msg);
+            if (response.value) {
+              this._success.next(response.text);
+            }
+          })
+          .catch($error => {
+            this.data.log('error carritoagregaritem cuenta', $error);
+            this._success.next(`Ya se encuentra en el Carrito!`);
+            msg.comprado = true;
+          });
+        } else {
+          msg['incompleto'] = true;
         }
-      })
-      .catch($error => {
-        this.data.log('error carritoagregaritem cuenta', $error);
-        this._success.next(`Ya se encuentra en el Carrito!`);
-        msg.comprado = true;
-      });
+      }
     }else {
       this.data.toggleLoginModal();
     }

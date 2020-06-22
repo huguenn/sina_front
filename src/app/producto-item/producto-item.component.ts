@@ -55,21 +55,27 @@ export class ProductoItemComponent implements OnInit {
   newMessage(msg) {
     const precio = msg.precio;
     if (this.sesion === true) {
-      const body = new URLSearchParams();
-      body.set('id_producto', msg.id);
-      body.set('cantidad', msg.cantidad);
-      this.auth.post('carrito/agregar_item', body)
-      .then($response => {
-        this.data.log('response carritoagregaritem producto-item', $response);
-        
-        const response = this.data.addMessage(msg);
-        if (response.value) {
-          this.mensaje.next(response.text);
+      if (msg.cantidad) {
+        if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
+          const body = new URLSearchParams();
+          body.set('id_producto', msg.id);
+          body.set('cantidad', msg.cantidad);
+          this.auth.post('carrito/agregar_item', body)
+          .then($response => {
+            this.data.log('response carritoagregaritem producto-item', $response);
+            
+            const response = this.data.addMessage(msg);
+            if (response.value) {
+              this.mensaje.next(response.text);
+            }
+          })
+          .catch($error => {
+            this.data.log('error carritoagregaritem producto-item', $error);
+          });
+        } else {
+          msg['incompleto'] = true;
         }
-      })
-      .catch($error => {
-        this.data.log('error carritoagregaritem producto-item', $error);
-      });
+      }
     }else {
       this.data.toggleLoginModal();
     }

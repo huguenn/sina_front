@@ -39,4 +39,12 @@ export class GoogleAnalyticsService {
 
     ga('ecommerce:send');
   }
+
+  public nuevaPageView (url) {
+
+    ga('set', 'page', url);
+
+    ga('send', 'pageview')
+
+  }
 }

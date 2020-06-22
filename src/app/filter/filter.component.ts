@@ -328,7 +328,7 @@ export class FilterComponent implements OnInit {
   newMessage(msg) {
     if (this.loginStatus === true) {
       if (msg.cantidad) {
-        if (msg.cantidad % msg.indice === 0 &&  msg.cantidad > msg.minimo) {
+        if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
           msg.comprado = true;
           this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.texto1, msg.precio, msg.precio, msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
           this._success.next(`Agregado al Carrito!`);

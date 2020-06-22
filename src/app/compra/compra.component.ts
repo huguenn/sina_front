@@ -603,8 +603,10 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.carritoLoading = true;
       this.carrito.lista = this.data.lista;
       this.updateValue();
-      this.data.rutaActual = '/compra/carrito';
-      this.location.go('/compra/carrito');
+      if (this.data.rutaActual != '/compra/finalizada') {
+        this.data.rutaActual = '/compra/carrito';
+        this.location.go('/compra/carrito');
+      }
       this.carritoLoading = false;
     }
   }
