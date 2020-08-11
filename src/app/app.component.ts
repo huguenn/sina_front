@@ -11,6 +11,13 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Rx';
 import { GoogleAnalyticsService } from './google-analytics.service';
 
+export class Link {
+  activo: boolean;
+  url:    string;
+  texto:  string;
+  urlImg?: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -33,6 +40,8 @@ export class AppComponent implements OnInit {
   @ViewChild('input_check_contrasena') inputCheckContrasena: ElementRef;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   inputSub: Subscription;
+
+  public SocialList: Link[] = [];
 
   public focusingPassword: boolean;
 
@@ -607,6 +616,13 @@ export class AppComponent implements OnInit {
       configuracion => {
         this.config = configuracion;
         this.find_index();
+
+        this.SocialList[0] = {activo: this.config.stickySocialTelActivo, texto: this.config.stickySocialTelTexto, url: this.config.stickySocialTelUrl, urlImg: '/assets/images/header/phone.png'};
+        this.SocialList[1] = {activo: this.config.stickySocialWhatsappActivo, texto: this.config.stickySocialWhatsappTexto, url: this.config.stickySocialWhatsappUrl, urlImg: '/assets/images/header/whatsapp.png'};
+        this.SocialList[2] = {activo: this.config.stickySocialFacebookActivo, texto: this.config.stickySocialFacebookTexto, url: this.config.stickySocialFacebookUrl, urlImg: '/assets/images/iconos/facebook.png'};
+        this.SocialList[3] = {activo: this.config.stickySocialInstagramActivo, texto: this.config.stickySocialInstagramTexto, url: this.config.stickySocialInstagramUrl, urlImg: '/assets/images/iconos/instagram.png'};
+        this.SocialList[4] = {activo: this.config.stickySocialTwitterActivo, texto: this.config.stickySocialTwitterTexto, url: this.config.stickySocialTwitterUrl, urlImg: '/assets/images/iconos/twitter.png'};
+        this.SocialList[5] = {activo: this.config.stickySocialYoutubeActivo, texto: this.config.stickySocialYoutubeTexto, url: this.config.stickySocialYoutubeUrl, urlImg: '/assets/images/iconos/youtube.png'};
       }
     );
 
@@ -664,6 +680,24 @@ export class AppComponent implements OnInit {
           bannerNovedadesImagen: $response.response.bannerNovedadesImagen,
           bannerCampaniasTitulo: $response.response.bannerCampaniasTitulo,
           bannerCampaniasImagen: $response.response.bannerCampaniasImagen,
+          stickySocialTelActivo: $response.response.stickySocialTelActivo === '1' ? true : false,
+          stickySocialTelTexto: $response.response.stickySocialTelTexto,
+          stickySocialTelUrl: $response.response.stickySocialTelUrl,
+          stickySocialWhatsappActivo: $response.response.stickySocialWhatsappActivo === '1' ? true : false,
+          stickySocialWhatsappTexto: $response.response.stickySocialWhatsappTexto,
+          stickySocialWhatsappUrl: $response.response.stickySocialWhatsappUrl,
+          stickySocialFacebookActivo: $response.response.stickySocialFacebookActivo === '1' ? true : false,
+          stickySocialFacebookTexto: $response.response.stickySocialFacebookTexto,
+          stickySocialFacebookUrl: $response.response.stickySocialFacebookUrl,
+          stickySocialInstagramActivo: $response.response.stickySocialInstagramActivo === '1' ? true : false,
+          stickySocialInstagramTexto: $response.response.stickySocialInstagramTexto,
+          stickySocialInstagramUrl: $response.response.stickySocialInstagramUrl,
+          stickySocialTwitterActivo: $response.response.stickySocialTwitterActivo === '1' ? true : false,
+          stickySocialTwitterTexto: $response.response.stickySocialTwitterTexto,
+          stickySocialTwitterUrl: $response.response.stickySocialTwitterUrl,
+          stickySocialYoutubeActivo: $response.response.stickySocialYoutubeActivo === '1' ? true : false,
+          stickySocialYoutubeTexto: $response.response.stickySocialYoutubeTexto,
+          stickySocialYoutubeUrl: $response.response.stickySocialYoutubeUrl,
         }
         this.data.updateConfiguracion(c);
       }

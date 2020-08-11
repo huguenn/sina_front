@@ -85,10 +85,34 @@ export class Configuracion {
   ventanaEmergenteTitulo: string;
   ventanaEmergenteImagen: string;
   ventanaEmergenteActivo: boolean;
+  stickySocialTelActivo: boolean;
+  stickySocialTelTexto: string;
+  stickySocialTelUrl: string;
+  stickySocialWhatsappActivo: boolean;
+  stickySocialWhatsappTexto: string;
+  stickySocialWhatsappUrl: string;
+  stickySocialFacebookActivo: boolean;
+  stickySocialFacebookTexto: string;
+  stickySocialFacebookUrl: string;
+  stickySocialInstagramActivo: boolean;
+  stickySocialInstagramTexto: string;
+  stickySocialInstagramUrl: string;
+  stickySocialTwitterActivo: boolean;
+  stickySocialTwitterTexto: string;
+  stickySocialTwitterUrl: string;
+  stickySocialYoutubeActivo: boolean;
+  stickySocialYoutubeTexto: string;
+  stickySocialYoutubeUrl: string;
   constructor(montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
     stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string,
     stickyHeaderDesde: Date, stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean,
-    ventanaEmergenteTitulo: string, ventanaEmergenteImagen: string, ventanaEmergenteActivo: boolean) {
+    ventanaEmergenteTitulo: string, ventanaEmergenteImagen: string, ventanaEmergenteActivo: boolean,
+    stickySocialTelActivo: boolean, stickySocialTelTexto: string, stickySocialTelUrl: string,
+    stickySocialWhatsappActivo: boolean, stickySocialWhatsappTexto: string, stickySocialWhatsappUrl: string,
+    stickySocialFacebookActivo: boolean, stickySocialFacebookTexto: string, stickySocialFacebookUrl: string,
+    stickySocialInstagramActivo: boolean, stickySocialInstagramTexto: string, stickySocialInstagramUrl: string,
+    stickySocialTwitterActivo: boolean, stickySocialTwitterTexto: string, stickySocialTwitterUrl: string,
+    stickySocialYoutubeActivo: boolean, stickySocialYoutubeTexto: string, stickySocialYoutubeUrl: string) {
       this.montoMinimo = montoMinimo;
       this.montoEnvio = montoEnvio;
       this.montoEnvioGratis = montoEnvioGratis;
@@ -103,6 +127,24 @@ export class Configuracion {
       this.ventanaEmergenteTitulo = ventanaEmergenteTitulo;
       this.ventanaEmergenteImagen = ventanaEmergenteImagen;
       this.ventanaEmergenteActivo = ventanaEmergenteActivo;
+      this.stickySocialTelActivo = stickySocialTelActivo;
+      this.stickySocialTelTexto = stickySocialTelTexto;
+      this.stickySocialTelUrl = stickySocialTelUrl;
+      this.stickySocialWhatsappActivo = stickySocialWhatsappActivo;
+      this.stickySocialWhatsappTexto = stickySocialWhatsappTexto;
+      this.stickySocialWhatsappUrl = stickySocialWhatsappUrl;
+      this.stickySocialFacebookActivo = stickySocialFacebookActivo;
+      this.stickySocialFacebookTexto = stickySocialFacebookTexto;
+      this.stickySocialFacebookUrl = stickySocialFacebookUrl;
+      this.stickySocialInstagramActivo = stickySocialInstagramActivo;
+      this.stickySocialInstagramTexto = stickySocialInstagramTexto;
+      this.stickySocialInstagramUrl = stickySocialInstagramUrl;
+      this.stickySocialTwitterActivo = stickySocialTwitterActivo;
+      this.stickySocialTwitterTexto = stickySocialTwitterTexto;
+      this.stickySocialTwitterUrl = stickySocialTwitterUrl;
+      this.stickySocialYoutubeActivo = stickySocialYoutubeActivo;
+      this.stickySocialYoutubeTexto = stickySocialYoutubeTexto;
+      this.stickySocialYoutubeUrl = stickySocialYoutubeUrl;
   }
 }
 

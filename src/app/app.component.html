@@ -3,6 +3,18 @@
         <app-sidebar></app-sidebar>
     </ng-sidebar>
     <div ng-sidebar-content class="ventana" #ventana (click)="eventoclick($event)">
+        <div *ngIf="actualRoute.indexOf('compra') === -1" class="sticky_socials_container">
+            <ul class="sticky_socials">
+                <ng-container *ngFor="let item of SocialList">
+                    <li *ngIf=item.activo>
+                        <a href="{{item.url}}" target="_blank">
+                            <span class="text_span"><p>{{item.texto}}</p></span>
+                        </a>
+                        <span class="img_span"><img [ngClass]="'lazyload'" [attr.data-src]="item.urlImg" title="{{item.texto}}"></span>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
         <!-- <div class="mensaje" [ngClass]="{'mensaje__activo': sticky.activo}"> DEPRECATED
             <div class="container">
                 <p>{{sticky.mensaje}}</p>
@@ -147,10 +159,10 @@
                                 </ng-select>
                                 <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
-                                <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido">
-                                <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
                                 <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
+                                <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido">
+                                <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
                             </div>
                         </div>
                         <div class="row stepsContent" *ngIf="_step === 2">

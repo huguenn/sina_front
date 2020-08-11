@@ -54,11 +54,17 @@ export class AutenticacionService {
   }
 
   getPath($path): string {
+    if($path.indexOf('https://') !== -1) {
+      return $path;
+    }
+    if($path.indexOf('http://') !== -1) {
+      return $path;
+    }
+    
     if (environment.production) {
       return 'https://sinaweb.appspot.com/' + $path;
     }
     return 'http://127.0.0.1:8080/' + $path;
-
   }
 
   getParams($params) {
