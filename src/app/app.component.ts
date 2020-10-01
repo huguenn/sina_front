@@ -44,6 +44,7 @@ export class AppComponent implements OnInit {
   public SocialList: Link[] = [];
 
   public focusingPassword: boolean;
+  public focusCampoRegistro: boolean = false;
 
   public recuperarClave: boolean;
   public validationCheckEmail: boolean = false;
@@ -122,7 +123,7 @@ export class AppComponent implements OnInit {
 
   public seleccionar($herramienta, $codigo) {
     const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
-    this.data.log('seleccionar items app:', this.cat_selected, this.domicilio_provincia, item);
+    // this.data.log('seleccionar items app:', this.cat_selected, this.domicilio_provincia, item);
     if (item) {
       $herramienta.select(item);
     // this.data.log('seleccionar items app:', cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
@@ -796,7 +797,9 @@ export class AppComponent implements OnInit {
 
   closeFull(event) {
     if (event.target.className === 'modal__container') {
-      this.closeModal();
+      if(!this.focusCampoRegistro) {
+        this.closeModal();
+      }
     }
   }
   closeFull2(event) {
@@ -1038,9 +1041,26 @@ export class AppComponent implements OnInit {
 
   passwordFocused() {
     this.focusingPassword = true;
+    setTimeout(() => {
+      this.focusCampoRegistro = true;
+    }, 500);
   }
   passwordBlured() {
     this.focusingPassword = false;
+    setTimeout(() => {
+      this.focusCampoRegistro = false;
+    }, 500);
+  }
+
+  campoRegistroFocused() {
+    setTimeout(() => {
+      this.focusCampoRegistro = true;
+    }, 500);
+  }
+  campoRegistroBlured() {
+    setTimeout(() => {
+      this.focusCampoRegistro = false;
+    }, 500);
   }
 
 }

@@ -86,9 +86,9 @@
 
                         <div *ngIf="_step === 1" class="row stepsContent" [ngClass]="{'focusingPassword': focusingPassword}">
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
-                                <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social">
-                                <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia">
-                                <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email">
+                                <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
                                 <ng-select #responsable style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
                                     [clearable]="true"
@@ -120,20 +120,20 @@
 
 
 
-                                <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit">
+                                <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 <span *ngIf="validationCUIT" style="color: red;">Solo usar números en el campo CUIT/DNI</span>
-                                <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono">
+                                <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
-                                <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular">
+                                <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
                             </div>
                             <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
                                 <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                    <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion">
-                                    <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero">
+                                    <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 </div>
-                                <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad">
-                                <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal">
+                                <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 <ng-select #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
                                     [clearable]="true"
                                     [items]="provincia"
@@ -147,20 +147,20 @@
                                 <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
                                 <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
                                 <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
-                                <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido">
+                                <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                 <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
                             </div>
                         </div>
                         <div class="row stepsContent" *ngIf="_step === 2">
                             <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 5px">
-                                    <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras">
+                                    <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion">
-                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero">
+                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                            <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad">
-                                            <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal">
+                                            <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                            <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
                                     <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
                                         placeholder="Provincia de entrega"
