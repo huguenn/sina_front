@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, AfterViewInit, HostListener, Input, ViewChild, ElementRef} from '@angular/core';
-import { SharedService, cliente } from '../shared.service';
+import { SharedService, cliente, Configuracion } from '../shared.service';
 import { Dato } from '../shared.service';
 import {  } from '@angular/core/src/metadata/lifecycle_hooks';
 import { PopoverModule, PopoverContent, Popover } from 'ngx-popover';
@@ -59,6 +59,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
   SearchFocus = '';
   SearchModel = '';
   resultados: any;
+  config: any;
   // user Data
   UserName: string;
   UserJob: string;
@@ -103,7 +104,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
     }
   }
   clickBusqueda(item) {
-    const ruta = '/articulo/' + (item.categoria ? item.categoria.nombre.split(' ').join('-') : '') + '/' + item['id'];
+    const ruta = '/articulo/' + (item.categorias ? item.categorias[0].nombre.split(' ').join('-') : '') + '/' + item['id'];
     this.router.navigate([ruta]);
     this.cerrarBusqueda();
 
@@ -186,10 +187,19 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
   ngOnInit() {
     // subscribing to router change
     this.router.events.subscribe(val => {
-      if (this.actualRoute !== val['url']) {
-        this.actualRoute = (val['url']);
+      if(val['url']) {
+        if (this.actualRoute !== val['url']) {
+          this.actualRoute = (val['url']);
+        }
       }
     });
+
+    // subscribing to config change
+    this.data.currentConfig.subscribe(
+      configuracion => {
+        this.config = configuracion;
+      }
+    );
   }
 
   ngAfterViewInit() {

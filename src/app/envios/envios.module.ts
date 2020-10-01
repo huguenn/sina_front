@@ -1,0 +1,19 @@
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { EnviosComponent } from './envios.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: EnviosComponent
+  }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forChild(routes),
+  ],
+  exports: [RouterModule],
+  declarations: [EnviosComponent]
+})
+export class EnviosModule { }

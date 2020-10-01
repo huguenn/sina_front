@@ -62,7 +62,7 @@ export class AutenticacionService {
     }
     
     if (environment.production) {
-      return 'https://sinaweb.appspot.com/' + $path;
+      return 'https://apisina.leren.com.ar/' + $path;
     }
     return 'http://127.0.0.1:8080/' + $path;
   }

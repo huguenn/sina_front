@@ -1,4 +1,14 @@
 <div class="top" [ngClass]="headerPosition">
+  <div *ngIf="headerPosition !== 'header--fixed'" class="mensaje" [ngClass]="{'mensaje__activo': config.stickyHeaderActivo}">
+    <div class="container" [ngClass]="{'mobileColumn' : !config.stickyHeaderMarquee}">
+        <div *ngIf="config.stickyHeaderMarquee" class="marquee">
+          <p>{{config.stickyHeaderTitulo}}</p>
+        </div>
+        <p *ngIf="!config.stickyHeaderMarquee">{{config.stickyHeaderTitulo}}</p>
+        <a class="actionButton" href={{config.stickyHeaderLink}}>{{config.stickyHeaderCta}}</a>
+        <i (click)="config.stickyHeaderActivo = false" class="fa fa-times-circle"></i>
+    </div>
+  </div>
   <div class="container">
     <nav class="navbar header__top" [ngClass]="SearchFocus">
         <div class="col-xs-2 col-md-2" style="max-width: 186px;">
@@ -133,6 +143,16 @@
   </div>
 </div>
 <div class="header" [ngClass]="headerPosition" *ngIf="data.rutaActual.indexOf('compra/envio') === -1">
+  <div *ngIf="headerPosition === 'header--fixed'" class="mensaje" [ngClass]="{'mensaje__activo': config.stickyHeaderActivo}">
+    <div class="container" [ngClass]="{'mobileColumn' : !config.stickyHeaderMarquee}">
+      <div *ngIf="config.stickyHeaderMarquee" class="marquee">
+        <p>{{config.stickyHeaderTitulo}}</p>
+      </div>
+      <p *ngIf="!config.stickyHeaderMarquee">{{config.stickyHeaderTitulo}}</p>
+        <a class="actionButton" href={{config.stickyHeaderLink}}>{{config.stickyHeaderCta}}</a>
+        <i (click)="config.stickyHeaderActivo = false" class="fa fa-times-circle"></i>
+    </div>
+  </div>
     <div class="container" [ngClass]="SideState">
       <nav class="navbar navbar-fixed" [ngClass]="SearchFocus">
           <div class="col-xs-2" style="display: flex; align-items: center;">

@@ -168,6 +168,117 @@
     z-index: 10;
     top: 0;
 }
+.mensaje {
+    background: #057aff;;
+    color: #fff;
+    max-height: 0px;
+    opacity: 0;
+    transition: 1s ease all;
+}
+.mensaje .container {
+    position: relative;
+    display: flex;
+    padding: 4px 16px;
+    align-items: center;
+    justify-content: center;
+}
+@media (max-width:540px) {
+    .mensaje .container {
+        justify-content: space-between;
+        /* flex-direction: column; */
+        word-break: break-all;
+        text-align: center;
+    }
+    .mensaje .mobileColumn {
+        flex-direction: column;
+    }
+}
+.mensaje p {
+    margin: 0px;
+    font-weight: bold;
+    font-size: 14px;
+}
+.mensaje a {
+    margin: 0px 10px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid #fff;
+    background: #fff;
+    color: #057aff;
+    font-size: 12px;
+}
+@media (max-width: 540px) {
+    .mensaje a {
+        padding: 2px 8px;
+    }
+    .mensaje p {
+        font-size: 12px;
+    }
+}
+.mensaje a:hover {
+    background: #fff;
+    color: #32e795;
+}
+.mensaje i {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+}
+@media (max-width: 540px) {
+    .mensaje i {
+        right: 10px;
+        margin-top: -4px;
+    }
+}
+.header--fixed .mensaje i {
+    color: #057aff;
+}
+.mensaje__activo {
+    max-height: 170px;
+    opacity: 1;
+}
+.marquee {
+    margin: 0px 0px;
+    overflow: hidden;
+    width: calc(100% - 100px);
+    white-space: nowrap;
+}
+.marquee p {
+    min-width: 100%;
+    display: inline-block;
+    animation: marquee 45s linear infinite;
+}
+  
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.header--fixed .mensaje {
+    background-color: white;
+}
+
+.header--fixed .mensaje .container {
+    padding: 3px 16px;
+    background-color: white;
+    color: #057aff;
+}
+
+.header--fixed .mensaje .container p {
+    font-weight: normal;
+}
+
+.header--fixed .mensaje .container .actionButton {
+    border: 1px solid #057aff;
+}
 
 /* navbar-fixed FIXED */
 .header--fixed .navbar-fixed ul > li{
@@ -193,11 +304,12 @@
     background-color: #00000087;
     position: absolute;
     width: 100%;
-    height: 100vh;
+    height: 0vh;
     z-index: -1;
     opacity: 0;
-    transition: 0.5s ease opacity;
-    display: none;
+    transition: opacity 0.3s, z-index 0.8s, height 0.8s;
+    transition-delay: 0.5s;
+    /* display: none; */
 }
 .header__filter * {
     font-family: Roboto;
@@ -205,16 +317,29 @@
 .header__filter--hover{
     opacity: 1;
     z-index: 2;
+    height: 100vh;
+    transition: opacity 0s, z-index 0s, height 0s;
+    transition-delay: 0s;
     display: block;
+}
+.header__filter--hover .container {
+    max-height: 65vh !important;
+    transition: max-height 0s, padding-bottom 0s !important;
+    transition-delay: 0s !important;
+    padding-bottom: 20px !important;
 }
 .header__filter .container{
     background-color: #ffffff;
     border-bottom-left-radius: 2em;
     border-bottom-right-radius: 2em;
     position: relative;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
     width: 100%;
-    max-height: 65vh;
+    max-height: 0vh;
+    overflow: hidden;
+    z-index: -1;
+    transition: max-height 0s, padding-bottom 0s;
+    transition-delay: 0.5s;
 }
 .header__filter img{
     position: absolute;

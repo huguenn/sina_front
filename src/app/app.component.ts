@@ -598,11 +598,13 @@ export class AppComponent implements OnInit {
     );
     // subscribing to router change
     this.router.events.subscribe(val => {
-      if (this.actualRoute !== val['url']) {
-        this.actualRoute = (val['url']);
-        this.data.rutaActual = (val['url']);
-        if(this.config) {
-          this.find_index();
+      if(val['url']) {
+        if (this.actualRoute !== val['url']) {
+          this.actualRoute = (val['url']);
+          this.data.rutaActual = (val['url']);
+          if(this.config) {
+            this.find_index();
+          }
         }
       }
       if (!(val instanceof NavigationEnd)) {
@@ -635,6 +637,7 @@ export class AppComponent implements OnInit {
         const fechaDesde = $response.response.stickyHeaderDesde ? new Date($response.response.stickyHeaderDesde.date) : ahora;
         const fechaHasta = $response.response.stickyHeaderHasta ? new Date($response.response.stickyHeaderHasta.date) : ahora;
         const permanente = $response.response.stickyHeaderPermanente === '1' ? true : false;
+        const marquee = $response.response.stickyHeaderMarquee === '1' ? true : false;
         const c = {
           montoMinimo: Number.parseInt($response.response.montoMinimo, 10),
           montoEnvio: Number.parseInt($response.response.montoEnvio, 10),
@@ -647,6 +650,7 @@ export class AppComponent implements OnInit {
           stickyHeaderHasta: fechaHasta,
           stickyHeaderActivo: permanente ? ($response.response.stickyHeaderActivo === '1' ? true : false) : ($response.response.stickyHeaderActivo === '1'  && ahora > fechaDesde && ahora < fechaHasta ? true : false),
           stickyHeaderPermanente: permanente,
+          stickyHeaderMarquee: marquee,
           ventanaEmergenteTitulo: $response.response.ventanaEmergenteTitulo,
           ventanaEmergenteImagen: $response.response.ventanaEmergenteImagen,
           ventanaEmergenteActivo: $response.response.ventanaEmergenteActivo === '1' ? true : false,
@@ -708,9 +712,9 @@ export class AppComponent implements OnInit {
     });
 
     // binding interval
-    // setInterval(() => {
-    //   this.menuStatus = this.el.nativeElement.parentElement.scrollTop;
-    // }, 100);
+    setInterval(() => {
+      this.menuStatus = this.el.nativeElement.parentElement.scrollTop;
+    }, 400);
 
     // reading user data
     if (this.auth.localGet('login')) {

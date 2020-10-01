@@ -8,7 +8,7 @@ import { Datos, DatosTransaccion } from '../data';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedService, cliente } from '../shared.service';
 import { AutenticacionService } from '../autenticacion.service';
-import * as XLSX from 'xlsx';
+import { utils as XLSXutils, writeFile as XLSXwrite, WorkSheet, WorkBook  } from 'xlsx';
 import { NgSelectComponent } from '@ng-select/ng-select';
 
 
@@ -490,10 +490,10 @@ export class CuentaComponent implements OnInit {
           );
         });
 
-        const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print);
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
-        XLSX.writeFile(wb, 'Listado de productos.xlsx');
+        const ws: WorkSheet = XLSXutils.aoa_to_sheet(print);
+        const wb: WorkBook = XLSXutils.book_new();
+        XLSXutils.book_append_sheet(wb, ws, 'Hoja 1');
+        XLSXwrite(wb, 'Listado de productos.xlsx');
       }
       (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
 

@@ -34,6 +34,8 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
+`ng build -prod -aot -sm -vc -cc -ec --buildOptimizer -nc -sri --statsJson`
+
 ## Running prod build locally
 
 Run `lite-server --baseDir="dist"`. If needed try installing lite-server globally (`npm install lite-server -g`).

@@ -1,5 +1,5 @@
 <div class="container">
-  <h1 class="title">Productos de limpieza por mayor, fabrica de productos de limpieza</h1>
+  <h1 class="title">{{(categoriaHijo || categoriaPadre) ? (categoriaHijo ? (categoriaHijo + ', ' + categoriaHijo + ' al por mayor') : (categoriaPadre + ', ' + categoriaPadre + ' al por mayor')) : 'Productos de limpieza por mayor, fabrica de productos de limpieza'}}</h1>
 </div>
 <div class="row message">
   <div class="container">
@@ -122,18 +122,21 @@
     <div class="col-md-9 col-xs-12" *ngIf="mensaje" style="
       display: flex;
       align-items: center;
-      flex-direction: revert;
+      flex-direction: column;
       text-align: center;
       height: 300px;
     ">
       <p
       style="
-        margin: auto;
+        margin-top: 100px;
+        margin-left: auto;
+        margin-right: auto;
         font-size: 3em;
         color: #057aff;
         opacity: 0.6;
       "
       >{{mensaje}}</p>
+      <img id="loadCat" style="margin-left: auto; margin-right: auto;" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
     </div>
   </div>
 </div>

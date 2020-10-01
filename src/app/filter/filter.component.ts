@@ -82,14 +82,18 @@ export class FilterComponent implements OnInit {
   ngOnDestroy() {
   }
   updateMenu(id, id2, padre) {
+    if(!id && !id2 && !padre) {
+      this.data.updatePageTitle();
+      return;
+    }
     this.ordenamiento = '';
-    this.categoriaPadre = (padre) ? padre.split('-').join(' ') : '';
+    this.categoriaPadre = padre ? padre.split('-').join(' ') : '';
     this.categoriaHijo = id2 ? id2.split('-').join(' ') : '';
     if (!id2) {
       this.categoriaHijo = (window.location.href.indexOf('ofertas') !== -1) ? 'OFERTAS' : 'NOVEDADES';
     } else if (id) {
-      this.data.updatePageTitle(this.categoriaPadre + (this.categoriaPadre ? ', ' : '') + this.categoriaHijo +
-        ' | Sina', 'Mayorista y distribuidora de ' + this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre + ' con entrega a todo el país, hacé tu pedido online!');
+      this.data.updatePageTitle((this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre) + ', ' + (this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre) +
+        ' al por mayor | Sina.com.ar', 'Encontrá la mayor variedad de ' + (this.categoriaHijo ? this.categoriaHijo : this.categoriaPadre) + ' al por mayor y al mejor precio en Sina.com.ar');
 
       let $categoria, $subcategoria;
       if (this.categoriaHijo && this.categoriaPadre) {
@@ -148,7 +152,6 @@ export class FilterComponent implements OnInit {
         }
       }
     });
-    // subscribing to data on loginStatus
     this.route.params.subscribe(params => {
       if (this.menu.LinkList.length) {
         this.LinkList = this.menu.LinkList;
@@ -160,6 +163,7 @@ export class FilterComponent implements OnInit {
         });
       }
     });
+    // subscribing to data on loginStatus
     this.data.currentLogin.subscribe(
       status => {
         this.loginStatus = status;

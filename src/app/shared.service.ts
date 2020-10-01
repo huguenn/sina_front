@@ -82,6 +82,7 @@ export class Configuracion {
   stickyHeaderHasta:      Date;
   stickyHeaderActivo:     boolean;
   stickyHeaderPermanente: boolean;
+  stickyHeaderMarquee:    boolean;
   ventanaEmergenteTitulo: string;
   ventanaEmergenteImagen: string;
   ventanaEmergenteActivo: boolean;
@@ -104,8 +105,8 @@ export class Configuracion {
   stickySocialYoutubeTexto: string;
   stickySocialYoutubeUrl: string;
   constructor(montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
-    stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string,
-    stickyHeaderDesde: Date, stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean,
+    stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string, stickyHeaderDesde: Date, 
+    stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean, stickyHeaderMarquee: boolean,
     ventanaEmergenteTitulo: string, ventanaEmergenteImagen: string, ventanaEmergenteActivo: boolean,
     stickySocialTelActivo: boolean, stickySocialTelTexto: string, stickySocialTelUrl: string,
     stickySocialWhatsappActivo: boolean, stickySocialWhatsappTexto: string, stickySocialWhatsappUrl: string,
@@ -124,6 +125,7 @@ export class Configuracion {
       this.stickyHeaderHasta = stickyHeaderHasta;
       this.stickyHeaderActivo = stickyHeaderActivo;
       this.stickyHeaderPermanente = stickyHeaderPermanente;
+      this.stickyHeaderMarquee = stickyHeaderMarquee;
       this.ventanaEmergenteTitulo = ventanaEmergenteTitulo;
       this.ventanaEmergenteImagen = ventanaEmergenteImagen;
       this.ventanaEmergenteActivo = ventanaEmergenteActivo;
@@ -314,7 +316,7 @@ export class SharedService {
         if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
           if (!this.lista.some(articulo_carrito => articulo_carrito.id === msg.id)) {
             msg.comprado = true;
-            this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
+            this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias ? msg.categorias[0].nombre : '');
             return {value: true, text: `Agregado al Carrito!`};
           } else {
             msg.comprado = true;

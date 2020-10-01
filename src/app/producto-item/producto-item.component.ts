@@ -19,8 +19,9 @@ export class ProductoItemComponent implements OnInit {
     return $entrada ? $entrada.replace(new RegExp('/'), '~') : $entrada;
   }
   ngOnInit() {
-    const padre = this.item.categoria ? (this.item.categoria.padre ? this.item.categoria.padre.nombre.split(' ').join('-') : 'Categoria') : 'Categoria';
-    const hijo = this.item.categoria ? this.item.categoria.nombre.split(' ').join('-') : 'Subcategoria';
+    var categoria = this.item.categorias ? this.item.categorias[0] : null;
+    const padre = categoria ? (categoria.padre ? categoria.padre.nombre.split(' ').join('-') : 'Categoria') : 'Categoria';
+    const hijo = categoria ? categoria.nombre.split(' ').join('-') : 'Subcategoria';
     this.item.fullLink = '/' + this.replaceHash(padre) + '/' + this.replaceHash(hijo) + '/' + this.replaceHash(this.item.titulo) + '/' + this.replaceHash(this.item.id);
     this.item.comprado    = false;
     this.item.cantidad    = this.item.cantSugerida ? this.item.cantSugerida : 1;

@@ -30,17 +30,13 @@ export class ProductoComponent implements OnInit {
     constructor(private data: SharedService, private http: HttpClient, private route: ActivatedRoute, private auth: AutenticacionService) {}
   respuesta = ($response)  => {
       this.relacionados = $response.response.productosRelacionados;
-      this.relacionados.forEach(item => {
-        item['categoria'] = {
-          nombre: 'Producto relacionado'
-        };
-      });
       this.producto = $response.response;
+      var categoria = this.producto['categorias'][0];
       this.full_link = 'http://www.sina.com.ar/producto/'
-        + (this.producto['categoria'] ? this.producto['categoria'].nombre.split(' ').join('-') : '') + '/' + this.producto['id'];
+        + (categoria ? categoria.nombre.split(' ').join('-') : '') + '/' + this.producto['id'];
       this.producto.cantidad = this.producto['cantSugerida'] ? this.producto['cantSugerida'] : 1;
       this.producto.comprado = false;
-      this.fullPath = ['Limpieza', this.producto['categoria'] ? this.producto['categoria'].padre.nombre : '', this.producto['categoria'] ? this.producto['categoria'].nombre : ''];
+      this.fullPath = ['Limpieza', categoria ? categoria.padre.nombre : '', categoria ? categoria.nombre : ''];
       this.galleryImages = [
         {
         small: this.producto['urlImagen'],
@@ -73,7 +69,7 @@ export class ProductoComponent implements OnInit {
           this.route.params.subscribe(params => {
             const id = (+params['id2']);
             const id2 = (params['id']);
-            this.data.updatePageTitle(id2, 'Comprá ' + id2 + ' con entrega a todo el país, hacé tu pedido online!');
+            this.data.updatePageTitle(id2 + ', ' + id2 + ' al por mayor | Sina.com.ar', 'Encontrá la mayor variedad de ' + id2 + ' al por mayor y al mejor precio en Sina.com.ar');
             const $public = this.loginStatus ? '' : 'public/';
             this.auth.get($public + 'producto/detalles/' + id)
             .then(this.respuesta)

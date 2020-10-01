@@ -31,16 +31,16 @@ import { BusquedaCuentaPipe } from './app.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 // firebase
-import { environment } from '../environments/environment';
+// import { environment } from '../environments/environment';
 import { ProductoItemComponent } from './producto-item/producto-item.component';
 import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
 import { ShareButtonsModule } from 'ngx-sharebuttons';
-import { ComoComprarComponent } from './como-comprar/como-comprar.component';
-import { EnviosComponent } from './envios/envios.component';
-import { NosotrosComponent } from './nosotros/nosotros.component';
-import { ContactoComponent } from './contacto/contacto.component';
+// import { ComoComprarComponent } from './como-comprar/como-comprar.component';
+// import { EnviosComponent } from './envios/envios.component';
+// import { NosotrosComponent } from './nosotros/nosotros.component';
+// import { ContactoComponent } from './contacto/contacto.component';
 import { RecuperarPassComponent } from './recuperar-pass/recuperar-pass.component';
-import { PreguntasFrecuentesComponent } from './preguntas-frecuentes/preguntas-frecuentes.component';
+// import { PreguntasFrecuentesComponent } from './preguntas-frecuentes/preguntas-frecuentes.component';
 import { ConfirmarDatosComponent } from './confirmar-datos/confirmar-datos.component';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { CategoriasComponent } from './categorias/categorias.component';
@@ -72,23 +72,28 @@ const appRoutes: Routes = [
   },
   {
     path: 'preguntas-frecuentes',
-    component: PreguntasFrecuentesComponent
+    // component: PreguntasFrecuentesComponent
+    loadChildren: './preguntas-frecuentes/preguntas-frecuentes.module#PreguntasFrecuentesModule',
   },
   {
     path: 'como-comprar',
-    component: ComoComprarComponent
+    // component: ComoComprarComponent
+    loadChildren: './como-comprar/como-comprar.module#ComoComprarModule',
   },
   {
     path: 'contacto',
-    component: ContactoComponent
+    // component: ContactoComponent
+    loadChildren: './contacto/contacto.module#ContactoModule',
   },
   {
     path: 'envios',
-    component: EnviosComponent
+    // component: EnviosComponent
+    loadChildren: './envios/envios.module#EnviosModule',
   },
   {
     path: 'nosotros',
-    component: NosotrosComponent
+    // component: NosotrosComponent
+    loadChildren: './nosotros/nosotros.module#NosotrosModule',
   },
   {
     path: 'busqueda/:id',
@@ -198,12 +203,12 @@ const appRoutes: Routes = [
     SidebarComponent,
     ProductoItemComponent,
     ConfirmacionComponent,
-    ComoComprarComponent,
-    EnviosComponent,
-    NosotrosComponent,
-    ContactoComponent,
+    // ComoComprarComponent,
+    // EnviosComponent,
+    // NosotrosComponent,
+    // ContactoComponent,
     RecuperarPassComponent,
-    PreguntasFrecuentesComponent,
+    // PreguntasFrecuentesComponent,
     ConfirmarDatosComponent,
     LoadingComponent,
     CategoriasComponent,

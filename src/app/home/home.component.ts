@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators/map';
 import { AutenticacionService } from '../autenticacion.service';
 // componente del producto
 import { ProductoItemComponent } from '../producto-item/producto-item.component';
-import * as XLSX from 'xlsx';
+import { utils as XLSXutils, writeFile as XLSXwrite, WorkSheet, WorkBook  } from 'xlsx';
 
 @Component({
   selector: 'app-home',
@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
   constructor(public data: SharedService, private http: HttpClient, private auth: AutenticacionService) {
     setInterval(() => {
       this.carousel__item = this.carousel__item < this.carousel__max - 1 ? this.carousel__item + 1 : 0;
-    }, 4000);
+    }, 5000);
     this.data.updatePageTitle();
   }
   mapOrder (array, order, key) {
@@ -168,6 +168,7 @@ export class HomeComponent implements OnInit {
         if(this.config.bannerSeisActivo) {
           this.imageSources.push({imagen: this.config.bannerSeisImagen, link: this.config.bannerSeisLink});
         }
+        this.carousel__max = this.imageSources.length;
       }
     );
 
@@ -210,10 +211,10 @@ export class HomeComponent implements OnInit {
             );
           });
 
-          const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(print);
-          const wb: XLSX.WorkBook = XLSX.utils.book_new();
-          XLSX.utils.book_append_sheet(wb, ws, 'Hoja 1');
-          XLSX.writeFile(wb, 'Listado de productos.xlsx');
+          const ws: WorkSheet = XLSXutils.aoa_to_sheet(print);
+          const wb: WorkBook = XLSXutils.book_new();
+          XLSXutils.book_append_sheet(wb, ws, 'Hoja 1');
+          XLSXwrite(wb, 'Listado de productos.xlsx');
         }
 
         (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';

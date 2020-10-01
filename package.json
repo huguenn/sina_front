@@ -8,7 +8,8 @@
     "build": "ng build --prod --base-href=/",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "analyze": "webpack-bundle-analyzer dist/stats.json"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,8 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^10.0.1",
+    "@angular-devkit/build-angular": "^0.1001.2",
     "@angular/cli": "^1.5.1",
     "@angular/compiler-cli": "^5.2.11",
     "@angular/language-service": "^5.2.11",
@@ -59,8 +62,10 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "lite-server": "^2.5.4",
     "protractor": "~5.1.2",
+    "source-map-explorer": "^2.5.0",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
-    "typescript": "^2.6.2"
+    "typescript": "^2.6.2",
+    "webpack-bundle-analyzer": "^3.9.0"
   }
 }

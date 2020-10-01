@@ -15,20 +15,6 @@
                 </ng-container>
             </ul>
         </div>
-        <!-- <div class="mensaje" [ngClass]="{'mensaje__activo': sticky.activo}"> DEPRECATED
-            <div class="container">
-                <p>{{sticky.mensaje}}</p>
-                <a class="actionButton" href={{sticky.link}}>{{sticky.call_to_action}}</a>
-                <i (click)="sticky.activo = false" class="fa fa-times-circle"></i>
-            </div>
-        </div> -->
-        <div class="mensaje" [ngClass]="{'mensaje__activo': config.stickyHeaderActivo}">
-            <div class="container">
-                <p>{{config.stickyHeaderTitulo}}</p>
-                <a class="actionButton" href={{config.stickyHeaderLink}}>{{config.stickyHeaderCta}}</a>
-                <i (click)="config.stickyHeaderActivo = false" class="fa fa-times-circle"></i>
-            </div>
-        </div>
         <app-header
             [greetMessage]="childmessage"
             [headerStatus]="menuStatus"
@@ -46,7 +32,7 @@
               <h4 class="modal-title desktop">{{registrarStatus ? "Registrando nuevo usuario" : "Bienvenido / Bienvenida"}}</h4>
               <h4 class="modal-title movil">{{registrarStatus ? "Registro en 3 pasos" : "Bienvenido / Bienvenida"}}</h4>
               <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
-              <span aria-hidden="true">×</span>
+              <span style="color: red;" aria-hidden="true">X</span>
               </button>
               </div>
               <div class="modal-body">
@@ -248,7 +234,7 @@
                 <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <h4 class="modal-title">Tiene un carrito pendiente</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "carritoCancelModal()">
-                <span aria-hidden="true">×</span>
+                <span style="color: red;" aria-hidden="true">X</span>
                 </button>
                 </div>
                 <div class="modal-body">
@@ -315,7 +301,7 @@
                         <div class="modal-header" style="padding: 0;">
                             <img [src]="config.ventanaEmergenteImagen || ''" alt="Sina" style="position: relative; bottom: 0px; left: 0px; width: 100%;">
                             <button aria-label="Close" class="close" type="button" (click)= "closeEmergente2()">
-                            <span aria-hidden="true">×</span>
+                            <span style="color: red;" aria-hidden="true">X</span>
                         </button>
                         </div>
                     </div>
@@ -331,7 +317,7 @@
                 <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <h4 class="modal-title">Cuentas disponibles para representación</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "representarCancel()">
-                <span aria-hidden="true">×</span>
+                <span style="color: red;" aria-hidden="true">X</span>
                 </button>
                 </div>
                 <div class="modal-body">
@@ -399,13 +385,14 @@
                 <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <h4 class="modal-title">Migrando datos</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "migrandoCancelModal()">
-                <span aria-hidden="true">×</span>
+                <span style="color: red;" aria-hidden="true">X</span>
                 </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div *ngIf="!login.confirMsg" class="card">
                             <h3 class="card-header">¡Bienvenido! Ingrese los datos de confirmación</h3>
+                            <p class="col-xs-12 col-md-12" style="text-align: center; padding: 5px 0px;">Si algunos de tus datos no corresponde con los que se indican a continuación contactate con un asesor de Sina para actualizar tu información</p>
                             <div class="card-block" style="display: flex;">
                                 <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
                                     <input style="width: 100%; margin-bottom: 10px;" type="text" [(ngModel)]="auth.email"  disabled="disabled">
