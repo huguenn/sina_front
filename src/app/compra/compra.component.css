@@ -954,7 +954,7 @@
 }
 
 
-/* Busqeda */
+/* Busqueda */
 .busqueda {
     position: absolute;
     background: #fff;
@@ -996,4 +996,20 @@
     color: #0084ff;
     font-weight: bold;
     margin-left: 10px;
+}
+
+/* Mensaje compra */
+.mensaje__compra {
+    background: linear-gradient(white, rgb(230, 230, 230), rgb(222, 222, 222), rgb(230, 230, 230), white);
+    color: red;
+    padding: 0px;
+    text-align: center;
+    white-space: pre-wrap;
+}
+.mensaje__compra__titulo {
+    font-size: 26px;
+    font-weight: bold;
+}
+.mensaje__compra__mensaje {
+    font-size: 18px;
 }

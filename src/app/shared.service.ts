@@ -104,6 +104,12 @@ export class Configuracion {
   stickySocialYoutubeActivo: boolean;
   stickySocialYoutubeTexto: string;
   stickySocialYoutubeUrl: string;
+  mensajeCompraActivo: boolean;
+  mensajeCompraTitulo: string;
+  mensajeCompraMensaje: string;
+  switchAltasActivo: boolean;
+  switchComprasActivo: boolean;
+  switchContactosActivo: boolean;
   constructor(montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
     stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string, stickyHeaderDesde: Date, 
     stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean, stickyHeaderMarquee: boolean,
@@ -113,7 +119,9 @@ export class Configuracion {
     stickySocialFacebookActivo: boolean, stickySocialFacebookTexto: string, stickySocialFacebookUrl: string,
     stickySocialInstagramActivo: boolean, stickySocialInstagramTexto: string, stickySocialInstagramUrl: string,
     stickySocialTwitterActivo: boolean, stickySocialTwitterTexto: string, stickySocialTwitterUrl: string,
-    stickySocialYoutubeActivo: boolean, stickySocialYoutubeTexto: string, stickySocialYoutubeUrl: string) {
+    stickySocialYoutubeActivo: boolean, stickySocialYoutubeTexto: string, stickySocialYoutubeUrl: string,
+    mensajeCompraActivo: boolean, mensajeCompraTitulo: string, mensajeCompraMensaje: string,
+    switchAltasActivo: boolean, switchComprasActivo: boolean, switchContactosActivo: boolean) {
       this.montoMinimo = montoMinimo;
       this.montoEnvio = montoEnvio;
       this.montoEnvioGratis = montoEnvioGratis;
@@ -147,6 +155,12 @@ export class Configuracion {
       this.stickySocialYoutubeActivo = stickySocialYoutubeActivo;
       this.stickySocialYoutubeTexto = stickySocialYoutubeTexto;
       this.stickySocialYoutubeUrl = stickySocialYoutubeUrl;
+      this.mensajeCompraActivo = mensajeCompraActivo;
+      this.mensajeCompraTitulo = mensajeCompraTitulo;
+      this.mensajeCompraMensaje = mensajeCompraMensaje;
+      this.switchAltasActivo = switchAltasActivo;
+      this.switchComprasActivo = switchComprasActivo;
+      this.switchContactosActivo = switchContactosActivo;
   }
 }
 

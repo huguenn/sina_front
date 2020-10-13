@@ -14,6 +14,12 @@
             </ul>
           </div>
           <div class="tab__content">
+            <div *ngIf="config.mensajeCompraActivo" class="tab__item">
+              <div class="content mensaje__compra">
+                <div class="mensaje__compra__titulo">{{config.mensajeCompraTitulo}}</div>
+                <div class="mensaje__compra__mensaje">{{config.mensajeCompraMensaje}}</div>
+              </div>
+            </div>
             <div class="tab__item" *ngIf="transaccion.paso === 0">
               <div class="content">
                   <div class="row tab__item__header">

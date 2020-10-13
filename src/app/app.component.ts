@@ -703,6 +703,12 @@ export class AppComponent implements OnInit {
           stickySocialYoutubeActivo: $response.response.stickySocialYoutubeActivo === '1' ? true : false,
           stickySocialYoutubeTexto: $response.response.stickySocialYoutubeTexto,
           stickySocialYoutubeUrl: $response.response.stickySocialYoutubeUrl,
+          mensajeCompraActivo: $response.response.mensajeCompraActivo === '1' ? true : false,
+          mensajeCompraTitulo: $response.response.mensajeCompraTitulo,
+          mensajeCompraMensaje: $response.response.mensajeCompraMensaje,
+          switchAltasActivo: $response.response.switchAltasActivo === '1' ? true : false,
+          switchComprasActivo: $response.response.switchComprasActivo === '1' ? true : false,
+          switchContactosActivo: $response.response.switchContactosActivo === '1' ? true : false,
         }
         this.data.updateConfiguracion(c);
       }
