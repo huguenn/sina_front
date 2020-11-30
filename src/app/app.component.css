@@ -11,6 +11,8 @@
 
 .modal-title.movil{
   display: none;
+  width: 65%;
+  margin: auto;
 }
 
 .steps.movil{
@@ -198,7 +200,39 @@
     width: 90%;
     margin: auto;
 }
+.buscador_cuenta {
+    display: inline-block;
+    width: 75%;
+}
+.buscador_btn {
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+}
+.show__web {
+    display: block;
+}
+.show__mobile {
+    display: none;
+}
 @media (max-width: 540px) {
+    .show__web {
+        display: none;
+    }
+    .show__mobile {
+        display: block;
+    }
+    .buscador_cuenta {
+        width: 55%;
+    }
+    .buscador_btn {
+        display: inline-block;
+        width: 40%;
+        text-align: center;
+    }
+    .modal__container .modal-body {
+        margin: 0px 5px;
+    }
     .modal__container .modal-body .stepsContent {
         width: 100%;
         margin: initial;

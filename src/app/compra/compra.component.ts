@@ -393,28 +393,30 @@ export class CompraComponent implements OnInit, AfterViewInit {
     this.fechaUpdate(this.retiroHora.getFullYear() + '-' + (this.retiroHora.getMonth() + 1) + '-' + this.retiroHora.getDate());
   }
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.inputSub = Observable.fromEvent(this.inputCantidad.nativeElement, 'input')
-      .debounceTime(1000)
-      .subscribe(
-        () => {
-          const body = new URLSearchParams();
-          let array = [];
-          for(let item of this.carrito.lista) {
-            array.push({id_producto: item.id, cantidad: item.cantidad});
-          }
-          body.set('lista', JSON.stringify(array));
+    if(this.inputCantidad && this.inputCantidad.nativeElement) {
+      setTimeout(() => {
+        this.inputSub = Observable.fromEvent(this.inputCantidad.nativeElement, 'input')
+        .debounceTime(1000)
+        .subscribe(
+          () => {
+            const body = new URLSearchParams();
+            let array = [];
+            for(let item of this.carrito.lista) {
+              array.push({id_producto: item.id, cantidad: item.cantidad});
+            }
+            body.set('lista', JSON.stringify(array));
 
-          this.auth.post('carrito/update_cantidades', body)
-          .then($response => {
-            this.data.log('response carritoupdatecantidades compra debounced', $response);
-          })
-          .catch($error => {
-            this.data.log('error carritoupdatecantidades compra debounced', $error);
-          });
-        }
-      );
-    },2000);
+            this.auth.post('carrito/update_cantidades', body)
+            .then($response => {
+              this.data.log('response carritoupdatecantidades compra debounced', $response);
+            })
+            .catch($error => {
+              this.data.log('error carritoupdatecantidades compra debounced', $error);
+            });
+          }
+        );
+      },2000);
+    }
   }
 
   public seleccionartransporte($herramienta, $codigo) {

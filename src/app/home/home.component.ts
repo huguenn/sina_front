@@ -82,10 +82,10 @@ export class HomeComponent implements OnInit {
           this.auth.get($public + 'producto/listado/ofertas')
           .then(($response)  => {
             let ofertas1 = $response.response.slice(0, 4);
-            let ofertas2 = $response.response.slice(0, 2);
+            // let ofertas2 = $response.response.slice(0, 2);
             this.listaResultados[0].lista = JSON.parse(JSON.stringify(ofertas1));
-            this.listaResultados[2].lista[0] = JSON.parse(JSON.stringify(ofertas2[0]));
-            this.listaResultados[2].lista[1] = JSON.parse(JSON.stringify(ofertas2[1]));
+            // this.listaResultados[2].lista[0] = JSON.parse(JSON.stringify(ofertas2[0]));
+            // this.listaResultados[2].lista[1] = JSON.parse(JSON.stringify(ofertas2[1]));
 
             if(this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
@@ -105,10 +105,10 @@ export class HomeComponent implements OnInit {
           this.auth.get($public + 'producto/listado/novedades')
           .then(($response)  => {
             const ofertas1 = $response.response.slice(0, 4);
-            const ofertas2 = $response.response.slice(0, 2);
+            // const ofertas2 = $response.response.slice(0, 2);
             this.listaResultados[1].lista = JSON.parse(JSON.stringify(ofertas1));
-            this.listaResultados[2].lista[2] = JSON.parse(JSON.stringify(ofertas2[0]));
-            this.listaResultados[2].lista[3] = JSON.parse(JSON.stringify(ofertas2[1]));
+            // this.listaResultados[2].lista[2] = JSON.parse(JSON.stringify(ofertas2[0]));
+            // this.listaResultados[2].lista[3] = JSON.parse(JSON.stringify(ofertas2[1]));
 
             if(this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
@@ -121,6 +121,23 @@ export class HomeComponent implements OnInit {
           })
           .catch($error => {
             this.data.log('getlistadonovedades error home:', $error);
+          });
+          this.auth.get($public + 'producto/listado/campania')
+          .then(($response)  => {
+            const ofertas1 = $response.response.slice(0, 4);
+            this.listaResultados[2].lista = JSON.parse(JSON.stringify(ofertas1));
+
+            if(this.config) {
+              this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+              this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+              this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+              this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+              this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+              this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+            }
+          })
+          .catch($error => {
+            this.data.log('getlistadocampania error home:', $error);
           });
 
         });

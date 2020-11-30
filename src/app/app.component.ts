@@ -122,7 +122,10 @@ export class AppComponent implements OnInit {
 
 
   public seleccionar($herramienta, $codigo) {
-    const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+    let item = false;
+    if($herramienta) {
+      item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+    }
     // this.data.log('seleccionar items app:', this.cat_selected, this.domicilio_provincia, item);
     if (item) {
       $herramienta.select(item);
@@ -846,6 +849,7 @@ export class AppComponent implements OnInit {
   }
   loginLoading = false;
   cuentasRepresentar = [];
+  cantCuentasRepresentar = 0;
   cuentaSeleccionada: any;
   cuentaLoading: boolean = false;
   cuentaRespuesta: string = '';
@@ -874,20 +878,33 @@ export class AppComponent implements OnInit {
               this.loginLoading = false;
               this.data.log('loginmodal error app', $error);
             });
-        } else {
-          this.auth.get('cliente/getAll')
-            .then(($response) => {
-              this.data.toggleLoginStatus(true);
-              this.loginLoading = false;
-              this.cuentasRepresentar = $response.response;
-              this.data.toggleRepresentar();
-              this.cuentaLoading = true;
-            })
-            .catch($error => {
-              this.loginLoading = false;
-              this.data.log('clientegetall error app', $error);
-            });
+        } else {          
+          // this.auth.get('cliente/getAll')
+          // .then(($response) => {
+          //   this.data.toggleLoginStatus(true);
+          //   this.loginLoading = false;
+          //   this.cuentasRepresentar = $response.response;
+          //   this.data.toggleRepresentar();
+          //   this.cuentaLoading = true;
+          // })
+          // .catch($error => {
+          //   this.loginLoading = false;
+          //   this.data.log('clientegetall error app', $error);
+          // });
 
+          this.auth.get('cliente/getPrimeros')
+          .then(($response) => {
+            this.data.toggleLoginStatus(true);
+            this.loginLoading = false;
+            this.cuentasRepresentar = $response.response;
+            this.cantCuentasRepresentar = $response.cant;
+            this.data.toggleRepresentar();
+            this.cuentaLoading = true;
+          })
+          .catch($error => {
+            this.loginLoading = false;
+            this.data.log('clientegetall error app', $error);
+          });
         }
       })
       .catch($catch => {
@@ -930,7 +947,29 @@ export class AppComponent implements OnInit {
       });
   }
   cerrarRepresentarCuenta() {
+    this.auth.desacreditar();
     window.location.reload();
+  }
+  public cambiarCantFiltro(event: any): void {
+    this.filterCantidad = event.target.value;
+  }
+  filtrarCuentas() {
+    this.loginLoading = true;
+
+    const body = new URLSearchParams();
+
+    body.set('like_filter', this.filterBusqueda);
+    body.set('cant_filter', this.filterCantidad.toString(10));
+
+    this.auth.post('cliente/getFiltrados', body)
+    .then($response => {
+      this.cuentasRepresentar = $response.body.response;
+      this.loginLoading = false;
+    })
+    .catch($error => {
+      this.loginLoading = false;
+      this.data.log('clientegetfiltrados error app', $error);
+    })
   }
   representarCuenta(cuenta) {
     this.cuentaRespuesta = 'Esperando respuesta...';
@@ -1016,6 +1055,7 @@ export class AppComponent implements OnInit {
       text: $item !== '' ? $item : '¡Campo incompleto!'
     };
   }
+  filterCantidad: number = 20;
   filterBusqueda: string;
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
       let s, i, j;

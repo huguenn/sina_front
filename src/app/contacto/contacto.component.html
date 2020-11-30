@@ -4,7 +4,7 @@
   </div>
   <div class="row">
       <div class="divisor">
-        <div class="divisor__formulario">
+        <div class="divisor__formulario" *ngIf="config.switchContactosActivo">
           <div class="divisor__formulario__info">
             <h2>Información de contacto</h2>
             <div class="imagenes_container">
@@ -33,6 +33,11 @@
                 <input class="actionButton" style="width: 100%;text-align: center;" value="ENVIAR" (click)="enviar()"/>
               </form>
           </div>
+        </div>
+        <div class="divisor__formulario" *ngIf="!config.switchContactosActivo">
+          Debido a la situación actual el formulario de contacto se encuentra suspendido temporalmente, puede dirigirse al siguiente enlace para dejar registrados sus datos:
+          <br><br>
+          LINK GOOGLE FORMS
         </div>
     </div>
   </div>

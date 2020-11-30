@@ -16,6 +16,7 @@ export class ContactoComponent implements OnInit {
     mensaje: any;
     respuesta: any;
     error: any;
+    config: any;
   constructor(
       private auth: AutenticacionService,
       private data: SharedService,
@@ -23,6 +24,12 @@ export class ContactoComponent implements OnInit {
 ) { }
 
   ngOnInit() {
+    // subscribing to config change
+    this.data.currentConfig.subscribe(
+      configuracion => {
+        this.config = configuracion;
+      }
+    );
   }
   enviar() {
       this.respuesta = '';

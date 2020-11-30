@@ -22,12 +22,12 @@
             </div>
             <div class="tab__item" *ngIf="transaccion.paso === 0">
               <div class="content">
-                  <div class="row tab__item__header">
-                    <p>Tu código de Cliente es {{facturacion.datos.codigoCliente}}</p>
-                    <button *ngIf="carrito.subtotal > config.montoMinimo" (click)="finalizarCompra()">Siguiente &#62;</button>
-                    <span>{{secciones[transaccion.paso]}}</span>
-                  </div>
-                  <div class="row">
+                <div class="row tab__item__header" *ngIf="config.switchComprasActivo">
+                  <p>Tu código de Cliente es {{facturacion.datos.codigoCliente}}</p>
+                  <button *ngIf="carrito.subtotal > config.montoMinimo" (click)="finalizarCompra()">Siguiente &#62;</button>
+                  <span>{{secciones[transaccion.paso]}}</span>
+                </div>
+                <div class="row" *ngIf="config.switchComprasActivo">
                   <div class="col-xs-12 col-md-4 show__mobile">
                     <div class="row carrito__total__mobile" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px;">
                       <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < config.montoEnvioGratis">
@@ -184,6 +184,11 @@
                       <button class="whiteButton">ACEPTAR</button>
                     </div-->
                   </div>
+                </div>
+                <div *ngIf="!config.switchComprasActivo">
+                  Debido a la situación actual las compras se encuentran suspendidas temporalmente, puede dirigirse al siguiente enlace para dejar registrados sus datos:
+                  <br><br>
+                  LINK GOOGLE FORMS
                 </div>
               </div>
             </div>
@@ -695,7 +700,7 @@
             </div>
         </div>
       </div>
-      <div>
+      <div *ngIf="config.switchComprasActivo">
         <p class="iva__mensaje">{{iva_usuario}}</p>
       </div>
     </div>

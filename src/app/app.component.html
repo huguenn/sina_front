@@ -29,8 +29,8 @@
               <div class="modal-header">
                 <img class="desktop" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <img class="mobile" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
-              <h4 class="modal-title desktop">{{registrarStatus ? "Registrando nuevo usuario" : "Bienvenido / Bienvenida"}}</h4>
-              <h4 class="modal-title movil">{{registrarStatus ? "Registro en 3 pasos" : "Bienvenido / Bienvenida"}}</h4>
+              <h4 class="modal-title desktop">{{registrarStatus ? (config.switchAltasActivo ? "Registrando nuevo usuario" : "&#x26A0; Altas de usuarios suspendidas temporalmente &#x26A0;") : ("Bienvenido / Bienvenida")}}</h4>
+              <h4 class="modal-title movil">{{registrarStatus ? (config.switchAltasActivo ? "Registro en 3 pasos" : "&#x26A0; Altas suspendidas temporalmente &#x26A0;") : ("Bienvenido / Bienvenida")}}</h4>
               <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
               <span style="color: red;" aria-hidden="true">X</span>
               </button>
@@ -57,7 +57,7 @@
                         <a (click)="recuperarClave = false; recuperarOk = ''; recuperarError = ''">Iniciar Sesión</a>
                       </div>
                     </div>
-                    <div class="row" *ngIf="registrarStatus" >
+                    <div class="row" *ngIf="registrarStatus && config.switchAltasActivo" >
                         <div class="row" id="pasostitle">
                             <p>Registrate en 3 simples pasos</p>
                         </div>
@@ -208,6 +208,11 @@
                             </div>
                         </div>
                     </div>
+                    <div *ngIf="registrarStatus && !config.switchAltasActivo">
+                        Debido a la situación actual las altas de nuevos usuarios se encuentran suspendidas temporalmente, puede dirigirse al siguiente enlace para dejar registrados sus datos:
+                        <br><br>
+                        LINK GOOGLE FORMS
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="row" *ngIf="!registrarStatus">
@@ -221,7 +226,7 @@
                     </div>
                     <div class="row" *ngIf="registrarStatus && !processing.started">
                         <button class="btn btn-outline-dark actionButton" type="button"(click)="_anteriorStep()">{{_step === 1 ? "CANCELAR" : "ANTERIOR"}}</button>
-                        <button class="btn btn-outline-dark actionButton" style="margin-bottom: 5px;"   type="button"(click)="_changeStep()">{{_step === 3 ? "REGISTRATE" : "SIGUIENTE"}}</button>
+                        <button class="btn btn-outline-dark actionButton" style="margin-bottom: 5px;" type="button" (click)="_changeStep()" *ngIf="config.switchAltasActivo">{{_step === 3 ? "REGISTRATE" : "SIGUIENTE"}}</button>
                     </div>
                 </div>
             </div>
@@ -307,33 +312,47 @@
                     </div>
                 </div>
         </div>
-        <div class="modal__container" [ngClass]="{'modalHide': representarStatus}" (click)="closeFullRepresentar($event)">
+        <div class="modal__container" [ngClass]="{'modalHide': representarStatus}"> <!-- (click)="closeFullRepresentar($event)"> -->
             <div class="loading" [ngClass]="{'loaded': !loginLoading}">
                 <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
             </div>
             <div role="document" class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
-                <h4 class="modal-title">Cuentas disponibles para representación</h4>
-                <button aria-label="Close" class="close" type="button" (click)= "representarCancel()">
-                <span style="color: red;" aria-hidden="true">X</span>
-                </button>
+                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34" class="show__web">
+                    <h4 class="modal-title">Cuentas disponibles para representación</h4>
+                    <button aria-label="Close" class="close" type="button" (click)= "cerrarRepresentarCuenta()">
+                        <span style="color: red;" aria-hidden="true">X</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="card">
-                            <h3 class="card-header">Seleccioná alguna de las {{cuentasRepresentar.length}} cuentas que puede representar</h3>
+                            <h3 class="card-header">Seleccione alguna de las {{cantCuentasRepresentar}} cuentas que puede representar</h3>
                             <div class="buscador_cuenta">
-                                    <input type="text" placeholder="Escriba para filtrar por Nombre/Razón Social o CUIT" [(ngModel)]="filterBusqueda" style="    width: 100%;
-                                    border: none;
-                                    padding: 5px 10px;">
-                                </div>
+                                <input type="text" placeholder="Escriba para filtrar por Razón Social o CUIT" [(ngModel)]="filterBusqueda" style="    width: 100%;
+                                border: none;
+                                padding: 5px 10px;">
+                            </div>
+                            <div class="buscador_btn">
+                                <span>
+                                    <select (change)="cambiarCantFiltro($event)">
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </span>
+                                <button class="btn" type="button" (click)="filtrarCuentas()">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <hr style="margin-top: 5px; margin-bottom: 5px;">
                             <div class="card-block" style="max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
                                 <div class="row carrito__header">
                                     <div class="col-rep-3">
                                         <div class="border">
-                                        <p>Selección</p>
+                                            <p class="show__web">Selección</p>
+                                            <p class="show__mobile"><i class="fa fa-check" aria-hidden="true"></i></p>
                                         </div>
                                     </div>
                                     <div class="col-rep-4">
@@ -343,11 +362,11 @@
                                     </div>
                                     <div class="col-rep-5">
                                         <div class="border">
-                                        <p>Nombre o razón social</p>
+                                        <p>Razón social</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row carrito__content" *ngFor="let cuenta of cuentasRepresentar | cuentasFilter: filterBusqueda; let $index = index" >
+                                <div class="row carrito__content" *ngFor="let cuenta of cuentasRepresentar; let $index = index;">
                                     <div class="col-rep-3">
                                         <div class="border">
                                             <input [value]="cuenta.id" [checked]="$index === 0" type="radio" [(ngModel)]="cuenta.seleccion" name="opcionCuenta" (click)="seleccionarCuenta(cuenta)" style="padding: 0; margin: auto;">

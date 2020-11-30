@@ -24,10 +24,14 @@
           <div class="tab__content">
             <!-- Mi cuenta Tab -->
             <div class="tab__item" *ngIf="transaccion.paso === 0">
-              <div class="content">
-                  <div class="row tab__item__header">
-                    <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
-                    <p>{{ListaItems[transaccion.paso].texto}}</p>
+                <div class="content">
+                  <div class="row tab__item__header show__desktop">
+                      <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
+                      <p>{{ListaItems[transaccion.paso].texto}}</p>
+                  </div>
+                  <div class="row tab__item__header show__mobile">
+                      <p>Nº de Cliente: {{DatosUsuario.codigo}}</p>
+                      <p>{{ListaItems[transaccion.paso].texto}}</p>
                   </div>
                   <div class="row">
                     <div class="col-md-9 col-xs-12">
@@ -78,8 +82,12 @@
             <!-- Mis Datos Tab -->
             <div class="tab__item" *ngIf="transaccion.paso === 1">
               <div class="content">
-                <div class="row tab__item__header">
-                    <p>{{DatosUsuario.codigo ? "Tu número de Cliente es " + this.DatosUsuario.codigo : "El cliente no fue "}}</p>
+                <div class="row tab__item__header show__desktop">
+                    <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
+                    <p>{{ListaItems[transaccion.paso].texto}}</p>
+                </div>
+                <div class="row tab__item__header show__mobile">
+                    <p>Nº de Cliente: {{DatosUsuario.codigo}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
                 </div>
                 <div class="row">
@@ -114,6 +122,14 @@
                             </label>
                             <div class="col-xs-9">
                               <input disabled class="form-control" type="text" name="cuit" [ngModel]="DatosUsuario.cuit">
+                            </div>
+                          </div>
+                          <div class="form-group row">
+                            <label for="example-text-input" class="col-xs-3 col-form-label">
+                                Email
+                            </label>
+                            <div class="col-xs-9">
+                              <input disabled class="form-control" type="text" name="email" [ngModel]="DatosUsuario.email">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -338,10 +354,14 @@
             <!-- Mis Frecuentes Tab -->
             <div class="tab__item" *ngIf="transaccion.paso === 2">
               <div class="content">
-                <div class="row tab__item__header">
+                <div class="row tab__item__header show__desktop">
                     <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
-                  </div>
+                </div>
+                <div class="row tab__item__header show__mobile">
+                    <p>Nº de Cliente: {{DatosUsuario.codigo}}</p>
+                    <p>{{ListaItems[transaccion.paso].texto}}</p>
+                </div>
 
                 <div class="row">
                   <div class="col-md-9 col-xs-12">
@@ -439,10 +459,14 @@
             <!-- Mi ultima compra Tab -->
             <div class="tab__item ultimaCompra" *ngIf="transaccion.paso === 3">
               <div class="content">
-                <div class="row tab__item__header">
+                <div class="row tab__item__header show__desktop">
                     <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
                     <p>{{ListaItems[transaccion.paso].texto}}</p>
-                  </div>
+                </div>
+                <div class="row tab__item__header show__mobile">
+                    <p>Nº de Cliente: {{DatosUsuario.codigo}}</p>
+                    <p>{{ListaItems[transaccion.paso].texto}}</p>
+                </div>
                 <div class="row">
                   <div class="col-md-9 col-xs-12">
                     <ngb-accordion *ngIf="ultimasCompras?.length" #acc="ngbAccordion" closeOthers="true">
@@ -553,9 +577,13 @@
             <!-- Cerrar sesion Tab -->
             <div class="tab__item" *ngIf="transaccion.paso === 4">
                 <div class="content">
-                  <div class="row tab__item__header">
-                    <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
-                    <p>{{ListaItems[transaccion.paso].texto}}</p>
+                  <div class="row tab__item__header show__desktop">
+                      <p>Tu número de Cliente es {{DatosUsuario.codigo}}</p>
+                      <p>{{ListaItems[transaccion.paso].texto}}</p>
+                  </div>
+                  <div class="row tab__item__header show__mobile">
+                      <p>Nº de Cliente: {{DatosUsuario.codigo}}</p>
+                      <p>{{ListaItems[transaccion.paso].texto}}</p>
                   </div>
                   <div class="row">
                     <div class="col-md-9 col-xs-12">

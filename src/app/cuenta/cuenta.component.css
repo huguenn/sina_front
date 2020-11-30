@@ -1,6 +1,12 @@
 .content {
     padding: 40px;
 }
+.show__desktop {
+    display: block;
+}
+.show__mobile {
+    display: none;
+}
 /* TAB */
 .tab__header {
     color: #ffffff;
@@ -487,6 +493,12 @@
     }
 }
 @media (max-width: 992px) {
+    .show__desktop {
+        display: none;
+    }
+    .show__mobile {
+        display: block;
+    }
     .banner {
         margin-top: 0;
         margin-bottom: 20px;
