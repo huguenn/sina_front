@@ -5,7 +5,7 @@
           <p>{{config.stickyHeaderTitulo}}</p>
         </div>
         <p *ngIf="!config.stickyHeaderMarquee">{{config.stickyHeaderTitulo}}</p>
-        <a class="actionButton" href={{config.stickyHeaderLink}}>{{config.stickyHeaderCta}}</a>
+        <a class="actionButton" href={{config.stickyHeaderLink}} target="_blank" rel="noopener noreferrer">{{config.stickyHeaderCta}}</a>
         <i (click)="config.stickyHeaderActivo = false" class="fa fa-times-circle"></i>
     </div>
   </div>
@@ -49,7 +49,8 @@
         </div>
         <div #inputCantidadHeader class="col-md-4 col-xs-2 right__form" style="max-width: none;">
           <div class="login" (click)="toggle('cuenta')">
-            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user.png" alt="User" width="40">
+            <div [ngClass]="{'pulsating_blue': !UserLog}"></div>
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.png" alt="User" width="40">
             <p *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> <b>{{representado ? "Representado" : UserJob || "Registrarse"}} </b></p>
             <p  *ngIf="!UserLog"> {{"Iniciar sesión"}} <br> {{"Registrarse"}} </p>
             <div class="contPop">
@@ -80,7 +81,7 @@
               background: #0083ff;
               border-radius: 25px;
               padding: 8px;">
-              <a target="_blank" href="https://wa.me/5491123145727?text=Hola">
+              <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491123145727?text=Hola">
                 <img [ngClass]="'lazyload'" data-src="./assets/images/header/whatsapp.png" alt="whatsapp" width="24">
               </a>
             </div>
@@ -208,6 +209,7 @@
           </div>   
           <div #inputCantidadHeaderVerde class="col-xs-2 col-md-3 right__form">
             <div class="login" (click)="toggle2('cuenta')">
+              <div [ngClass]="{'pulsating_white': !UserLog}"></div>
               <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.png" alt="User" width="40">
               <p style="color: #fff" *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> {{UserJob || "Registrarse"}} </p>
               <p style="color: #fff" *ngIf="!UserLog"> {{"Iniciar sesión"}} <br> {{"Registrarse"}} </p>

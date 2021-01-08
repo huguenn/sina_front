@@ -83,8 +83,17 @@ export class ProductoItemComponent implements OnInit {
   }
   removeMessage(msg) {
     if (this.sesion === true) {
-      this.data.removeMessage(msg);
-      msg.comprado = false;
+      const body = new URLSearchParams();
+      body.set('id_producto', msg.id);
+      this.auth.post('carrito/eliminar_item', body)
+      .then($response => {
+        this.data.log('response carritoeliminaritem compra', $response);
+        this.data.removeMessage(msg);
+        msg.comprado = false;
+      })
+      .catch($error => {
+        this.data.log('error carritoeliminaritem compra', $error);
+      });
     }else {
       this.data.toggleLoginModal();
     }

@@ -11,7 +11,7 @@
 </div>
 <div class="container filter">
   <div class="row">
-    <div class="col-md-3 col-xs-12">
+    <div class="col-md-3 col-xs-12" [ngStyle]="{'padding-top': modoVista === 'Paginado' ? '14px' : '0px' }">
       <!-- <div class="row filter__selector filter__top" style="border: none; display: flex; flex-direction: column; height: auto;"> -->
         <!--div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
           <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Ordenar por</button>
@@ -67,10 +67,12 @@
           <p>Ordenar productos</p>
         </div>
         <div class="row listadoCategorias">
+          <p *ngIf="!ordenamiento || (!ordenamiento.startsWith('nombre') && !ordenamiento.startsWith('precio'))" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorDefecto()"><strong>Por defecto</strong></p>
+          <p *ngIf="ordenamiento && (ordenamiento.startsWith('nombre') || ordenamiento.startsWith('precio'))" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorDefecto()">Por defecto</p>
           <p *ngIf="ordenamiento && ordenamiento.startsWith('nombre')" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorNombre()"><strong>Nombre</strong></p>
           <p *ngIf="!ordenamiento || !ordenamiento.startsWith('nombre')" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorNombre()">Nombre</p>
-          <p *ngIf="ordenamiento && ordenamiento.startsWith('precio')" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorPrecio()"><strong>Precio</strong></p>
-          <p *ngIf="!ordenamiento || !ordenamiento.startsWith('precio')" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorPrecio()">Precio</p>
+          <p *ngIf="ordenamiento && ordenamiento.startsWith('precio') && loginStatus" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorPrecio()"><strong>Precio</strong></p>
+          <p *ngIf="(!ordenamiento && loginStatus) || (!ordenamiento.startsWith('precio') && loginStatus)" style="margin-left: 20px; cursor: pointer;" (click)="ordenPorPrecio()">Precio</p>
         </div>
       </div>
       <div class="containerSidebarCategorias">
@@ -91,9 +93,10 @@
       </div>
     </div>
     <div class="col-md-9 col-xs-12" *ngIf="listaResultados && listaResultados?.length">
-      <div class="row filter__top">
-        <div class="col">
+      <div class="row filter__top" style="padding-top: 0px;">
+        <div class="col" [ngStyle]="{'padding-top': modoVista === 'Paginado' ? '0px' : '29px' }">
             <h1 style="
+            min-height: 15px;
             font-size: 14px;
             margin: 0 0 10px;">{{categoriaPadre? categoriaPadre + " - " : ""}} {{categoriaHijo}}</h1>
         </div>
@@ -136,7 +139,7 @@
         opacity: 0.6;
       "
       >{{mensaje}}</p>
-      <img id="loadCat" style="margin-left: auto; margin-right: auto;" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
+      <img id="loadCat" *ngIf="mensaje == 'Cargando'" style="margin-left: auto; margin-right: auto;" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
     </div>
   </div>
 </div>

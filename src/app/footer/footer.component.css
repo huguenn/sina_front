@@ -61,7 +61,7 @@
   display: block;
   margin: 0px 0px 0px 10px;
 }
-.footer__section a.whiteButton {
+.footer__section .whiteButton {
   margin-top: 10px;
   background: #fff;
   border: 2px solid #fff;
@@ -69,8 +69,10 @@
   color: #057aff;
   padding: 8px 18px;
   display: block;
+  cursor: pointer;
+  text-align: center;
 }
-.footer__section a.whiteButton:hover {
+.footer__section .whiteButton:hover {
   background-color: #057aff;
   color: #fff;
 }

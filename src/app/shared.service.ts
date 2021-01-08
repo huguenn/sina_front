@@ -110,6 +110,8 @@ export class Configuracion {
   switchAltasActivo: boolean;
   switchComprasActivo: boolean;
   switchContactosActivo: boolean;
+  mensajeModalLoginActivo: boolean;
+  mensajeModalLoginMensaje: string;
   constructor(montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
     stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string, stickyHeaderDesde: Date, 
     stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean, stickyHeaderMarquee: boolean,
@@ -121,7 +123,8 @@ export class Configuracion {
     stickySocialTwitterActivo: boolean, stickySocialTwitterTexto: string, stickySocialTwitterUrl: string,
     stickySocialYoutubeActivo: boolean, stickySocialYoutubeTexto: string, stickySocialYoutubeUrl: string,
     mensajeCompraActivo: boolean, mensajeCompraTitulo: string, mensajeCompraMensaje: string,
-    switchAltasActivo: boolean, switchComprasActivo: boolean, switchContactosActivo: boolean) {
+    switchAltasActivo: boolean, switchComprasActivo: boolean, switchContactosActivo: boolean,
+    mensajeModalLoginActivo: boolean, mensajeModalLoginMensaje: string) {
       this.montoMinimo = montoMinimo;
       this.montoEnvio = montoEnvio;
       this.montoEnvioGratis = montoEnvioGratis;
@@ -161,6 +164,8 @@ export class Configuracion {
       this.switchAltasActivo = switchAltasActivo;
       this.switchComprasActivo = switchComprasActivo;
       this.switchContactosActivo = switchContactosActivo;
+      this.mensajeModalLoginActivo = mensajeModalLoginActivo;
+      this.mensajeModalLoginMensaje = mensajeModalLoginMensaje;
   }
 }
 

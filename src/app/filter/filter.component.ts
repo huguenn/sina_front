@@ -61,6 +61,7 @@ export class FilterComponent implements OnInit {
   staticAlertClosed = false;
   listaResultados;
   listaOriginal;
+  listaDefault;
   FilterItem = undefined;
   term = '';
   categoriaPadre = undefined;
@@ -72,7 +73,7 @@ export class FilterComponent implements OnInit {
   listado_subcategorias;
   mensaje: string;
   LinkList: Array<any>;
-  public ordenamiento: string;
+  public ordenamiento: string = '';
   constructor(
     private menu: MenuService,
     private auth: AutenticacionService,
@@ -222,9 +223,10 @@ export class FilterComponent implements OnInit {
                   .then($res => resolve($res.body.response)).catch($error => reject($error));
               }
             }
-          }).then(($response)  => {
+          }).then(($response: any)  => {
             this.listaResultados = $response;
             this.listaOriginal = $response;
+            this.listaDefault = $response.slice();
             this.paginado.init();
 
             setTimeout(() => {
@@ -392,11 +394,15 @@ export class FilterComponent implements OnInit {
     }else {
       this.paginado.disable();
     }
+
     if(this.ordenamiento && this.ordenamiento.startsWith('nombre')) {
       this.ordenPorNombre();
     }
-    if(this.ordenamiento && this.ordenamiento.startsWith('precio')) {
+    else if(this.ordenamiento && this.ordenamiento.startsWith('precio')) {
       this.ordenPorPrecio();
+    }
+    else {
+      this.ordenPorDefecto();
     }
   }
 
@@ -446,6 +452,17 @@ export class FilterComponent implements OnInit {
         this.ordenamiento = 'precioDESCL';
         this.listaResultados = this.listaResultados.sort((a,b) => { return a.precio - b.precio });
       }
+    }
+  }
+  ordenPorDefecto() {
+    if(this.modoVista && this.modoVista === 'Paginado') {
+      this.ordenamiento = '';
+      this.paginado.original = this.listaDefault.slice();
+      this.paginado.actualizar();
+    }
+    if(this.modoVista && this.modoVista === 'Listado') {
+      this.ordenamiento = '';
+      this.listaResultados = this.listaDefault.slice();
     }
   }
 }

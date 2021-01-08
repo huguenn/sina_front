@@ -63,7 +63,7 @@
                       </div>
                       <div class="row carrito__titulo">
                         <p style="font-weight: bold;">COMPRA ACTUAL</p>
-                        <p style="font-size: 10px;margin-top: -8px;">{{carrito.hora}}</p>
+                        <!-- <p style="font-size: 10px;margin-top: -8px;">{{carrito.hora}}</p> -->
                       </div>
                       <div class="row carrito__header">
                         <div class="col-1">
@@ -391,7 +391,7 @@
                           <div class="form-group row">
                             <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia === 'Domingo'">No es posible el retiro los días Domingo</p>
                             <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia === 'Sábado'">Sábados: horarios de retiro es de 08hs a 11:30hs</p>
-                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia !== 'Domingo' && dia !== 'Sábado'">Lunes a Viernes: horarios de retiro es de 08hs a 12hs y de 14hs a 16:30hs</p>
+                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia !== 'Domingo' && dia !== 'Sábado'">Lunes a Viernes: horarios de retiro es de 08hs a 12hs y de 14hs a 17hs</p>
                           </div>
                           <p style="font-weight: bold; font-size: 14px; padding-bottom: 10px;">Dirección</p>
                           <div class="form-group row">
@@ -440,7 +440,7 @@
                         </div>
                         <div class="form-group row">
                           <label for="example-text-input" class="col-xs-4 col-form-label">
-                              Nombre de fantasía
+                              Nombre comercial
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.nombre_fantasia">
@@ -629,7 +629,7 @@
                       <div class="cuadro">
                         <h1>¡MUCHAS GRACIAS POR SU PEDIDO!</h1>
                         <p>{{completarCompraTexto}}</p>
-                        <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank">
+                        <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank" rel="noopener noreferrer">
                           <button class="actionButton">IMPRIMIR PEDIDO</button>
                         </a>
                         <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="">
@@ -669,7 +669,7 @@
                         </div>
                         <div class="row envio__seccion__content">
                           <p>Razón Social: {{facturacion.datos.razon_social}}</p>
-                          <p>Nombre de fantasía: {{facturacion.datos.nombre_fantasia}}</p>
+                          <p>Nombre comercial: {{facturacion.datos.nombre_fantasia}}</p>
                           <p>Categoría IVA: {{facturacion.datos.cod_categoria_iva}}</p>
                           <p>Telefono: {{facturacion.datos.telefono}}</p>
                           <p>Telefono celular: {{facturacion.datos.telefono_celular}}</p>
@@ -692,7 +692,7 @@
                       </div>
                   </div>
                   <div class="row volver">
-                    <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank">
+                    <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank" rel="noopener noreferrer">
                       <button class="whiteButton">IMPRIMIR</button>
                     </a>
                   </div>

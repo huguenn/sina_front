@@ -64,6 +64,7 @@
 }
 .divisor__formulario__mensaje > .actionButton {
   margin-top: 0;
+  cursor: pointer;
 }
 
 /** EFECTO FADE IMAGENES **/
@@ -82,7 +83,7 @@
   left: 0;
 }
 
-@-webkit-keyframes imgFade {
+@keyframes imgFade {
  0% {
    opacity:1;
  }

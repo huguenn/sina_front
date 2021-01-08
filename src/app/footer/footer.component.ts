@@ -33,30 +33,57 @@ export class FooterComponent implements OnInit {
   nombre: string;
   email: string;
   suscripcion: string = 'SUSCRIBIRME';
+  enableSuscribir: boolean = true;
   constructor(public data: SharedService, private auth: AutenticacionService) { }
   registrar() {
     this.data.toggleLoginModal();
   }
   suscribir () {
-    const sendyUrl = 'https://mailing.leren.com.ar/';
+    this.enableSuscribir = false;
 
-    const body = new URLSearchParams();
-    body.set('api_key', 'RCUuYdks5u0kwkTgCVlw ');
-    body.set('name', this.nombre);
-    body.set('email', this.email);
-    body.set('list', 'cqW4SwUCeaOE36rhy8922C3A');
-    body.set('country', 'AR');
-    body.set('referrer', 'https://sina.leren.com.ar/');
-    body.set('boolean', 'true');
+    if(this.nombre && this.email) {
 
-    if(this.data.statusLogin) {
-      body.set('logueado', 'SI');
+      const sendyUrl = 'https://mailing.leren.com.ar/';
 
-      this.auth.get('sendy/cliente/getIdListaPrecios')
-      .then(result => {
-        this.data.log('response getidlistaprecios footer', result);
+      const body = new URLSearchParams();
+      body.set('api_key', 'RCUuYdks5u0kwkTgCVlw ');
+      body.set('name', this.nombre);
+      body.set('email', this.email);
+      body.set('list', 'cqW4SwUCeaOE36rhy8922C3A');
+      body.set('country', 'AR');
+      body.set('referrer', 'https://sina.leren.com.ar/');
+      body.set('boolean', 'true');
 
-        body.set('lista_precios', result.response);
+      if(this.data.statusLogin) {
+        body.set('logueado', 'SI');
+
+        this.auth.get('sendy/cliente/getIdListaPrecios')
+        .then(result => {
+          this.data.log('response getidlistaprecios footer', result);
+
+          body.set('lista_precios', result.response);
+
+          this.auth.post(sendyUrl + 'subscribe', body)
+          .then($response => {
+            this.data.log('response suscribir footer', $response);
+          })
+          .catch($error => {
+            this.data.log('error suscribir footer', $error);
+          });
+        })
+        .catch(error => {
+          this.data.log('error getidlistaprecios footer', error);
+
+          this.auth.post(sendyUrl + 'subscribe', body)
+          .then($response => {
+            this.data.log('response suscribir footer', $response);
+          })
+          .catch($error => {
+            this.data.log('error suscribir footer', $error);
+          });
+        });
+      } else {
+        body.set('logueado', 'NO');
 
         this.auth.post(sendyUrl + 'subscribe', body)
         .then($response => {
@@ -65,45 +92,31 @@ export class FooterComponent implements OnInit {
         .catch($error => {
           this.data.log('error suscribir footer', $error);
         });
-      })
-      .catch(error => {
-        this.data.log('error getidlistaprecios footer', error);
+      }
 
-        this.auth.post(sendyUrl + 'subscribe', body)
-        .then($response => {
-          this.data.log('response suscribir footer', $response);
-        })
-        .catch($error => {
-          this.data.log('error suscribir footer', $error);
-        });
-      });
+      this.suscripcion = 'ENVIANDO.';
+      setTimeout(() => {
+      this.suscripcion = 'ENVIANDO..';
+      setTimeout(() => {
+      this.suscripcion = 'ENVIANDO...';
+      setTimeout(() => {
+      this.suscripcion = 'ENVIADO!';
+      setTimeout(() => {
+        this.email = '';
+        this.nombre = '';
+        // this.suscripcion = 'SUSCRIBIRME';
+        // this.enableSuscribir = true;
+      }, 500);
+      }, 500);
+      }, 500);
+      }, 1000);
     } else {
-      body.set('logueado', 'NO');
-
-      this.auth.post(sendyUrl + 'subscribe', body)
-      .then($response => {
-        this.data.log('response suscribir footer', $response);
-      })
-      .catch($error => {
-        this.data.log('error suscribir footer', $error);
-      });
+      this.suscripcion = 'CAMPOS INCOMPLETOS!';
+      setTimeout(() => {
+        this.suscripcion = 'SUSCRIBIRME';
+      this.enableSuscribir = true;
+      }, 3000);
     }
-
-    this.suscripcion = 'ENVIANDO.';
-    setTimeout(() => {
-    this.suscripcion = 'ENVIANDO..';
-    setTimeout(() => {
-    this.suscripcion = 'ENVIANDO...';
-    setTimeout(() => {
-    this.suscripcion = 'ENVIADO';
-    setTimeout(() => {
-      this.email = '';
-      this.nombre = '';
-      this.suscripcion = 'SUSCRIBIRME';
-    }, 500);
-    }, 500);
-    }, 500);
-    }, 1000);
 
   }
   ngOnInit() {

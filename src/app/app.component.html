@@ -7,7 +7,7 @@
             <ul class="sticky_socials">
                 <ng-container *ngFor="let item of SocialList">
                     <li *ngIf=item.activo>
-                        <a href="{{item.url}}" target="_blank">
+                        <a href="{{item.url}}" target="_blank" rel="noopener noreferrer">
                             <span class="text_span"><p>{{item.texto}}</p></span>
                         </a>
                         <span class="img_span"><img [ngClass]="'lazyload'" [attr.data-src]="item.urlImg" title="{{item.texto}}"></span>
@@ -36,27 +36,34 @@
               </button>
               </div>
               <div class="modal-body">
+                <form>
                   <div class="row" style="display: flex; align-items: center;" *ngIf="!registrarStatus">
                       <div class="col-xs-12 col-md-6 modal__texto">
-                        <img [ngClass]="'lazyload'" data-src="./assets/images/home/login.png" alt="Sina">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/home/login.png" alt="Sina" style="cursor: pointer;" [routerLink]="['/']" (click)="_toggleRegistrarStatus()">
                       </div>
                       <div class="col-xs-12 col-md-6 modal__registrar" *ngIf="!recuperarClave">
                         <p>Si ya tenes usuario:</p>
-                        <input type="text" [(ngModel)]="login.user" name="user" placeholder="Usuario" (keydown)="enterLogin($event)">
-                        <input type="password" [(ngModel)]="login.pass" name="pass" placeholder="Contraseña" (keydown)="enterLogin($event)">
+                        <input type="text" [(ngModel)]="login.user" name="user" placeholder="Usuario" (keydown)="enterLogin($event)" autocomplete="username">
+                        <!-- <input type="password" [(ngModel)]="login.pass" name="pass" placeholder="Contraseña" (keydown)="enterLogin($event)" autocomplete="current-password"> -->
+                        <div>
+                            <input class="password__input" [type]="password_type" [(ngModel)]="login.pass" name="pass" placeholder="Contraseña" (keydown)="enterLogin($event)" autocomplete="current-password">
+                            <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                            <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                        </div>
                         <button class="btn btn-outline-dark actionButton" type="button"(click)="loginModal(login.user, login.pass)">INGRESAR</button>
                         <p style="color: #F44336; margin-top: 5px;" *ngIf="login.error">{{login.errorMsg || "Error en el logeo"}}</p>
-                        <a (click)="recuperarClave = true">Olvide la contraseña</a>
+                        <a style="cursor: pointer;" (click)="recuperarClave = true">Olvide la contraseña</a>
                       </div>
                       <div class="col-xs-12 col-md-6 modal__registrar" *ngIf="recuperarClave">
                         <p *ngIf="!recuperarOk">Ingrese su email para recuperar la contraseña de su cuenta:</p>
-                        <input *ngIf="!recuperarOk" type="text" [(ngModel)]="login.user" name="user" placeholder="Email" (keydown)="enterRecuperar($event)">
+                        <input *ngIf="!recuperarOk" type="text" [(ngModel)]="login.user" name="user" placeholder="Email" (keydown)="enterRecuperar($event)" autocomplete="username">
                         <p style="color: #00C973; margin-top: 5px; text-align: center;" *ngIf="recuperarOk">{{recuperarOk}}</p>
                         <p style="color: #F44336; margin-top: 5px;" *ngIf="recuperarError">{{recuperarError}}</p>
                         <button *ngIf="!recuperarOk" class="btn btn-outline-dark actionButton" type="button"(click)="enterRecuperarEvento()">RECUPERAR CONTRASEÑA</button>
                         <a (click)="recuperarClave = false; recuperarOk = ''; recuperarError = ''">Iniciar Sesión</a>
                       </div>
                     </div>
+                </form>
                     <div class="row" *ngIf="registrarStatus && config.switchAltasActivo" >
                         <div class="row" id="pasostitle">
                             <p>Registrate en 3 simples pasos</p>
@@ -85,71 +92,84 @@
 
 
                         <div *ngIf="_step === 1" class="row stepsContent" [ngClass]="{'focusingPassword': focusingPassword}">
-                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
-                                <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <input type="text" placeholder="Nombre de fantasia" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
-                                <ng-select #responsable style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
-                                    [clearable]="true"
-                                    bindLabel="text"
-                                    bindValue="codigo"
-                                    (change)="refreshCUIT($event)"
-                                    ng-model="cat_selected"
-                                    placeholder="CAT. IVA.*"
-                                    (focus)="focusResponsable()"
-                                >
-                                    <ng-option *ngFor="let country of data.reponsable_lista" [value]="country.codigo">
-                                    {{country.text}}
-                                    </ng-option>
-                                </ng-select>
-
-                                <!-- <select class="custom__select"
-                                        #responsable
+                            <form>
+                                <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
+                                    <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()" autocomplete="username">
+                                    <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
+                                    <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()" autocomplete="username">
+                                    <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
+                                    <ng-select #responsable labelForId="responsable_value" style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
+                                        [clearable]="true"
+                                        bindLabel="text"
+                                        bindValue="codigo"
+                                        (change)="refreshCUIT($event)"
                                         ng-model="cat_selected"
-                                        (change)="refreshCUIT($event.target.value)"
                                         placeholder="CAT. IVA.*"
-                                        [ngClass]="{'noValidado': validador?.cat_selected}">
-                                    <option value="0">CAT. IVA.*</option>
-                                    <option *ngFor="let country of data.reponsable_lista"
-                                            [value]="country.codigo"
-                                            class="custom__select--option" value="1">
-                                        {{ country.text }}
-                                    </option>
-                                </select> -->
+                                        (focus)="focusResponsable()"
+                                    >
+                                        <ng-option *ngFor="let country of data.reponsable_lista" [value]="country.codigo">
+                                        {{country.text}}
+                                        </ng-option>
+                                    </ng-select>
+
+                                    <!-- <select class="custom__select"
+                                            #responsable
+                                            ng-model="cat_selected"
+                                            (change)="refreshCUIT($event.target.value)"
+                                            placeholder="CAT. IVA.*"
+                                            [ngClass]="{'noValidado': validador?.cat_selected}">
+                                        <option value="0">CAT. IVA.*</option>
+                                        <option *ngFor="let country of data.reponsable_lista"
+                                                [value]="country.codigo"
+                                                class="custom__select--option" value="1">
+                                            {{ country.text }}
+                                        </option>
+                                    </select> -->
 
 
 
-                                <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <span *ngIf="validationCUIT" style="color: red;">Solo usar números en el campo CUIT/DNI</span>
-                                <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
-                                <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
-                            </div>
-                            <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
-                                <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                    <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                    <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <span *ngIf="validationCUIT && cuit === 'DNI (Solo numeros)*'" style="color: red;">Solo usar 8 números en el campo DNI</span>
+                                    <span *ngIf="validationCUIT && cuit === 'CUIT (Solo numeros)*'" style="color: red;">Solo usar 11 números en el campo CUIT</span>
+                                    <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
+                                    <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
                                 </div>
-                                <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <ng-select #provincia_value [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
-                                    [clearable]="true"
-                                    [items]="provincia"
-                                    (change)="refreshProvincia($event)"
-                                    ng-model="domicilio_provincia"
-                                    placeholder="Provincia*"
-                                    (focus)="focusProvincia()"
-                                >
-                                </ng-select>
-                                <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
-                                <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
-                                <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()">
-                                <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
-                                <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
-                            </div>
+                                <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
+                                    <input type="text" placeholder="Nombre comercial" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
+                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    </div>
+                                    <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <ng-select #provincia_value labelForId="provincia_value" [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
+                                        [clearable]="true"
+                                        [items]="provincia"
+                                        (change)="refreshProvincia($event)"
+                                        ng-model="domicilio_provincia"
+                                        placeholder="Provincia*"
+                                        (focus)="focusProvincia()"
+                                    >
+                                    </ng-select>
+                                    <!-- <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password"> -->
+                                    <div>
+                                        <input class="password__input" [type]="password_type" #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password">
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                    </div>
+                                    <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
+                                    <!-- <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password"> -->
+                                    <div>
+                                        <input class="password__input" [type]="password_type" #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password">
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                    </div>
+                                    <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
+                                </div>
+                            </form>
                         </div>
                         <div class="row stepsContent" *ngIf="_step === 2">
                             <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 5px">
@@ -178,7 +198,7 @@
                             <div class="notProcessing" *ngIf="!processing.started">
                                 <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
                                     <p><b>Nombre o razón social: </b>{{ckeckItem(contacto.razon_social).text}}</p>
-                                    <p *ngIf="contacto.nombre_fantasia"><b>Nombre de fantasia: </b>{{contacto.nombre_fantasia}}</p>
+                                    <p *ngIf="contacto.nombre_fantasia"><b>Nombre comercial: </b>{{contacto.nombre_fantasia}}</p>
                                     <p><b>Email: </b>{{ckeckItem(contacto.email).text}}</p>
                                     <p><b>CAT. IVA.: </b>{{ckeckItem(cativa).text}}</p>
                                     <p><b>Localidad: </b>{{ckeckItem(contacto.domicilio_ciudad).text}}</p>
@@ -222,6 +242,11 @@
                         </div>
                         <div class="col-xs-12 col-md-6 footer__col">
                             <button type="button" class="facebook"> CONTINUAR CON FACEBOOK </button>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="!registrarStatus && config.mensajeModalLoginActivo">
+                        <div class="col-xs-12 col-md-12 no-padding">
+                            <div class="mensaje__login" [innerHTML]="config.mensajeModalLoginMensaje"></div>
                         </div>
                     </div>
                     <div class="row" *ngIf="registrarStatus && !processing.started">
@@ -332,7 +357,8 @@
                             <div class="buscador_cuenta">
                                 <input type="text" placeholder="Escriba para filtrar por Razón Social o CUIT" [(ngModel)]="filterBusqueda" style="    width: 100%;
                                 border: none;
-                                padding: 5px 10px;">
+                                padding: 5px 10px;"
+                                name="filtroBusqueda">
                             </div>
                             <div class="buscador_btn">
                                 <span>
@@ -412,21 +438,33 @@
                         <div *ngIf="!login.confirMsg" class="card">
                             <h3 class="card-header">¡Bienvenido! Ingrese los datos de confirmación</h3>
                             <p class="col-xs-12 col-md-12" style="text-align: center; padding: 5px 0px;">Si algunos de tus datos no corresponde con los que se indican a continuación contactate con un asesor de Sina para actualizar tu información</p>
-                            <div class="card-block" style="display: flex;">
-                                <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
-                                    <input style="width: 100%; margin-bottom: 10px;" type="text" [(ngModel)]="auth.email"  disabled="disabled">
-                                    <input style="width: 100%;" type="text" [(ngModel)]="auth.razonsocial"  disabled="disabled">
+                            <form>
+                                <div class="card-block" style="display: flex;">
+                                    <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
+                                        <input style="width: 100%; margin-bottom: 10px;" type="text" [(ngModel)]="auth.email" name="authEmail" disabled="disabled" autocomplete="username">
+                                        <input style="width: 100%;" type="text" [(ngModel)]="auth.razonsocial" name="authRazonSocial" disabled="disabled" autocomplete="username">
+                                    </div>
+                                    <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
+                                        <!-- <input style="width: 100%; margin-bottom: 10px;" name="contrasena" type="password" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" autocomplete="new-password"> -->
+                                        <div style="width: 100%; margin-bottom: 10px;">
+                                            <input class="password__input" [type]="password_type" name="contrasena" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" autocomplete="new-password">
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        </div>
+                                        <!-- <input style="width: 100%;" type="password" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido" autocomplete="new-password"> -->
+                                        <div style="width: 100%;">
+                                            <input class="password__input" [type]="password_type" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido" autocomplete="new-password">
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
-                                    <input style="width: 100%; margin-bottom: 10px;" type="password" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" >
-                                    <input style="width: 100%;" type="password" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido">
+                                <div class="card-block">
+                                    <div class="col-xs-12 col-md-12" style="float: none;">
+                                        <p style="color: #F44336; margin-top: 5px;" *ngIf="login.error">{{login.errorMsg || "Error en el logeo"}}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-block">
-                                <div class="col-xs-12 col-md-12" style="float: none;">
-                                    <p style="color: #F44336; margin-top: 5px;" *ngIf="login.error">{{login.errorMsg || "Error en el logeo"}}</p>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                         <div class="card" *ngIf="login.confirMsg">
                             <h3 class="card-header">Mensaje de confirmación</h3>

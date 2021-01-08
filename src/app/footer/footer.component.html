@@ -6,7 +6,7 @@
         <div class="content">
           <p>Email: <a href="mailto:infoweb@sina.com.ar" style="text-transform: none;">infoweb@sina.com.ar</a></p>
           <p>Teléfono: <a href="tel:01121399100">011 2139-9100</a></p>
-          <p>Whatsapp: <a target="_blank" href="https://api.whatsapp.com/send?phone=5491123145727">+54 9 11 2314-5727</a></p>
+          <p>Whatsapp: <a target="_blank" rel="noopener noreferrer" href="https://api.whatsapp.com/send?phone=5491123145727">+54 9 11 2314-5727</a></p>
           <p>Horario de atención: Lun. a Vie. de 8 a 12 hs. y de 14 a 17 hs. Sáb. de 8 a 12 hs.</p>
           <p>Domicilio: Madres de Plaza de Mayo 949, Quilmes, Bs. As.</p>
         </div>
@@ -40,7 +40,7 @@
                 <div class="content">
                   <ul class="ulSocial">
                     <li *ngFor="let item of SocialList" class="nav-item" [ngClass]="{'active': item.active}">
-                      <a class="nav-link" href="{{item.url}}">
+                      <a class="nav-link" href="{{item.url}}" target="_blank" rel="noopener noreferrer">
                         <img [ngClass]="'lazyload'" [attr.data-src]="item.urlImg" title="{{item.texto}}" />
                         <p>
                         {{item.texto}}
@@ -54,9 +54,9 @@
             <div class="col-sm-4 col-xs-12 footer__section">
                 <div class="header">NEWSLETTER / SUSCRIBITE</div>
                 <div class="content">
-                  <input type="text" name="nombre" placeholder="Nombre" [(ngModel)]="nombre">
-                  <input type="text" name="email"  placeholder="Email" [(ngModel)]="email">
-                  <a class="whiteButton" (click)="suscribir()">{{suscripcion}}</a>
+                  <input type="text" name="nombre" placeholder="Nombre" [(ngModel)]="nombre" [disabled]="!enableSuscribir">
+                  <input type="text" name="email"  placeholder="Email" [(ngModel)]="email" [disabled]="!enableSuscribir">
+                  <button class="whiteButton" (click)="suscribir()" type="button" [disabled]="!enableSuscribir">{{suscripcion}}</button>
                 </div>
             </div>
             <div class="col-sm-4 col-xs-12 footer__section">

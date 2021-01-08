@@ -41,7 +41,7 @@ export class SidebarComponent implements OnInit {
             this.UserLog = status;
             if (this.data.user) {
               try {
-                this.UserName = this.data.user.nombreFantasia;
+                this.UserName = this.data.user.razonSocial;
                 this.UserJob  = this.data.user.categoriaIva;
               }catch (e) {
                 this.data.log('oninit error sidebar:', e);

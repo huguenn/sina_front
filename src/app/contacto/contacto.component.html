@@ -16,7 +16,7 @@
               </div>
             </div>
             <p>Tel.: <a href="tel:01121399100">011 2139-9100</a></p>
-            <p>Whatsapp: <a target="_blank" href="https://wa.me/5491123145727?text=Hola">+54 9 11 2314-5727</a></p>
+            <p>Whatsapp: <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491123145727?text=Hola">+54 9 11 2314-5727</a></p>
             <p>Madres de Plaza de Mayo 949, Quilmes, Bs. As.</p>    
             <p>Horario de atención:  Lun. a Vie. de 8 a 12 hs. y de 14 a 17 hs. Sáb. de 8 a 12 hs.</p>
             <p><a href="mailto:infoweb@sina.com.ar" style="text-transform: none;">infoweb@sina.com.ar</a></p>
@@ -30,7 +30,7 @@
                 <textarea class="form-control" [(ngModel)]="mensaje" name="mensaje" rows="11" placeholder="Mensaje" required></textarea>
                 <p style="color: #057aff;"*ngIf="respuesta">{{respuesta}}</p>
                 <p style="color: #ea4335" *ngIf="error">{{error}}</p>
-                <input class="actionButton" style="width: 100%;text-align: center;" value="ENVIAR" (click)="enviar()"/>
+                <button type="button" class="actionButton" style="width: 100%;text-align: center;" (click)="enviar()">ENVIAR</button>
               </form>
           </div>
         </div>

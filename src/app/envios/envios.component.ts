@@ -10,7 +10,16 @@ export class EnviosComponent implements OnInit {
 
   constructor(private data: SharedService) { }
 
+  config: any;
+
   ngOnInit() {
     this.data.updatePageTitle();
+    
+    // subscribing to config change
+    this.data.currentConfig.subscribe(
+      configuracion => {
+        this.config = configuracion;
+      }
+    );
   }
 }

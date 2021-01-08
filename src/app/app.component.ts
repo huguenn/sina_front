@@ -60,6 +60,8 @@ export class AppComponent implements OnInit {
 
   };
 
+  public password_type: string = 'password';
+
   public mensajesEstados: any = {
     campoNoValido: ''
   };
@@ -428,7 +430,10 @@ export class AppComponent implements OnInit {
 
           // Chequeo que el cuit contenga solo números, sin puntos ni guiones
           if ($campo_obligatorio === 'cuit' && this.contacto[$campo_obligatorio]) {
-            const cuitRegExp = new RegExp(/^\d+$/); // numeros del 0 al 9
+            var cuitRegExp = new RegExp(/^\d{11}$/); // numeros del 0 al 9, obligado a 11 caracteres (CUIT)
+            if(this.cuit === 'DNI (Solo numeros)*') {
+              cuitRegExp = new RegExp(/^\d{8}$/); // numeros del 0 al 9, obligado a 8 caracteres (DNI)
+            }
             if (cuitRegExp.test(this.contacto[$campo_obligatorio])) {
               delete this.validador[$campo_obligatorio];
               this.validationCUIT = false;
@@ -712,6 +717,8 @@ export class AppComponent implements OnInit {
           switchAltasActivo: $response.response.switchAltasActivo === '1' ? true : false,
           switchComprasActivo: $response.response.switchComprasActivo === '1' ? true : false,
           switchContactosActivo: $response.response.switchContactosActivo === '1' ? true : false,
+          mensajeModalLoginActivo: $response.response.mensajeModalLoginActivo === '1' ? true : false,
+          mensajeModalLoginMensaje: $response.response.mensajeModalLoginMensaje,
         }
         this.data.updateConfiguracion(c);
       }
@@ -1109,6 +1116,14 @@ export class AppComponent implements OnInit {
     }, 500);
   }
 
+  togglePasswordType() {
+    if(this.password_type === 'password') {
+      this.password_type = 'text';
+    }
+    else if(this.password_type === 'text') {
+      this.password_type = 'password';
+    }
+  }
 }
 
 @Pipe({
