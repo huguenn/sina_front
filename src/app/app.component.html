@@ -29,8 +29,8 @@
               <div class="modal-header">
                 <img class="desktop" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
                 <img class="mobile" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
-              <h4 class="modal-title desktop">{{registrarStatus ? (config.switchAltasActivo ? "Registrando nuevo usuario" : "&#x26A0; Altas de usuarios suspendidas temporalmente &#x26A0;") : ("Bienvenido / Bienvenida")}}</h4>
-              <h4 class="modal-title movil">{{registrarStatus ? (config.switchAltasActivo ? "Registro en 3 pasos" : "&#x26A0; Altas suspendidas temporalmente &#x26A0;") : ("Bienvenido / Bienvenida")}}</h4>
+              <h4 class="modal-title desktop">{{registrarStatus ? (config.switchAltasActivo ? "Registrando nuevo usuario" : "&#x26A0; Altas de usuarios suspendidas temporalmente &#x26A0;") : ("Bienvenido | Bienvenida")}}</h4>
+              <h4 class="modal-title movil">{{registrarStatus ? (config.switchAltasActivo ? "Registro en 3 pasos" : "&#x26A0; Altas suspendidas temporalmente &#x26A0;") : ("Bienvenido | Bienvenida")}}</h4>
               <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
               <span style="color: red;" aria-hidden="true">X</span>
               </button>
@@ -60,7 +60,7 @@
                         <p style="color: #00C973; margin-top: 5px; text-align: center;" *ngIf="recuperarOk">{{recuperarOk}}</p>
                         <p style="color: #F44336; margin-top: 5px;" *ngIf="recuperarError">{{recuperarError}}</p>
                         <button *ngIf="!recuperarOk" class="btn btn-outline-dark actionButton" type="button"(click)="enterRecuperarEvento()">RECUPERAR CONTRASEÑA</button>
-                        <a (click)="recuperarClave = false; recuperarOk = ''; recuperarError = ''">Iniciar Sesión</a>
+                        <a style="cursor: pointer;" (click)="recuperarClave = false; recuperarOk = ''; recuperarError = ''">Iniciar Sesión</a>
                       </div>
                     </div>
                 </form>
@@ -130,8 +130,8 @@
 
 
                                     <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                    <span *ngIf="validationCUIT && cuit === 'DNI (Solo numeros)*'" style="color: red;">Solo usar 8 números en el campo DNI</span>
-                                    <span *ngIf="validationCUIT && cuit === 'CUIT (Solo numeros)*'" style="color: red;">Solo usar 11 números en el campo CUIT</span>
+                                    <span *ngIf="validationCUIT && cuit === 'DNI (Solo numeros)*'" style="color: red;">Colocar 8 dígitos, sin puntos</span>
+                                    <span *ngIf="validationCUIT && cuit === 'CUIT (Solo numeros)*'" style="color: red;">Colocar 11 dígitos, sin guiones</span>
                                     <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
                                     <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
@@ -355,7 +355,7 @@
                         <div class="card">
                             <h3 class="card-header">Seleccione alguna de las {{cantCuentasRepresentar}} cuentas que puede representar</h3>
                             <div class="buscador_cuenta">
-                                <input type="text" placeholder="Escriba para filtrar por Razón Social o CUIT" [(ngModel)]="filterBusqueda" style="    width: 100%;
+                                <input type="text" placeholder="Escriba para filtrar por Cód. Cliente, Razón Social o CUIT" [(ngModel)]="filterBusqueda" (keydown)="enterBusqueda($event)" style="width: 100%;
                                 border: none;
                                 padding: 5px 10px;"
                                 name="filtroBusqueda">

@@ -377,26 +377,40 @@
                       </div>
                       <div class="row envio__seccion__content retiro" style="width: 100%;
                           margin: 0;
-                          padding: 0 5px;
-                          padding-right: 30px;">
+                          padding: 0 5px;">
                           <p style="font-weight: bold; font-size: 14px; padding-bottom: 10px;">Día y horario</p>
-                          <div class="form-group row">
-                            <div class="col-xs-7 horario">
-                              <input [ngModel]="retiroHora | date:'yyyy-MM-dd'" (ngModelChange)="fechaUpdate($event)" type="date" name="retiroHora"/>
+                          <div class="form-group">
+                            <div class="horario" style="width: 234px;">
+                              <input [ngModel]="retiroHora | date:'yyyy-MM-dd'" (ngModelChange)="fechaUpdate($event)" type="date" [min]="hoyFormatted" name="retiroHora"/>
                             </div>
-                            <div class="col-xs-5 horario">
-                              <input [ngModel]="retiroHora1 | date:'HH:mm'" (ngModelChange)="fechaUpdate1($event)" type="time" name="retiroHora1"/>
+                            <br>
+                            <div class="horario">
+                              <div class="col__1" style="padding-left: 0px;">
+                                <input [ngModel]="inputHora" (ngModelChange)="fechaUpdate1($event)" name="retiroHora1" type="number"/>
+                              </div>
+                              <div class="col__1"><p>:</p></div>
+                              <div class="col__2" style="padding-right: 0px;">
+                                <!-- <input [ngModel]="inputMinuto" (ngModelChange)="fechaUpdate2($event)" name="retiroHora2"/> -->
+                                <div class="btn-group" role="group" aria-label="Minutos">
+                                  <button type="button" class="btn btn-minuto" [ngClass]="{'selected' : inputMinuto === '00'}" (click)="fechaUpdate2('00')" name="retiroHora2">00</button>
+                                  <button type="button" class="btn btn-minuto" [ngClass]="{'selected' : inputMinuto === '15'}" (click)="fechaUpdate2('15')" name="retiroHora3">15</button>
+                                  <button type="button" class="btn btn-minuto" [ngClass]="{'selected' : inputMinuto === '30'}" (click)="fechaUpdate2('30')" name="retiroHora4">30</button>
+                                  <button type="button" class="btn btn-minuto" [ngClass]="{'selected' : inputMinuto === '45'}" (click)="fechaUpdate2('45')" name="retiroHora5">45</button>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div class="form-group row">
-                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia === 'Domingo'">No es posible el retiro los días Domingo</p>
-                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia === 'Sábado'">Sábados: horarios de retiro es de 08hs a 11:30hs</p>
-                            <p style="color: red; margin: 0px 15px;" *ngIf="!retiro && dia !== 'Domingo' && dia !== 'Sábado'">Lunes a Viernes: horarios de retiro es de 08hs a 12hs y de 14hs a 17hs</p>
+                          <div class="form-group row" style="margin: 0px; width: 234px; border: 1px solid black;">
+                            <p tabindex="1" #mensaje_error_retiro style="color: red; margin: 10px; font-weight: bold;" *ngIf="flagHoraPasada">La fecha/horario seleccionados ya pasaron!</p>
+                            <p tabindex="1" #mensaje_error_retiro style="color: red; margin: 10px; font-weight: bold;" *ngIf="dia === 'Domingo'">No es posible el retiro los días Domingo</p>
+                            <p tabindex="1" #mensaje_error_retiro style="color: red; margin: 10px; font-weight: bold;" *ngIf="!retiro && dia === 'Sábado'">Sábados: horario de retiro es de 08 a 12hs</p>
+                            <p tabindex="1" #mensaje_error_retiro style="color: red; margin: 10px; font-weight: bold;" *ngIf="!retiro && dia !== 'Domingo' && dia !== 'Sábado'">Lunes a Viernes: horario de retiro es de 08 a 12hs y de 14 a 17hs.<br>Sábados: horario de retiro es de 08 a 12hs</p>
+                            <p style="color: #00c973; margin: 10px; font-weight: bold;" *ngIf="retiro && dia !== 'Domingo'">Retirás: {{dia}} {{inputFecha}} a las {{inputHora}}:{{inputMinuto}} hrs</p>
                           </div>
-                          <p style="font-weight: bold; font-size: 14px; padding-bottom: 10px;">Dirección</p>
+                          <p style="font-weight: bold; font-size: 14px; padding-top: 10px; padding-bottom: 10px;">Dirección</p>
                           <div class="form-group row">
                             <div class="col-xs-12">
-                              <p class="mapa__container">Madres de plaza de Mayo 949, Quilmes.
+                              <p class="mapa__container"><a href="https://g.page/Sina-messina-hnos?share" target="_blank" rel="noopener noreferrer">Madres de plaza de Mayo 949 (1878), Quilmes.</a>
                               <a>
                                 <div class="mapa__content" *ngIf="mapa">
                                     <span (click)="mapa = !mapa">x</span>

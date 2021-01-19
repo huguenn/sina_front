@@ -804,9 +804,9 @@ export class AppComponent implements OnInit {
         // }
       } else {
         this.actualEmergenteFlag = false;
-        setTimeout(() => {
-          this.data.closeLoginModal();
-        }, 1000);
+        // setTimeout(() => {
+        //   this.data.closeLoginModal();
+        // }, 1000);
       }
     }
   }
@@ -960,6 +960,11 @@ export class AppComponent implements OnInit {
   public cambiarCantFiltro(event: any): void {
     this.filterCantidad = event.target.value;
   }
+  enterBusqueda(event) {
+    if (event.keyCode == 13) {
+      this.filtrarCuentas();
+    }
+  }
   filtrarCuentas() {
     this.loginLoading = true;
 
@@ -996,7 +1001,8 @@ export class AppComponent implements OnInit {
                 this.auth.localSet('user', $response.response as cliente);
                 this.auth.userTypeUpdate($response.response['numeroListaPrecios']);
                 this.representarCancel();
-                window.location.reload(true);
+                // window.location.reload(true); // forceReload deprecated
+                window.location.href = window.location.href;
               })
               .catch($error => this.data.log('representarcuenta error app', $error));
           }, 1000);

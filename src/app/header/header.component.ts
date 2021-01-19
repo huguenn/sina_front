@@ -95,6 +95,9 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
     { texto: 'Ultimas compras', id: 3 },
     { texto: 'Cerrar sesión', id: 4 }
   ];
+  headerCuentaLink(id: number) {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => this.router.navigate(['/cuenta'], { queryParams: {tab: id}}));
+  }
   texto_busqueda: string = '';
   ResultadoBusqueda: any;
   enterBusqueda(event) {

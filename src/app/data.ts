@@ -130,6 +130,7 @@ export class ProductoCompleto extends Producto {
   /* Variables globales */
   descripcion: String;
   condicion:  String;
+  id: number;
   constructor( ) {
       super();
       this.descripcion = '';

@@ -7,15 +7,17 @@
     
       <p>
         ¡Llegamos a todo el país con el mejor servicio de asesoramiento, venta y postventa del mercado!<br />
-        <br />
+        <br/>
         Tenes que hacer tu pedido con <b>ANTICIPACIÓN</b>, debido a que el espacio es <b>LIMITADO</b>.<br />
-        <br />
+        <br/>
         <!-- <b>Mínimo de compra para envíos sin cargo: $5.000 + IVA.-</b> <br /> -->
-        <b>El monto mínimo de compra es de ${{config.montoMinimo}}.- + IVA.<br/>
-        El monto mínimo de compra para envíos es de ${{config.montoEnvio}}.- + IVA.<br/>
-        El monto mínimo de compra para envíos sin cargo es de ${{config.montoEnvioGratis}}.- + IVA.<br/></b>
-        <br />
-        <span style="font-size: 11px; font-weight: bold;">LOS DIAS DE ENTREGA DETALLADOS CORRESPONDEN A LA LOGISTICA Y DISTRIBUCION EN SITUACIONES NORMALES Y HABITUALES, LOS MISMOS PUEDEN ESTAR SUJETOS A MODIFICACIONES.</span>
+        <b>
+          <!-- El monto mínimo de compra es de ${{config.montoMinimo}}.- + IVA.<br/>
+          El monto mínimo de compra para envíos es de ${{config.montoEnvio}}.- + IVA.<br/>
+          El monto mínimo de compra para envíos sin cargo es de ${{config.montoEnvioGratis}}.- + IVA.<br/> -->
+          Mínimo de compra para envíos sin cargo: ${{config.montoEnvioGratis}}.-<br/>
+        </b>
+        <span style="font-size: 12px;">Las  compras inferiores a tal mínimo, tendrán un valor adicional de ${{config.costoEnvio}}.- por  envío.</span>
       </p>
 
       <div class="line"></div>
@@ -23,39 +25,51 @@
       <div class="celda sesenta vmiddle">
         <h3>GBA</h3>
         <p style="margin-bottom: 20px;">
-          ventasgba@sina.com.ar<br />
-          011-2139-9100 pre atendedor | Opción 01<br />
-          Cel/Whatsapp: +54 11-3561-3680| +54 11-3561-3682
+          ventasgba@sina.com.ar | ventasgbasur@sina.com.ar<br/>
+          011-2139-9100 pre atendedor | Opción 01<br/>
+          Cel|Whatsapp: +54 11-2314-5727 | +54 11-3561-3682
         </p>
 
         <h4>ENTREGAS DIRECTAS:</h4>
 
         <ul>
-          <li><span class="textoNegro">GBA Zona Norte y Zona Oeste:</span> días Lunes, Miércoles y Sábados.</li>
-          <li><span class="textoNegro">GBA Zona Sudoeste:</span> días Martes, Jueves y Sábados.</li>
-          <li><span class="textoNegro">GLP y La Plata:</span> días Miércoles y Viernes.</li>
-          <li><span class="textoNegro">GBA Zona Sur:</span> días Martes, Viernes y Sábados.</li>
+          <li><span class="textoNegro">GBA Zona Norte y Zona Oeste</span></li>
+          <li><span class="textoNegro">GBA Zona Sudoeste</span></li>
+          <li><span class="textoNegro">GLP y La Plata</span></li>
+          <li><span class="textoNegro">GBA Zona Sur</span></li>
         </ul>
+
+        <h3>¡Ampliamos nuestras zonas de entrega directa!</h3>
+
+        <span>
+          <span style="display: inline;"><b style="display: inline;">Ahora también</b></span> <span style="display: inline;"><p style="color: #0579ff; display: inline;">GRAN GBA</p>; entregamos en las siguientes zonas y sus alrededores: <br>
+          <b style="color: #0579ff;">Escobar - Pilar - Lujan – Cañuelas – Mercedes - Chascomús - Magdalena</b></span>
+        </span><br>
+        <br>
+        <span>
+          <b style="color: #0579ff;">CONSULTA DÍAS DE ENTREGA</b> - comunícate al Cel|Whatsapp: +54 11-3951-1753 <br>
+          gbasegundocordon@sina.com.ar
+        </span>
 
         <div class="line"></div>
 
         <h3>CABA | INTERIOR DEL PAIS</h3>
 
         <p style="margin-bottom: 20px;">
-          ventasinterior@sina.com.ar<br />
-          011-2139-9100 pre atendedor | Opción 02<br />
-          Cel/Whatsapp: +54 11-3854-2732 | +54 11-3561-3675
+          ventasinterior@sina.com.ar<br/>
+          011-2139-9100 pre atendedor | Opción 02<br/>
+          Cel|Whatsapp: +54 11-3854-2732 | +54 11-3561-3675
         </p>
 
         <h4>ENTREGAS DIRECTAS:</h4>
 
         <ul>
-          <li><span class="textoNegro">CABA | EXPRESOS SITUADOS EN CABA:</span> días lunes, martes, miércoles y jueves.</li>
+          <li><span class="textoNegro">CABA | TRANSPORTES SITUADOS EN CABA</span></li>
         </ul>
 
         <p>
-          LOS EXPRESOS O TRASNPORTES DE CARGA, SON A ELECCION DEL CLIENTE EN BASE A SU CONVENIENCIA (precio – calidad de servicio – velocidad de entrega – etc.)<br />
-          <br />
+          LOS EXPRESOS O TRANSPORTES DE CARGA, SON A ELECCION DEL CLIENTE EN BASE A SU CONVENIENCIA (precio – calidad de servicio – velocidad de entrega – etc.)<br />
+          <br/>
           NO REALIZAMOS COTIZACION NI MANEJAMOS COSTOS DE LOS SERVICIOS DE ENTREGA CONTRATADOS POR EL CLIENTE.
         </p>
 
@@ -63,11 +77,7 @@
         
         <h3>¡VENI A RETIRAR TU PEDIDO EN MOSTRADOR!</h3>
 
-        <p style="margin-bottom: 20px;">
-          ventasmostrador@sina.com.ar<br />
-          011-2139-9100 pre atendedor | Opción 01<br />
-          Cel/Whatsapp: +54 11-3561-3680
-        </p>
+        <b>Mínimo de compra: ${{config.montoMinimo}}.- Una vez realizado tu pedido,  el retiro del mismo será programa por nuestro equipo de ventas, por orden de llegada.</b>
 
         <h4>DÍAS Y HORARIOS:</h4>
 
@@ -75,6 +85,12 @@
           <li><span class="textoNegro">LUNES A VIERNES:</span> de 8 a 12 hs. y de 14 a 17 hs.</li>
           <li><span class="textoNegro">SABADOS:</span> de 8 a 12 hs.</li>
         </ul>
+
+        <p style="margin-bottom: 20px;">
+          ventasmostrador@sina.com.ar<br/>
+          011-2139-9100 pre atendedor | Opción 01<br/>
+          Cel|Whatsapp: +54 11-3561-3680
+        </p>
 
       </div>
     

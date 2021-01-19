@@ -100,5 +100,9 @@ export class SidebarComponent implements OnInit {
   toggleSideBar() {
     this.data.toggleSideBar();
   }
+  sidebarCerrarSesion() {
+    this.toggleSideBar();
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => this.router.navigate(['/cuenta'], { queryParams: {tab: 4}}));
+  }
 
 }

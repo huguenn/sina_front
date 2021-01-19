@@ -99,10 +99,11 @@
     max-width: 116px;
     min-width: 100px;
     margin: 0px 10px;
-    line-height: 15px;
+    line-height: 20px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+    font-weight: bold;
 }
 .navbar-fixed .login p{
     width: 40px;
@@ -955,6 +956,7 @@
 
 .login .popup ul li {
     cursor: pointer;
+    margin: 0px;
 }
 
 .login .popup__lista {

@@ -43,6 +43,8 @@ export class FooterComponent implements OnInit {
 
     if(this.nombre && this.email) {
 
+      var resultado = 'OK';
+
       const sendyUrl = 'https://mailing.leren.com.ar/';
 
       const body = new URLSearchParams();
@@ -69,6 +71,7 @@ export class FooterComponent implements OnInit {
           })
           .catch($error => {
             this.data.log('error suscribir footer', $error);
+            resultado = $error.error.text;
           });
         })
         .catch(error => {
@@ -80,6 +83,7 @@ export class FooterComponent implements OnInit {
           })
           .catch($error => {
             this.data.log('error suscribir footer', $error);
+            resultado = $error.error.text;
           });
         });
       } else {
@@ -91,6 +95,7 @@ export class FooterComponent implements OnInit {
         })
         .catch($error => {
           this.data.log('error suscribir footer', $error);
+          resultado = $error.error.text;
         });
       }
 
@@ -100,7 +105,7 @@ export class FooterComponent implements OnInit {
       setTimeout(() => {
       this.suscripcion = 'ENVIANDO...';
       setTimeout(() => {
-      this.suscripcion = 'ENVIADO!';
+      this.suscripcion = resultado === 'Already subscribed.' ? 'YA ESTÁS SUSCRITO/A!' : 'ENVIADO!';
       setTimeout(() => {
         this.email = '';
         this.nombre = '';

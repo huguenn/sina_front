@@ -57,7 +57,7 @@
               <div class="popup" *ngIf="popup.cuenta">
                 <div class="popup__lista">
                   <ul class="list-group">
-                    <li [routerLink]="['/cuenta']" [queryParams]="{tab: item.id}" *ngFor="let item of cuenta" class="list-group-item">
+                    <li (click)="headerCuentaLink(item.id)" *ngFor="let item of cuenta" class="list-group-item">
                       {{item.texto}}
                     </li>
                   </ul>          
@@ -217,7 +217,7 @@
                 <div class="popup" *ngIf="popup2.cuenta">
                   <div class="popup__lista">
                     <ul class="list-group">
-                      <li [routerLink]="['/cuenta']" [queryParams]="{tab: item.id}" *ngFor="let item of cuenta" class="list-group-item">
+                      <li (click)="headerCuentaLink(item.id)" *ngFor="let item of cuenta" class="list-group-item">
                         {{item.texto}}
                       </li>
                     </ul>          

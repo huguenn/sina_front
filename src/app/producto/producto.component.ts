@@ -58,6 +58,11 @@ export class ProductoComponent implements OnInit {
         medium: this.producto['urlImagen'],
         big: this.producto['urlImagen'],
         }];
+        this.data.lista.forEach(articulo_carrito => {
+          if (articulo_carrito.id === this.producto.id) {
+            this.producto.comprado = true;
+          }
+        });
     }
     ngOnInit(): void {
       this.data.updatePageTitle('Sina', 'Comprá con entrega a todo el país, hacé tu pedido online!');
@@ -141,28 +146,49 @@ export class ProductoComponent implements OnInit {
     this.successMessage = null;
     this.data.toggleCarritoShow();
   }
-  
+
   newMessage(msg) {
     const precio = msg.precio;
     if (this.loginStatus === true) {
       if (msg.cantidad) {
         if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
-          msg.comprado = true;
-          this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
-          this._success.next(`Agregado al Carrito!`);
+          const body = new URLSearchParams();
+          body.set('id_producto', msg.id);
+          body.set('cantidad', msg.cantidad);
+          this.auth.post('carrito/agregar_item', body)
+          .then($response => {
+            this.data.log('response carritoagregaritem producto-item', $response);
+            
+            const response = this.data.addMessage(msg);
+            if (response.value) {
+              this._success.next(response.text);
+            }
+          })
+          .catch($error => {
+            this.data.log('error carritoagregaritem producto-item', $error);
+          });
         } else {
           msg['incompleto'] = true;
         }
       }
-    } else {
+    }else {
       this.data.toggleLoginModal();
     }
   }
   removeMessage(msg) {
     if (this.loginStatus === true) {
-      this.data.removeMessage(msg);
-      msg.comprado = false;
-    } else {
+      const body = new URLSearchParams();
+      body.set('id_producto', msg.id);
+      this.auth.post('carrito/eliminar_item', body)
+      .then($response => {
+        this.data.log('response carritoeliminaritem compra', $response);
+        this.data.removeMessage(msg);
+        msg.comprado = false;
+      })
+      .catch($error => {
+        this.data.log('error carritoeliminaritem compra', $error);
+      });
+    }else {
       this.data.toggleLoginModal();
     }
   }

@@ -764,8 +764,55 @@
     transform: scale(1);
 }
 
+.horario {
+    min-height: 40px;
+    width: 236.66px;
+}
 .horario input {
     padding: 2px;
+    font-size: 1.8em;
+    width: 100%;
+}
+.horario p {
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+.horario .col__1 {
+    width: 38px;
+    float: left;
+    padding-left: 0px;
+    padding-right: 0px;
+    position: relative;
+    min-height: 1px;
+}
+.horario .col__2 {
+    width: 160px;
+    float: left;
+    padding-left: 0px;
+    padding-right: 0px;
+    position: relative;
+    min-height: 1px;
+}
+.horario .btn-minuto {
+    background-color: white;
+    padding: 2.5px 6.5px;
+    border: 1.5px inset rgb(118, 118, 118);
+    border-radius: 2px;
+    font-size: 1.8em;
+}
+.horario .btn-group .selected {
+    background-color: #0579ff;
+}
+/* Chrome, Safari, Edge, Opera */
+.horario .col__1 input::-webkit-outer-spin-button,
+.horario .col__1 input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+/* Firefox */
+.horario .col__1 input[type=number] {
+-moz-appearance: textfield;
 }
 
 .mapa__container {

@@ -27,6 +27,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 export class CompraComponent implements OnInit, AfterViewInit {
   @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
+  @ViewChild('mensaje_error_retiro') mensajeErrorRetiro: ElementRef;
   inputSub: Subscription;
   public modalLoading: boolean = false;
   iva_usuario: string = '';
@@ -124,68 +125,529 @@ export class CompraComponent implements OnInit, AfterViewInit {
           this.data.log('actualizardatosenvio error compra:', $error);
           reject($error);
         });
-    });
-  },
-  add: () => {
-    this.datosEnvio_flag = true;
-    return new Promise((resolve, reject) => {
-      const body = new URLSearchParams();
-      Object.keys(this.datostransporte.form).forEach(key => {
-        body.set(key, this.datostransporte.form[key]);
       });
-      this.auth.post('cliente/envio/nuevo_transporte', body)
-      .then($response => {
-        resolve($response.body.response);
-      })
-      .catch(($error) => {
-        this.data.log('envionuevotransporte error compra:', $error);
-        reject($error);
+    },
+    add: () => {
+      this.datosEnvio_flag = true;
+      return new Promise((resolve, reject) => {
+        const body = new URLSearchParams();
+        Object.keys(this.datostransporte.form).forEach(key => {
+          body.set(key, this.datostransporte.form[key]);
+        });
+        this.auth.post('cliente/envio/nuevo_transporte', body)
+        .then($response => {
+          resolve($response.body.response);
+        })
+        .catch(($error) => {
+          this.data.log('envionuevotransporte error compra:', $error);
+          reject($error);
+        });
       });
-  });
-  }
-};
+    }
+  };
   retiro: boolean = false;
+  flagHoraPasada: boolean = false;
   dia: string = '';
   hoy = new Date();
+  hoyFormatted = this.hoy.getFullYear() + '-' + this.hoy.getMonth()+1 + '-' + this.hoy.getDate();
   hoyMediodia = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), this.hoy.getDate(), 13, 0);
-  retiroHora = this.hoyMediodia;
+  retiroHora = this.hoyMediodia.getFullYear() + '-' + this.hoyMediodia.getMonth()+1 + '-' + this.hoyMediodia.getDate();
   retiroHora1 = this.hoyMediodia;
+  inputFecha: string = this.hoyMediodia.getDate() + '/' + this.hoyMediodia.getMonth()+1 + '/' + this.hoyMediodia.getFullYear();
+  inputHora: string = '13';
+  inputMinuto: string = '00';
   fechaUpdate($event) {
+    this.flagHoraPasada = false;
     this.retiroHora = $event;
+    const diaElegido = this.retiroHora.split('-')[2];
+    const mesElegido = this.retiroHora.split('-')[1];
+    const anoElegido = this.retiroHora.split('-')[0];
     const dias = $event.split('-');
     this.dia = this.diaSemana(dias[2], dias[1], dias[0]);
+    this.inputFecha = dias[2] + '/' + dias[1] + '/' + dias[0];
+
+    if (parseInt(anoElegido) < this.hoy.getFullYear()) {
+      this.retiro = false;
+      this.flagHoraPasada = true;
+    } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
+      if (parseInt(mesElegido) < this.hoy.getMonth()+1) {
+        this.retiro = false;
+        this.flagHoraPasada = true;
+      } else if (parseInt(mesElegido) === this.hoy.getMonth()+1) {
+        if (parseInt(diaElegido) < this.hoy.getDate()) {
+          this.retiro = false;
+          this.flagHoraPasada = true;
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && this.retiroHora1.getHours() < this.hoy.getHours()) {
+          this.retiro = false;
+          this.flagHoraPasada = true;
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && this.retiroHora1.getHours() === this.hoy.getHours()) {
+          if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes()+10) {
+            this.retiro = false;
+            this.flagHoraPasada = true;
+          } else {
+            switch (this.dia) {
+              case 'Domingo':
+                this.retiro = false;
+                break;
+              case 'Sábado':
+                if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+                  this.retiro = true;
+                } else if (this.retiroHora1.getHours() === 12) {
+                  this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+                break;
+              default:
+                if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+                  this.retiro = true;
+                  if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+                    if (this.retiroHora1.getHours() === 12) {
+                      this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                    } else {
+                      this.retiro = false;
+                    }
+                  } else {
+                    this.retiro = true;
+                  }
+                } else if (this.retiroHora1.getHours() === 17) {
+                  this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+                break;
+            }
+          }
+        } else {
+          switch (this.dia) {
+            case 'Domingo':
+              this.retiro = false;
+              break;
+            case 'Sábado':
+              if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+                this.retiro = true;
+              } else if (this.retiroHora1.getHours() === 12) {
+                this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+              break;
+            default:
+              if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+                this.retiro = true;
+                if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+                  if (this.retiroHora1.getHours() === 12) {
+                    this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                  } else {
+                    this.retiro = false;
+                  }
+                } else {
+                  this.retiro = true;
+                }
+              } else if (this.retiroHora1.getHours() === 17) {
+                this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+              break;
+          }
+        }
+      } else {
+        switch (this.dia) {
+          case 'Domingo':
+            this.retiro = false;
+            break;
+          case 'Sábado':
+            if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+              this.retiro = true;
+            } else if (this.retiroHora1.getHours() === 12) {
+              this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+            } else {
+              this.retiro = false;
+            }
+            break;
+          default:
+            if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+              this.retiro = true;
+              if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+                if (this.retiroHora1.getHours() === 12) {
+                  this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+              } else {
+                this.retiro = true;
+              }
+            } else if (this.retiroHora1.getHours() === 17) {
+              this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+            } else {
+              this.retiro = false;
+            }
+            break;
+        }
+      }
+    } else {
+      switch (this.dia) {
+        case 'Domingo':
+          this.retiro = false;
+          break;
+        case 'Sábado':
+          if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+            this.retiro = true;
+          } else if (this.retiroHora1.getHours() === 12) {
+            this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+          } else {
+            this.retiro = false;
+          }
+          break;
+        default:
+          if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+            this.retiro = true;
+            if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+              if (this.retiroHora1.getHours() === 12) {
+                this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+            } else {
+              this.retiro = true;
+            }
+          } else if (this.retiroHora1.getHours() === 17) {
+            this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+          } else {
+            this.retiro = false;
+          }
+          break;
+      }
+    }
   }
   fechaUpdate1($event) {
-    const hora = $event.split(':');
-    this.retiroHora1.setHours(parseInt(hora[0]));
-    this.retiroHora1.setMinutes(parseInt(hora[1]));
-    switch (this.dia) {
-      case 'Domingo':
-        this.retiro = false;
-        break;
-      case 'Sabado':
-        if (parseInt(hora[0]) >= 8 && parseInt(hora[0]) < 11) {
-          this.retiro = true;
-        }else if (parseInt(hora[0]) === 11) {
-          this.retiro = parseInt(hora[1]) >= 30 ? false : true;
-        }
-        break;
-      default:
-        if (parseInt(hora[0]) >= 8 && parseInt(hora[0]) < 16) {
-          this.retiro = true;
-          if (parseInt(hora[0]) >= 12 && parseInt(hora[0]) < 14) {
-            this.retiro = false;
-          } else {
-            this.retiro = true;
-          }
-        } else if (parseInt(hora[0]) === 16) {
-          this.retiro = parseInt(hora[1]) >= 30 ? false : true;
-        } else {
-          this.retiro = false;
-        }
-        break;
-    }
+    const diaElegido = this.retiroHora.split('-')[2];
+    const mesElegido = this.retiroHora.split('-')[1];
+    const anoElegido = this.retiroHora.split('-')[0];
+    this.flagHoraPasada = false;
+    const hora = $event;
+    this.inputHora = hora;
+    this.retiroHora1.setHours(parseInt(hora));
 
+    if (parseInt(anoElegido) < this.hoy.getFullYear()) {
+      this.retiro = false;
+      this.flagHoraPasada = true;
+    } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
+      if (parseInt(mesElegido) < this.hoy.getMonth()+1) {
+        this.retiro = false;
+        this.flagHoraPasada = true;
+      } else if (parseInt(mesElegido) === this.hoy.getMonth()+1) {
+        if (parseInt(diaElegido) < this.hoy.getDate()) {
+          this.retiro = false;
+          this.flagHoraPasada = true;
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && parseInt(hora) < this.hoy.getHours()) {
+          this.retiro = false;
+          this.flagHoraPasada = true;
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && parseInt(hora) === this.hoy.getHours()) {
+          if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes()+10) {
+            this.retiro = false;
+            this.flagHoraPasada = true;
+          } else {
+            switch (this.dia) {
+              case 'Domingo':
+                this.retiro = false;
+                break;
+              case 'Sábado':
+                if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+                  this.retiro = true;
+                } else if (parseInt(hora) === 12) {
+                  this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+                break;
+              default:
+                if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+                  this.retiro = true;
+                  if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
+                    if (parseInt(hora) === 12) {
+                      this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                    } else {
+                      this.retiro = false;
+                    }
+                  } else {
+                    this.retiro = true;
+                  }
+                } else if (parseInt(hora) === 17) {
+                  this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+                break;
+            }
+          }
+        } else {
+          switch (this.dia) {
+            case 'Domingo':
+              this.retiro = false;
+              break;
+            case 'Sábado':
+              if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+                this.retiro = true;
+              } else if (parseInt(hora) === 12) {
+                this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+              break;
+            default:
+              if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+                this.retiro = true;
+                if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
+                  if (parseInt(hora) === 12) {
+                    this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                  } else {
+                    this.retiro = false;
+                  }
+                } else {
+                  this.retiro = true;
+                }
+              } else if (parseInt(hora) === 17) {
+                this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+              break;
+          }
+        }
+      } else {
+        switch (this.dia) {
+          case 'Domingo':
+            this.retiro = false;
+            break;
+          case 'Sábado':
+            if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+              this.retiro = true;
+            } else if (parseInt(hora) === 12) {
+              this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+            } else {
+              this.retiro = false;
+            }
+            break;
+          default:
+            if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+              this.retiro = true;
+              if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
+                if (parseInt(hora) === 12) {
+                  this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+              } else {
+                this.retiro = true;
+              }
+            } else if (parseInt(hora) === 17) {
+              this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+            } else {
+              this.retiro = false;
+            }
+            break;
+        }
+      }
+    } else {
+      switch (this.dia) {
+        case 'Domingo':
+          this.retiro = false;
+          break;
+        case 'Sábado':
+          if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+            this.retiro = true;
+          } else if (parseInt(hora) === 12) {
+            this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+          } else {
+            this.retiro = false;
+          }
+          break;
+        default:
+          if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+            this.retiro = true;
+            if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
+              if (parseInt(hora) === 12) {
+                this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+            } else {
+              this.retiro = true;
+            }
+          } else if (parseInt(hora) === 17) {
+            this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
+          } else {
+            this.retiro = false;
+          }
+          break;
+      }
+    }
+  }
+  fechaUpdate2($event) {
+    const diaElegido = this.retiroHora.split('-')[2];
+    const mesElegido = this.retiroHora.split('-')[1];
+    const anoElegido = this.retiroHora.split('-')[0];
+    this.flagHoraPasada = false;
+    const minuto = $event;
+    this.inputMinuto = minuto;
+    this.retiroHora1.setMinutes(parseInt(minuto));
+
+    if (parseInt(anoElegido) < this.hoy.getFullYear()) {
+      this.retiro = false;
+      this.flagHoraPasada = true;
+    } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
+      if (parseInt(mesElegido) < this.hoy.getMonth()+1) {
+        this.retiro = false;
+        this.flagHoraPasada = true;
+      } else if (parseInt(mesElegido) === this.hoy.getMonth()+1) {
+        if (parseInt(diaElegido) < this.hoy.getDate()) {
+          this.retiro = false;
+          this.flagHoraPasada = true;
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && this.retiroHora1.getHours() < this.hoy.getHours()) {
+          this.retiro = false;
+          this.flagHoraPasada = true;
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && this.retiroHora1.getHours() === this.hoy.getHours()) {
+          if (parseInt(minuto) <= this.hoy.getMinutes()+10) {
+            this.retiro = false;
+            this.flagHoraPasada = true;
+          } else {
+            switch (this.dia) {
+              case 'Domingo':
+                this.retiro = false;
+                break;
+              case 'Sábado':
+                if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+                  this.retiro = true;
+                } else if (this.retiroHora1.getHours() === 12) {
+                  this.retiro = parseInt(minuto) === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+                break;
+              default:
+                if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+                  this.retiro = true;
+                  if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+                    if (this.retiroHora1.getHours() === 12) {
+                      this.retiro = parseInt(minuto) === 0 ? true : false;
+                    } else {
+                      this.retiro = false;
+                    }
+                  } else {
+                    this.retiro = true;
+                  }
+                } else if (this.retiroHora1.getHours() === 17) {
+                  this.retiro = parseInt(minuto) === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+                break;
+            }
+          }
+        } else {
+          switch (this.dia) {
+            case 'Domingo':
+              this.retiro = false;
+              break;
+            case 'Sábado':
+              if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+                this.retiro = true;
+              } else if (this.retiroHora1.getHours() === 12) {
+                this.retiro = parseInt(minuto) === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+              break;
+            default:
+              if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+                this.retiro = true;
+                if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+                  if (this.retiroHora1.getHours() === 12) {
+                    this.retiro = parseInt(minuto) === 0 ? true : false;
+                  } else {
+                    this.retiro = false;
+                  }
+                } else {
+                  this.retiro = true;
+                }
+              } else if (this.retiroHora1.getHours() === 17) {
+                this.retiro = parseInt(minuto) === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+              break;
+          }
+        }
+      } else {
+        switch (this.dia) {
+          case 'Domingo':
+            this.retiro = false;
+            break;
+          case 'Sábado':
+            if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+              this.retiro = true;
+            } else if (this.retiroHora1.getHours() === 12) {
+              this.retiro = parseInt(minuto) === 0 ? true : false;
+            } else {
+              this.retiro = false;
+            }
+            break;
+          default:
+            if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+              this.retiro = true;
+              if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+                if (this.retiroHora1.getHours() === 12) {
+                  this.retiro = parseInt(minuto) === 0 ? true : false;
+                } else {
+                  this.retiro = false;
+                }
+              } else {
+                this.retiro = true;
+              }
+            } else if (this.retiroHora1.getHours() === 17) {
+              this.retiro = parseInt(minuto) === 0 ? true : false;
+            } else {
+              this.retiro = false;
+            }
+            break;
+        }
+      }
+    } else {
+      switch (this.dia) {
+        case 'Domingo':
+          this.retiro = false;
+          break;
+        case 'Sábado':
+          if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 12) {
+            this.retiro = true;
+          } else if (this.retiroHora1.getHours() === 12) {
+            this.retiro = parseInt(minuto) === 0 ? true : false;
+          } else {
+            this.retiro = false;
+          }
+          break;
+        default:
+          if (this.retiroHora1.getHours() >= 8 && this.retiroHora1.getHours() < 17) {
+            this.retiro = true;
+            if (this.retiroHora1.getHours() >= 12 && this.retiroHora1.getHours() < 14) {
+              if (this.retiroHora1.getHours() === 12) {
+                this.retiro = parseInt(minuto) === 0 ? true : false;
+              } else {
+                this.retiro = false;
+              }
+            } else {
+              this.retiro = true;
+            }
+          } else if (this.retiroHora1.getHours() === 17) {
+            this.retiro = parseInt(minuto) === 0 ? true : false;
+          } else {
+            this.retiro = false;
+          }
+          break;
+      }
+    }
   }
 
   // Formato dia
@@ -229,7 +691,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
   constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router, private location: Location, private googleAnalyticsService: GoogleAnalyticsService) {
 
     this.transaccion = new DatosTransaccion(0);
-    this.dia = this.diaSemana(this.retiroHora.getDate(), this.retiroHora.toLocaleString('default', { month: 'long' }), this.retiroHora.getFullYear());
+    this.dia = this.diaSemana(this.hoyMediodia.getDate(), this.hoyMediodia.toLocaleString('default', { month: 'long' }), this.hoyMediodia.getFullYear());
     if (this.data.user) {
       this.user = this.data.user as cliente;
       this.auth.get('public/cliente/envio/getAll').then((result) => {
@@ -283,6 +745,10 @@ export class CompraComponent implements OnInit, AfterViewInit {
       };
       this.facturacion.cargar(this.user);
     }
+
+    setInterval(() => {
+      this.hoy = new Date();
+    }, 300000)
   }
 
   cargarTransporte: boolean = false;
@@ -362,6 +828,8 @@ export class CompraComponent implements OnInit, AfterViewInit {
         }
         this.data.log('confirmarpedido error compra:', $error);
       });
+    } else if (!this.retiro) {
+      this.mensajeErrorRetiro.nativeElement.focus();
     }
   }
 
@@ -390,7 +858,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
         }
       }
     });
-    this.fechaUpdate(this.retiroHora.getFullYear() + '-' + (this.retiroHora.getMonth() + 1) + '-' + this.retiroHora.getDate());
+    this.fechaUpdate(this.hoyMediodia.getFullYear() + '-' + (this.hoyMediodia.getMonth() + 1) + '-' + this.hoyMediodia.getDate());
   }
   ngAfterViewInit() {
     if(this.inputCantidad && this.inputCantidad.nativeElement) {

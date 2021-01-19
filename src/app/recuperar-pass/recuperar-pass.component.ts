@@ -27,6 +27,8 @@ export class RecuperarPassComponent implements OnInit {
 
     }
 
+    public password_type: string = 'password';
+
     ngOnInit() {
         this.data.updatePageTitle('Recuperar contraseña | Sina');
         this.data.closeLoginModal();
@@ -84,6 +86,15 @@ export class RecuperarPassComponent implements OnInit {
           }*/
           this.respuesta = ($error.error.response);
         });
+    }
+
+    togglePasswordType() {
+      if(this.password_type === 'password') {
+        this.password_type = 'text';
+      }
+      else if(this.password_type === 'text') {
+        this.password_type = 'password';
+      }
     }
 }
 

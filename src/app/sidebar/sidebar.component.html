@@ -127,7 +127,7 @@
             <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.png" alt="User" width="40" style="z-index: 2;">
             <p style="z-index: 2;">Iniciar sesión <br> Registrarse</p>
         </div>
-        <div class="cerrar" *ngIf="UserLog" (click)="toggleSideBar()" [routerLink]="['/cuenta']" [queryParams]="{tab: 4}">
+        <div class="cerrar" *ngIf="UserLog" (click)="sidebarCerrarSesion()">
             <p> Cerrar sesión </p>
         </div>
     </div>

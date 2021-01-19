@@ -28,7 +28,7 @@
   justify-content: space-between;
 }
 .divisor__formulario {
-  text-align: center;
+  /* text-align: center; */
   display: flex;
   flex-direction: row;
   flex-basis: 100%;
@@ -50,6 +50,15 @@
 .divisor__formulario__info > *,
 .divisor__formulario__mensaje > * {
   margin: 10px 0px;
+}
+@media screen and (max-width: 768px){
+  .divisor__formulario {
+    flex-direction: column;
+  }
+  .divisor__formulario__info,
+  .divisor__formulario__mensaje{
+    width: 100%;
+  }
 }
 .divisor__datos {
   display: flex;
