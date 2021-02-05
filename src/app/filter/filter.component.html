@@ -1,10 +1,10 @@
 <div class="container">
-  <h1 class="title">{{(categoriaHijo || categoriaPadre) ? (categoriaHijo ? (categoriaHijo + ', ' + categoriaHijo + ' al por mayor') : (categoriaPadre + ', ' + categoriaPadre + ' al por mayor')) : 'Productos de limpieza por mayor, fabrica de productos de limpieza'}}</h1>
+  <h1 class="title">{{(categoriaHijo || categoriaPadre) ? (categoriaHijo ? (categoriaHijo + ', ' + categoriaHijo + ' al por mayor') : (categoriaPadre + ', ' + categoriaPadre + ' al por mayor')) : 'Productos de ' + familiaActual + ' por mayor, fabrica de productos de ' + familiaActual}}</h1>
 </div>
 <div class="row message">
   <div class="container">
     <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
-      {{ successMessage }}
+      <i class="fa fa-check-circle fa-3x" aria-hidden="true"></i> {{ successMessage }}
       <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
     </ngb-alert>
   </div>
@@ -12,45 +12,6 @@
 <div class="container filter">
   <div class="row">
     <div class="col-md-3 col-xs-12" [ngStyle]="{'padding-top': modoVista === 'Paginado' ? '14px' : '0px' }">
-      <!-- <div class="row filter__selector filter__top" style="border: none; display: flex; flex-direction: column; height: auto;"> -->
-        <!--div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
-          <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Ordenar por</button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-            <button class="dropdown-item">Nombre</button>
-            <button class="dropdown-item">Precio</button>
-          </div>
-        </div-->
-        <!-- <div ngbDropdown placement="bottom-right" class="d-inline-block order col-md-8 col-xs-12">
-          <button class="btn btn-outline-primary" id="dropdownBasic2" ngbDropdownToggle>Vista: {{modoVista}}</button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
-            <button class="dropdown-item" (click)="cambiarVista('Paginado')">Paginado</button>
-            <button class="dropdown-item" (click)="cambiarVista('Listado')">Listado</button>
-          </div>
-        </div>  
-      </div> -->
-    <!--
-      <div class="row">
-        <div class="col-md-8 col-xs-12">
-          <div class="selection" 
-            [ngClass]="{'hidden': filter.head.selected == 0}" 
-            *ngFor="let filter of FilterItem; let i = index">
-            <div class="header"><p>{{filter.head.texto}}: {{filter.head.selectedText}}</p><span (click)="itemFilterRemoveClick(i)">x</span></div>
-          </div>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-md-8 col-xs-12 selector" 
-          [ngClass]="{'toggle': filter.head.state, 'hidden': filter.head.selected != 0}" 
-          *ngFor="let filter of FilterItem; let i = index">
-          <div class="header" (click)="itemFilterClick(i)"><p>{{filter.head.texto}}</p><span></span></div>
-          <div class="content">
-            <div *ngFor="let item of filter.items; let j = index" class="item" (click)="selectItemClick(i, j)">{{item.texto}}</div>
-          </div>
-        </div>
-      </div>
-      <br>
-    -->
       <div class="containerSidebarCategorias">
         <div class="row filter__top">
           <p>Vista</p>
@@ -98,7 +59,7 @@
             <h1 style="
             min-height: 15px;
             font-size: 14px;
-            margin: 0 0 10px;">{{categoriaPadre? categoriaPadre + " - " : ""}} {{categoriaHijo}}</h1>
+            margin: 0 0 10px;">{{(categoriaHijo || categoriaPadre) ? (categoriaPadre ? categoriaPadre + " - " + categoriaHijo : categoriaHijo) : (familiaActual)}}</h1>
         </div>
         <div class="siguiente__top" *ngIf="modoVista === 'Paginado'">
           <button (click)="paginado.anterior()">Anterior</button>
@@ -106,9 +67,48 @@
           <button (click)="paginado.siguiente()">Siguiente</button>
         </div>
       </div>
+      <div class="containerTopCategorias">
+        <span style="font-weight: bold;">Ordenar productos:
+          <div style="display: inline-block;">
+            <button type="button" class="ordenProductos_selector" (click)="toggleOrdenarMobile()">
+              <p *ngIf="!ordenamiento || (!ordenamiento.startsWith('nombre') && !ordenamiento.startsWith('precio'))">Por defecto</p>
+              <p *ngIf="ordenamiento && ordenamiento.startsWith('nombre')">Nombre</p>
+              <p *ngIf="ordenamiento && ordenamiento.startsWith('precio') && loginStatus">Precio</p>
+              <i *ngIf="!showOrdenarMobile" class="fa fa-caret-down" aria-hidden="true"></i>
+              <i *ngIf="showOrdenarMobile" class="fa fa-caret-up" aria-hidden="true"></i>
+            </button>
+            <ul class="ordenProductos" *ngIf="showOrdenarMobile">
+              <li (click)="ordenPorDefecto()" *ngIf="!ordenamiento || (!ordenamiento.startsWith('nombre') && !ordenamiento.startsWith('precio'))">
+                <p><strong>Por defecto</strong></p>
+                <p class="floatingRight"><strong><i class="fa fa-bullseye" aria-hidden="true"></i></strong></p>
+              </li>
+              <li (click)="ordenPorDefecto()" *ngIf="ordenamiento && (ordenamiento.startsWith('nombre') || ordenamiento.startsWith('precio'))" >
+                <p>Por defecto</p>
+                <p class="floatingRight"><i class="fa fa-circle" aria-hidden="true"></i></p>
+              </li>
+              <li (click)="ordenPorNombre()" *ngIf="ordenamiento && ordenamiento.startsWith('nombre')">
+                <p><strong>Nombre</strong></p>
+                <p class="floatingRight"><strong><i class="fa fa-bullseye" aria-hidden="true"></i></strong></p>
+              </li>
+              <li (click)="ordenPorNombre()" *ngIf="!ordenamiento || !ordenamiento.startsWith('nombre')">
+                <p>Nombre</p>
+                <p class="floatingRight"><i class="fa fa-circle" aria-hidden="true"></i></p>
+              </li>
+              <li (click)="ordenPorPrecio()" *ngIf="ordenamiento && ordenamiento.startsWith('precio') && loginStatus">
+                <p><strong>Precio</strong></p>
+                <p class="floatingRight"><strong><i class="fa fa-bullseye" aria-hidden="true"></i></strong></p>
+              </li>
+              <li (click)="ordenPorPrecio()" *ngIf="(!ordenamiento && loginStatus) || (!ordenamiento.startsWith('precio') && loginStatus)">
+                <p>Precio</p>
+                <p class="floatingRight"><i class="fa fa-circle" aria-hidden="true"></i></p>
+              </li>
+            </ul>
+          </div>
+        </span>
+      </div>
       <div class="row resultado">
         <div class="resultado__item col-md-3 col-xs-6" *ngFor="let item of listaResultados | filter : term">
-            <producto [item]="item" [sesion]="loginStatus" [mensaje]="_success"></producto>            
+            <app-producto-item [item]="item" [sesion]="loginStatus" [mensaje]="_success"></app-producto-item>            
         </div>
       </div>
       <div class="row">

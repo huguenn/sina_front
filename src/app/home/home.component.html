@@ -1,7 +1,7 @@
 <div class="row message">
     <div class="container">
         <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
-            {{ successMessage }}
+            <i class="fa fa-check-circle fa-3x" aria-hidden="true"></i> {{ successMessage }}
             <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
         </ngb-alert>
     </div>
@@ -26,16 +26,16 @@
     </div>
 </div>
 <div class="container">
-    <div class="resultado row" *ngFor="let row of listaResultados">
+    <div class="resultado row" style="margin: 50px 0px;" *ngFor="let row of listaResultados">
         <div class="col-xs-6 col-md-15">
             <div class="resultado__head">
                 <div class="img" [ngStyle]="{'background-image': 'url(' + row.head.imagen + ')'}"></div>
-                <p>{{row.head.texto}}</p>
+                <!-- <p>{{row.head.texto}}</p> -->
                 <button routerLink="{{row.head.filter}}">VER TODOS</button>
             </div>
         </div>
         <div class="resultado__item col-xs-6 col-md-15" *ngFor="let item of row.lista">
-            <producto [item]="item" [sesion]="loginStatus" [mensaje]="_success"></producto>
+            <app-producto-item [item]="item" [sesion]="loginStatus" [mensaje]="_success"></app-producto-item>
         </div>
     </div>
 </div>

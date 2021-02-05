@@ -38,6 +38,10 @@ p {
     background-color: #fff;
     justify-content: space-around;
 }
+.resultado__item__content .imgContainer img {
+    max-width: 100%;
+    width: unset;
+}
 .resultado__item__comprar button{
     display: block;
     margin: auto;
@@ -98,6 +102,13 @@ h3{
     width: calc(35% - 10px);
 }
 .cantidad--left input {
+    width: 100%;
+    padding: 4px 10px 4px 5px;
+    margin-top: 2px;
+    padding-right: 5px;
+    border: 1px solid #9E9E9E;
+}
+.cantidad--left select {
     width: 100%;
     padding: 4px 10px 4px 5px;
     margin-top: 2px;

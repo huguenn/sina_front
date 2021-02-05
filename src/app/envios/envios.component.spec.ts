@@ -8,7 +8,7 @@ describe('EnviosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EnviosComponent ]
+      declarations: [ EnviosComponent ],
     })
     .compileComponents();
   }));

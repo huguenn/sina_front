@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Title, Meta } from '@angular/platform-browser';
 import { environment } from '../environments/environment';
 
 export class Dato {
-  cantidad: Number;
-  descripcion: String;
+  cantidad: number;
+  descripcion: string;
   precio: number;
   total: number;
   id: number;
   sku: string;
   categoria: string;
-  constructor(cantidad: Number, descripcion: String, precio: number, total: number, id: number, sku: string, categoria: string) {
+  cantPack: number;
+  arrayCants = [];
+  constructor(cantidad: number, descripcion: string, precio: number, total: number, id: number, sku: string, categoria: string, cantPack: number) {
     this.cantidad     = cantidad;
     this.descripcion  = descripcion;
     this.precio       = precio;
@@ -19,6 +21,15 @@ export class Dato {
     this.id           = id;
     this.sku          = sku;
     this.categoria    = categoria;
+    this.cantPack     = cantPack;
+    if (this.cantPack !== 1) {
+      for (let i = 0; i < 20; i++) {
+        this.arrayCants[i] = this.cantPack * (i + 1);
+      }
+      for (let i = 0; i < 50; i++) {
+        this.arrayCants[i + 20] = this.cantPack * (i + 3) * 10;
+      }
+    }
   }
 }
 export class domicilio {
@@ -44,14 +55,14 @@ export class cliente {
   codigo:       string;
   cuit:         string;
   datosEnvio:   {
-    codigoTransporte: string
-    nombreTransporte: string
-    costo:            string
-    diasEntrega:      any
-    domicilioEntrega: domicilio
-    horarioEntrega:   string
-    idTransporte:     string
-    telefono:         string
+    codigoTransporte: string,
+    nombreTransporte: string,
+    costo:            string,
+    diasEntrega:      any,
+    domicilioEntrega: domicilio,
+    horarioEntrega:   string,
+    idTransporte:     string,
+    telefono:         string,
   };
   descripcion:          string;
   domicilio:            domicilio;
@@ -71,11 +82,11 @@ export class cliente {
   telefonoFacturacion:  string;
 }
 export class Configuracion {
-  montoMinimo:            Number;
-  montoEnvio:             Number;
-  montoEnvioGratis:       Number;
-  costoEnvio:             Number;
-  stickyHeaderTitulo:     String;
+  montoMinimo:            number;
+  montoEnvio:             number;
+  montoEnvioGratis:       number;
+  costoEnvio:             number;
+  stickyHeaderTitulo:     string;
   stickyHeaderCta:        string;
   stickyHeaderLink:       string;
   stickyHeaderDesde:      Date;
@@ -112,8 +123,9 @@ export class Configuracion {
   switchContactosActivo: boolean;
   mensajeModalLoginActivo: boolean;
   mensajeModalLoginMensaje: string;
-  constructor(montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
-    stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string, stickyHeaderDesde: Date, 
+  constructor(
+    montoMinimo: number, montoEnvio: number, montoEnvioGratis: number, costoEnvio: number,
+    stickyHeaderTitulo: string, stickyHeaderCta: string, stickyHeaderLink: string, stickyHeaderDesde: Date,
     stickyHeaderHasta: Date, stickyHeaderActivo: boolean, stickyHeaderPermanente: boolean, stickyHeaderMarquee: boolean,
     ventanaEmergenteTitulo: string, ventanaEmergenteImagen: string, ventanaEmergenteActivo: boolean,
     stickySocialTelActivo: boolean, stickySocialTelTexto: string, stickySocialTelUrl: string,
@@ -183,7 +195,7 @@ export class SharedService {
   configuracion = [];
   rutaActual = '';
 
-  public reponsable_lista: Array<any> = [
+  public reponsable_lista: any[] = [
     { text: 'Consumidor final',  codigo: 'CF'},
     { text: 'Monotributista',  codigo: 'RS'},
     { text: 'Responsable inscripto',  codigo: 'RI'},
@@ -196,7 +208,7 @@ export class SharedService {
     { text: 'Sujeto no categorizado', codigo: 'SNC'},
   ];
 
-  public provincia_lista: Array<any> = [
+  public provincia_lista: any[] = [
     'Ciudad de Buenos Aires',
     'Buenos Aires',
     'Catamarca',
@@ -221,7 +233,7 @@ export class SharedService {
     'Santiago del Estero',
     'Tierra del Fuego',
     'Tucumán',
-    'Otra'
+    'Otra',
   ];
 
   // observable carrito
@@ -254,7 +266,7 @@ export class SharedService {
   private carritoPopup  = new BehaviorSubject<boolean>(false);
   currentCarrito        = this.carritoPopup.asObservable();
 
-  //observable configuracion
+  // observable configuracion
   private configuracionSource = new BehaviorSubject<Configuracion[]>([]);
   currentConfig               = this.configuracionSource.asObservable();
 
@@ -306,14 +318,14 @@ export class SharedService {
     this.carritoPopup.next(this.statusCarrito);
   }
   updateMessage($next?) {
-    if($next)
+    if ($next) {
       this.messageSource.next($next);
-    else {
+    } else {
       this.messageSource.next(this.lista);
     }
   }
-  changeMessage(cantidad: Number, descripcion: String, precio: number, total: number, id: number, sku: string, categoria: string, enable?: boolean) {
-    this.lista.push(new Dato(cantidad, descripcion, precio, total, id, sku, categoria));
+  changeMessage(cantidad: number, descripcion: string, precio: number, total: number, id: number, sku: string, categoria: string, cantPack: number, enable?: boolean) {
+    this.lista.push(new Dato(cantidad, descripcion, precio, total, id, sku, categoria, cantPack));
     this.messageSource.next(this.lista);
   }
   checkObjectValues(a, b) {
@@ -322,9 +334,8 @@ export class SharedService {
     if (aProperties.length != bProperties.length) {
       return false;
     }
-    for (let i = 0; i < aProperties.length; i++) {
-      const saveNameProperty = aProperties[i]; // The name of the property name, lastname.
-      if ( a[saveNameProperty] !== b[saveNameProperty]) { // The value of the property cristina, rojas.
+    for (const saveNameProperty of aProperties) { // The name of the property name, lastname.
+      if (a[saveNameProperty] !== b[saveNameProperty]) { // The value of the property cristina, rojas.
         return false;
       }
     }
@@ -333,10 +344,11 @@ export class SharedService {
   addMessage(msg): any {
       if (msg.cantidad) {
         if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
-          if (!this.lista.some(articulo_carrito => articulo_carrito.id === msg.id)) {
+          if (!this.lista.some((articulo_carrito) => articulo_carrito.id === msg.id)) {
             msg.comprado = true;
-            this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias ? msg.categorias[0].nombre : '');
-            return {value: true, text: `Agregado al Carrito!`};
+            this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad),
+                                msg.id, msg.codInterno, msg.categorias ? msg.categorias[0].nombre : '', msg.cantPack);
+            return {value: true, text: `Producto agregado al Carrito!`};
           } else {
             msg.comprado = true;
             return {value: true, text: `Ya se encuentra en el Carrito!`};
@@ -374,7 +386,8 @@ export class SharedService {
     this.loginStatus.next(this.statusLogin);
   }
 
-  updatePageTitle($title: string = 'Productos de limpieza por mayor, fabrica de productos de limpieza | Sina',
+  updatePageTitle(
+    $title: string = 'Productos de limpieza por mayor, fabrica de productos de limpieza | Sina',
     $meta_content: string = 'Fábrica mayorista y distribuidora de artículos de limpieza y bazar con entrega a todo el país, hacé tu pedido online!') {
     /**
      * Configura el titulo de la pagina.

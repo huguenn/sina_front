@@ -4,7 +4,7 @@ import { SharedService } from '../shared.service';
 @Component({
   selector: 'app-como-comprar',
   templateUrl: './como-comprar.component.html',
-  styleUrls: ['./como-comprar.component.css']
+  styleUrls: ['./como-comprar.component.css'],
 })
 export class ComoComprarComponent implements OnInit {
 

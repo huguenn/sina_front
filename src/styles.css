@@ -125,7 +125,7 @@ ngb-accordion .card .row {
 .popup__mas {
     width: 100%;
     background: #00c973;
-    padding: 10px;
+    padding: 4px 0px 10px 0px;
     text-align: center;
     color: #fff;
     position: absolute;
@@ -137,6 +137,7 @@ ngb-accordion .card .row {
 }
 .popup__mas p {
     margin: 0px;
+    margin-top: 8px;
 }
 
 .buy .popover.bottom {
@@ -157,18 +158,24 @@ ngb-accordion .card .row {
 .message * {
     color: #ffffff;
 }
+.message i {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
 .message .alert-success {
     background-color: #00c973;
     color: #ffffff;
     z-index: 10;
-    width: 30%;
-    margin-left: 70%;
+    width: 35%;
+    margin-left: 65%;
     position: relative;
+    padding-left: 50px;
 }
 .message .transparentButton {
     position: absolute;
     right: 5px;
-    top: 2px;
+    top: 4px;
 }
 .message .close {
     display: none;
@@ -239,6 +246,8 @@ ng-sidebar-container {
     .message .alert-success {
         width: 100%;
         margin: 10px 0px;
+        padding-left: 45px;
+        font-size: 0.9em;
     }
     .carouselContainer{
         height: 30vh;
@@ -299,7 +308,7 @@ ng-sidebar-container {
 }
 
 .resultado{
-    margin: 50px 0px;
+    margin: 0px;
     padding-bottom: 50px;
     border-bottom: 1px solid #cccccc;
     display: flex;
@@ -308,7 +317,7 @@ ng-sidebar-container {
 }
 .resultado__head{
     /* background-color: #00c9737d; */
-    min-height: 297px;
+    min-height: 260px;
     overflow: hidden;
     display: flex;
     justify-content: space-around;
@@ -325,13 +334,15 @@ ng-sidebar-container {
     background-size: cover;
 }
 .resultado__head > button{
-    border: 1px solid #FFF;
+    border: 2px solid #FFF;
     background-color: transparent;
     border-radius: 5px;
     color: #FFF;
     width: 50%;
-    margin-left: 25%;
     padding: 5px;
+    position: absolute;
+    bottom: 35px;
+    left: 25%;
 }
 .resultado__head > p{
     color: #FFF;
@@ -386,18 +397,27 @@ ng-sidebar-container {
 }
 
 
-
+@media screen and (max-width: 1200px){
+    .resultado__head {
+        min-height: 210px;
+    }
+    .resultado__head > button{
+        font-size: 0.9em;
+    }
+}
 @media (max-width: 992px) {
-    .resultado__head{
-        min-height: auto;
+    .resultado__head {
+        min-height: 80vw;
         padding: 10px 0 15px 0;
         width: 100%;
     }
     .resultado__item {
         padding: 0px !important;
     }
+    .resultado__head > button{
+        font-size: 1em;
+    }
 }
-
 
 /* ELIPSE */
 
@@ -483,5 +503,20 @@ ng-sidebar-container {
 @media screen and (max-width: 768px){
     ngb-accordion .card .row {
         margin: 0px;
+    }
+}
+
+@media screen and (max-width: 1200px){
+    .message .transparentButton {
+        font-size: 0.85em;
+        top: 5px;
+        padding: 5px;
+    }
+}
+@media screen and (max-width: 968px){
+    .message .transparentButton {
+        font-size: 0.75em;
+        top: 7px;
+        padding: 5px;
     }
 }

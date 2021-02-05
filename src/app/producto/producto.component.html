@@ -1,20 +1,18 @@
 <div class="row message">
     <div class="container">
         <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
-            {{ successMessage }}
+          <i class="fa fa-check-circle fa-3x" aria-hidden="true"></i> {{ successMessage }}
             <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
         </ngb-alert>
     </div>
 </div>
 <div class="container producto">
   <div class="row producto__header" style="position: relative;">
-    <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.png" alt="">
-    <p> OFERTA DEL MES </p>
-    <h1 style="    position: absolute;
-    right: 0;
-    bottom: 0px;
-    font-size: 14px;
-    margin: 0;">{{producto["titulo"] + ', ' + producto["titulo"] + ' al por mayor'}}</h1>
+    <img *ngIf="producto.oferta == true" [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.png" alt="">
+    <img *ngIf="producto.oferta == false && producto.novedad == true" [ngClass]="'lazyload'" data-src="./assets/images/iconos/imperdible.png" alt="">
+    <p *ngIf="producto.oferta == true">OFERTA DEL MES</p>
+    <p *ngIf="producto.oferta == false && producto.novedad == true">NOVEDAD DEL MES</p>
+    <h1 [ngStyle]="{'max-width': producto.oferta == false && producto.novedad == false ? 'unset' : 'calc(100% - 60px)' }">{{producto["titulo"] + ', ' + producto["titulo"] + ' al por mayor'}}</h1>
   </div>
   <!-- <div class="row">
     <div class="producto__path">
@@ -68,15 +66,10 @@
         <div class="row producto__compra">
           <div class="cantidad">
             <p style="margin-right: 10px; margin-bottom: 0;">Cantidad:</p>
-            <input type="number" [(ngModel)]="producto.cantidad" (focus)="producto['incompleto'] = false">
-            <div class="cantidad--label" [class.alerta]="producto['incompleto']">
-              <div class="mensaje">
-                <div class="mensaje__content">
-                    <span *ngIf="producto.cantidad % producto['cantPack'] !== 0"> * La cantidad ingresada debe ser multiplo de {{producto['cantPack']}}.</span>
-                    <span *ngIf="producto.cantidad < producto['cantMinima']"> * La cantidad es menor al mínimo.</span>
-                </div>
-              </div>
-            </div>
+            <input *ngIf="producto.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" [(ngModel)]="producto.cantidad">
+            <select *ngIf="producto.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="producto.cantidad">
+              <option *ngFor="let cant of arrayCants" [ngValue]="cant">{{cant}}</option>
+            </select>
           </div>
         </div>
 
@@ -112,7 +105,7 @@
     </div>
     <div class="row resultado">
         <div class="resultado__item col-xs-6 col-md-3" *ngFor="let item of relacionados | myfilter:{id: null}">
-            <producto [item]="item" [relacionado]="true" [sesion]="false" [mensaje]="_success"></producto>
+            <app-producto-item [item]="item" [relacionado]="true" [sesion]="false" [mensaje]="_success"></app-producto-item>
       </div>
   </div>
 </div>

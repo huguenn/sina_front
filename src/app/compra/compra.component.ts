@@ -1,22 +1,17 @@
-import { Component, OnInit, AfterViewInit, Input, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { SharedService, cliente } from '../shared.service';
-import {
-  DatosTransaccion,
-  clienteActualizar,
-  clientEnvioActualizarDatos
-} from '../data';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AutenticacionService } from '../autenticacion.service';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/defer';
 import { Location } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { debounceTime } from 'rxjs/operator/debounceTime';
-import { distinctUntilChanged } from 'rxjs/operator/distinctUntilChanged';
-import { Subscription } from 'rxjs/Subscription';
-import { GoogleAnalyticsService } from "../google-analytics.service";
 import { NgSelectComponent } from '@ng-select/ng-select';
+import 'rxjs/add/observable/defer';
+import 'rxjs/add/observable/fromEvent';
+import { takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { AutenticacionService } from '../autenticacion.service';
+import { clienteActualizar, clientEnvioActualizarDatos, DatosTransaccion } from '../data';
+import { GoogleAnalyticsService } from '../google-analytics.service';
+import { cliente, SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-compra',
@@ -24,18 +19,24 @@ import { NgSelectComponent } from '@ng-select/ng-select';
   styleUrls: ['./compra.component.css'],
   providers: [GoogleAnalyticsService],
 })
-export class CompraComponent implements OnInit, AfterViewInit {
+export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   @ViewChild('mensaje_error_retiro') mensajeErrorRetiro: ElementRef;
   inputSub: Subscription;
   public modalLoading: boolean = false;
+  public showAgregado: boolean = false;
+  idPedidoAgregado: number;
+  public showErrorAgregado: boolean = false;
+  public responseErrorAgregado: string = '';
+  public responseSuccessAgregado;
   iva_usuario: string = '';
   user: cliente;
   transaccion: DatosTransaccion;
   facturacion: any = {
     datos: new clienteActualizar(),
-    cargar: function ($cliente){
+    cargar($cliente) {
       this.datos.codigoCliente = $cliente.codigo;
       this.datos.email = $cliente.email;
       this.datos.cuit = $cliente.cuit;
@@ -59,10 +60,12 @@ export class CompraComponent implements OnInit, AfterViewInit {
       return new Promise((resolve, reject) => {
         const body = new URLSearchParams();
         for (const dato in this.facturacion.datos) {
-          body.set(dato, this.facturacion.datos[dato]);
+          if (dato) {
+            body.set(dato, this.facturacion.datos[dato]);
+          }
         }
         this.auth.post('cliente/actualizar', body)
-        .then($response => {
+        .then(($response) => {
           resolve($response.body.response);
         })
         .catch(($error) => {
@@ -70,12 +73,12 @@ export class CompraComponent implements OnInit, AfterViewInit {
           reject($error);
         });
       });
-    }
+    },
   };
   entrega: any = {
     transporte: {
-      lista: []
-    }
+      lista: [],
+    },
   };
 
   datos_envio: clientEnvioActualizarDatos = new clientEnvioActualizarDatos();
@@ -84,7 +87,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
     hora: '16 Sep 14:05',
     subtotal: 0,
     lista: [
-    ]
+    ],
   };
   datostransporte = {
     data: {
@@ -94,12 +97,12 @@ export class CompraComponent implements OnInit, AfterViewInit {
       telefono: '',
       codigoTransporte: '',
       horarioEntrega: '',
-      nombreTransporte: ''
+      nombreTransporte: '',
     },
     form: {
       nombreTransporte: '',
       domicilioTransporte: '',
-      telefonoTransporte: ''
+      telefonoTransporte: '',
     },
     cargar: ($calle, $localidad, $provincia, $telefono, $codigo)  => {
       this.datostransporte.data.calle     = $calle;
@@ -114,11 +117,11 @@ export class CompraComponent implements OnInit, AfterViewInit {
       return new Promise((resolve, reject) => {
         const body = new URLSearchParams();
         const datos = this.datos_envio.enviar();
-        Object.keys(datos).forEach(key => {
+        Object.keys(datos).forEach((key) => {
           body.set(key, datos[key]);
         });
         this.auth.post('cliente/envio/actualizar_datos', body)
-        .then($response => {
+        .then(($response) => {
           resolve($response.body.response);
         })
         .catch(($error) => {
@@ -131,11 +134,11 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.datosEnvio_flag = true;
       return new Promise((resolve, reject) => {
         const body = new URLSearchParams();
-        Object.keys(this.datostransporte.form).forEach(key => {
+        Object.keys(this.datostransporte.form).forEach((key) => {
           body.set(key, this.datostransporte.form[key]);
         });
         this.auth.post('cliente/envio/nuevo_transporte', body)
-        .then($response => {
+        .then(($response) => {
           resolve($response.body.response);
         })
         .catch(($error) => {
@@ -143,17 +146,17 @@ export class CompraComponent implements OnInit, AfterViewInit {
           reject($error);
         });
       });
-    }
+    },
   };
   retiro: boolean = false;
   flagHoraPasada: boolean = false;
   dia: string = '';
   hoy = new Date();
-  hoyFormatted = this.hoy.getFullYear() + '-' + this.hoy.getMonth()+1 + '-' + this.hoy.getDate();
+  hoyFormatted = this.hoy.getFullYear() + '-' + this.hoy.getMonth() + 1 + '-' + this.hoy.getDate();
   hoyMediodia = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), this.hoy.getDate(), 13, 0);
-  retiroHora = this.hoyMediodia.getFullYear() + '-' + this.hoyMediodia.getMonth()+1 + '-' + this.hoyMediodia.getDate();
+  retiroHora = this.hoyMediodia.getFullYear() + '-' + this.hoyMediodia.getMonth() + 1 + '-' + this.hoyMediodia.getDate();
   retiroHora1 = this.hoyMediodia;
-  inputFecha: string = this.hoyMediodia.getDate() + '/' + this.hoyMediodia.getMonth()+1 + '/' + this.hoyMediodia.getFullYear();
+  inputFecha: string = this.hoyMediodia.getDate() + '/' + this.hoyMediodia.getMonth() + 1 + '/' + this.hoyMediodia.getFullYear();
   inputHora: string = '13';
   inputMinuto: string = '00';
   fechaUpdate($event) {
@@ -170,10 +173,10 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.retiro = false;
       this.flagHoraPasada = true;
     } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
-      if (parseInt(mesElegido) < this.hoy.getMonth()+1) {
+      if (parseInt(mesElegido) < this.hoy.getMonth() + 1) {
         this.retiro = false;
         this.flagHoraPasada = true;
-      } else if (parseInt(mesElegido) === this.hoy.getMonth()+1) {
+      } else if (parseInt(mesElegido) === this.hoy.getMonth() + 1) {
         if (parseInt(diaElegido) < this.hoy.getDate()) {
           this.retiro = false;
           this.flagHoraPasada = true;
@@ -181,7 +184,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
           this.retiro = false;
           this.flagHoraPasada = true;
         } else if (parseInt(diaElegido) === this.hoy.getDate() && this.retiroHora1.getHours() === this.hoy.getHours()) {
-          if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes()+10) {
+          if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes() + 10) {
             this.retiro = false;
             this.flagHoraPasada = true;
           } else {
@@ -334,10 +337,10 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.retiro = false;
       this.flagHoraPasada = true;
     } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
-      if (parseInt(mesElegido) < this.hoy.getMonth()+1) {
+      if (parseInt(mesElegido) < this.hoy.getMonth() + 1) {
         this.retiro = false;
         this.flagHoraPasada = true;
-      } else if (parseInt(mesElegido) === this.hoy.getMonth()+1) {
+      } else if (parseInt(mesElegido) === this.hoy.getMonth() + 1) {
         if (parseInt(diaElegido) < this.hoy.getDate()) {
           this.retiro = false;
           this.flagHoraPasada = true;
@@ -345,7 +348,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
           this.retiro = false;
           this.flagHoraPasada = true;
         } else if (parseInt(diaElegido) === this.hoy.getDate() && parseInt(hora) === this.hoy.getHours()) {
-          if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes()+10) {
+          if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes() + 10) {
             this.retiro = false;
             this.flagHoraPasada = true;
           } else {
@@ -498,10 +501,10 @@ export class CompraComponent implements OnInit, AfterViewInit {
       this.retiro = false;
       this.flagHoraPasada = true;
     } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
-      if (parseInt(mesElegido) < this.hoy.getMonth()+1) {
+      if (parseInt(mesElegido) < this.hoy.getMonth() + 1) {
         this.retiro = false;
         this.flagHoraPasada = true;
-      } else if (parseInt(mesElegido) === this.hoy.getMonth()+1) {
+      } else if (parseInt(mesElegido) === this.hoy.getMonth() + 1) {
         if (parseInt(diaElegido) < this.hoy.getDate()) {
           this.retiro = false;
           this.flagHoraPasada = true;
@@ -509,7 +512,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
           this.retiro = false;
           this.flagHoraPasada = true;
         } else if (parseInt(diaElegido) === this.hoy.getDate() && this.retiroHora1.getHours() === this.hoy.getHours()) {
-          if (parseInt(minuto) <= this.hoy.getMinutes()+10) {
+          if (parseInt(minuto) <= this.hoy.getMinutes() + 10) {
             this.retiro = false;
             this.flagHoraPasada = true;
           } else {
@@ -663,14 +666,15 @@ export class CompraComponent implements OnInit, AfterViewInit {
     medio: {
       nombre: '',
       telefono: '',
-      direccion: ''
+      direccion: '',
     },
     envio : {
       calle: '',
       localidad: '',
       provincia: '',
       telefono: '',
-    }
+    },
+    agregado: '0',
   };
   editingEnvio: boolean = false;
   editingTransporte: boolean = false;
@@ -684,21 +688,28 @@ export class CompraComponent implements OnInit, AfterViewInit {
   secciones = [
     'Mi compra',
     'Datos de envío',
-    'Confirmación'
+    'Confirmación',
   ];
   initialLista = [];
   config: any;
-  constructor(private data: SharedService, private http: HttpClient, private auth: AutenticacionService, private router: Router, private location: Location, private googleAnalyticsService: GoogleAnalyticsService) {
+  constructor(
+    private data: SharedService,
+    // private http: HttpClient,
+    private auth: AutenticacionService,
+    private router: Router,
+    private location: Location,
+    private googleAnalyticsService: GoogleAnalyticsService,
+  ) {
 
     this.transaccion = new DatosTransaccion(0);
     this.dia = this.diaSemana(this.hoyMediodia.getDate(), this.hoyMediodia.toLocaleString('default', { month: 'long' }), this.hoyMediodia.getFullYear());
     if (this.data.user) {
       this.user = this.data.user as cliente;
       this.auth.get('public/cliente/envio/getAll').then((result) => {
-        result.response.forEach(transporte => {
+        result.response.forEach((transporte) => {
           this.entrega.transporte.lista.push({
             id: transporte.codigo,
-            text: transporte.nombre
+            text: transporte.nombre,
           });
         });
         this.entrega.transporte.lista.push({id: 'FFF', text: 'INGRESAR NUEVO TRANSPORTE'});
@@ -717,7 +728,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
             this.user.datosEnvio.domicilioEntrega.ciudad,
             this.user.datosEnvio.domicilioEntrega.provincia,
             this.user.datosEnvio.telefono,
-            this.user.datosEnvio.codigoTransporte
+            this.user.datosEnvio.codigoTransporte,
           );
         }else {
           this.datostransporte.cargar(
@@ -725,7 +736,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
           '',
           '',
           this.user.datosEnvio.telefono,
-          this.user.datosEnvio.codigoTransporte
+          this.user.datosEnvio.codigoTransporte,
         );
         }
       }
@@ -734,21 +745,22 @@ export class CompraComponent implements OnInit, AfterViewInit {
         medio: {
           nombre: '',
           telefono: '',
-          direccion: ''
+          direccion: '',
         },
           envio:   {
           calle:      this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.direccion : '',
           localidad:  this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.ciudad : '',
           provincia:  this.user.datosEnvio.domicilioEntrega ? this.user.datosEnvio.domicilioEntrega.provincia : '',
-          telefono:   this.user.telefonoFacturacion ? this.user.telefonoFacturacion : ''
+          telefono:   this.user.telefonoFacturacion ? this.user.telefonoFacturacion : '',
         },
+        agregado: '0',
       };
       this.facturacion.cargar(this.user);
     }
 
     setInterval(() => {
       this.hoy = new Date();
-    }, 300000)
+    }, 300000);
   }
 
   cargarTransporte: boolean = false;
@@ -772,13 +784,17 @@ export class CompraComponent implements OnInit, AfterViewInit {
   completarCompraLink = '';
 
   public completarCompra() {
-    if(this.datosCompra.entrega === '0') {
+    if (this.datosCompra.entrega === '0') {
       this.retiro = true;
     }
     if (!this.carritoLoading && this.retiro) {
       this.carritoLoading = true;
       this.completarCompraTexto = 'Procesando pedido...';
       const body = new URLSearchParams();
+      if (this.datosCompra.agregado === '1' && this.idPedidoAgregado && this.responseSuccessAgregado) {
+        this.observaciones = this.observaciones + '\r\n' + ' - ' + '\r\n' + 'Agregado al pedido ID #' + this.idPedidoAgregado +
+                            ' realizado el dia ' + this.responseSuccessAgregado.fechaPedido;
+      }
       body.set('observaciones', this.observaciones);
       body.set('total', this.pedido ? this.updateTotal(this.carrito.subtotal) : '100.01');
       if (this.datosCompra.entrega === '1') {
@@ -795,15 +811,15 @@ export class CompraComponent implements OnInit, AfterViewInit {
         body.set('hora_retiro', horaRetiro);
       }
       this.auth.post('pedido/confirmar', body)
-      .then($confirmado => {
-        let productos = this.carrito.lista;
+      .then(($confirmado) => {
+        const productos = this.carrito.lista;
         let respuesta;
 
-        if($confirmado.body) {
+        if ($confirmado.body) {
           respuesta = $confirmado.body.response;
         }
 
-        if(respuesta) {
+        if (respuesta) {
           this.total = respuesta.total;
           this.googleAnalyticsService.nuevoPedido(respuesta.id_pedido, respuesta.total, productos);
         }
@@ -818,7 +834,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
           this.carritoLoading = false;
         }, 1500);
       })
-      .catch($error => {
+      .catch(($error) => {
         this.carritoLoading = false;
         try {
           this.pedidoCorrecto = false;
@@ -836,13 +852,13 @@ export class CompraComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.data.updatePageTitle();
     // subscribing to config change
-    this.data.currentConfig.subscribe(
-      configuracion => {
+    this.data.currentConfig.pipe(takeUntil(this.destroy$)).subscribe(
+      (configuracion) => {
         this.config = configuracion;
-      }
+      },
     );
-    this.data.currentMessage.subscribe(() => this.checkCarritoInit(0));
-    this.data.currentUser.subscribe($user => {
+    this.data.currentMessage.pipe(takeUntil(this.destroy$)).subscribe(() => this.checkCarritoInit(0));
+    this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
       if ($user) {
         switch ($user['codCategoriaIva']) {
           case 'CF':
@@ -860,36 +876,41 @@ export class CompraComponent implements OnInit, AfterViewInit {
     });
     this.fechaUpdate(this.hoyMediodia.getFullYear() + '-' + (this.hoyMediodia.getMonth() + 1) + '-' + this.hoyMediodia.getDate());
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
   ngAfterViewInit() {
-    if(this.inputCantidad && this.inputCantidad.nativeElement) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (this.inputCantidad && this.inputCantidad.nativeElement) {
         this.inputSub = Observable.fromEvent(this.inputCantidad.nativeElement, 'input')
         .debounceTime(1000)
-        .subscribe(
+        .pipe(takeUntil(this.destroy$)).subscribe(
           () => {
             const body = new URLSearchParams();
-            let array = [];
-            for(let item of this.carrito.lista) {
+            const array = [];
+            for (const item of this.carrito.lista) {
               array.push({id_producto: item.id, cantidad: item.cantidad});
             }
             body.set('lista', JSON.stringify(array));
 
             this.auth.post('carrito/update_cantidades', body)
-            .then($response => {
+            .then(($response) => {
               this.data.log('response carritoupdatecantidades compra debounced', $response);
             })
-            .catch($error => {
+            .catch(($error) => {
               this.data.log('error carritoupdatecantidades compra debounced', $error);
             });
-          }
+          },
         );
-      },2000);
-    }
+      }
+    }, 2000);
   }
 
   public seleccionartransporte($herramienta, $codigo) {
     if ($herramienta) {
-      const item = $herramienta.itemsList._items.find($item => $item.value.id === $codigo);
+      const item = $herramienta.itemsList._items.find(($item) => $item.value.id === $codigo);
       if (item) {
         $herramienta.select(item);
       }
@@ -900,40 +921,52 @@ export class CompraComponent implements OnInit, AfterViewInit {
     const body = new URLSearchParams();
     body.set('id_producto', $item.id);
     this.auth.post('carrito/eliminar_item', body)
-    .then($response => {
+    .then(($response) => {
       this.data.log('response carritoeliminaritem compra', $response);
       this.data.removeMessage($item);
       this.updateValue();
     })
-    .catch($error => {
+    .catch(($error) => {
       this.data.log('error carritoeliminaritem compra', $error);
     });
   }
   updateValue() {
     let $carrito = 0;
-    for (let index = 0; index < this.carrito.lista.length; index++) {
-      const precio = this.carrito.lista[index].precio;
-      const cantidad = this.carrito.lista[index].cantidad;
+    for (const c of this.carrito.lista) {
+      const precio = c.precio;
+      const cantidad = c.cantidad;
       $carrito += precio * cantidad;
     }
     this.carrito.subtotal = $carrito;
-
+  }
+  updateValueDelayed() {
+    setTimeout(() => {
+      let $carrito = 0;
+      for (const c of this.carrito.lista) {
+        const precio = c.precio;
+        const cantidad = c.cantidad;
+        $carrito += precio * cantidad;
+      }
+      this.carrito.subtotal = $carrito;
+    }, 200);
   }
   updatePrecio($precio, $cantidad): string {
     const subtotal = $precio * $cantidad;
     return this.corregirPrecio(subtotal);
   }
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-      let s, i, j;
-      c = isNaN(c = Math.abs(c)) ? 2 : c,
-      d = d == undefined ? ',' : d,
-      t = t == undefined ? '.' : t,
-      s = n < 0 ? '-' : '',
-      i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-      j = (j = i.length) > 3 ? j % 3 : 0;
+    let s;
+    let i;
+    let j;
+    c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? ',' : d,
+    t = t == undefined ? '.' : t,
+    s = n < 0 ? '-' : '',
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
 
     return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) +
-      (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
+    (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
   }
   corregirPrecio($precio): string {
   return this.formatMoney($precio);
@@ -954,13 +987,13 @@ export class CompraComponent implements OnInit, AfterViewInit {
         this.data.log('addtransporte response compra:', response);
         const temp_transporte = {
           id: response['codigo'],
-          text: this.datostransporte.form.nombreTransporte
+          text: this.datostransporte.form.nombreTransporte,
         };
         this.entrega.transporte.lista.push(temp_transporte);
         this.initialLista = [temp_transporte];
         this.refreshTransporte(temp_transporte);
       }).catch((error) => {
-        Object.values(error.error.response).forEach($error_item => this.datos_envio_error += $error_item);
+        Object.values(error.error.response).forEach(($error_item) => this.datos_envio_error += $error_item);
       });
       // this.transaccion.cambio(2)
     }else {
@@ -969,7 +1002,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
         this.editingEnvio = false;
       }).catch((error) => {
         if (error.error) {
-          Object.values(error.error.response).forEach($error_item => this.datos_envio_error += $error_item);
+          Object.values(error.error.response).forEach(($error_item) => this.datos_envio_error += $error_item);
         } else {
           this.datos_envio_error = 'Hubo un problema en la carga de los datos, aguarde un momento y vuelva a intentar.';
         }
@@ -978,10 +1011,9 @@ export class CompraComponent implements OnInit, AfterViewInit {
     }
   }
   delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
   carritoLoading: boolean = false;
-
 
   async printAll() {
     this.transaccion.cambio(1);
@@ -989,22 +1021,21 @@ export class CompraComponent implements OnInit, AfterViewInit {
 
   // Finalizar Compra
   finalizarCompra() {
-    if(this.carrito.lista.length) {
-      
+    if (this.carrito.lista.length) {
       // this.carritoLoading = true;
       this.modalLoading = true;
 
       const body = new URLSearchParams();
-      let array = [];
-      for(let item of this.carrito.lista) {
+      const array = [];
+      for (const item of this.carrito.lista) {
         array.push({id_producto: item.id, cantidad: item.cantidad});
       }
       body.set('lista', JSON.stringify(array));
 
       this.auth.post('carrito/update_cantidades', body)
-      .then($response => {
+      .then(($response) => {
         this.data.log('response carritoupdatecantidades compra', $response);
-        if(this.carrito.subtotal < this.config.montoEnvio) {
+        if (this.carrito.subtotal < this.config.montoEnvio) {
           this.datosCompra.entrega = '1';
         } else {
           this.datosCompra.entrega = '0';
@@ -1016,7 +1047,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
         this.carritoLoading = false;
         this.modalLoading = false;
       })
-      .catch($error => {
+      .catch(($error) => {
         this.data.log('error carritoupdatecantidades compra', $error);
 
         this.carritoLoading = false;
@@ -1030,7 +1061,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
     entrega_miercoles: false,
     entrega_jueves:    false,
     entrega_viernes:   false,
-    entrega_sabado:    false
+    entrega_sabado:    false,
   };
   checkValue($value, $dia) {
     this.datos_envio[$dia] = $value;
@@ -1047,7 +1078,7 @@ export class CompraComponent implements OnInit, AfterViewInit {
       const body = new URLSearchParams();
       body.set('frase', this.texto_busqueda);
       this.auth.post('producto/busqueda', body)
-      .then($response => {
+      .then(($response) => {
           this.ResultadoBusqueda = $response.body.response.slice(0, 6);
       })
       .catch((error) => this.data.log('buscarpalabra error compra:', error));
@@ -1061,7 +1092,8 @@ export class CompraComponent implements OnInit, AfterViewInit {
   }
   cerrarBusqueda(msg) {
     const precio = msg.precio;
-    this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, precio, precio * (+msg.cantidad), msg.id, msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '');
+    this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, precio, precio * (+msg.cantidad), msg.id,
+      msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '', msg.cantPack);
     this.ResultadoBusqueda = [];
   }
   descargarPedido($pedido) {
@@ -1088,12 +1120,76 @@ export class CompraComponent implements OnInit, AfterViewInit {
   toggleEditingEnvio() {
     this.editingEnvio = !this.editingEnvio;
 
-    if(this.editingEnvio) {
+    if (this.editingEnvio) {
       setTimeout(() => {
         if (this.datos_envio.cod_transporte) {
           this.seleccionartransporte(this.ngSelectTransporte, this.datos_envio.cod_transporte);
         }
       }, 500);
+    }
+  }
+
+  enterBusquedaAgregado(event) {
+    if (event.keyCode == 13) {
+      this.finalizarCompraAgregado();
+    }
+  }
+  finalizarCompraAgregado() {
+    this.showErrorAgregado = false;
+    this.responseErrorAgregado = '';
+
+    if (this.idPedidoAgregado && this.idPedidoAgregado > 0) {
+      if (this.carrito.lista.length) {
+        // this.carritoLoading = true;
+        this.modalLoading = true;
+
+        const body = new URLSearchParams();
+        const array = [];
+        for (const item of this.carrito.lista) {
+          array.push({id_producto: item.id, cantidad: item.cantidad});
+        }
+        body.set('lista', JSON.stringify(array));
+
+        this.auth.post('carrito/update_cantidades', body)
+        .then(($response) => {
+          this.data.log('response carritoupdatecantidades compraagregado', $response);
+          const body2 = new URLSearchParams();
+          body2.set('id_pedido', JSON.stringify(this.idPedidoAgregado));
+          this.auth.post('pedido/busqueda_agregado', body2)
+          .then(($response2) => {
+            this.data.log('response busquedaagregado compraagregado', $response2);
+
+            if ($response2.body.status) {
+              this.responseSuccessAgregado = $response2.body.response;
+              this.responseSuccessAgregado.fechaPedido = this.responseSuccessAgregado.fechaPedido.date.split(' ')[0].split('-').reverse().join('/');
+
+              this.datosCompra.agregado = '1';
+
+              this.location.go('/compra/envio');
+              this.data.rutaActual = '/compra/envio';
+              this.printAll();
+            } else {
+              this.showErrorAgregado = true;
+              this.responseErrorAgregado = $response2.body.response;
+            }
+            this.carritoLoading = false;
+            this.modalLoading = false;
+          })
+          .catch(($error2) => {
+            this.data.log('error busquedaagregado compraagregado', $error2);
+            this.carritoLoading = false;
+            this.modalLoading = false;
+          });
+        })
+        .catch(($error) => {
+          this.data.log('error carritoupdatecantidades compraagregado', $error);
+          this.carritoLoading = false;
+          this.modalLoading = false;
+        });
+      }
+    } else {
+      this.showErrorAgregado = true;
+      this.responseErrorAgregado = 'No se ingresó un ID de pedido válido.';
     }
   }
 }

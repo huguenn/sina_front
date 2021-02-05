@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'myfilter'
+  name: 'myfilter',
 })
 export class MyFilterPipe implements PipeTransform {
 
@@ -9,7 +9,7 @@ export class MyFilterPipe implements PipeTransform {
     if (!items || !filter) {
         return items;
     }
-    return items.filter(item => item.id);
+    return items.filter((item) => item.id);
 }
 
 }

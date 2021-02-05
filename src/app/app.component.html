@@ -39,16 +39,16 @@
                 <form>
                   <div class="row" style="display: flex; align-items: center;" *ngIf="!registrarStatus">
                       <div class="col-xs-12 col-md-6 modal__texto">
-                        <img [ngClass]="'lazyload'" data-src="./assets/images/home/login.png" alt="Sina" style="cursor: pointer;" [routerLink]="['/']" (click)="_toggleRegistrarStatus()">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/home/login.webp" alt="Sina" style="cursor: pointer;" [routerLink]="['/']" (click)="_toggleRegistrarStatus()">
                       </div>
                       <div class="col-xs-12 col-md-6 modal__registrar" *ngIf="!recuperarClave">
                         <p>Si ya tenes usuario:</p>
-                        <input type="text" [(ngModel)]="login.user" name="user" placeholder="Usuario" (keydown)="enterLogin($event)" autocomplete="username">
+                        <input type="text" [(ngModel)]="login.user" name="user" aria-label="Usuario" placeholder="Usuario" (keydown)="enterLogin($event)" autocomplete="username">
                         <!-- <input type="password" [(ngModel)]="login.pass" name="pass" placeholder="Contraseña" (keydown)="enterLogin($event)" autocomplete="current-password"> -->
                         <div>
-                            <input class="password__input" [type]="password_type" [(ngModel)]="login.pass" name="pass" placeholder="Contraseña" (keydown)="enterLogin($event)" autocomplete="current-password">
-                            <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                            <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                            <input class="password__input" [type]="password_type" [(ngModel)]="login.pass" name="pass" aria-label="Password" placeholder="Contraseña" (keydown)="enterLogin($event)" autocomplete="current-password">
+                            <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                            <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                         </div>
                         <button class="btn btn-outline-dark actionButton" type="button"(click)="loginModal(login.user, login.pass)">INGRESAR</button>
                         <p style="color: #F44336; margin-top: 5px;" *ngIf="login.error">{{login.errorMsg || "Error en el logeo"}}</p>
@@ -56,7 +56,7 @@
                       </div>
                       <div class="col-xs-12 col-md-6 modal__registrar" *ngIf="recuperarClave">
                         <p *ngIf="!recuperarOk">Ingrese su email para recuperar la contraseña de su cuenta:</p>
-                        <input *ngIf="!recuperarOk" type="text" [(ngModel)]="login.user" name="user" placeholder="Email" (keydown)="enterRecuperar($event)" autocomplete="username">
+                        <input *ngIf="!recuperarOk" type="text" [(ngModel)]="login.user" name="user" aria-label="Email" placeholder="Email" (keydown)="enterRecuperar($event)" autocomplete="username">
                         <p style="color: #00C973; margin-top: 5px; text-align: center;" *ngIf="recuperarOk">{{recuperarOk}}</p>
                         <p style="color: #F44336; margin-top: 5px;" *ngIf="recuperarError">{{recuperarError}}</p>
                         <button *ngIf="!recuperarOk" class="btn btn-outline-dark actionButton" type="button"(click)="enterRecuperarEvento()">RECUPERAR CONTRASEÑA</button>
@@ -91,13 +91,14 @@
                         </div>
 
 
-                        <div *ngIf="_step === 1" class="row stepsContent" [ngClass]="{'focusingPassword': focusingPassword}">
+                        <div *ngIf="_step === 1" class="row stepsContent" [ngClass]="{'focusingPassword': focusingPassword}" (scroll)="stepUnoScroll($event)">
+                            <div *ngIf="showScrollPromptUno" class="scroll-prompt"><div class="scroll-prompt-shape"></div></div>
                             <form>
                                 <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
-                                    <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                    <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()" autocomplete="username">
+                                    <input #input_razon_social [ngClass]="{'noValidado': validador?.razon_social}" type="text" placeholder="Nombre o razón social*" [(ngModel)]="contacto.razon_social" name="razon_social" aria-label="Razon Social" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_email [ngClass]="{'noValidado': validador?.email}" type="text" placeholder="Email*" [(ngModel)]="contacto.email" name="email" aria-label="Email" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()" autocomplete="username">
                                     <span *ngIf="validationEmail" style="color: red;">Formato incorrecto de email</span>
-                                    <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()" autocomplete="username">
+                                    <input #input_check_email [ngClass]="{'noValidado': validador?.checkemail}" type="text" placeholder="Repetir email*" [(ngModel)]="contacto.emailRepetido" name="emailRepetido" aria-label="Repetir Email" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()" autocomplete="username">
                                     <span *ngIf="validationCheckEmail" style="color: red;">Los emails no son iguales</span>
                                     <ng-select #responsable labelForId="responsable_value" style="max-height: 32px; margin: 6px 0px;" [ngClass]="{'noValidado': validador?.cat_selected}"
                                         [clearable]="true"
@@ -129,22 +130,22 @@
 
 
 
-                                    <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_cuit [ngClass]="{'noValidado': validador?.cuit}" type="text" [placeholder]="cuit" [(ngModel)]="contacto.cuit" name="cuit" aria-label="Cuit" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <span *ngIf="validationCUIT && cuit === 'DNI (Solo numeros)*'" style="color: red;">Colocar 8 dígitos, sin puntos</span>
                                     <span *ngIf="validationCUIT && cuit === 'CUIT (Solo numeros)*'" style="color: red;">Colocar 11 dígitos, sin guiones</span>
-                                    <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" aria-label="Telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
-                                    <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" aria-label="Telefono Celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
                                 </div>
                                 <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
-                                    <input type="text" placeholder="Nombre comercial" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input type="text" placeholder="Nombre comercial" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia" aria-label="Nombre Comercial" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio" [(ngModel)]="contacto.domicilio_direccion" name="domicilio_direccion"  aria-label="Domicilio Direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.domicilio_numero" name="domicilio_numero" aria-label="Domicilio Numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
-                                    <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                    <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input #input_ciudad [ngClass]="{'noValidado': validador?.domicilio_ciudad}" type="text" placeholder="Localidad*" [(ngModel)]="contacto.domicilio_ciudad" name="domicilio_ciudad" aria-label="Domicilio Ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal" aria-label="Domicilio Codigo Postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <ng-select #provincia_value labelForId="provincia_value" [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
                                         [clearable]="true"
                                         [items]="provincia"
@@ -156,16 +157,16 @@
                                     </ng-select>
                                     <!-- <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password"> -->
                                     <div>
-                                        <input class="password__input" [type]="password_type" #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password">
-                                        <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                                        <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        <input class="password__input" [type]="password_type" #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" aria-label="Password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password">
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                     </div>
                                     <span *ngIf="validationPassword" style="color: red; font-size: 0.9em;">La contraseña debe contener al menos 6 caracteres</span>
                                     <!-- <input #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" type="password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password"> -->
                                     <div>
-                                        <input class="password__input" [type]="password_type" #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password">
-                                        <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                                        <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        <input class="password__input" [type]="password_type" #input_check_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena}" [(ngModel)]="contacto.contrasenaRepetida" name="contrasenaRepetida" aria-label="Repetir Password" placeholder="Repetir contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password">
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                        <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                     </div>
                                     <span *ngIf="validationCheckPassword" style="color: red;">Las contraseñas no son iguales</span>
                                 </div>
@@ -173,14 +174,14 @@
                         </div>
                         <div class="row stepsContent" *ngIf="_step === 2">
                             <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 5px">
-                                    <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                    <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras" aria-label="Nombre Responsable Compras" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: calc(100% - 110px);" type="text" placeholder="Domicilio de entrega" [(ngModel)]="contacto.envio_domicilio_direccion" name="envio_domicilio_direccion" aria-label="Domicilio Envio Direccion" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero" aria-label="Domicilio Entrega Numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                            <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                            <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                            <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad" aria-label="Domicilio Envio Ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                            <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal" aria-label="Domicilio Envio Codigo Postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
                                     <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
                                         placeholder="Provincia de entrega"
@@ -194,7 +195,8 @@
                                     </ng-select>
                             </div>
                         </div>
-                        <div class="row stepsContent" *ngIf="_step === 3">
+                        <div class="row stepsContent" *ngIf="_step === 3" (scroll)="stepTresScroll($event)">
+                            <div *ngIf="showScrollPromptTres" class="scroll-prompt"><div class="scroll-prompt-shape"></div></div>
                             <div class="notProcessing" *ngIf="!processing.started">
                                 <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
                                     <p><b>Nombre o razón social: </b>{{ckeckItem(contacto.razon_social).text}}</p>
@@ -212,7 +214,7 @@
                                     <p><b>Provincia: </b>{{ckeckItem(contacto.domicilio_provincia).text}}</p>
                                 </div>
                                 <div class="col-xs-12">
-                                    <textarea [(ngModel)]="contacto.actividad" name="actividad" id="actividad" cols="30" rows="3" placeholder="BREVE DESCRIPCIÓN DE ACTIVIDAD"></textarea>
+                                    <textarea [(ngModel)]="contacto.actividad" name="actividad" aria-label="Breve Descripcion Actividad" id="actividad" cols="30" rows="3" placeholder="BREVE DESCRIPCIÓN DE ACTIVIDAD"></textarea>
                                 </div>
                             </div>
                             <div class="processing" *ngIf="processing.started">
@@ -257,71 +259,74 @@
             </div>
         </div>
         </div>
-        <div class="modal__container" [ngClass]="{'modalHide': carritoStatus}" (click)="closeFull2($event)">
+        <div class="modal__container mobile__modal__container" [ngClass]="{'modalHide': carritoStatus}" (click)="closeFull2($event)">
             <div role="document" class="modal-dialog" style="width: 950px;">
                 <div class="modal-content">
-                <div class="modal-header">
-                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
-                <h4 class="modal-title">Tiene un carrito pendiente</h4>
-                <button aria-label="Close" class="close" type="button" (click)= "carritoCancelModal()">
-                <span style="color: red;" aria-hidden="true">X</span>
-                </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="card">
-                            <h3 class="card-header">{{childmessage.length}} compras pendientes</h3>
-                            <div #inputCantidad class="card-block" style="overflow-y: scroll; height: 350px; overflow-x: hidden;">
-                                <div class="row carrito__header">
-                                    <div class="col-1">
-                                        <div class="border">
-                                        <p>Cantidad</p>
+                    <div class="modal-header mobile_padding-top_extra_60">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                        <h4 class="modal-title mobile_padding-top_extra_25">Tiene un carrito pendiente</h4>
+                        <button aria-label="Close" class="close" type="button" (click)= "carritoCancelModal()">
+                            <span style="color: red;" aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="card">
+                                <h3 class="card-header">{{childmessage.length}} compras pendientes</h3>
+                                <div #inputCantidad class="card-block" style="overflow-y: scroll; height: 305px; overflow-x: hidden;">
+                                    <div class="row carrito__header">
+                                        <div class="col-1">
+                                            <div class="border">
+                                            <p>Cantidad</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 mobile_padding-left_extra">
+                                            <div class="border">
+                                                <p>Descripcion</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <div class="border">
+                                            <p>Precio Unitario</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 mobile_padding-left_extra">
+                                            <div class="border">
+                                            <p>Subtotal</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-2">
-                                        <div class="border">
-                                            <p>Descripcion</p>
+                                    <div class="row carrito__content" *ngFor="let compra of childmessage">
+                                        <div class="col-1">
+                                            <input *ngIf="compra.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
+                                            <select *ngIf="compra.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="compra.cantidad">
+                                                <option *ngFor="let cant of compra.arrayCants" [ngValue]="cant">{{cant}}</option>
+                                            </select>
                                         </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="border">
-                                        <p>Precio Unitario</p>
+                                        <div class="col-2">
+                                            <p>{{compra.descripcion}}</p>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="border">
-                                        <p>Subtotal</p>
+                                        <div class="col-3">
+                                            <p>${{formatMoney(compra.precio)}}</p>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="row carrito__content" *ngFor="let compra of childmessage">
-                                    <div class="col-1">
-                                        <input type="number" name="cantidad" id="cantidad" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
-                                    </div>
-                                    <div class="col-2">
-                                        <p>{{compra.descripcion}}</p>
-                                    </div>
-                                    <div class="col-3">
-                                        <p>${{formatMoney(compra.precio)}}</p>
-                                    </div>
-                                    <div class="col-4">
-                                        <p>${{updatePrecio(compra.precio, compra.cantidad)}}</p>
+                                        <div class="col-4">
+                                            <p>${{updatePrecio(compra.precio, compra.cantidad)}}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer carrito">
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6 footer__col">
-                            <button class="actionButton" type="button" (click)="carritoModal()">CONTINUAR COMPRA</button>
-                        </div>
-                        <div class="col-xs-12 col-md-6 footer__col">
-                            <button type="button" class="whiteButton" (click)="carritoCancelModal()"> CANCELAR </button>
+                    <div class="modal-footer carrito">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6 footer__col">
+                                <button class="actionButton" type="button" (click)="carritoModal()">CONTINUAR COMPRA</button>
+                            </div>
+                            <div class="col-xs-12 col-md-6 footer__col">
+                                <button type="button" class="whiteButton" (click)="carritoCancelModal()"> CANCELAR </button>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
                 </div>
         </div>
@@ -358,17 +363,17 @@
                                 <input type="text" placeholder="Escriba para filtrar por Cód. Cliente, Razón Social o CUIT" [(ngModel)]="filterBusqueda" (keydown)="enterBusqueda($event)" style="width: 100%;
                                 border: none;
                                 padding: 5px 10px;"
-                                name="filtroBusqueda">
+                                name="filtroBusqueda" aria-label="Filtro por Codigo Cliente, Razon Social o CUIT">
                             </div>
                             <div class="buscador_btn">
                                 <span>
-                                    <select (change)="cambiarCantFiltro($event)">
+                                    <select (change)="cambiarCantFiltro($event)" aria-label="Cantidad de cuentas a mostrar">
                                         <option value="20">20</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
                                     </select>
                                 </span>
-                                <button class="btn" type="button" (click)="filtrarCuentas()">
+                                <button class="btn" type="button" (click)="filtrarCuentas()" aria-label="Buscar cuentas">
                                     <i class="fa fa-search" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -395,7 +400,7 @@
                                 <div class="row carrito__content" *ngFor="let cuenta of cuentasRepresentar; let $index = index;">
                                     <div class="col-rep-3">
                                         <div class="border">
-                                            <input [value]="cuenta.id" [checked]="$index === 0" type="radio" [(ngModel)]="cuenta.seleccion" name="opcionCuenta" (click)="seleccionarCuenta(cuenta)" style="padding: 0; margin: auto;">
+                                            <input [value]="cuenta.id" [checked]="$index === 0" type="radio" [(ngModel)]="cuenta.seleccion" name="opcionCuenta" aria-label="Seleccion cuenta" (click)="seleccionarCuenta(cuenta)" style="padding: 0; margin: auto;">
                                         </div>
                                     </div>
                                     <div class="col-rep-4">
@@ -441,21 +446,21 @@
                             <form>
                                 <div class="card-block" style="display: flex;">
                                     <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
-                                        <input style="width: 100%; margin-bottom: 10px;" type="text" [(ngModel)]="auth.email" name="authEmail" disabled="disabled" autocomplete="username">
-                                        <input style="width: 100%;" type="text" [(ngModel)]="auth.razonsocial" name="authRazonSocial" disabled="disabled" autocomplete="username">
+                                        <input style="width: 100%; margin-bottom: 10px;" type="text" [(ngModel)]="auth.email" name="authEmail" aria-label="Email" disabled="disabled" autocomplete="username">
+                                        <input style="width: 100%;" type="text" [(ngModel)]="auth.razonsocial" name="authRazonSocial" aria-label="Razon Social" disabled="disabled" autocomplete="username">
                                     </div>
                                     <div class="col-xs-12 col-md-6" style="display: flex;flex-direction: column;">
                                         <!-- <input style="width: 100%; margin-bottom: 10px;" name="contrasena" type="password" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" autocomplete="new-password"> -->
                                         <div style="width: 100%; margin-bottom: 10px;">
-                                            <input class="password__input" [type]="password_type" name="contrasena" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" autocomplete="new-password">
-                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                            <input class="password__input" [type]="password_type" name="contrasena" aria-label="Password" placeholder="Nueva contraseña" [(ngModel)]="migracion.pass_original" autocomplete="new-password">
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                         </div>
                                         <!-- <input style="width: 100%;" type="password" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido" autocomplete="new-password"> -->
                                         <div style="width: 100%;">
-                                            <input class="password__input" [type]="password_type" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido" autocomplete="new-password">
-                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                            <input class="password__input" [type]="password_type" placeholder="Repetir contraseña" [(ngModel)]="migracion.pass_repetido" name="migracion_pass_repetido" aria-label="Repetir Password" autocomplete="new-password">
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                                            <button class="confirm__password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
                                 </div>

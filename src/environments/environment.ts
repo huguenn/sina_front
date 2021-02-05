@@ -11,6 +11,6 @@ export const environment = {
     databaseURL: 'https://sina-admin.firebaseio.com',
     projectId: 'sina-admin',
     storageBucket: '',
-    messagingSenderId: '827453877207'
-  }
+    messagingSenderId: '827453877207',
+  },
 };

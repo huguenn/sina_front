@@ -298,6 +298,8 @@
 }
 .carrito__content {
     font-size: 12px;
+    border-bottom: 1px solid #d5d5d5;
+    margin-bottom: 5px;
 }
 .carrito__content:hover {
     background-color: #f8f8f8;
@@ -310,6 +312,10 @@
     background-color: transparent;
 }
 .carrito__content > div input {
+    width: 80%;
+    border: 1px solid #cccccc;
+}
+.carrito__content > div select {
     width: 80%;
     border: 1px solid #cccccc;
 }
@@ -343,8 +349,9 @@
     padding: 0 10px;
 }
 .modal__container .carrito .footer__col input,
-.modal__container .carrito .footer__col button{
-        width: 100%;
+.modal__container .carrito .footer__col select,
+.modal__container .carrito .footer__col button {
+    width: 100%;
 }
 .col-1  {
     width: 12.5%;
@@ -375,10 +382,23 @@
 
 .col-1 input {
     width: 70%;
-    padding: 3px 10px;
+    padding: 3px 6px;
     padding-top: 5px;
     margin-top: -7px;
     border: 1px solid #d5d5d5;
+}
+.col-1 select {
+    width: 70%;
+    padding: 3px;
+    padding-top: 5px;
+    margin-top: -7px;
+    border: 1px solid #d5d5d5;
+}
+@media (max-width: 540px) {
+    .carrito__content .col-1 input,
+    .carrito__content .col-1 select {
+        margin-top: 0px;
+    }
 }
 
 .col-rep-1,
@@ -590,5 +610,161 @@ textarea {
     }
     .sticky_socials li p {
         padding: 7px 3px 0px 3px;
+    }
+}
+@media (max-width: 540px) {
+    .carrito__content > div {
+        padding-top: 0px;
+    }
+    .carrito__content > div select {
+        width: 100%;
+    }
+    .carrito__header .col-1,
+    .carrito__header .col-2,
+    .carrito__header .col-3,
+    .carrito__header .col-4,
+    .carrito__header .col-5,
+    .carrito__content .col-1,
+    .carrito__content .col-2,
+    .carrito__content .col-3,
+    .carrito__content .col-4,
+    .carrito__content .col-5 {
+        padding-right: 2px;
+        padding-left: 10px;
+    }
+    .carrito__header .col-1 {
+        width: 17%;
+    }
+    .carrito__content .col-1 {
+        width: 22%;
+        padding-top: 5px;
+    }
+    .carrito__header .col-2,
+    .carrito__content .col-2 {
+        width: 44%;
+    }
+    
+    .carrito__header .col-4 {
+        width: 34%;
+    }
+    .carrito__content .col-4 {
+        width: 34%;
+        padding-top: 5px;
+    }
+    .carrito__header .col-3,
+    .carrito__content .col-3 {
+        display: none;
+    }
+
+    .carrito__content .col-1 input {
+        width: 100%;
+    }
+    .carrito__content .col-1 select {
+        width: 100%;
+    }
+
+    .carrito__content .col-2 {
+        line-height: 20px;
+        height: 40px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .mobile_padding-left_extra {
+        padding-left: 20px !important;
+    }
+    .mobile_padding-top_extra_60 {
+        padding-top: 60px !important;
+    }
+    .mobile_padding-top_extra_25 {
+        padding-top: 25px !important;
+    }
+
+    .mobile__modal__container {
+        height: calc(100vh - 40px);
+    }
+    .mobile__modal__container .modal-body {
+        max-height: 350px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    .mobile__modal__container .modal-footer {
+        padding: 10px 40px;
+    }
+
+    .mobile__modal__container img {
+        bottom: 30px;
+        left: 15px;
+    }
+}
+.scroll-prompt .scroll-prompt-shape {
+    display: none;
+}
+@media (max-width: 992px) {
+    .scroll-prompt .scroll-prompt-shape {
+        display: block;
+    }
+    .scroll-prompt {
+        position: absolute;
+        bottom: 60%;
+        right: 15%;
+        z-index: 100;
+        -webkit-transition: opacity ease-in-out;
+        -moz-transition: opacity ease-in-out;
+        -o-transition: opacity ease-in-out;
+        transition: opacity ease-in-out;
+    }
+    
+    .scroll-prompt .scroll-prompt-shape {
+        position: relative;
+        animation: slidedown 2.25s infinite;
+    }
+    
+    .scroll-prompt .scroll-prompt-shape:before {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 1.5em;
+        height: .25em;
+        top: 0;
+        left: -6px;
+        background: rgb(5,122,255);
+        border-radius: 0 .25em .25em 0;
+        transform-origin: bottom, left;
+    }
+    .scroll-prompt .scroll-prompt-shape:after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 1.5em;
+        height: .25em;
+        top: 0;
+        left: 6px;
+        background: rgb(5,122,255);
+        border-radius: 0 .25em .25em 0;
+        transform-origin: bottom, left;
+    }
+    
+    .scroll-prompt .scroll-prompt-shape:before {
+        transform: scaleX(-1) rotate(-45deg);
+    }
+    .scroll-prompt .scroll-prompt-shape:after {
+        transform: rotate(-45deg);
+    }
+    
+    
+    
+    @keyframes slidedown {
+        0% {
+            opacity: 0;
+        } 
+        75% {
+            opacity: 1;
+            transform: translate(0, 80px);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(0, 80px);
+        }
     }
 }

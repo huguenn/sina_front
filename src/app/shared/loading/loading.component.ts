@@ -1,9 +1,9 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.css']
+  styleUrls: ['./loading.component.css'],
 })
 export class LoadingComponent implements OnInit {
 
@@ -17,7 +17,6 @@ export class LoadingComponent implements OnInit {
   cerrar() {
     // this.cerrarModal.emit(true);
   }
-
 
   // [ngClass]="{'modalHide': loginStatus}"
 }

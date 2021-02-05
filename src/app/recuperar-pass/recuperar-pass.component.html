@@ -21,15 +21,15 @@
             <div class="tab__content" style="    background-color: #ffffff;">
               <div class="content" style="padding: 40px; max-width: 380px; margin: auto; display: flex; flex-direction: column; width: 100%;">
                 <div *ngIf="!volviendoAlHome">
-                  <input class="password__input" [type]="password_type" [(ngModel)]="password" name="password" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)" autocomplete="new-password">
-                  <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                  <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                  <input class="password__input" [type]="password_type" [(ngModel)]="password" name="password" aria-label="Password" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)" autocomplete="new-password">
+                  <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                  <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                 </div>
                 <!-- <input *ngIf="!volviendoAlHome" type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)" style="margin-bottom: 5px;"> -->
                 <div *ngIf="!volviendoAlHome">
-                  <input class="password__input" [type]="password_type" [(ngModel)]="password_re" name="password_re" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)" autocomplete="new-password">
-                  <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
-                  <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                  <input class="password__input" [type]="password_type" [(ngModel)]="password_re" name="password_re" aria-label="Repetir Password" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)" autocomplete="new-password">
+                  <button class="password__eye" type="button" *ngIf="password_type === 'password'" (click)="togglePasswordType()" aria-label="Mostrar Password"><i class="fa fa-eye-slash" aria-hidden="true"></i></button>
+                  <button class="password__eye" type="button" *ngIf="password_type === 'text'" (click)="togglePasswordType()" aria-label="Ocultar Password"><i class="fa fa-eye" aria-hidden="true"></i></button>
                 </div>
                 <!-- <input *ngIf="!volviendoAlHome" type="password" [(ngModel)]="password_re" name="password_re" placeholder="Contraseña" (keydown)="confirmarClaveKey($event)"> -->
                 <button *ngIf="!volviendoAlHome" class="btn btn-outline-dark actionButton" type="button"(click)="confirmarClave()">CONFIRMAR NUEVA CONTRASEÑA</button>

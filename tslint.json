@@ -28,6 +28,7 @@
       true,
       180
     ],
+    "max-classes-per-file": false,
     "member-access": false,
     "member-ordering": [
       false,
@@ -70,6 +71,7 @@
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": false,
     "no-unused-expression": true,
+    "no-unused-variable": true,
     "no-use-before-declare": false,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
@@ -139,5 +141,9 @@
     "no-access-missing-member": true,
     "templates-use-public": true,
     "invoke-injectable": true
-  }
+  },
+  "extends": [
+    "tslint:recommended",
+    "@angular-extensions/lint-rules"
+  ]
 }

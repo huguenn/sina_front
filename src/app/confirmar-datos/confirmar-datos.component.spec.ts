@@ -8,7 +8,7 @@ describe('ConfirmarDatosComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmarDatosComponent ]
+      declarations: [ ConfirmarDatosComponent ],
     })
     .compileComponents();
   }));

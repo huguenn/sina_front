@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../shared.service';
-import { Subject } from 'rxjs/Subject';
-import { debounceTime } from 'rxjs/operator/debounceTime';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { map } from 'rxjs/operators/map';
+import { debounceTime } from 'rxjs/operator/debounceTime';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
+import { utils as XLSXutils, WorkBook, WorkSheet, writeFile as XLSXwrite } from 'xlsx';
 import { AutenticacionService } from '../autenticacion.service';
 // componente del producto
 import { ProductoItemComponent } from '../producto-item/producto-item.component';
-import { utils as XLSXutils, writeFile as XLSXwrite, WorkSheet, WorkBook  } from 'xlsx';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  providers: [ProductoItemComponent]
+  providers: [ProductoItemComponent],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   private _success = new Subject<string>();
   public iva_usuario: string = '';
   staticAlertClosed = false;
@@ -34,13 +35,14 @@ export class HomeComponent implements OnInit {
   constructor(public data: SharedService, private http: HttpClient, private auth: AutenticacionService) {
     setInterval(() => {
       this.carousel__item = this.carousel__item < this.carousel__max - 1 ? this.carousel__item + 1 : 0;
-    }, 5000);
+    }, 6000);
     this.data.updatePageTitle();
   }
-  mapOrder (array, order, key) {
+  mapOrder(array, order, key) {
 
-    array.sort( function (a, b) {
-      const A = a[key], B = b[key];
+    array.sort((a, b) => {
+      const A = a[key];
+      const B = b[key];
 
       if (order.indexOf(A) > order.indexOf(B)) {
         return 1;
@@ -56,19 +58,19 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => this.staticAlertClosed = true, 5000);
-    this._success.subscribe((message) => this.successMessage = message);
+    this._success.pipe(takeUntil(this.destroy$)).subscribe((message) => this.successMessage = message);
     debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
 
     // subscribing to data on loginStatus
-    this.data.currentLogin.subscribe(
-      status => {
+    this.data.currentLogin.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this.loginStatus = status;
         // getting data via get request
         this.http.get('assets/data/resultadosHome.json')
-        .subscribe(res => {
+        .pipe(takeUntil(this.destroy$)).subscribe((res) => {
           this.listaResultados = res['Resultados'];
 
-          if(this.config) {
+          if (this.config) {
             this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
             this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
             this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
@@ -76,18 +78,18 @@ export class HomeComponent implements OnInit {
             this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
             this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
           }
-          
+
           // this.listaResultados[2].lista = [];
           const $public = this.loginStatus ? '' : 'public/';
           this.auth.get($public + 'producto/listado/ofertas')
           .then(($response)  => {
-            let ofertas1 = $response.response.slice(0, 4);
+            const ofertas1 = $response.response.slice(0, 4);
             // let ofertas2 = $response.response.slice(0, 2);
             this.listaResultados[0].lista = JSON.parse(JSON.stringify(ofertas1));
             // this.listaResultados[2].lista[0] = JSON.parse(JSON.stringify(ofertas2[0]));
             // this.listaResultados[2].lista[1] = JSON.parse(JSON.stringify(ofertas2[1]));
 
-            if(this.config) {
+            if (this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
               this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
               this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
@@ -96,7 +98,7 @@ export class HomeComponent implements OnInit {
               this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
             }
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('getresultadoshome.json error home:', $error);
             this.auth.desacreditar();
             // TODO: Este reload me dejaba en loop infinito la web en el celular
@@ -110,7 +112,7 @@ export class HomeComponent implements OnInit {
             // this.listaResultados[2].lista[2] = JSON.parse(JSON.stringify(ofertas2[0]));
             // this.listaResultados[2].lista[3] = JSON.parse(JSON.stringify(ofertas2[1]));
 
-            if(this.config) {
+            if (this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
               this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
               this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
@@ -119,7 +121,7 @@ export class HomeComponent implements OnInit {
               this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
             }
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('getlistadonovedades error home:', $error);
           });
           this.auth.get($public + 'producto/listado/campania')
@@ -127,7 +129,7 @@ export class HomeComponent implements OnInit {
             const ofertas1 = $response.response.slice(0, 4);
             this.listaResultados[2].lista = JSON.parse(JSON.stringify(ofertas1));
 
-            if(this.config) {
+            if (this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
               this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
               this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
@@ -136,15 +138,14 @@ export class HomeComponent implements OnInit {
               this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
             }
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('getlistadocampania error home:', $error);
           });
 
         });
-
-      }
+      },
     );
-    this.data.currentUser.subscribe($user => {
+    this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
       this.data.log('actualizacion de usuario home');
       if ($user) {
         switch ($user['codCategoriaIva']) {
@@ -163,45 +164,50 @@ export class HomeComponent implements OnInit {
     });
 
     // subscribing to config change
-    this.data.currentConfig.subscribe(
-      configuracion => {
+    this.data.currentConfig.pipe(takeUntil(this.destroy$)).subscribe(
+      (configuracion) => {
         this.config = configuracion;
 
-        if(this.config.bannerUnoActivo) {
+        if (this.config.bannerUnoActivo) {
           this.imageSources.push({imagen: this.config.bannerUnoImagen, link: this.config.bannerUnoLink});
         }
-        if(this.config.bannerDosActivo) {
+        if (this.config.bannerDosActivo) {
           this.imageSources.push({imagen: this.config.bannerDosImagen, link: this.config.bannerDosLink});
         }
-        if(this.config.bannerTresActivo) {
+        if (this.config.bannerTresActivo) {
           this.imageSources.push({imagen: this.config.bannerTresImagen, link: this.config.bannerTresLink});
         }
-        if(this.config.bannerCuatroActivo) {
+        if (this.config.bannerCuatroActivo) {
           this.imageSources.push({imagen: this.config.bannerCuatroImagen, link: this.config.bannerCuatroLink});
         }
-        if(this.config.bannerCincoActivo) {
+        if (this.config.bannerCincoActivo) {
           this.imageSources.push({imagen: this.config.bannerCincoImagen, link: this.config.bannerCincoLink});
         }
-        if(this.config.bannerSeisActivo) {
+        if (this.config.bannerSeisActivo) {
           this.imageSources.push({imagen: this.config.bannerSeisImagen, link: this.config.bannerSeisLink});
         }
         this.carousel__max = this.imageSources.length;
-      }
+      },
     );
 
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
   alertClicked() {
     this.successMessage = null;
     this.data.toggleCarritoShow();
   }
   registrar() {
-    if(!this.loginStatus) {
+    if (!this.loginStatus) {
       this.data.toggleLoginModal();
     }
   }
 
   descargarLista() {
-    if(this.loginStatus) {
+    if (this.loginStatus) {
       (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
       (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'block';
       this.auth.get('producto/listadoProductos')
@@ -211,7 +217,7 @@ export class HomeComponent implements OnInit {
           const print: any[] = [];
           print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)',
             'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta']);
-          this.listadoProductos.forEach(producto => {
+          this.listadoProductos.forEach((producto) => {
             print.push
             (
               [
@@ -223,8 +229,8 @@ export class HomeComponent implements OnInit {
                 producto.familia,
                 producto.categoria,
                 producto.subcategoria,
-                producto.es_oferta
-              ]
+                producto.es_oferta,
+              ],
             );
           });
 
@@ -238,7 +244,7 @@ export class HomeComponent implements OnInit {
         (document.querySelector('#loaderFileMsg') as HTMLElement).style.display = 'none';
 
       })
-      .catch($error => {
+      .catch(($error) => {
         this.data.log('descargarlista error home:', $error);
       });
     } else {

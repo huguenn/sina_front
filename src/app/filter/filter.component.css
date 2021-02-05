@@ -232,6 +232,10 @@
 .selection .header > span:hover{
     background-color: red;
 }
+.containerTopCategorias {
+    visibility: hidden;
+    display: none;
+}
 .containerSidebarCategorias {
     margin: 10px 0;
 }
@@ -254,6 +258,62 @@
     .containerSidebarCategorias {
         visibility: hidden;
         display: none;
+    }
+    .containerTopCategorias {
+        visibility: visible;
+        display: block;
+        text-align: center;
+        margin: 10px 0px;
+    }
+    .ordenProductos_selector {
+        width: 130px;
+        background: white;
+        color: #057aff;
+        line-height: 16px;
+        font-size: 14px;
+        padding: 0 10px;
+        cursor: pointer;
+        border: none;
+    }
+    .ordenProductos_selector > p {
+        display: inline-block;
+    }
+    .ordenProductos {
+        /* display: none; */
+        position: absolute;
+        margin: 0;
+        background: black;
+        list-style-type: none;
+        padding: 0px;
+        z-index: 2;
+    }
+    .ordenProductos > li {
+        max-width: 150px;
+        background: rgb(249, 249, 249);
+        line-height: 25px;
+        font-size: 14px;
+        padding: 0 30px 0px 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #dddddd;
+    }
+    .ordenProductos > li:last-of-type {
+        border: none;
+    }
+    .ordenProductos > li > p {
+        padding: 2px 10px;
+        margin: 1px 0px;
+        font-weight: normal;
+        display: inline-block;
+    }
+    .ordenProductos > li > p.floatingRight {
+        position: absolute;
+        right: 5px;
+    }
+    .ordenProductos > li > p > strong > i {
+        color: #00c972;
+    }
+    .ordenProductos > li > p > i {
+        color: #00c97270;
     }
 }
 

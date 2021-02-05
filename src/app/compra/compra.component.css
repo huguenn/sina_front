@@ -156,7 +156,14 @@
     padding: 6px;
 }
 
-
+.carrito__content {
+    border-bottom: 1px solid #d5d5d5;
+    margin-bottom: 4px;
+}
+.carrito__content__mobile {
+    border-bottom: 1px solid #d5d5d5;
+    /* margin-bottom: 4px; */
+}
 .carrito__content:hover,
 .carrito__content__mobile:hover {
     background-color: #f8f8f8;
@@ -189,11 +196,24 @@
     width: 65%;
     border: 1px solid #cccccc;
 }
+.carrito__content > div select {
+    width: 95%;
+    border: 1px solid #cccccc;
+}
+.carrito__content__mobile > div select {
+    width: 65%;
+    border: 1px solid #cccccc;
+}
 .carrito__titulo {
     border-bottom: 1px solid #ccc;
     margin: 0px;
     margin: 20px 0px;
     font-weight: bold;
+}
+@media (min-width: 541px) {
+    .carrito__titulo {
+        margin-left: -10px;
+    }
 }
 .carrito__header {
     margin-bottom: 20px;
@@ -270,12 +290,12 @@
         display: none;
     }
     .carrito__header .col-5 {
-        width: 38px;
-        min-width: 38px;
+        width: 35px;
+        min-width: 35px;
     }
     .carrito__content__mobile .row .col-5 {
-        width: 38px;
-        min-width: 38px;
+        width: 35px;
+        min-width: 35px;
     }
 
     .tab__header p {
@@ -325,7 +345,7 @@
     }
     .carrito__content__mobile {
         display: block;
-        margin-top: 10px;
+        /* margin-top: 10px; */
     }
     .carrito__total {
         display: none;
@@ -351,17 +371,23 @@
         margin: 0px;
     }
     .carrito__content__mobile .row .col-1,
+    .carrito__content__mobile .row .col-1 select {
+        min-width: 57px;
+        padding: 5px 1px;
+        margin-top: 0px;
+        margin-right: 5px;
+    }
     .carrito__content__mobile .row .col-1 input {
-        min-width: 40px;
-        padding: 5px 2px;
+        min-width: 57px;
+        padding: 5px 3px;
         margin-top: 0px;
         margin-right: 5px;
     }
     .carrito__header .col-2 {
-        width: 35%;
+        width: 42%;
     }
     .carrito__content__mobile .row .col-2 {
-        width: 35%;
+        width: 42%;
         line-height: 20px;
         height: 40px;
         text-overflow: ellipsis;
@@ -382,12 +408,12 @@
         display: none;
     }
     .carrito__header .col-5 {
-        width: 38px;
-        min-width: 38px;
+        width: 35px;
+        min-width: 35px;
     }
     .carrito__content__mobile .row .col-5 {
-        width: 38px;
-        min-width: 38px;
+        width: 35px;
+        min-width: 35px;
         display: table-cell;
         vertical-align: middle;
     }
@@ -398,7 +424,7 @@
     }
     .carrito,
     .carrito__total__mobile {
-        padding: 15px 12px;
+        padding: 15px 4px;
     }
 }
 /* Carrito */
@@ -591,6 +617,12 @@
 .col-1 input {
   width: 90%;
   padding: 5px 8px;
+  margin-top: -7px;
+  border: 1px solid #d5d5d5;
+}
+.col-1 select {
+  width: 90%;
+  padding: 5px;
   margin-top: -7px;
   border: 1px solid #d5d5d5;
 }
@@ -857,7 +889,36 @@ margin: 0;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-    text-align: center;
+    /* text-align: center; */
+}
+
+.div__agregado {
+    padding-top: 10px;
+    margin: auto;
+}
+.div__agregado .form-control {
+    padding-right: 30px;
+}
+.div__agregado .busqueda__agregado {
+    position: relative;
+    float: right;
+    top: -28px;
+    margin: 0px;
+    margin-left: -30px;
+    margin-top: 0px;
+    width: 30px;
+    border: none;
+    background: none;
+}
+/* Chrome, Safari, Edge, Opera */
+.div__agregado input::-webkit-outer-spin-button,
+.div__agregado input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+/* Firefox */
+.div__agregado input[type=number] {
+-moz-appearance: textfield;
 }
 
 @media (max-width: 540px) {
@@ -878,6 +939,13 @@ margin: 0;
     }
     .form-control {
         width: calc(100% + 30px);
+    }
+    .div__agregado {
+        width: 90%;
+    }
+    .div__agregado .form-control {
+        width: 100%;
+        margin: auto;
     }
     .buscador__general input{
         width: calc(100% + 4px);
@@ -1059,4 +1127,17 @@ margin: 0;
 }
 .mensaje__compra__mensaje {
     font-size: 18px;
+}
+@media (max-width: 540px) {
+    .mobile_padding_extra {
+        padding-left: 21px;
+    }
+}
+@media (max-width: 390px) {
+    .carrito__header .col-2 {
+        width: 35%;
+    }
+    .carrito__content__mobile .row .col-2 {
+        width: 35%;
+    }
 }

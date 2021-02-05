@@ -1,20 +1,14 @@
-import { Component, OnInit, OnChanges, AfterViewInit, HostListener, Input, ViewChild, ElementRef} from '@angular/core';
-import { SharedService, cliente, Configuracion } from '../shared.service';
-import { Dato } from '../shared.service';
-import {  } from '@angular/core/src/metadata/lifecycle_hooks';
-import { PopoverModule, PopoverContent, Popover } from 'ngx-popover';
-import { CompraItem, Carrito, Link, MenuItem, MenuSection } from '../data';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { AutenticacionService } from '../autenticacion.service';
-import { element } from 'protractor';
-import { link } from 'fs';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
-import { MenuService } from '../menu.service';
-import { Subscription } from 'rxjs/Subscription';
+import { takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
-
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { AutenticacionService } from '../autenticacion.service';
+import { Carrito } from '../data';
+import { MenuService } from '../menu.service';
+import { Dato, SharedService } from '../shared.service';
 
 const COMPRA: Carrito = {
   fecha: 'hoy',
@@ -26,24 +20,25 @@ const COMPRA: Carrito = {
     {texto: 'Escobas', url: '', precio: '19,90'},
     {texto: 'Escobas', url: '', precio: '19,90'},
     {texto: 'Escobas', url: '', precio: '19,90'},
-    {texto: 'Escobas', url: '', precio: '19,90'}
-  ]
+    {texto: 'Escobas', url: '', precio: '19,90'},
+  ],
 };
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
+export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   @Input() greetMessage: Dato[];
-  @Input() headerStatus: Number;
+  @Input() headerStatus: number;
 
   @ViewChild('inputCantidadHeader') inputCantidadHeader: ElementRef;
   inputSubHeader: Subscription;
   @ViewChild('inputCantidadHeaderVerde') inputCantidadHeaderVerde: ElementRef;
   inputSubHeaderVerde: Subscription;
-  
+
   menuToggle = false;
   CompraList = COMPRA;
   LinkList  = [];
@@ -63,18 +58,18 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
   // user Data
   UserName: string;
   UserJob: string;
-  
+
   actualRoute = '/';
 
   menuSelectedItem = 0;
 
   popup = {
     cuenta: false,
-    compra: false
+    compra: false,
   };
   popup2 = {
     cuenta: false,
-    compra: false
+    compra: false,
   };
   message: string;
 
@@ -87,13 +82,12 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
     this.selectedItem.show = true;
   }
 
-
   cuenta = [
     { texto: 'Mi cuenta', id: 0 },
     { texto: 'Mis datos', id: 1 },
     { texto: 'Mis frecuentes', id: 2 },
     { texto: 'Ultimas compras', id: 3 },
-    { texto: 'Cerrar sesión', id: 4 }
+    { texto: 'Cerrar sesión', id: 4 },
   ];
   headerCuentaLink(id: number) {
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => this.router.navigate(['/cuenta'], { queryParams: {tab: id}}));
@@ -117,38 +111,39 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
       const body = new URLSearchParams();
       body.set('frase', this.texto_busqueda);
       this.auth.post('producto/busqueda', body)
-      .then($response => {
+      .then(($response) => {
           this.ResultadoBusqueda = $response.body.response.slice(0, 6);
       })
-      .catch($error => {
+      .catch(($error) => {
         this.data.log('error buscarPalabra header:', $error);
       });
     }
   }
   cerrarBusqueda() {
     this.ResultadoBusqueda = [];
+    this.texto_busqueda = '';
   }
   constructor(private menu: MenuService, private router: Router, public data: SharedService, private auth: AutenticacionService) {
     this.MenuClass = '';
-    this.menu.notifyObservable$.subscribe($cambio => {
+    this.menu.notifyObservable$.pipe(takeUntil(this.destroy$)).subscribe(($cambio) => {
       if ($cambio) {
         this.closeCompra();
       }
     });
-    this.menu.LinkList$.subscribe(($cambio_link: any) => {
+    this.menu.LinkList$.pipe(takeUntil(this.destroy$)).subscribe(($cambio_link: any) => {
       if ($cambio_link) {
         this.LinkList = $cambio_link;
       }
 
     });
-    this.menu.MenuList$.subscribe(($cambio_menu: any) => {
+    this.menu.MenuList$.pipe(takeUntil(this.destroy$)).subscribe(($cambio_menu: any) => {
       if ($cambio_menu) {
         this.MenuList = $cambio_menu;
       }
     });
     // subscribing to data on carritoStatus
-    this.data.currentCarrito.subscribe(
-      status => {
+    this.data.currentCarrito.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this.carritoStatus = status;
         if ( (this.headerStatus > 90 && window.innerWidth > 960) ||
         (this.headerStatus > 0  && window.innerWidth <= 960) ) {
@@ -156,11 +151,11 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
         } else {
           this.popup2.compra = status;
         }
-      }
+      },
     );
     // subscribing to data on carritoStatus?? debe ser loginStatus algo asi
-    this.data.currentLogin.subscribe(
-      status => {
+    this.data.currentLogin.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this.UserLog = status;
         if (this.data.user) {
           try {
@@ -171,9 +166,9 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
             this.data.log('error userlog header:', e);
           }
         }
-      }
+      },
     );
-    this.data.currentUser.subscribe($user => {
+    this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
       if (this.data.user) {
         try {
           this.data.log('user viejo header:', this.data.user.razonSocial);
@@ -189,8 +184,8 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
 
   ngOnInit() {
     // subscribing to router change
-    this.router.events.subscribe(val => {
-      if(val['url']) {
+    this.router.events.pipe(takeUntil(this.destroy$)).subscribe((val) => {
+      if (val['url']) {
         if (this.actualRoute !== val['url']) {
           this.actualRoute = (val['url']);
         }
@@ -198,61 +193,65 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
     });
 
     // subscribing to config change
-    this.data.currentConfig.subscribe(
-      configuracion => {
+    this.data.currentConfig.pipe(takeUntil(this.destroy$)).subscribe(
+      (configuracion) => {
         this.config = configuracion;
-      }
+      },
     );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
   }
 
   ngAfterViewInit() {
     setTimeout(() => {
       this.inputSubHeader = Observable.fromEvent(this.inputCantidadHeader.nativeElement, 'input')
       .debounceTime(1000)
-      .subscribe(
+      .pipe(takeUntil(this.destroy$)).subscribe(
         () => {
           const body = new URLSearchParams();
-          let array = [];
-          for(let item of this.data.lista) {
+          const array = [];
+          for (const item of this.data.lista) {
             array.push({id_producto: item.id, cantidad: item.cantidad});
           }
           body.set('lista', JSON.stringify(array));
 
           this.auth.post('carrito/update_cantidades', body)
-          .then($response => {
+          .then(($response) => {
             this.data.log('response carritoupdatecantidades header debounced', $response);
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('error carritoupdatecantidades header debounced', $error);
           });
-        }
+        },
       );
       this.inputSubHeaderVerde = Observable.fromEvent(this.inputCantidadHeaderVerde.nativeElement, 'input')
       .debounceTime(1000)
-      .subscribe(
+      .pipe(takeUntil(this.destroy$)).subscribe(
         () => {
           const body = new URLSearchParams();
-          let array = [];
-          for(let item of this.data.lista) {
+          const array = [];
+          for (const item of this.data.lista) {
             array.push({id_producto: item.id, cantidad: item.cantidad});
           }
           body.set('lista', JSON.stringify(array));
 
           this.auth.post('carrito/update_cantidades', body)
-          .then($response => {
+          .then(($response) => {
             this.data.log('response carritoupdatecantidades header debounced verde', $response);
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('error carritoupdatecantidades header debounced verde', $error);
           });
-        }
+        },
       );
     }, 2000);
   }
 
   representado: boolean = false;
   // auxiliar value
-  lastInput: Boolean = false;
+  lastInput: boolean = false;
   ngOnChanges() {
     if ( (this.headerStatus > 90 && window.innerWidth > 960) ||
         (this.headerStatus > 0  && window.innerWidth <= 960)
@@ -345,6 +344,22 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
       this.data.toggleLoginModal();
     }
   }
+  carritoVerTodos() {
+    this.toggle('compra');
+    if (this.greetMessage && this.greetMessage.length > 0) {
+      this.router.navigateByUrl('/compra/carrito');
+    } else {
+      this.router.navigateByUrl('/compra/carrito', {skipLocationChange: true}).then(() => this.router.navigateByUrl('/'));
+    }
+  }
+  carritoVerTodos2() {
+    this.toggle2('compra');
+    if (this.greetMessage && this.greetMessage.length > 0) {
+      this.router.navigateByUrl('/compra/carrito');
+    } else {
+      this.router.navigateByUrl('/compra/carrito', {skipLocationChange: true}).then(() => this.router.navigateByUrl('/'));
+    }
+  }
   toggleMenu() {
     this.data.toggleSideBar();
   }
@@ -352,11 +367,11 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
     const body = new URLSearchParams();
     body.set('id_producto', msg.id);
     this.auth.post('carrito/eliminar_item', body)
-    .then($response => {
+    .then(($response) => {
       this.data.log('response carritoeliminaritem header', $response);
       this.data.removeMessage(msg);
     })
-    .catch($error => {
+    .catch(($error) => {
       this.data.log('error carritoeliminaritem header', $error);
     });
   }
@@ -379,18 +394,27 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit {
       this.cerrarBusqueda();
     }, 1000);
   }
-  updatePrecio($precio, $cantidad): string {
+  updatePrecio($precio, $cantidad): string { // TODO: revisar esto, mientras el popup se muestra esta llamandose en cada tick
     const subtotal = $precio * $cantidad;
     return this.formatMoney(subtotal);
   }
+  updateSubtotal(listaCarrito): string { // TODO: revisar esto, mientras el popup se muestra esta llamandose en cada tick
+    let subtotal = 0;
+    listaCarrito.forEach((item) => {
+      subtotal += item.cantidad * item.precio;
+    });
+    return this.formatMoney(subtotal);
+  }
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-      let s, i, j;
-      c = isNaN(c = Math.abs(c)) ? 2 : c,
-      d = d == undefined ? ',' : d,
-      t = t == undefined ? '.' : t,
-      s = n < 0 ? '-' : '',
-      i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-      j = (j = i.length) > 3 ? j % 3 : 0;
+    let s;
+    let i;
+    let j;
+    c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? ',' : d,
+    t = t == undefined ? '.' : t,
+    s = n < 0 ? '-' : '',
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
 
     return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) + (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
   }

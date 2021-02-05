@@ -45,6 +45,7 @@
   "devDependencies": {
     "@angular-builders/custom-webpack": "^10.0.1",
     "@angular-devkit/build-angular": "^0.1001.2",
+    "@angular-extensions/lint-rules": "^1.2.1",
     "@angular/cli": "^1.5.1",
     "@angular/compiler-cli": "^5.2.11",
     "@angular/language-service": "^5.2.11",

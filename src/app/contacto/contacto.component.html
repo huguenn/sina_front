@@ -9,10 +9,12 @@
             <h2>Información de contacto</h2>
             <div class="imagenes_container">
               <div class="imagenes">
-                <img [ngClass]="'lazyload'" data-src="../assets/images/contacto/sinaEquipo.jpg" alt="Equipo Sina" title="Equipo Sina" />
+                <!-- <img [ngClass]="'lazyload'" data-src="../assets/images/contacto/sinaEquipo.jpg" alt="Equipo Sina" title="Equipo Sina" /> -->
                 <img [ngClass]="'lazyload'" data-src="../assets/images/contacto/sinaEquipo2.jpg" alt="Equipo Sina" title="Equipo Sina" />
-                <img [ngClass]="'lazyload'" data-src="../assets/images/contacto/sinaEquipo.jpg" alt="Equipo Sina" title="Equipo Sina" />
+                <img [ngClass]="'lazyload'" data-src="https://apisina.leren.com.ar/storage/images/web_contacto.png" alt="Equipo Sina" title="Equipo Sina" />
+                <!-- <img [ngClass]="'lazyload'" data-src="../assets/images/contacto/sinaEquipo.jpg" alt="Equipo Sina" title="Equipo Sina" /> -->
                 <img [ngClass]="'lazyload'" data-src="../assets/images/contacto/sinaEquipo2.jpg" alt="Equipo Sina" title="Equipo Sina" />
+                <img [ngClass]="'lazyload'" data-src="https://apisina.leren.com.ar/storage/images/web_contacto.png" alt="Equipo Sina" title="Equipo Sina" />
               </div>
             </div>
             <p><i class="fa fa-phone" aria-hidden="true"></i> Tel.: <a href="tel:01121399100">011 2139-9100</a></p>
@@ -21,17 +23,24 @@
             <p><i class="fa fa-clock-o" aria-hidden="true"></i> Horario de atención:  Lun. a Vie. de 8 a 12 hs. y de 14 a 17 hs. Sáb. de 8 a 12 hs.</p>
             <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:infoweb@sina.com.ar" style="text-transform: none;">infoweb@sina.com.ar</a></p>
           </div>
-          <div class="divisor__formulario__mensaje">
+          <div *ngIf="!contactoEnviado" class="divisor__formulario__mensaje">
               <h2>Dejanos tu mensaje</h2>
               <form action="/">
-                <input class="form-control" [(ngModel)]="nombre" name="nombre" type="text" placeholder="Nombre" required>
-                <input class="form-control" [(ngModel)]="email" name="email" type="email" placeholder="E-mail" required>
-                <input class="form-control" [(ngModel)]="telefono" name="telefono" type="number" placeholder="Teléfono">
-                <textarea class="form-control" [(ngModel)]="mensaje" name="mensaje" rows="11" placeholder="Mensaje" required></textarea>
+                <input class="form-control" [(ngModel)]="nombre" name="nombre" aria-label="Nombre" type="text" placeholder="Nombre" required>
+                <input class="form-control" [(ngModel)]="email" name="email" aria-label="Email" type="email" placeholder="E-mail" required>
+                <input class="form-control" [(ngModel)]="telefono" name="telefono" aria-label="Telefono" type="number" placeholder="Teléfono">
+                <textarea class="form-control" [(ngModel)]="mensaje" name="mensaje" aria-label="Mensaje" rows="11" placeholder="Mensaje" required></textarea>
                 <p style="color: #057aff;"*ngIf="respuesta">{{respuesta}}</p>
                 <p style="color: #ea4335" *ngIf="error">{{error}}</p>
-                <button type="button" class="actionButton" style="width: 100%;text-align: center;" (click)="enviar()">ENVIAR</button>
+                <button type="button" class="actionButton" style="width: 100%;text-align: center;" (click)="enviar()" [disabled]="disableButton">ENVIAR</button>
               </form>
+          </div>
+          <div *ngIf="contactoEnviado" class="divisor__formulario__mensaje" style="text-align: center;">
+            <h2>¡Solicitud ingresada satisfactoriamente!</h2>
+            <p style="color: #057aff;"*ngIf="respuesta">{{respuesta}}</p>
+            <p>También podés comunicarte al (011) 2139-9100 | +54 9 11 2314-5727</p>
+            <p>Muchas gracias.</p>
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="55">
           </div>
         </div>
         <div class="divisor__formulario" *ngIf="!config.switchContactosActivo">

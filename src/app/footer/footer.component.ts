@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../shared.service';
 import { AutenticacionService } from '../autenticacion.service';
+import { SharedService } from '../shared.service';
 
 export class Link {
   url:    string;
@@ -11,21 +11,20 @@ const LINKS: Link[] = [
   { url: '',   texto: 'Inicio' },
   { url: 'nosotros',   texto: 'Nosotros' },
   { url: 'envios',   texto: 'Envíos' },
-  { url: 'como-comprar',   texto: 'Como comprar' }
+  { url: 'como-comprar',   texto: 'Como comprar' },
 ];
 
 const SOCIAL: Link[] = [
   { url: 'https://www.facebook.com/MessinaHnos',    texto: 'Facebook', urlImg: '/assets/images/iconos/facebook.png' },
   { url: 'https://www.instagram.com/messinahnos/',   texto: 'Instagram', urlImg: '/assets/images/iconos/instagram.png' },
   { url: 'https://twitter.com/MessinaHnos',     texto: 'Twitter', urlImg: '/assets/images/iconos/twitter.png' },
-  { url: 'https://www.youtube.com/channel/UCXeHXMr9oWN-d-mHPU9VRuQ', texto: 'Youtube', urlImg: '/assets/images/iconos/youtube.png' }
+  { url: 'https://www.youtube.com/channel/UCXeHXMr9oWN-d-mHPU9VRuQ', texto: 'Youtube', urlImg: '/assets/images/iconos/youtube.png' },
 ];
-
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+  styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent implements OnInit {
   LinkList = LINKS;
@@ -38,12 +37,12 @@ export class FooterComponent implements OnInit {
   registrar() {
     this.data.toggleLoginModal();
   }
-  suscribir () {
+  suscribir() {
     this.enableSuscribir = false;
 
-    if(this.nombre && this.email) {
+    if (this.nombre && this.email) {
 
-      var resultado = 'OK';
+      let resultado = 'OK';
 
       const sendyUrl = 'https://mailing.leren.com.ar/';
 
@@ -56,32 +55,32 @@ export class FooterComponent implements OnInit {
       body.set('referrer', 'https://sina.leren.com.ar/');
       body.set('boolean', 'true');
 
-      if(this.data.statusLogin) {
+      if (this.data.statusLogin) {
         body.set('logueado', 'SI');
 
         this.auth.get('sendy/cliente/getIdListaPrecios')
-        .then(result => {
+        .then((result) => {
           this.data.log('response getidlistaprecios footer', result);
 
           body.set('lista_precios', result.response);
 
           this.auth.post(sendyUrl + 'subscribe', body)
-          .then($response => {
+          .then(($response) => {
             this.data.log('response suscribir footer', $response);
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('error suscribir footer', $error);
             resultado = $error.error.text;
           });
         })
-        .catch(error => {
+        .catch((error) => {
           this.data.log('error getidlistaprecios footer', error);
 
           this.auth.post(sendyUrl + 'subscribe', body)
-          .then($response => {
+          .then(($response) => {
             this.data.log('response suscribir footer', $response);
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('error suscribir footer', $error);
             resultado = $error.error.text;
           });
@@ -90,10 +89,10 @@ export class FooterComponent implements OnInit {
         body.set('logueado', 'NO');
 
         this.auth.post(sendyUrl + 'subscribe', body)
-        .then($response => {
+        .then(($response) => {
           this.data.log('response suscribir footer', $response);
         })
-        .catch($error => {
+        .catch(($error) => {
           this.data.log('error suscribir footer', $error);
           resultado = $error.error.text;
         });
@@ -119,7 +118,7 @@ export class FooterComponent implements OnInit {
       this.suscripcion = 'CAMPOS INCOMPLETOS!';
       setTimeout(() => {
         this.suscripcion = 'SUSCRIBIRME';
-      this.enableSuscribir = true;
+        this.enableSuscribir = true;
       }, 3000);
     }
 

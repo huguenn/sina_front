@@ -12,12 +12,6 @@
 </div>
 <div class="cantidad" *ngIf="sesion || item.oferta">
   <div class="cantidad--right" [class.alerta]="item.incompleto">
-    <div class="mensaje">
-      <div class="mensaje__content">
-        <span *ngIf="item.cantidad % item.cantPack !== 0"> * La cantidad ingresada debe ser multiplo de {{item.cantPack}}.</span>
-        <span *ngIf="item.cantidad < item.cantMinima"> * La cantidad mínima es {{item.cantMinima}} unidades.</span>
-      </div>
-    </div>
     <div class="precio" *ngIf="sesion || item.oferta">
       <p>${{item.precio_mostrado | number : '.2'}}</p>
       <span style="margin-left: 5px">{{iva_usuario}}</span>
@@ -28,7 +22,10 @@
   </div>
   <div class="cantidad--left">
     <div class="custom-select">
-      <input (keyup.enter)="enterCheck()" type="number" [(ngModel)]="item.cantidad" (focus)="item['incompleto'] = false">
+      <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" (keyup.enter)="enterCheck()" type="number" min="0" max="999999" [(ngModel)]="item.cantidad">
+      <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="item.cantidad">
+        <option *ngFor="let cant of arrayCants" [ngValue]="cant">{{cant}}</option>
+      </select>
     </div>
   </div>
 </div>

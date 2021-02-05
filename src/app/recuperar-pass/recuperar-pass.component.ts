@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { AutenticacionService } from '../autenticacion.service';
 import { SharedService } from '../shared.service';
@@ -8,9 +10,10 @@ import { SharedService } from '../shared.service';
 @Component({
   selector: 'app-recuperar-pass',
   templateUrl: './recuperar-pass.component.html',
-  styleUrls: ['./recuperar-pass.component.css']
+  styleUrls: ['./recuperar-pass.component.css'],
 })
-export class RecuperarPassComponent implements OnInit {
+export class RecuperarPassComponent implements OnInit, OnDestroy {
+    private destroy$: Subject<void> = new Subject<void>();
     sub: Subscription;
     respuesta: string = '';
     tokenCode: string = '';
@@ -22,7 +25,7 @@ export class RecuperarPassComponent implements OnInit {
     private router: Router,
     private http:   HttpClient,
     private auth:   AutenticacionService,
-    private data: SharedService
+    private data: SharedService,
     ) {
 
     }
@@ -34,15 +37,18 @@ export class RecuperarPassComponent implements OnInit {
         this.data.closeLoginModal();
         this.sub = this.route
         .queryParams
-        .subscribe(params => {
+        .pipe(takeUntil(this.destroy$)).subscribe((params) => {
           if (params['codigo']) {
               this.tokenCode = params['codigo'];
           }
         });
     }
+
     ngOnDestroy() {
-        this.sub.unsubscribe();
+      this.destroy$.next();
+      this.sub.unsubscribe();
     }
+
     confirmarClaveKey($event) {
         if ($event.keyCode == 13) {
             this.confirmarClave();
@@ -69,7 +75,7 @@ export class RecuperarPassComponent implements OnInit {
 
         const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
         this.http.post(this.auth.getPath('public/cliente/cambiar_contrasena/' + this.tokenCode), body.toString(), {headers, observe: 'response'})
-        .subscribe(($response: any) => {
+        .pipe(takeUntil(this.destroy$)).subscribe(($response: any) => {
           this.respuesta = ($response.body.response);
           this.volviendoAlHome = true;
 
@@ -89,12 +95,12 @@ export class RecuperarPassComponent implements OnInit {
     }
 
     togglePasswordType() {
-      if(this.password_type === 'password') {
+      if (this.password_type === 'password') {
         this.password_type = 'text';
-      }
-      else if(this.password_type === 'text') {
-        this.password_type = 'password';
+      } else {
+        if (this.password_type === 'text') {
+          this.password_type = 'password';
+        }
       }
     }
 }
-

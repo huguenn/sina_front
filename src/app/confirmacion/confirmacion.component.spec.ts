@@ -8,7 +8,7 @@ describe('ConfirmacionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmacionComponent ]
+      declarations: [ ConfirmacionComponent ],
     })
     .compileComponents();
   }));

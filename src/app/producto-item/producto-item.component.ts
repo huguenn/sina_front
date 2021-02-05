@@ -1,14 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Item } from '../data';
-import { SharedService } from '../shared.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 import { AutenticacionService } from '../autenticacion.service';
+import { SharedService } from '../shared.service';
 
 @Component({
-  selector: 'producto',
+  selector: 'app-producto-item',
   templateUrl: './producto-item.component.html',
-  styleUrls: ['./producto-item.component.css']
+  styleUrls: ['./producto-item.component.css'],
 })
-export class ProductoItemComponent implements OnInit {
+export class ProductoItemComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   @Input() item;
   @Input() sesion;
   @Input() mensaje;
@@ -18,22 +20,32 @@ export class ProductoItemComponent implements OnInit {
   private replaceHash($entrada: string) {
     return $entrada ? $entrada.replace(new RegExp('/'), '~') : $entrada;
   }
+  arrayCants = [];
   ngOnInit() {
-    var categoria = this.item.categorias ? this.item.categorias[0] : null;
+    const categoria = this.item.categorias ? this.item.categorias[0] : null;
     const padre = categoria ? (categoria.padre ? categoria.padre.nombre.split(' ').join('-') : 'Categoria') : 'Categoria';
     const hijo = categoria ? categoria.nombre.split(' ').join('-') : 'Subcategoria';
     this.item.fullLink = '/' + this.replaceHash(padre) + '/' + this.replaceHash(hijo) + '/' + this.replaceHash(this.item.titulo) + '/' + this.replaceHash(this.item.id);
     this.item.comprado    = false;
-    this.item.cantidad    = this.item.cantSugerida ? this.item.cantSugerida : 1;
+    this.item.cantidad    = this.item.cantSugerida ? parseInt(this.item.cantSugerida) : 1;
+    if (this.item.cantPack !== '1') {
+      this.item.cantidad  = this.item.cantPack ? parseInt(this.item.cantPack) : 1;
+      for (let i = 0; i < 20; i++) {
+        this.arrayCants[i] = this.item.cantidad * (i + 1);
+      }
+      for (let i = 0; i < 50; i++) {
+        this.arrayCants[i + 20] = this.item.cantidad * (i + 3) * 10;
+      }
+    }
     this.item.oferta      = this.item.oferta === '1' ? true : false;
     this.item.imperdible  = this.item.oferta === false ? (this.item.novedad === '1' ? true : false) : false;
     this.item.precio_mostrado = this.item.precio ? this.item.precio.toString().replace(',', '.') : '0';
-    this.data.lista.forEach(articulo_carrito => {
+    this.data.lista.forEach((articulo_carrito) => {
       if (articulo_carrito.id === this.item.id) {
         this.item.comprado = true;
       }
     });
-    this.data.currentUser.subscribe($user => {
+    this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
       if ($user) {
         switch ($user['codCategoriaIva']) {
           case 'CF':
@@ -50,11 +62,16 @@ export class ProductoItemComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
   enterCheck() {
     this.newMessage(this.item);
   }
   newMessage(msg) {
-    const precio = msg.precio;
+    // const precio = msg.precio;
     if (this.sesion === true) {
       if (msg.cantidad) {
         if ((+msg.cantidad % +msg.cantPack === 0 &&  +msg.cantidad > +msg.cantMinima) || (+msg.cantMinima === +msg.cantidad)) {
@@ -62,15 +79,15 @@ export class ProductoItemComponent implements OnInit {
           body.set('id_producto', msg.id);
           body.set('cantidad', msg.cantidad);
           this.auth.post('carrito/agregar_item', body)
-          .then($response => {
+          .then(($response) => {
             this.data.log('response carritoagregaritem producto-item', $response);
-            
+
             const response = this.data.addMessage(msg);
             if (response.value) {
               this.mensaje.next(response.text);
             }
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('error carritoagregaritem producto-item', $error);
           });
         } else {
@@ -86,18 +103,16 @@ export class ProductoItemComponent implements OnInit {
       const body = new URLSearchParams();
       body.set('id_producto', msg.id);
       this.auth.post('carrito/eliminar_item', body)
-      .then($response => {
+      .then(($response) => {
         this.data.log('response carritoeliminaritem compra', $response);
         this.data.removeMessage(msg);
         msg.comprado = false;
       })
-      .catch($error => {
+      .catch(($error) => {
         this.data.log('error carritoeliminaritem compra', $error);
       });
     }else {
       this.data.toggleLoginModal();
     }
   }
-
-
 }

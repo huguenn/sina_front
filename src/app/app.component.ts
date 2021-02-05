@@ -1,15 +1,17 @@
-import { NgZone, Component, OnInit, ViewChild, ChangeDetectorRef, ElementRef, Pipe, PipeTransform } from '@angular/core';
-import { SharedService, cliente, Dato, Configuracion } from '../app/shared.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { INgxMyDpOptions, IMyDateModel } from 'ngx-mydatepicker';
-import { AutenticacionService } from './autenticacion.service';
-import { Router, NavigationEnd } from '@angular/router';
-import { MenuService } from './menu.service';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { NgSelectComponent } from '@ng-select/ng-select';
+import { IMyDateModel, INgxMyDpOptions } from 'ngx-mydatepicker';
 import 'rxjs/add/observable/fromEvent';
-import { Subscription } from 'rxjs/Subscription';
+import { takeUntil } from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { cliente, Dato, SharedService } from '../app/shared.service';
+import { AutenticacionService } from './autenticacion.service';
 import { GoogleAnalyticsService } from './google-analytics.service';
+import { MenuService } from './menu.service';
 
 export class Link {
   activo: boolean;
@@ -24,7 +26,8 @@ export class Link {
   styleUrls: ['./app.component.css'],
   providers: [GoogleAnalyticsService],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   @ViewChild('ventana') el: ElementRef;
   @ViewChild('responsable') ngSelectResponsable: NgSelectComponent;
   @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
@@ -63,7 +66,7 @@ export class AppComponent implements OnInit {
   public password_type: string = 'password';
 
   public mensajesEstados: any = {
-    campoNoValido: ''
+    campoNoValido: '',
   };
 
   public contacto: any = {
@@ -87,13 +90,13 @@ export class AppComponent implements OnInit {
     envio_domicilio_codigo_postal: '',
     envio_domicilio_ciudad: '',
     envio_domicilio_provincia: '',
-    actividad: ''
+    actividad: '',
   };
 
   public provincia = ['Ciudad de Buenos Aires', 'Buenos Aires', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba',
     'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén',
     'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán', 'Otra'];
-  public reponsable: Array<string> = [
+  public reponsable: string[] = [
     'Consumidor final',
     'Monotributista',
     'Responsable inscripto',
@@ -103,30 +106,30 @@ export class AppComponent implements OnInit {
     'No responsable',
     'Pequeño contribuyente eventual',
     'Pequeño contribuyente eventual social',
-    'Sujeto no categorizado'
+    'Sujeto no categorizado',
   ];
 
   public migracion = {
     email_original: '',
     email_repetido: '',
     pass_original: '',
-    pass_repetido: ''
+    pass_repetido: '',
   };
 
   public cuit: any = 'CUIT (Solo numeros)*';
   private cativa: string = '';
-  private _disabledV: string = '0';
-  private disabled: boolean = false;
 
   cat_selected: any;
   domicilio_provincia = '';
   envio_provincia = '';
 
+  showScrollPromptUno = true;
+  showScrollPromptTres = true;
 
   public seleccionar($herramienta, $codigo) {
     let item = false;
-    if($herramienta) {
-      item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+    if ($herramienta) {
+      item = $herramienta.itemsList._items.find(($item) => $item.value === $codigo);
     }
     // this.data.log('seleccionar items app:', this.cat_selected, this.domicilio_provincia, item);
     if (item) {
@@ -178,19 +181,19 @@ export class AppComponent implements OnInit {
     started: false,
     right_now: false,
     finished: true,
-    start: function () {
+    start() {
       this.started = true;
       this.right_now = true;
     },
-    stop: function () {
+    stop() {
       this.right_now = false;
       this.started = true;
     },
-    finish: function () {
+    finish() {
       this.right_now = false;
       this.started = false;
       this.finished = true;
-    }
+    },
   };
 
   // sticky: any = {
@@ -220,18 +223,18 @@ export class AppComponent implements OnInit {
     pass: '',
     error: false,
     errorMsg: '',
-    confirMsg: ''
+    confirMsg: '',
   };
   ventana;
   eventoclick($event) {
     if ($event.path) {
-      if (!$event.path.some($element => ($element.className === 'buy' || $element.className === 'login'))) {
+      if (!$event.path.some(($element) => ($element.className === 'buy' || $element.className === 'login'))) {
         this.menu.notifyOther(true);
       }
     } else {
       if (!('path' in Event.prototype)) {
         Object.defineProperty(Event.prototype, 'path', {
-          get: function () {
+          get() {
             const path = [];
             let currentElem = this.target;
             while (currentElem) {
@@ -245,15 +248,15 @@ export class AppComponent implements OnInit {
               path.push(window);
             }
             return path;
-          }
+          },
         });
       }
-      if (!$event.path.some($element => ($element.className === 'buy' || $element.className === 'login'))) {
+      if (!$event.path.some(($element) => ($element.className === 'buy' || $element.className === 'login'))) {
         this.menu.notifyOther(true);
       }
     }
   }
-  _MODES: Array<string> = ['over', 'push', 'slide'];
+  _MODES: string[] = ['over', 'push', 'slide'];
   _opened: boolean = false;
   _option: number = 2;
 
@@ -291,7 +294,7 @@ export class AppComponent implements OnInit {
     action: 'Volver al inicio',
     value: () => {
       this.processing.finish(); this.registrarStatus = false; this._changeStep(1);
-    }
+    },
   };
   error: any = {
     error: true,
@@ -302,7 +305,7 @@ export class AppComponent implements OnInit {
     },
     reset: () => {
       this.error.mensaje = '';
-    }
+    },
   };
   response: any;
   validador = {};
@@ -312,10 +315,10 @@ export class AppComponent implements OnInit {
     // this.data.log('_changestep app', '$step: '+$step, '_step: '+this._step);
     if (this._step === 3 && !$step) {
       if (this.processing.finished) {
-        const Cat = this.data.reponsable_lista.find(element => element.text === this.cativa);
+        const Cat = this.data.reponsable_lista.find((element) => element.text === this.cativa);
         this.contacto['cod_categoria_iva'] = Cat ? Cat.codigo : '';
         try {
-          this.no_obligatorios.forEach($item => {
+          this.no_obligatorios.forEach(($item) => {
             if (this.contacto[$item] === '') {
               delete this.contacto[$item];
             }
@@ -335,7 +338,7 @@ export class AppComponent implements OnInit {
           this.processing.start();
           const body = new URLSearchParams();
 
-          Object.keys(this.contacto).forEach(element => {
+          Object.keys(this.contacto).forEach((element) => {
             if (!element.includes('domicilio_direccion')) {
               body.set(element, this.contacto[element]);
             } else {
@@ -360,7 +363,7 @@ export class AppComponent implements OnInit {
           */
 
           this.http.post(this.auth.getPath('public/cliente/nuevo'), body.toString(), { headers, observe: 'response' })
-            .subscribe($response => {
+            .pipe(takeUntil(this.destroy$)).subscribe(($response) => {
               this.processing.stop();
               this.googleAnalyticsService.nuevoCliente();
               this.response = this.confirmacion;
@@ -369,7 +372,7 @@ export class AppComponent implements OnInit {
               this.error.reset();
               this.response = this.error;
               try {
-                Object.keys($error.error.response.error).forEach(element => {
+                Object.keys($error.error.response.error).forEach((element) => {
                   this.response.mensaje += $error.error.response.error[element] + '\n';
                 });
               } catch ($throw) {
@@ -403,25 +406,25 @@ export class AppComponent implements OnInit {
 
         // this.data.log('step1 validador app', this.validador)
         // Aca paso por cada campo obligatorio
-        this.obligatorios.forEach($campo_obligatorio => {
+        this.obligatorios.forEach(($campo_obligatorio) => {
           if (!this.contacto[$campo_obligatorio]) {
             this.validador[$campo_obligatorio] = true;
-            if($campo_obligatorio === 'contrasena') {
+            if ($campo_obligatorio === 'contrasena') {
               this.inputContrasena.nativeElement.focus();
             }
-            if($campo_obligatorio === 'domicilio_ciudad') {
+            if ($campo_obligatorio === 'domicilio_ciudad') {
               this.inputCiudad.nativeElement.focus();
             }
-            if($campo_obligatorio === 'telefono') {
+            if ($campo_obligatorio === 'telefono') {
               this.inputTelefono.nativeElement.focus();
             }
-            if($campo_obligatorio === 'cuit') {
+            if ($campo_obligatorio === 'cuit') {
               this.inputCuit.nativeElement.focus();
             }
-            if($campo_obligatorio === 'email') {
+            if ($campo_obligatorio === 'email') {
               this.inputEmail.nativeElement.focus();
             }
-            if($campo_obligatorio === 'razon_social') {
+            if ($campo_obligatorio === 'razon_social') {
               this.inputRazonSocial.nativeElement.focus();
             }
           } else {
@@ -430,8 +433,8 @@ export class AppComponent implements OnInit {
 
           // Chequeo que el cuit contenga solo números, sin puntos ni guiones
           if ($campo_obligatorio === 'cuit' && this.contacto[$campo_obligatorio]) {
-            var cuitRegExp = new RegExp(/^\d{11}$/); // numeros del 0 al 9, obligado a 11 caracteres (CUIT)
-            if(this.cuit === 'DNI (Solo numeros)*') {
+            let cuitRegExp = new RegExp(/^\d{11}$/); // numeros del 0 al 9, obligado a 11 caracteres (CUIT)
+            if (this.cuit === 'DNI (Solo numeros)*') {
               cuitRegExp = new RegExp(/^\d{8}$/); // numeros del 0 al 9, obligado a 8 caracteres (DNI)
             }
             if (cuitRegExp.test(this.contacto[$campo_obligatorio])) {
@@ -505,13 +508,13 @@ export class AppComponent implements OnInit {
           delete this.validador['cat_selected'];
         } else {
           this.validador['cat_selected'] = true;
-          this.ngSelectResponsable.elementRef.nativeElement.querySelector("input").focus();
+          this.ngSelectResponsable.elementRef.nativeElement.querySelector('input').focus();
         }
         if (this.domicilio_provincia && Object.keys(this.domicilio_provincia).length !== 0) {
           delete this.validador['domicilio_provincia'];
         } else {
           this.validador['domicilio_provincia'] = true;
-          this.ngSelectProvincia.elementRef.nativeElement.querySelector("input").focus();
+          this.ngSelectProvincia.elementRef.nativeElement.querySelector('input').focus();
         }
       }
       if (Object.keys(this.validador).length === 0 && this.validador.constructor === Object) {
@@ -551,17 +554,17 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private _toggleSidebar() {
-    this._opened = !this._opened;
-  }
+  // private _toggleSidebar() {
+  //   this._opened = !this._opened;
+  // }
   constructor(
-    private _ngZone: NgZone,
+    // private _ngZone: NgZone,
     private menu: MenuService,
     private cdRef: ChangeDetectorRef,
     private data: SharedService,
     private http: HttpClient,
     private auth: AutenticacionService,
-    private router: Router, 
+    private router: Router,
     private googleAnalyticsService: GoogleAnalyticsService) {
     this.recuperarClave = false;
     this.recuperarOk = '';
@@ -573,45 +576,48 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // subscribing to data on carrito
-    this.data.currentMessage.subscribe(
-      message => {
+    this.data.currentMessage.pipe(takeUntil(this.destroy$)).subscribe(
+      (message) => {
         this.childmessage = message;
-      }
+      },
     );
     // subscribing to data on sidebar
-    this.data.currentSide.subscribe(
-      status => {
+    this.data.currentSide.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this._opened = status;
-      }
+      },
     );
     // subscribing to data on loginStatus
-    this.data.currentModal.subscribe(
-      status => {
+    this.data.currentModal.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this.loginStatus = status;
-        if(status && this.config) {
+        if (status && this.config) {
           this.find_index();
         }
-      }
+      },
     );
     // subscribing to data on CarritoStatus
-    this.data.currentModal2.subscribe(
-      status => {
+    this.data.currentModal2.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this.carritoStatus = status;
-      }
+        if (this.config) {
+          this.find_index();
+        }
+      },
     );
     // subscribing to data on representarStatus
-    this.data.currentRepresentar.subscribe(
-      status => {
+    this.data.currentRepresentar.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
         this.representarStatus = status;
-      }
+      },
     );
     // subscribing to router change
-    this.router.events.subscribe(val => {
-      if(val['url']) {
+    this.router.events.pipe(takeUntil(this.destroy$)).subscribe((val) => {
+      if (val['url']) {
         if (this.actualRoute !== val['url']) {
           this.actualRoute = (val['url']);
           this.data.rutaActual = (val['url']);
-          if(this.config) {
+          if (this.config) {
             this.find_index();
           }
         }
@@ -623,25 +629,43 @@ export class AppComponent implements OnInit {
     });
 
     // subscribing to config change
-    this.data.currentConfig.subscribe(
-      configuracion => {
+    this.data.currentConfig.pipe(takeUntil(this.destroy$)).subscribe(
+      (configuracion) => {
         this.config = configuracion;
         this.find_index();
 
-        this.SocialList[0] = {activo: this.config.stickySocialTelActivo, texto: this.config.stickySocialTelTexto, url: this.config.stickySocialTelUrl, urlImg: '/assets/images/header/phone.png'};
-        this.SocialList[1] = {activo: this.config.stickySocialWhatsappActivo, texto: this.config.stickySocialWhatsappTexto, url: this.config.stickySocialWhatsappUrl, urlImg: '/assets/images/header/whatsapp.png'};
-        this.SocialList[2] = {activo: this.config.stickySocialFacebookActivo, texto: this.config.stickySocialFacebookTexto, url: this.config.stickySocialFacebookUrl, urlImg: '/assets/images/iconos/facebook.png'};
-        this.SocialList[3] = {activo: this.config.stickySocialInstagramActivo, texto: this.config.stickySocialInstagramTexto, url: this.config.stickySocialInstagramUrl, urlImg: '/assets/images/iconos/instagram.png'};
-        this.SocialList[4] = {activo: this.config.stickySocialTwitterActivo, texto: this.config.stickySocialTwitterTexto, url: this.config.stickySocialTwitterUrl, urlImg: '/assets/images/iconos/twitter.png'};
-        this.SocialList[5] = {activo: this.config.stickySocialYoutubeActivo, texto: this.config.stickySocialYoutubeTexto, url: this.config.stickySocialYoutubeUrl, urlImg: '/assets/images/iconos/youtube.png'};
-      }
+        this.SocialList[0] = {
+          activo: this.config.stickySocialTelActivo, texto: this.config.stickySocialTelTexto,
+          url: this.config.stickySocialTelUrl, urlImg: '/assets/images/header/phone.png',
+        };
+        this.SocialList[1] = {
+          activo: this.config.stickySocialWhatsappActivo, texto: this.config.stickySocialWhatsappTexto,
+          url: this.config.stickySocialWhatsappUrl, urlImg: '/assets/images/header/whatsapp.png',
+        };
+        this.SocialList[2] = {
+          activo: this.config.stickySocialFacebookActivo, texto: this.config.stickySocialFacebookTexto,
+          url: this.config.stickySocialFacebookUrl, urlImg: '/assets/images/iconos/facebook.png',
+        };
+        this.SocialList[3] = {
+          activo: this.config.stickySocialInstagramActivo, texto: this.config.stickySocialInstagramTexto,
+          url: this.config.stickySocialInstagramUrl, urlImg: '/assets/images/iconos/instagram.png',
+        };
+        this.SocialList[4] = {
+          activo: this.config.stickySocialTwitterActivo, texto: this.config.stickySocialTwitterTexto,
+          url: this.config.stickySocialTwitterUrl, urlImg: '/assets/images/iconos/twitter.png',
+        };
+        this.SocialList[5] = {
+          activo: this.config.stickySocialYoutubeActivo, texto: this.config.stickySocialYoutubeTexto,
+          url: this.config.stickySocialYoutubeUrl, urlImg: '/assets/images/iconos/youtube.png',
+        };
+      },
     );
 
     // reading config data
     this.auth.get('public/configuracion')
     .then(($response) => {
       this.data.log('response publicconfiguracion app', $response);
-      if($response.response) {
+      if ($response.response) {
         const ahora = new Date();
         const fechaDesde = $response.response.stickyHeaderDesde ? new Date($response.response.stickyHeaderDesde.date) : ahora;
         const fechaHasta = $response.response.stickyHeaderHasta ? new Date($response.response.stickyHeaderHasta.date) : ahora;
@@ -657,7 +681,8 @@ export class AppComponent implements OnInit {
           stickyHeaderLink: $response.response.stickyHeaderLink,
           stickyHeaderDesde: fechaDesde,
           stickyHeaderHasta: fechaHasta,
-          stickyHeaderActivo: permanente ? ($response.response.stickyHeaderActivo === '1' ? true : false) : ($response.response.stickyHeaderActivo === '1'  && ahora > fechaDesde && ahora < fechaHasta ? true : false),
+          stickyHeaderActivo: permanente ? ($response.response.stickyHeaderActivo === '1' ? true : false) :
+            ($response.response.stickyHeaderActivo === '1'  && ahora > fechaDesde && ahora < fechaHasta ? true : false),
           stickyHeaderPermanente: permanente,
           stickyHeaderMarquee: marquee,
           ventanaEmergenteTitulo: $response.response.ventanaEmergenteTitulo,
@@ -719,11 +744,11 @@ export class AppComponent implements OnInit {
           switchContactosActivo: $response.response.switchContactosActivo === '1' ? true : false,
           mensajeModalLoginActivo: $response.response.mensajeModalLoginActivo === '1' ? true : false,
           mensajeModalLoginMensaje: $response.response.mensajeModalLoginMensaje,
-        }
+        };
         this.data.updateConfiguracion(c);
       }
     })
-    .catch($error => {
+    .catch(($error) => {
       this.data.log('problemas con la configuracion app');
       this.data.log('getconfiguracion error app', $error);
     });
@@ -747,11 +772,15 @@ export class AppComponent implements OnInit {
           this.data.updateUser($response.response);
           // this.auth.userTypeUpdate($response.response["numeroListaPrecios"])
         })
-        .catch($error => {
+        .catch(($error) => {
           this.data.log('problemas con el login/token app', this.auth.localGet('login'));
           this.data.log('getdatoscliente error app', $error);
         });
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
   }
 
   find_index() {
@@ -763,7 +792,7 @@ export class AppComponent implements OnInit {
       if (this.actualRoute.indexOf('confirmacion') === -1) {
         // if (index !== -1) {
           if (this.carritoStatus && this.loginStatus) {
-            if(this.config.ventanaEmergenteActivo) {
+            if (this.config.ventanaEmergenteActivo) {
               if (!this.auth.localGet('actualEmergenteFlag')) {
                 // this.actualEmergente = this.emergentes[index];
                 this.actualEmergenteFlag = true;
@@ -773,32 +802,32 @@ export class AppComponent implements OnInit {
           } else {
             this.actualEmergenteFlag = false;
             this.auth.localSet('actualEmergenteFlag', false);
-            
-            if(!this.carritoStatus) {
+
+            if (!this.carritoStatus) {
               setTimeout(() => {
-                if(this.inputCantidad) {
+                if (this.inputCantidad && this.inputCantidad.nativeElement) {
                   this.inputSub = Observable.fromEvent(this.inputCantidad.nativeElement, 'input')
                   .debounceTime(1000)
-                  .subscribe(
+                  .pipe(takeUntil(this.destroy$)).subscribe(
                     () => {
                       const body = new URLSearchParams();
-                      let array = [];
-                      for(let item of this.data.lista) {
+                      const array = [];
+                      for (const item of this.data.lista) {
                         array.push({id_producto: item.id, cantidad: item.cantidad});
                       }
                       body.set('lista', JSON.stringify(array));
-          
+
                       this.auth.post('carrito/update_cantidades', body)
-                      .then($response => {
+                      .then(($response) => {
                         this.data.log('response carritoupdatecantidades compra debounced', $response);
                       })
-                      .catch($error => {
+                      .catch(($error) => {
                         this.data.log('error carritoupdatecantidades compra debounced', $error);
                       });
-                    }
+                    },
                   );
                 }
-              },2000);
+              }, 2000);
             }
           }
         // }
@@ -813,7 +842,7 @@ export class AppComponent implements OnInit {
 
   closeFull(event) {
     if (event.target.className === 'modal__container') {
-      if(!this.focusCampoRegistro) {
+      if (!this.focusCampoRegistro) {
         this.closeModal();
       }
     }
@@ -867,7 +896,7 @@ export class AppComponent implements OnInit {
     this.loginLoading = true;
     this.login.error = false;
     this.auth.autorizar($user, $pass)
-      .then($response => {
+      .then(($response) => {
         if (this.auth.localGet('login').primer_login) {
           this.migrandoStatus = false;
           this.loginLoading = false;
@@ -875,17 +904,17 @@ export class AppComponent implements OnInit {
           // this.data.toggleLoginModal2()
         } else if (!this.auth.localGet('login').administrativo) {
           this.auth.get('cliente/datos')
-            .then(($response) => {
-              this.auth.localSet('user', $response.response as cliente);
-              this.data.toggleLoginStatus(true);
-              this.loginLoading = false;
-              this.auth.userTypeUpdate($response.response['numeroListaPrecios']);
-            })
-            .catch($error => {
-              this.loginLoading = false;
-              this.data.log('loginmodal error app', $error);
-            });
-        } else {          
+          .then(($response) => {
+            this.auth.localSet('user', $response.response as cliente);
+            this.data.toggleLoginStatus(true);
+            this.loginLoading = false;
+            this.auth.userTypeUpdate($response.response['numeroListaPrecios']);
+          })
+          .catch(($error) => {
+            this.loginLoading = false;
+            this.data.log('loginmodal error app', $error);
+          });
+        } else {
           // this.auth.get('cliente/getAll')
           // .then(($response) => {
           //   this.data.toggleLoginStatus(true);
@@ -908,13 +937,13 @@ export class AppComponent implements OnInit {
             this.data.toggleRepresentar();
             this.cuentaLoading = true;
           })
-          .catch($error => {
+          .catch(($error) => {
             this.loginLoading = false;
             this.data.log('clientegetall error app', $error);
           });
         }
       })
-      .catch($catch => {
+      .catch(($catch) => {
         this.loginLoading = false;
         this.data.log('loginmodal error app', $catch);
         this.login.errorMsg = ($catch.error.message);
@@ -940,12 +969,12 @@ export class AppComponent implements OnInit {
         this.data.toggleLoginStatus(true)
         this.auth.userTypeUpdate($response.response["numeroListaPrecios"])  */
       })
-      .catch($error => {
+      .catch(($error) => {
         this.loginLoading = false;
         if (typeof $error.error.response === 'string') {
           this.login.errorMsg = $error.error.response;
         } else {
-          Object.keys($error.error.response).forEach(element => {
+          Object.keys($error.error.response).forEach((element) => {
             this.login.errorMsg += $error.error.response[element] + ' ';
           });
         }
@@ -974,14 +1003,14 @@ export class AppComponent implements OnInit {
     body.set('cant_filter', this.filterCantidad.toString(10));
 
     this.auth.post('cliente/getFiltrados', body)
-    .then($response => {
+    .then(($response) => {
       this.cuentasRepresentar = $response.body.response;
       this.loginLoading = false;
     })
-    .catch($error => {
+    .catch(($error) => {
       this.loginLoading = false;
       this.data.log('clientegetfiltrados error app', $error);
-    })
+    });
   }
   representarCuenta(cuenta) {
     this.cuentaRespuesta = 'Esperando respuesta...';
@@ -989,7 +1018,7 @@ export class AppComponent implements OnInit {
       const body = new URLSearchParams();
       body.set('cuit_cliente', cuenta.cuit);
       this.auth.post('auth/admin/representar', body)
-        .then($response => {
+        .then(($response) => {
           this.cuentaRespuesta = $response.body.response;
           setTimeout(() => {
             const login = this.auth.localGet('login');
@@ -1004,7 +1033,7 @@ export class AppComponent implements OnInit {
                 // window.location.reload(true); // forceReload deprecated
                 window.location.href = window.location.href;
               })
-              .catch($error => this.data.log('representarcuenta error app', $error));
+              .catch(($error) => this.data.log('representarcuenta error app', $error));
           }, 1000);
         })
         .catch(($error) => {
@@ -1027,14 +1056,14 @@ export class AppComponent implements OnInit {
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     this.http.post(this.auth.getPath('public/cliente/recuperar_contrasena'), body.toString(), { headers, observe: 'response' })
-      .subscribe(($response: any) => {
+      .pipe(takeUntil(this.destroy$)).subscribe(($response: any) => {
         // this.data.log('recuperarcontraseña response app', $response.body.response.mensaje)
         if ($response.body.response.mensaje) {
           this.recuperarOk = $response.body.response.mensaje;
         }
       }, ($error) => {
         try {
-          Object.keys($error.error.response.error).forEach(element => {
+          Object.keys($error.error.response.error).forEach((element) => {
             this.recuperarError += $error.error.response.error[element] + ' ';
           });
         } catch ($throw) {
@@ -1065,36 +1094,38 @@ export class AppComponent implements OnInit {
   ckeckItem($item) {
     return {
       status: $item !== '' ? '' : 'complete',
-      text: $item !== '' ? $item : '¡Campo incompleto!'
+      text: $item !== '' ? $item : '¡Campo incompleto!',
     };
   }
   filterCantidad: number = 20;
   filterBusqueda: string;
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-      let s, i, j;
-      c = isNaN(c = Math.abs(c)) ? 2 : c,
-      d = d == undefined ? ',' : d,
-      t = t == undefined ? '.' : t,
-      s = n < 0 ? '-' : '',
-      i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-      j = (j = i.length) > 3 ? j % 3 : 0;
+    let s;
+    let i;
+    let j;
+    c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? ',' : d,
+    t = t == undefined ? '.' : t,
+    s = n < 0 ? '-' : '',
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
 
     return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) + (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
   }
 
   focusResponsable() {
     if (window.outerWidth && window.outerWidth < 540) {
-      this.ngSelectResponsable.elementRef.nativeElement.querySelector("input").blur();
+      this.ngSelectResponsable.elementRef.nativeElement.querySelector('input').blur();
     }
   }
   focusProvincia() {
     if (window.outerWidth && window.outerWidth < 540) {
-      this.ngSelectProvincia.elementRef.nativeElement.querySelector("input").blur();
+      this.ngSelectProvincia.elementRef.nativeElement.querySelector('input').blur();
     }
   }
   focusProvincia2() {
     if (window.outerWidth && window.outerWidth < 540) {
-      this.ngSelectProvincia2.elementRef.nativeElement.querySelector("input").blur();
+      this.ngSelectProvincia2.elementRef.nativeElement.querySelector('input').blur();
     }
   }
 
@@ -1123,17 +1154,29 @@ export class AppComponent implements OnInit {
   }
 
   togglePasswordType() {
-    if(this.password_type === 'password') {
+    if (this.password_type === 'password') {
       this.password_type = 'text';
+    } else {
+      if (this.password_type === 'text') {
+        this.password_type = 'password';
+      }
     }
-    else if(this.password_type === 'text') {
-      this.password_type = 'password';
+  }
+
+  stepUnoScroll(e) {
+    if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 5) {
+      this.showScrollPromptUno = false;
+    }
+  }
+  stepTresScroll(e) {
+    if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 5) {
+      this.showScrollPromptTres = false;
     }
   }
 }
 
 @Pipe({
-  name: 'cuentasFilter'
+  name: 'cuentasFilter',
 })
 export class BusquedaCuentaPipe implements PipeTransform {
   transform(items: any[], searchText: string): any[] {
@@ -1141,7 +1184,7 @@ export class BusquedaCuentaPipe implements PipeTransform {
     if (!searchText) { return items; }
 
     searchText = searchText.toLowerCase();
-    return items.filter(it => {
+    return items.filter((it) => {
       return it.razon_social.toLowerCase().includes(searchText) || it.cuit.includes(parseInt(searchText));
     });
   }

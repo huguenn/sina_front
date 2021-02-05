@@ -1,7 +1,7 @@
 <div class="row message">
   <div class="container">
     <ngb-alert *ngIf="successMessage" (click)="alertClicked()" type="success" (close)="alertClicked();">
-      {{ successMessage }}
+      <i class="fa fa-check-circle fa-3x" aria-hidden="true"></i> {{ successMessage }}
       <button class="actionButton transparentButton" [routerLink]="['/compra/carrito']">VER TODOS</button>
     </ngb-alert>
   </div>
@@ -54,7 +54,9 @@
                     </div>
                     <div class="col-md-3  col-xs-12 columnaSide">
                       <div class="side">
-                        <a class="whiteButton blueButton" type="button" routerLink="/como-comprar">¿CÓMO COMPRAR?</a>
+                        <button type="button" class="whiteButton blueButton" routerLink="/como-comprar">
+                          <p style="margin: auto;">¿COMO COMPRAR?</p>
+                        </button>
                         <button (click)="descargarLista()" class="whiteButton">
                             <i class="fa fa-download" aria-hidden="true"></i>
                             <p>LISTA DE PRECIOS</p>
@@ -105,7 +107,7 @@
                                 Razon social
                             </label>
                             <div class="col-xs-9">
-                              <input disabled class="form-control" type="text" name="razon_social" [ngModel]="DatosUsuario.razonSocial" >
+                              <input disabled class="form-control" type="text" name="razon_social" aria-label="Razon Social" [ngModel]="DatosUsuario.razonSocial" >
                             </div>
                           </div>
                           <div class="form-group row">
@@ -113,7 +115,7 @@
                                 Nombre comercial
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" name="nombre_fantasia" [(ngModel)]="DatosUsuario.nombreFantasia">
+                              <input class="form-control" type="text" name="nombre_fantasia" aria-label="Nombre Comercial" [(ngModel)]="DatosUsuario.nombreFantasia">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -121,7 +123,7 @@
                                 CUIT/DNI
                             </label>
                             <div class="col-xs-9">
-                              <input disabled class="form-control" type="text" name="cuit" [ngModel]="DatosUsuario.cuit">
+                              <input disabled class="form-control" type="text" name="cuit" aria-label="CUIT" [ngModel]="DatosUsuario.cuit">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -129,7 +131,7 @@
                                 Email
                             </label>
                             <div class="col-xs-9">
-                              <input disabled class="form-control" type="text" name="email" [ngModel]="DatosUsuario.email">
+                              <input disabled class="form-control" type="text" name="email" aria-label="Email" [ngModel]="DatosUsuario.email">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -153,7 +155,7 @@
                                 Telefono
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.telefono}}" [(ngModel)]="DatosUsuario.telefono">
+                              <input class="form-control" type="text" value="{{DatosUsuario.telefono}}" [(ngModel)]="DatosUsuario.telefono" aria-label="Telefono">
                             </div>
                           </div>
                           <div class="form-group row">
@@ -161,7 +163,7 @@
                                 Celular
                             </label>
                             <div class="col-xs-9">
-                              <input class="form-control" type="text" value="{{DatosUsuario.telefonoCelular}}" [(ngModel)]="DatosUsuario.telefonoCelular">
+                              <input class="form-control" type="text" value="{{DatosUsuario.telefonoCelular}}" [(ngModel)]="DatosUsuario.telefonoCelular" aria-label="Telefono Celular">
                             </div>
                           </div>
                         <div class="form-group row">
@@ -169,7 +171,7 @@
                                   Direccion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_direccion" [(ngModel)]="DatosUsuario.domicilio.direccion">
+                                <input class="form-control" type="text" name="domicilio_direccion" [(ngModel)]="DatosUsuario.domicilio.direccion" aria-label="Domicilio Calle">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -177,7 +179,7 @@
                                   Localidad
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_ciudad" [(ngModel)]="DatosUsuario.domicilio.ciudad">
+                                <input class="form-control" type="text" name="domicilio_ciudad" [(ngModel)]="DatosUsuario.domicilio.ciudad" aria-label="Domicilio Ciudad">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -202,7 +204,7 @@
                                   Codigo postal
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="domicilio_codigo_postal" [(ngModel)]="DatosUsuario.domicilio.codPostal">
+                                <input class="form-control" type="text" name="domicilio_codigo_postal" [(ngModel)]="DatosUsuario.domicilio.codPostal" aria-label="Domicilio Codigo Postal">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -210,7 +212,7 @@
                                   Responsable facturacion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="nombreResponsableFacturacion" [(ngModel)]="DatosUsuario.nombreResponsableFacturacion">
+                                <input class="form-control" type="text" name="nombreResponsableFacturacion" [(ngModel)]="DatosUsuario.nombreResponsableFacturacion" aria-label="Nombre Responsable Facturacion">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -218,7 +220,7 @@
                                   Email facturacion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="emailFacturacion" [(ngModel)]="DatosUsuario.emailFacturacion">
+                                <input class="form-control" type="text" name="emailFacturacion" [(ngModel)]="DatosUsuario.emailFacturacion" aria-label="Facturacion Email">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -226,7 +228,7 @@
                                   Telefono facturacion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="telefonoFacturacion" [(ngModel)]="DatosUsuario.telefonoFacturacion">
+                                <input class="form-control" type="text" name="telefonoFacturacion" [(ngModel)]="DatosUsuario.telefonoFacturacion" aria-label="Facturacion Telefono">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -234,7 +236,7 @@
                                   Breve Descripcion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="descripcion" [(ngModel)]="DatosUsuario.descripcion">
+                                <input class="form-control" type="text" name="descripcion" [(ngModel)]="DatosUsuario.descripcion" aria-label="Breve Descripcion Actividad">
                               </div>
                             </div>
                           </ng-template>
@@ -251,7 +253,7 @@
                                   Direccion
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="entrega_domicilio_direccion" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.direccion">
+                                <input class="form-control" type="text" name="entrega_domicilio_direccion" aria-label="Domicio Entrega Calle" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.direccion">
                               </div>
                             </div>
                             <div class="form-group row">
@@ -259,7 +261,7 @@
                                   Localidad
                               </label>
                               <div class="col-xs-9">
-                                <input class="form-control" type="text" name="entrega_domicilio_ciudad" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.ciudad">
+                                <input class="form-control" type="text" name="entrega_domicilio_ciudad" aria-label="Domicilio Entrega Ciudad" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.ciudad">
                               </div>
                             </div>
                               <div class="form-group row">
@@ -284,7 +286,7 @@
                                     Cod. Postal
                                 </label>
                                 <div class="col-xs-9">
-                                  <input class="form-control" type="text" name="entrega_domicilio_codPostal" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.codPostal">
+                                  <input class="form-control" type="text" name="entrega_domicilio_codPostal" aria-label="Domicilio Entrega Codigo Postal" [(ngModel)]="DatosUsuario.datosEnvio.domicilioEntrega.codPostal">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -292,7 +294,7 @@
                                     Telefono
                                 </label>
                                 <div class="col-xs-9">
-                                  <input class="form-control" type="text"  name="entrega_domicilio_telefono" [(ngModel)]="DatosUsuario.datosEnvio.telefono">
+                                  <input class="form-control" type="text"  name="entrega_domicilio_telefono" aria-label="Domicilio Entrega Telefono" [(ngModel)]="DatosUsuario.datosEnvio.telefono">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -326,11 +328,13 @@
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">
                     <div class="side">
-                      <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
-                        <button (click)="descargarLista()" class="whiteButton">
-                          <i class="fa fa-download" aria-hidden="true"></i>
-                          <p>LISTA DE PRECIOS</p>
-						</button>
+                      <button type="button" class="whiteButton blueButton"routerLink="/como-comprar">
+                        <p style="margin: auto;">¿COMO COMPRAR?</p>
+                      </button>
+                      <button (click)="descargarLista()" class="whiteButton">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <p>LISTA DE PRECIOS</p>
+						          </button>
 						<div class="text-center" id="loaderFile" style="display:none;">
 							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
 							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
@@ -373,39 +377,34 @@
                         <div class="row misFrecuentesHeader">
                             <div class="col-1"><div class="border">Cantidad</div></div>
                             <div class="col-2"><div class="border">Descripcion</div></div>
-                            <div class="grupo">
+                            <!-- <div class="grupo"> -->
                               <div class="col-3"><div class="border">Precio Unitario</div></div>
                               <div class="col-4"><div class="border">Subtotal</div></div>
                               <div class="col-5"></div>
-                            </div>
+                            <!-- </div> -->
                         </div>
                         <div class="row misFrecuentesRow" *ngFor="let item of comprados">
                           <div class="col-1">
-                            <input type="number"  [(ngModel)]="item.cantidad" (focus)="item['incompleto'] = false">
-                            <div class="cantidad--right" [class.alerta]="item.incompleto">
-                                <div class="mensaje">
-                                    <div class="mensaje__content">
-                                        <span *ngIf="item.cantidad % item.cantPack !== 0"> * La cantidad ingresada debe ser multiplo de {{item.cantPack}}.</span>
-                                        <span *ngIf="item.cantidad < item.cantMinima"> * La cantidad mínima es {{item.cantMinima}} unidades.</span>
-                                    </div>
-                                </div>
-                          </div>
+                            <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" [(ngModel)]="item.cantidad">
+                            <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="item.cantidad">
+                              <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
+                            </select>
                           </div>
                           <div class="col-2">
                             <p class="misFrecuentesDescripcion">{{item.titulo}}</p>
                           </div>
-                          <div class="grupo">
+                          <!-- <div class="grupo"> -->
                             <div class="col-3">
                               <p>${{formatMoney(item.precio)}}</p>
                             </div>
                             <div class="col-4">
                               <p>${{formatMoney(item.precio * (+item.cantidad))}}</p>
                             </div>
-                            <div class="col-5">
+                            <div class="col-5" style="margin-top: -7px;">
                               <button *ngIf="!item.comprado" class="whiteButton" (click)="newMessage(item)">AGREGAR</button>
-                              <button *ngIf="item.comprado" class="whiteButton">AGREGADO</button>
+                              <button *ngIf="item.comprado" class="whiteButton" (click)="removeMessage(item)">AGREGADO</button>
                             </div>
-                          </div>
+                          <!-- </div> -->
                         </div>
                     </div>
                     </div>
@@ -431,7 +430,9 @@
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">
                     <div class="side">
-                      <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
+                      <button type="button" class="whiteButton blueButton" routerLink="/como-comprar">
+                        <p style="margin: auto;">¿COMO COMPRAR?</p>
+                      </button>
                       <button (click)="descargarLista()" class="whiteButton">
                           <i class="fa fa-download" aria-hidden="true"></i>
                           <p>LISTA DE PRECIOS</p>
@@ -477,39 +478,39 @@
                             </div>
                           </ng-template>
                           <ng-template ngbPanelContent>
-                              <div class="misFrecuentes">
+                              <div class="misFrecuentes" style="padding: 4px;">
                                   <div class="row misFrecuentesHeader">
                                     <div class="col-1"><div class="border">Cantidad</div></div>
                                     <div class="col-2"><div class="border">Descripcion</div></div>
-                                    <div class="grupo">
+                                    <!-- <div class="grupo"> -->
                                       <div class="col-3"><div class="border">Precio Unitario</div></div>
                                       <div class="col-4"><div class="border">Subtotal</div></div>
-                                    </div>
+                                    <!-- </div> -->
                                   </div>
-                                <div class="row misFrecuentesRow" *ngFor="let item of compra.items">
-                                    <div class="col-1">
+                                <div class="row misFrecuentesRow" *ngFor="let item of compra.items" style="padding-top: 4px;">
+                                    <div class="col-1 sinPaddingLeftMobile">
                                       <p style="margin-left: 5px;"> {{item.cantidad}}</p>
                                     </div>
-                                    <div class="col-2">
-                                      <p class="misFrecuentesDescripcion">{{item.producto.titulo}}</p>
+                                    <div class="col-2 sinPaddingLeftMobile">
+                                      <p style="margin-left: 2px;" class="misFrecuentesDescripcion">{{item.producto.titulo}}</p>
                                     </div>
-                                    <div class="grupo">
+                                    <!-- <div class="grupo"> -->
                                       <div class="col-3">
                                         <p>${{formatMoney(item.producto.precio)}}</p>
                                       </div>
-                                      <div class="col-4">
-                                        <p>${{formatMoney(item.subtotal)}}</p>
+                                      <div class="col-4 sinPaddingLeftMobile">
+                                        <p class="marginLeftMobile">${{formatMoney(item.subtotal)}}</p>
                                       </div>
-                                    </div>
+                                    <!-- </div> -->
                                   </div>
                                   <div class="row misFrecuentesTotal">
-                                    <div class="col-2">
+                                    <div class="col-2" style="min-width: 90px;">
                                       <button class="actionButton" (click)="repetirPregunta(compra)" style="width: 50%;">REPETIR COMPRA</button>
                                       <!--<a href="#"> -->
                                       <a target="_blank" rel="noopener noreferrer" [href]="compra.urlPdf" *ngIf="compra.urlPdf">
-                                      <button class="whiteButton" style="width: 150px; padding: 5px 25px;">
-                                        VER PEDIDO
-                                      </button>
+                                        <button class="whiteButton" style="width: 50%; padding: 5px 10px;">
+                                          VER PEDIDO
+                                        </button>
                                       </a>
                                       </div>
                                     <div class="col-1"></div>
@@ -549,7 +550,9 @@
                   </div>
                   <div class="col-md-3  col-xs-12 columnaSide">
                     <div class="side">
-                      <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
+                      <button type="button" class="whiteButton blueButton" routerLink="/como-comprar">
+                        <p style="margin: auto;">¿COMO COMPRAR?</p>
+                      </button>
                       <button (click)="descargarLista()" class="whiteButton">
                           <i class="fa fa-download" aria-hidden="true"></i>
                           <p>LISTA DE PRECIOS</p>
@@ -609,7 +612,9 @@
                     </div>
                     <div class="col-md-3  col-xs-12 columnaSide">
                       <div class="side">
-                        <input class="whiteButton blueButton" type="button" routerLink="/como-comprar" value="¿COMO COMPRAR?">
+                        <button type="button" class="whiteButton blueButton" routerLink="/como-comprar">
+                          <p style="margin: auto;">¿COMO COMPRAR?</p>
+                        </button>
                         <button (click)="descargarLista()" class="whiteButton">
                             <i class="fa fa-download" aria-hidden="true"></i>
                             <p>LISTA DE PRECIOS</p>

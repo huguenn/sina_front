@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { EnviosComponent } from './envios.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: EnviosComponent
-  }
+    component: EnviosComponent,
+  },
 ];
 
 @NgModule({
@@ -14,6 +14,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: [EnviosComponent]
+  declarations: [EnviosComponent],
 })
 export class EnviosModule { }

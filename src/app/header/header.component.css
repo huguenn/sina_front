@@ -159,7 +159,21 @@
     top: 5px;
     right: -20px;
     position: absolute;
-    width: 40px;
+    width: 50px;
+}
+.buy .popup select {
+    top: 6px;
+    right: -20px;
+    position: absolute;
+    width: 50px;
+    min-height: 23px;
+}
+.popup__subtotal {
+    width: 100%;
+    background: #057aff;
+    padding: 0px 10px;
+    text-align: center;
+    color: #fff;
 }
 .navbar-fixed .right__form .login *{
     display: inline-block;
@@ -507,6 +521,12 @@
 .popup .popup__header * {
     color: #000;
 }
+.popup .popup__header p {
+    font-size: 0.9em;
+    color: rgb(109, 109, 109);
+    margin: 0px;
+    text-align: right;
+}
 .popup {
     width: 200px;
     min-height: 100px;
@@ -569,8 +589,22 @@
 }
 .buy .popup .popup__lista input{
     top: 3px;
-    left: 8px;
+    left: 5px;
     right: auto;
+}
+.buy .popup .popup__lista select{
+    left: 5px;
+    right: auto;
+}
+/* Chrome, Safari, Edge, Opera */
+.buy .popup .popup__lista input::-webkit-outer-spin-button,
+.buy .popup .popup__lista input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+/* Firefox */
+.buy .popup .popup__lista input[type=number] {
+-moz-appearance: textfield;
 }
 .buy .popup .popup__lista p{
     width: auto;
@@ -579,6 +613,21 @@
     top: 6px;
     left: 66%;
     position: absolute;
+}
+@media screen and (max-width: 768px){
+    .buy .popup .popup__lista input{
+        left: 0px;
+    }
+    .buy .popup .popup__lista select{
+        left: 0px;
+    }
+    .buy .popup .popup__lista li{
+        padding: 8px 55px;
+        padding-right: 40%;
+    }
+    .buy .popup .popup__lista p{
+        left: 62%;
+    }
 }
 
 .login .popup ul{

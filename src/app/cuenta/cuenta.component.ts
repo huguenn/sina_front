@@ -1,89 +1,91 @@
-import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SubjectSubscriber, Subject } from 'rxjs/Subject';
-import { debounceTime } from 'rxjs/operator/debounceTime';
-import { Observable } from 'rxjs/Rx';
-import { Subscription } from 'rxjs/Subscription';
-import { Datos, DatosTransaccion } from '../data';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SharedService, cliente } from '../shared.service';
-import { AutenticacionService } from '../autenticacion.service';
-import { utils as XLSXutils, writeFile as XLSXwrite, WorkSheet, WorkBook  } from 'xlsx';
 import { NgSelectComponent } from '@ng-select/ng-select';
-
+import { debounceTime } from 'rxjs/operator/debounceTime';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { utils as XLSXutils, WorkBook, WorkSheet, writeFile as XLSXwrite } from 'xlsx';
+import { AutenticacionService } from '../autenticacion.service';
+import { Datos, DatosTransaccion } from '../data';
+import { cliente, SharedService } from '../shared.service';
 
 const datosFis: Datos[] = [
   {
     texto: 'Nombre completo',
-    model: 'nombre'
+    model: 'nombre',
   },
   {
     texto: 'Direccion',
-    model: 'direccion'
+    model: 'direccion',
   },
   {
     texto: 'Localidad',
-    model: 'nombre'
+    model: 'nombre',
   },
   {
     texto: 'Provincia',
-    model: 'nombre'
+    model: 'nombre',
   },
   {
     texto: 'Telfono',
-    model: 'nombre'
+    model: 'nombre',
   },    {
     texto: 'E-mail',
-    model: 'nombre'
-  }
+    model: 'nombre',
+  },
 ];
 const Items = [
   {
     texto: 'Mi Cuenta',
     model: './assets/images/iconos/Mi-cuenta.png',
-    icon: 'user'
+    icon: 'user',
   },
   {
     texto: 'Mis Datos',
     model: './assets/images/iconos/Mis-datos.png',
-    icon: 'table'
+    icon: 'table',
   },
   {
     texto: 'Mis frecuentes',
     model: './assets/images/iconos/Mis-frecuentes.png',
-    icon: 'clock-o'
+    icon: 'clock-o',
   },
   {
     texto: 'Últimas compras',
     model: './assets/images/iconos/Mis-ultimas-compras.png',
-    icon: 'reply'
+    icon: 'reply',
   },
   {
     texto: 'Cerrar sesión',
     model: './assets/images/iconos/Cerrar-sesion.png',
-    icon: 'times-circle'
-  }
+    icon: 'times-circle',
+  },
 ];
 
 @Component({
   selector: 'app-cuenta',
   templateUrl: './cuenta.component.html',
-  styleUrls: ['./cuenta.component.css']
+  styleUrls: ['./cuenta.component.css'],
 })
-export class CuentaComponent implements OnInit {
+export class CuentaComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   @ViewChild('responsable') ngSelectResponsable: NgSelectComponent;
   @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
   @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
   @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
 
   formatMoney(n, c = undefined, d = undefined, t = undefined) {
-      let s, i, j;
-      c = isNaN(c = Math.abs(c)) ? 2 : c,
-      d = d == undefined ? ',' : d,
-      t = t == undefined ? '.' : t,
-      s = n < 0 ? '-' : '',
-      i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-      j = (j = i.length) > 3 ? j % 3 : 0;
+    let s;
+    let i;
+    let j;
+    c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? ',' : d,
+    t = t == undefined ? '.' : t,
+    s = n < 0 ? '-' : '',
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
 
     return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) + (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
   }
@@ -108,8 +110,6 @@ export class CuentaComponent implements OnInit {
   ultimasCompras = [];
   listadoProductos = [];
 
-
-
   /*ultimasCompras = [
     {
       fecha:"",
@@ -126,8 +126,8 @@ export class CuentaComponent implements OnInit {
 
   misFrecuentesLink: string = '#';
 
-  transporte_lista: Array<any> = [];
-  initialLista: Array<any> = [];
+  transporte_lista = [];
+  initialLista = [];
   procesando_info: boolean = false;
   procesando_info_entrega: boolean = false;
   procesando_info_error: string = '';
@@ -135,17 +135,17 @@ export class CuentaComponent implements OnInit {
   procesando_info_ok: string = '';
   procesando_info_entrega_ok: string = '';
   constructor(
-    private _ngZone: NgZone,
+    // private _ngZone: NgZone,
     private data:   SharedService,
     private route:  ActivatedRoute,
     private router: Router,
     private http:   HttpClient,
-    private auth:   AutenticacionService
+    private auth:   AutenticacionService,
   ) {
     this.transaccion = new DatosTransaccion(0);
 
     this.http.get('assets/data/cuenta.json')
-    .subscribe(res => {
+    .pipe(takeUntil(this.destroy$)).subscribe((res) => {
       this.ListaCompras = res['lista'];
       // this.comprados    = res["comprados"]
       // this.ultimasCompras = res["ultimasCompras"]
@@ -155,17 +155,17 @@ export class CuentaComponent implements OnInit {
       if ($response.response) {
         this.ultimasCompras = $response.response;
         this.data.log('getultimospedidos response cuenta:', this.ultimasCompras, 'ko');
-        this.ultimasCompras.forEach(compra => {
+        this.ultimasCompras.forEach((compra) => {
           const fechaP = new Date(compra['fechaPedido'].date);
           compra['fechaPedido'].date = {
             year: fechaP.getFullYear(),
             date: fechaP.getDate(),
-            month: fechaP.getMonth()+1
+            month: fechaP.getMonth() + 1,
           };
         });
       }
     })
-    .catch($error => {
+    .catch(($error) => {
       this.data.log('getultimospedidos error cuenta:', $error);
       this.router.navigate(['/']);
     });
@@ -174,12 +174,27 @@ export class CuentaComponent implements OnInit {
       if ($response.response) {
         this.comprados = $response.response;
         this.data.log('productosmaspedidos response cuenta:', this.comprados);
-        this.comprados.forEach(producto => {
+        this.comprados.forEach((producto) => {
+          this.data.lista.forEach((articulo_carrito) => {
+            if (articulo_carrito.id === producto.id) {
+              producto.comprado = true;
+            }
+          });
           producto.cantidad = +producto['cantSugerida'];
+          if (producto['cantPack'] !== '1') {
+            producto.cantidad = +producto['cantPack'];
+            producto.arrayCants = [];
+            for (let i = 0; i < 20; i++) {
+              producto.arrayCants[i] = producto.cantidad * (i + 1);
+            }
+            for (let i = 0; i < 50; i++) {
+              producto.arrayCants[i + 20] = producto.cantidad * (i + 3) * 10;
+            }
+          }
         });
       }
     })
-    .catch($error => {
+    .catch(($error) => {
       this.data.log('productosmaspedidos error cuenta:', $error);
       this.router.navigate(['/']);
     });
@@ -225,21 +240,23 @@ export class CuentaComponent implements OnInit {
           this.data.cleanCarrito();
           this.data.updateMessage([]);
 
-          $item['items'].forEach(compra => {
-            if(delay < 1000) {
-              delay+=100;
+          $item['items'].forEach((compra) => {
+            if (delay < 1000) {
+              delay += 100;
             }
-  
+
             const body = new URLSearchParams();
             body.set('id_producto', compra.producto.id);
             body.set('cantidad', compra.cantidad);
             this.auth.post('carrito/agregar_item', body)
-            .then($response => {
+            .then(($response) => {
               this.data.log('response carritoagregaritem cuenta', $response);
-              
-              const response = this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1, compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id, compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '');
+
+              this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1,
+              compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id,
+              compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '', compra.producto.cantPack);
             })
-            .catch($error => {
+            .catch(($error) => {
               this.data.log('error carritoagregaritem cuenta', $error);
               // compra.producto.comprado = true;
             });
@@ -248,28 +265,30 @@ export class CuentaComponent implements OnInit {
           setTimeout(() => {
             this.router.navigate(['/compra/carrito']);
           }, delay);
-        
+
         }).catch((error) => {
           this.data.log('carrito/eliminar error cuenta:', error);
 
           this.data.cleanCarrito();
           this.data.updateMessage([]);
 
-          $item['items'].forEach(compra => {
-            if(delay < 1000) {
-              delay+=100;
+          $item['items'].forEach((compra) => {
+            if (delay < 1000) {
+              delay += 100;
             }
-  
+
             const body = new URLSearchParams();
             body.set('id_producto', compra.producto.id);
             body.set('cantidad', compra.cantidad);
             this.auth.post('carrito/agregar_item', body)
-            .then($response => {
+            .then(($response) => {
               this.data.log('response carritoagregaritem cuenta', $response);
-              
-              const response = this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1, compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id, compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '');
+
+              this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1,
+              compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id,
+              compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '', compra.producto.cantPack);
             })
-            .catch($error => {
+            .catch(($error) => {
               this.data.log('error carritoagregaritem cuenta', $error);
               // compra.producto.comprado = true;
             });
@@ -290,86 +309,91 @@ export class CuentaComponent implements OnInit {
   ngOnInit() {
     this.data.updatePageTitle();
     setTimeout(() => this.staticAlertClosed = true, 5000);
-    this._success.subscribe((message) => this.successMessage = message);
+    this._success.pipe(takeUntil(this.destroy$)).subscribe((message) => this.successMessage = message);
     debounceTime.call(this._success, 5000).subscribe(() => this.successMessage = null);
 
     this.sub = this.route
-      .queryParams
-      .subscribe(params => {
-        this.transaccion.cambio(+params['tab'] || 0);
-      });
-      // subscribing to data on loginStatus
-      this.data.currentLogin.subscribe(
-        status => {
-          this.loginStatus = status;
-        }
-      );
-      // Esto se está llamando dos veces seguidas, no se por que aun (cold observer? que deberia ser hot?)
-      this.data.currentUser.subscribe(($user: any) => {
-        if ($user) {
-          this.DatosUsuario = $user;
-          new Promise(($acepto, $rechazo) => {
-            this.auth.get('public/cliente/envio/getAll').then((result) => {
-              result.response.forEach(transporte => {
-                this.transporte_lista.push({
-                  id: transporte.codigo,
-                  text: transporte.nombre
-                });
+    .queryParams
+    .pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.transaccion.cambio(+params['tab'] || 0);
+    });
+    // subscribing to data on loginStatus
+    this.data.currentLogin.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
+        this.loginStatus = status;
+      },
+    );
+    // Esto se está llamando dos veces seguidas, no se por que aun (cold observer? que deberia ser hot?)
+    this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user: any) => {
+      if ($user) {
+        this.DatosUsuario = $user;
+        new Promise(($acepto, $rechazo) => {
+          this.auth.get('public/cliente/envio/getAll').then((result) => {
+            result.response.forEach((transporte) => {
+              this.transporte_lista.push({
+                id: transporte.codigo,
+                text: transporte.nombre,
               });
-              // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
-              var findTransporte = this.transporte_lista.find((transporte) => {
-                return (this.DatosUsuario.datosEnvio && transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte);
-              });
-              if(findTransporte) {
-                this.DatosUsuario.datosEnvio.codigoTransporte = findTransporte.text;
-              }
-              $acepto('ok');
-            }).catch((error) => $rechazo(error));
-          })
-          .then($respuesta => {
-            this.data.log('userenviogetall response cuenta:', 'okerso', this.transporte_lista, this.initialLista);
-            if (this.transaccion.paso === 1) {
-              setTimeout(() => {
-                if (this.DatosUsuario.codCategoriaIva) {
-                  this.seleccionariva(this.ngSelectResponsable, this.DatosUsuario.codCategoriaIva);
-                }
-                if (this.DatosUsuario.domicilio.provincia) {
-                  this.seleccionarprovincia(this.ngSelectProvincia, this.DatosUsuario.domicilio.provincia);
-                }
-                if (this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
-                  this.seleccionarprovincia2(this.ngSelectProvincia2, this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
-                }
-                if (this.DatosUsuario.datosEnvio.nombreTransporte) {
-                  this.seleccionartransporte(this.ngSelectTransporte, this.DatosUsuario.datosEnvio.nombreTransporte);
-                }
-              }, 500);
+            });
+            // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
+            const findTransporte = this.transporte_lista.find((transporte) => {
+              return (this.DatosUsuario.datosEnvio && transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte);
+            });
+            if (findTransporte) {
+              this.DatosUsuario.datosEnvio.codigoTransporte = findTransporte.text;
             }
-          })
-          .catch($error => {
-            this.data.log('public/cliente/envio/getAll error cuenta:', this.transporte_lista, this.initialLista);
-            this.data.log('oninit error cuenta:', $error);
-          });
-          switch ($user['codCategoriaIva']) {
-            case 'CF':
-            case 'INR':
-            case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
-            case 'RI':
-            case 'EX':
-            case 'PCE':
-            case 'PCS':
-            case 'EXE':
-            case 'SNC':
-            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
+            $acepto('ok');
+          }).catch((error) => $rechazo(error));
+        })
+        .then(($respuesta) => {
+          this.data.log('userenviogetall response cuenta:', 'okerso', this.transporte_lista, this.initialLista);
+          if (this.transaccion.paso === 1) {
+            setTimeout(() => {
+              if (this.DatosUsuario.codCategoriaIva) {
+                this.seleccionariva(this.ngSelectResponsable, this.DatosUsuario.codCategoriaIva);
+              }
+              if (this.DatosUsuario.domicilio.provincia) {
+                this.seleccionarprovincia(this.ngSelectProvincia, this.DatosUsuario.domicilio.provincia);
+              }
+              if (this.DatosUsuario.datosEnvio.domicilioEntrega.provincia) {
+                this.seleccionarprovincia2(this.ngSelectProvincia2, this.DatosUsuario.datosEnvio.domicilioEntrega.provincia);
+              }
+              if (this.DatosUsuario.datosEnvio.nombreTransporte) {
+                this.seleccionartransporte(this.ngSelectTransporte, this.DatosUsuario.datosEnvio.nombreTransporte);
+              }
+            }, 500);
           }
+        })
+        .catch(($error) => {
+          this.data.log('public/cliente/envio/getAll error cuenta:', this.transporte_lista, this.initialLista);
+          this.data.log('oninit error cuenta:', $error);
+        });
+        switch ($user['codCategoriaIva']) {
+          case 'CF':
+          case 'INR':
+          case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+          case 'RI':
+          case 'EX':
+          case 'PCE':
+          case 'PCS':
+          case 'EXE':
+          case 'SNC':
+          default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
         }
-      });
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.sub.unsubscribe();
   }
 
   alertClicked() {
     this.successMessage = null;
     this.data.toggleCarritoShow();
   }
-  
+
   cambioTab(i) {
     this.transaccion.cambio(i);
     if (i === 1) {
@@ -391,7 +415,7 @@ export class CuentaComponent implements OnInit {
   }
   public seleccionariva($herramienta, $codigo) {
     if ($herramienta) {
-      const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      const item = $herramienta.itemsList._items.find(($item) => $item.value === $codigo);
       if (item) {
         $herramienta.select(item);
       }
@@ -399,7 +423,7 @@ export class CuentaComponent implements OnInit {
   }
   public seleccionarprovincia($herramienta, $codigo) {
     if ($herramienta) {
-      const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      const item = $herramienta.itemsList._items.find(($item) => $item.value === $codigo);
       if (item) {
         $herramienta.select(item);
       }
@@ -407,7 +431,7 @@ export class CuentaComponent implements OnInit {
   }
   public seleccionarprovincia2($herramienta, $codigo) {
     if ($herramienta) {
-      const item = $herramienta.itemsList._items.find($item => $item.value === $codigo);
+      const item = $herramienta.itemsList._items.find(($item) => $item.value === $codigo);
       if (item) {
         $herramienta.select(item);
       }
@@ -415,7 +439,7 @@ export class CuentaComponent implements OnInit {
   }
   public seleccionartransporte($herramienta, $codigo) {
     if ($herramienta) {
-      const item = $herramienta.itemsList._items.find($item => $item.label.trim() === $codigo);
+      const item = $herramienta.itemsList._items.find(($item) => $item.label.trim() === $codigo);
       if (item) {
         $herramienta.select(item);
       }
@@ -430,9 +454,6 @@ export class CuentaComponent implements OnInit {
     this.auth.desacreditar();
     window.location.reload();
   }
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
   newMessage(msg) {
     if (this.loginStatus === true) {
       if (msg.cantidad) {
@@ -441,15 +462,14 @@ export class CuentaComponent implements OnInit {
           body.set('id_producto', msg.id);
           body.set('cantidad', msg.cantidad);
           this.auth.post('carrito/agregar_item', body)
-          .then($response => {
+          .then(($response) => {
             this.data.log('response carritoagregaritem cuenta', $response);
-            
             const response = this.data.addMessage(msg);
             if (response.value) {
               this._success.next(response.text);
             }
           })
-          .catch($error => {
+          .catch(($error) => {
             this.data.log('error carritoagregaritem cuenta', $error);
             this._success.next(`Ya se encuentra en el Carrito!`);
             msg.comprado = true;
@@ -462,7 +482,23 @@ export class CuentaComponent implements OnInit {
       this.data.toggleLoginModal();
     }
   }
-
+  removeMessage(msg) {
+    if (this.loginStatus === true) {
+      const body = new URLSearchParams();
+      body.set('id_producto', msg.id);
+      this.auth.post('carrito/eliminar_item', body)
+      .then(($response) => {
+        this.data.log('response carritoeliminaritem compra', $response);
+        this.data.removeMessage(msg);
+        msg.comprado = false;
+      })
+      .catch(($error) => {
+        this.data.log('error carritoeliminaritem compra', $error);
+      });
+    }else {
+      this.data.toggleLoginModal();
+    }
+  }
 
   descargarLista() {
     (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
@@ -473,7 +509,7 @@ export class CuentaComponent implements OnInit {
         const print: any[] = [];
         print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)',
           'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta']);
-        this.listadoProductos.forEach(producto => {
+        this.listadoProductos.forEach((producto) => {
           print.push
           (
             [
@@ -485,8 +521,8 @@ export class CuentaComponent implements OnInit {
               producto.familia,
               producto.categoria,
               producto.subcategoria,
-              producto.es_oferta
-            ]
+              producto.es_oferta,
+            ],
           );
         });
 
@@ -498,11 +534,10 @@ export class CuentaComponent implements OnInit {
       (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
 
     })
-    .catch($error => {
+    .catch(($error) => {
       this.data.log('descargarlista error cuenta:', $error);
     });
   }
-
 
   guardarDatos() {
     this.procesando_info = true;
@@ -534,7 +569,7 @@ export class CuentaComponent implements OnInit {
     this.procesando_info_entrega_ok = '';
 
     this.auth.post('cliente/actualizar', body)
-    .then($response => {
+    .then(($response) => {
       this.data.log('updatecliente response cuenta:', $response);
 
       this.procesando_info = false;
@@ -555,7 +590,7 @@ export class CuentaComponent implements OnInit {
       this.procesando_info_entrega_error = '';
 
       try {
-        Object.values($error.error.response_datos).forEach(element => {
+        Object.values($error.error.response_datos).forEach((element) => {
           this.procesando_info_error += element + ' ';
         });
       } catch ($throw) {

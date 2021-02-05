@@ -1,5 +1,3 @@
-import { domicilio } from './shared.service';
-
 export class CompraItem {
   texto: string;
   url:   string;
@@ -72,7 +70,7 @@ export class ItemFilter {
   }
 }
 export class FilterItemHead extends ItemFilter {
-  constructor( texto: string, link: string, ) {
+  constructor( texto: string, link: string ) {
     super(texto, link);
   }
 }
@@ -113,8 +111,15 @@ export class Producto {
   comprado:   boolean;
   cantidad:   number;
 
-  constructor( imagen: string = '', texto1: string = '', texto2: string = '', precio: number = 0, indice: number = 1,
-    oferta: boolean = false, imperdible: boolean = false, comprado: boolean = true, cantidad: number = 0) {
+  constructor(
+    imagen: string = '',
+    texto1: string = '', texto2: string = '',
+    precio: number = 0, indice: number = 1,
+    oferta: boolean = false,
+    imperdible: boolean = false,
+    comprado: boolean = true,
+    cantidad: number = 0,
+  ) {
     this.imagen     = imagen;
     this.texto1     = texto1;
     this.texto2     = texto2;
@@ -128,9 +133,11 @@ export class Producto {
 }
 export class ProductoCompleto extends Producto {
   /* Variables globales */
-  descripcion: String;
-  condicion:  String;
+  descripcion: string;
+  condicion: string;
   id: number;
+  cantPack;
+  novedad;
   constructor( ) {
       super();
       this.descripcion = '';

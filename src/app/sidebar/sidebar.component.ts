@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { SharedService } from '../shared.service';
-import { ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { AutenticacionService } from '../autenticacion.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 import { MenuService } from '../menu.service';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   LinkList  = [];
   MenuList  = [];
   LinkIndex = 0;
@@ -21,35 +21,46 @@ export class SidebarComponent implements OnInit {
   UserName: any;
   UserJob: any;
 
-  constructor(private menu: MenuService, private router: Router, private data: SharedService, private http: HttpClient, private auth: AutenticacionService) {
-    this.menu.LinkList$.subscribe(($cambio_link: any) => {
+  constructor(
+    private menu: MenuService,
+    private router: Router,
+    private data: SharedService,
+    // private http: HttpClient,
+    // private auth: AutenticacionService
+  ) {
+    this.menu.LinkList$.pipe(takeUntil(this.destroy$)).subscribe(($cambio_link: any) => {
       if ($cambio_link) {
         this.LinkList = $cambio_link;
       }
 
     });
-    this.menu.MenuList$.subscribe(($cambio_menu: any) => {
+    this.menu.MenuList$.pipe(takeUntil(this.destroy$)).subscribe(($cambio_menu: any) => {
       if ($cambio_menu) {
         this.MenuList = $cambio_menu;
       }
     });
   }
   ngOnInit() {
-        // subscribing to data on carritoStatus
-        this.data.currentLogin.subscribe(
-          status => {
-            this.UserLog = status;
-            if (this.data.user) {
-              try {
-                this.UserName = this.data.user.razonSocial;
-                this.UserJob  = this.data.user.categoriaIva;
-              }catch (e) {
-                this.data.log('oninit error sidebar:', e);
-              }
-            }
+    // subscribing to data on carritoStatus
+    this.data.currentLogin.pipe(takeUntil(this.destroy$)).subscribe(
+      (status) => {
+        this.UserLog = status;
+        if (this.data.user) {
+          try {
+            this.UserName = this.data.user.razonSocial;
+            this.UserJob  = this.data.user.categoriaIva;
+          }catch (e) {
+            this.data.log('oninit error sidebar:', e);
           }
-        );
+        }
+      },
+    );
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
+
   convertLink= ($subcategoria) => {
     try {
       const texto = $subcategoria.nombre.split(' ').join('-') + '/' + $subcategoria.id;

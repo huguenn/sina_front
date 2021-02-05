@@ -1,22 +1,17 @@
-import { Inject, Injectable, Component } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ResponseContentType } from '@angular/http';
-import { HttpHeaders, HttpParams, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Rx';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
-import { reject } from 'q';
-import { SharedService } from './shared.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from './../environments/environment';
-
+import { SharedService } from './shared.service';
 
 @Injectable()
 export class AutenticacionService {
   public  username:     string;
-  private token:        string;
-  private password:     string;
+  // private token:        string;
+  public  password:     string;
   public  razonsocial:  string;
   public  email:     	string;
-
 
   // Observable para el estado del login
   private tokenSource = new BehaviorSubject<string>('');
@@ -28,7 +23,7 @@ export class AutenticacionService {
   }
 
   // Observable para el estado del login
-  private loginSource = new BehaviorSubject<Boolean>(false);
+  private loginSource = new BehaviorSubject<boolean>(false);
   public  loginStatus = this.loginSource.asObservable();
   public  loginValue: boolean = false;
   loginUpdate($value) {
@@ -44,7 +39,7 @@ export class AutenticacionService {
       this.titleSource.next($value);
   }
   // Observable para el estado del userType
-  private userTypeSource = new BehaviorSubject<Boolean>(false);
+  private userTypeSource = new BehaviorSubject<boolean>(false);
   public  userTypeStatus = this.userTypeSource.asObservable();
   public  userTypeValue: boolean = false;
   userTypeUpdate($value) {
@@ -54,13 +49,13 @@ export class AutenticacionService {
   }
 
   getPath($path): string {
-    if($path.indexOf('https://') !== -1) {
+    if ($path.indexOf('https://') !== -1) {
       return $path;
     }
-    if($path.indexOf('http://') !== -1) {
+    if ($path.indexOf('http://') !== -1) {
       return $path;
     }
-    
+
     if (environment.production) {
       return 'https://apisina.leren.com.ar/' + $path;
     }
@@ -69,8 +64,8 @@ export class AutenticacionService {
 
   getParams($params) {
     let httpParams = new HttpParams();
-    Object.keys($params).forEach(function (key) {
-        httpParams = httpParams.set(key, $params[key]);
+    Object.keys($params).forEach((key) => {
+      httpParams = httpParams.set(key, $params[key]);
     });
     return httpParams;
   }
@@ -79,9 +74,9 @@ export class AutenticacionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/x-www-form-urlencoded',
-        'X-API-TOKEN': this.tokenValue
+        'X-API-TOKEN': this.tokenValue,
       }),
-      params: this.getParams($data)
+      params: this.getParams($data),
     };
     return httpOptions;
   }
@@ -89,9 +84,9 @@ export class AutenticacionService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type':  'application/x-www-form-urlencoded',
-        'X-API-TOKEN': this.tokenValue
+        'X-API-TOKEN': this.tokenValue,
       }),
-      responseType: 'arraybuffer' as 'json'
+      responseType: 'arraybuffer' as 'json',
     };
     return httpOptions;
   }
@@ -116,10 +111,10 @@ export class AutenticacionService {
   autorizar($username, $password): Promise<any> {
     return new Promise((resolve, reject) => {
       this.http.post(this.getPath('auth/login'), {
-      username: $username,
-      password: $password
+        username: $username,
+        password: $password,
       })
-      .subscribe($response => {
+      .subscribe(($response) => {
         this.username = $username;
         this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
           primer_login: $response['primer_login']});
@@ -129,12 +124,13 @@ export class AutenticacionService {
 
         // reading carrito data
         this.get('carrito')
-        .then($responseCarrito => {
+        .then(($responseCarrito) => {
           this.data.log('response getcarrito autenticacion', $responseCarrito);
           if ($responseCarrito.response) {
-            for(var item of $responseCarrito.response.items) {
-              let prod = item.producto;
-              this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '');
+            for (const item of $responseCarrito.response.items) {
+              const prod = item.producto;
+              this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10),
+                                      prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '', prod.cantPack);
             }
           }
 
@@ -145,7 +141,7 @@ export class AutenticacionService {
             this.razonsocial = $response['razon_social'];
           }
         })
-        .catch($error => {
+        .catch(($error) => {
           this.data.log('error getcarrito autenticacion', $error);
 
           if (!$response['primer_login']) {
@@ -192,7 +188,7 @@ export class AutenticacionService {
     }
     return new Promise((resolve, reject) => {
       this.http.get(this.getPath($url), this.getHeader({}))
-      .subscribe($response => {
+      .subscribe(($response) => {
         /*this.username = $username
         this.localSet("login", {username: this.username, token: this.tokenValue,})
         this.loginUpdate(true)*/
@@ -218,11 +214,11 @@ export class AutenticacionService {
     }
     const headers = new HttpHeaders({
       'Content-Type':  'application/x-www-form-urlencoded',
-      'X-API-TOKEN': this.tokenValue
+      'X-API-TOKEN': this.tokenValue,
     });
     return new Promise((resolve, reject) => {
       this.http.post(this.getPath($url), $body.toString(), {headers, observe: 'response'})
-      .subscribe($response => {
+      .subscribe(($response) => {
         resolve($response);
       }, ($error) => {
         reject({error: $error['error']});
@@ -230,7 +226,7 @@ export class AutenticacionService {
     });
   }
 
-  checkNull ($value) {
+  checkNull($value) {
     return $value === null || $value === '';
   }
 
@@ -260,16 +256,17 @@ export class AutenticacionService {
 
       // reading carrito data
       this.get('carrito')
-      .then($response => {
+      .then(($response) => {
         this.data.log('response getcarrito autenticacion', $response);
         if ($response.response) {
-          for(var item of $response.response.items) {
-            let prod = item.producto;
-            this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10), prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '');
+          for (const item of $response.response.items) {
+            const prod = item.producto;
+            this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10),
+                                    prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '', prod.cantPack);
           }
         }
       })
-      .catch($error => {
+      .catch(($error) => {
         this.data.log('error getcarrito autenticacion', $error);
       });
     }

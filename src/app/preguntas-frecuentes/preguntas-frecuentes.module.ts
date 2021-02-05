@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { PreguntasFrecuentesComponent } from './preguntas-frecuentes.component';
+import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PreguntasFrecuentesComponent } from './preguntas-frecuentes.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PreguntasFrecuentesComponent
-  }
+    component: PreguntasFrecuentesComponent,
+  },
 ];
 
 @NgModule({
@@ -16,6 +16,6 @@ const routes: Routes = [
     NgbModule.forRoot(),
   ],
   exports: [RouterModule],
-  declarations: [PreguntasFrecuentesComponent]
+  declarations: [PreguntasFrecuentesComponent],
 })
 export class PreguntasFrecuentesModule { }

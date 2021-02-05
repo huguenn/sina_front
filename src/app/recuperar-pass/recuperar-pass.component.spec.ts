@@ -8,7 +8,7 @@ describe('RecuperarPassComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RecuperarPassComponent ]
+      declarations: [ RecuperarPassComponent ],
     })
     .compileComponents();
   }));

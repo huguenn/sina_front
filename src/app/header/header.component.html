@@ -30,11 +30,11 @@
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
               </button>
               <!--(keyup)="buscarPalabra($event)" -->
-              <input (focusout)="focusoutFunction()" (keydown)="enterBusqueda($event)" class="form-control" type="text" placeholder="Buscar" [(ngModel)]="texto_busqueda" name="texto_busqueda">
-              <button class="btn btn-outline-sucess"  routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
+              <input (focusout)="focusoutFunction()" (keydown)="enterBusqueda($event)" class="form-control" type="text" placeholder="Buscar" [(ngModel)]="texto_busqueda" name="texto_busqueda" aria-label="Texto Busqueda">
+              <button class="btn btn-outline-sucess" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
                   <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.png" alt="Sina" width="20">
               </button>
-              <i class="fa fa-search" aria-hidden="true"></i>
+              <i class="fa fa-search" aria-hidden="true" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()"></i>
               <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                 <ul>
                   <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
@@ -71,8 +71,10 @@
               background: #0083ff;
               border-radius: 25px;
               margin: 0px 5px;
-              padding: 8px;" routerLink="contacto">
-              <img [ngClass]="'lazyload'" data-src="./assets/images/header/phone.png" alt="telefono" width="24">
+              padding: 8px;">
+              <a href="tel:01121399100" target="_blank" rel="noopener noreferrer">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/phone.png" alt="telefono" width="24">
+              </a>
             </div>
           </div>
           <div class="whatsapp">
@@ -92,10 +94,8 @@
               background: #0083ff;
               border-radius: 25px;
               margin: 0px 5px;
-              padding: 8px;">
-              <a href="mailto:infoweb@sina.com.ar">
-                <img [ngClass]="'lazyload'" data-src="./assets/images/header/email.png" alt="email" width="24">
-              </a>
+              padding: 8px;" routerLink="contacto">
+              <img [ngClass]="'lazyload'" data-src="./assets/images/header/email.png" alt="email" width="24">
             </div>
           </div>
           <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
@@ -107,6 +107,7 @@
               <div class="popup" *ngIf="popup.compra">
                 <div class="popup__header">
                   <b>ESTADO DE COMPRA</b>
+                  <p>Mostrando {{greetMessage?.length < 8 ? greetMessage?.length : '8'}} de {{greetMessage?.length}} items</p>
                 </div>
                 <div style="text-align: center; padding-bottom: 15px;" *ngIf="listFilter(greetMessage)?.length === 0 || !listFilter(greetMessage)">
                   <h1 style="color: #057aff; font-size: 30px;">Tu carrito está vacío</h1>
@@ -117,7 +118,10 @@
                   <li *ngFor="let item of listFilter(greetMessage)" class="list-group-item justify-content-between">
                     {{item.descripcion}}
                     <p>${{updatePrecio(item.precio, item.cantidad)}}</p>                    
-                    <input (input)="data.updateMessage()" [(ngModel)]="item.cantidad" type="number">
+                    <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
+                    <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
+                      <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
+                    </select>
                     <div class="eliminar">
                       <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
                       <img class="eliminar--hover" width="18"  [ngClass]="'lazyload'"data-src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
@@ -125,7 +129,10 @@
                   </li>
                   </ul>          
                 </div>
-                <div class="popup__mas" routerLink="/compra/carrito" (click)="toggle('compra')">
+                <div class="popup__mas" (click)="carritoVerTodos()">
+                  <div class="popup__subtotal">
+                    Subtotal: <strong>${{updateSubtotal(greetMessage)}}</strong>
+                  </div>
                   <p>Ver todos</p>
                 </div>
               </div>
@@ -165,8 +172,8 @@
               <img [ngClass]="'lazyload'" data-src="./assets/images/header/icono_mobile_blanco.png" alt="Sina" height="34">              
             </a>
             <ul class="nav navbar-nav">
-              <li *ngFor="let item of LinkList; let itemIndex = index" style="cursor: pointer;" class="nav-item" routerLink="{{'/' + MenuTitle}}" (mouseover)="changeStyle($event, itemIndex)" (mouseout)="changeStyle($event, itemIndex)">
-                <a class="nav-link" (click)="changeStyleClick(itemIndex)">
+              <li *ngFor="let item of LinkList; let itemIndex = index" style="cursor: pointer;" class="nav-item" (mouseover)="changeStyle($event, itemIndex)" (mouseout)="changeStyle($event, itemIndex)">
+                <a class="nav-link" (click)="changeStyleClick(itemIndex)" routerLink="{{'/' + MenuTitle}}">
                   <div class="cont">
                     <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img1" alt="">
                     <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img2" alt="">
@@ -186,7 +193,7 @@
                   <i class="fa fa-chevron-left" aria-hidden="true"></i>
                 </button>
                 <!-- removing (keyup)="buscarPalabra($event)" -->
-                <input  [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)"  name="texto_busqueda" (focus)="focusFunction()" (focusout)="focusoutFunction()" class="form-control" type="text" placeholder="Buscar">
+                <input  [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)" name="texto_busqueda" aria-label="Texto Busqueda" (focus)="focusFunction()" (focusout)="focusoutFunction()" class="form-control" type="text" placeholder="Buscar">
                 <button class="btn btn-outline-sucess" type="submit" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
                     <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.png" alt="Sina" width="20">
                 </button>
@@ -234,6 +241,7 @@
                 <div class="popup" *ngIf="popup2.compra">
                   <div class="popup__header">
                     <b>ESTADO DE COMPRA</b>
+                    <p>Mostrando {{greetMessage?.length < 8 ? greetMessage?.length : '8'}} de {{greetMessage?.length}} items</p>
                   </div>
                   <div style="text-align: center; padding-bottom: 15px;" *ngIf="listFilter(greetMessage)?.length === 0 || !listFilter(greetMessage)">
                     <h1 style="color: #057aff; font-size: 30px;">Tu carrito está vacío</h1>
@@ -244,7 +252,10 @@
                     <li *ngFor="let item of listFilter(greetMessage)" [ngClass]="{'selected': true}" class="list-group-item justify-content-between">
                       {{item.descripcion}}
                       <p>${{updatePrecio(item.precio, item.cantidad)}}</p>
-                      <input (input)="data.updateMessage()" [(ngModel)]="item.cantidad" type="number">
+                      <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
+                      <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
+                        <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
+                      </select>
                       <div class="eliminar">
                         <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
                         <img class="eliminar--hover" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
@@ -252,7 +263,10 @@
                     </li>
                     </ul>          
                   </div>
-                  <div class="popup__mas" routerLink="/compra/carrito" (click)="toggle2('compra')">
+                  <div class="popup__mas" (click)="carritoVerTodos2()">
+                    <div class="popup__subtotal">
+                      Subtotal: <strong>${{updateSubtotal(greetMessage)}}</strong>
+                    </div>
                     <p>Ver todos</p>
                   </div>
                 </div>

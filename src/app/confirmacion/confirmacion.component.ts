@@ -1,24 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { AutenticacionService } from '../autenticacion.service';
 import { SharedService } from '../shared.service';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-confirmacion',
   templateUrl: './confirmacion.component.html',
-  styleUrls: ['./confirmacion.component.css']
+  styleUrls: ['./confirmacion.component.css'],
 })
-export class ConfirmacionComponent implements OnInit {
+export class ConfirmacionComponent implements OnInit, OnDestroy {
+  private destroy$: Subject<void> = new Subject<void>();
   sub: Subscription;
   respuesta: string = 'Esperando respuesta';
   constructor(
     private route:  ActivatedRoute,
-    private router: Router,
-    private http:   HttpClient,
+    // private router: Router,
+    // private http:   HttpClient,
     private auth:   AutenticacionService,
-    private data: SharedService
+    private data: SharedService,
   ) { }
 
   ngOnInit() {
@@ -26,13 +28,13 @@ export class ConfirmacionComponent implements OnInit {
     this.data.closeLoginModal();
     this.sub = this.route
     .queryParams
-    .subscribe(params => {
+    .pipe(takeUntil(this.destroy$)).subscribe((params) => {
       if (params['codigo'] || 0) {
         this.auth.get('public/cliente/confirmar_email/' + params['codigo'])
         .then(($response)  => {
           this.respuesta = $response.response;
         })
-        .catch($error => {
+        .catch(($error) => {
           this.respuesta = $error.error.response;
           this.data.log('oninit confirmarmail error confirmacion', $error);
         });
@@ -40,8 +42,9 @@ export class ConfirmacionComponent implements OnInit {
       }
     });
   }
+
   ngOnDestroy() {
+    this.destroy$.next();
     this.sub.unsubscribe();
   }
-
 }

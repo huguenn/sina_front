@@ -52,7 +52,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cfcdcf', endColorstr='#ffffff', GradientType=0 );
 }
 .nuevocliente .container{
-    background-image: url(../../assets/images/home/nuevo_cliente.png);
+    background-image: url(../../assets/images/home/nuevo_cliente.webp);
     background-size: contain;
     background-repeat: no-repeat;
     background-position-x: right;
@@ -130,7 +130,7 @@
         width: calc(100% - 10px);
     }
 }
-.resultado__head {
+/* .resultado__head {
     border-radius: 5px;
     box-shadow: 1px 1px 1px 1px #0000001a;
-}
+} */
