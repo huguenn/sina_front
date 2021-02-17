@@ -253,9 +253,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
   // auxiliar value
   lastInput: boolean = false;
   ngOnChanges() {
-    if ( (this.headerStatus > 90 && window.innerWidth > 960) ||
-        (this.headerStatus > 0  && window.innerWidth <= 960)
-      ) {
+    if ((this.headerStatus > 90 && window.innerWidth > 960) || (this.headerStatus > 0 && window.innerWidth <= 960)) {
       this.headerPosition = 'header--fixed';
       if (this.popup.cuenta) {
         this.popup2.cuenta = true;
@@ -265,7 +263,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
       }
       this.popup.cuenta = false;
       this.popup.compra = false;
-    }else {
+    } else {
       if (this.popup2.cuenta) {
         this.popup.cuenta = true;
       }
@@ -295,7 +293,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
       if (itemIndex >= 0) {
         this.MenuList   = this.LinkList[this.actualIndex].links;
         this.MenuTitle  = this.LinkList[this.actualIndex].texto;
-      }else {
+      } else {
         this.MenuList = undefined;
       }
     }
@@ -315,32 +313,35 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
   closeCompra() {
     this.popup.compra = false;
     this.popup2.compra = false;
-    this.popup.cuenta = false;
-    this.popup2.cuenta = false;
+
+    if (window.innerWidth > 960) {
+      this.popup.cuenta = false;
+      this.popup2.cuenta = false;
+    }
   }
-  toggle(component) {
+  toggle(component: string) {
     if (this.UserLog) {
       if (component === 'cuenta') {
         this.popup.cuenta = !this.popup.cuenta;
         this.popup.compra = false;
-      }else {
+      } else {
         this.popup.compra = !this.popup.compra;
         this.popup.cuenta = false;
       }
-    }else {
+    } else {
       this.data.toggleLoginModal();
     }
   }
-  toggle2(component) {
+  toggle2(component: string) {
     if (this.UserLog) {
       if (component === 'cuenta') {
         this.popup2.cuenta = !this.popup2.cuenta;
         this.popup2.compra = false;
-      }else {
+      } else {
         this.popup2.compra = !this.popup2.compra;
         this.popup2.cuenta = false;
       }
-    }else {
+    } else {
       this.data.toggleLoginModal();
     }
   }
@@ -386,7 +387,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     this.SearchFocus = 'onSearchFocus';
   }
   focusclickFunction() {
-      this.SearchFocus = 'onSearchFocus';
+    this.SearchFocus = 'onSearchFocus';
   }
   focusoutFunction() {
     setTimeout(() => {

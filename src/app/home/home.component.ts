@@ -147,18 +147,22 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
     this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
       this.data.log('actualizacion de usuario home');
-      if ($user) {
-        switch ($user['codCategoriaIva']) {
-          case 'CF':
-          case 'INR':
-          case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
-          case 'RI':
-          case 'EX':
-          case 'PCE':
-          case 'PCS':
-          case 'EXE':
-          case 'SNC':
-          default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
+      if ($user && $user['c'] === '1') {
+        this.iva_usuario = 'LOS PRECIOS SON UNITARIOS Y ESTÁN SUJETOS A SU CONDICIÓN HABITUAL';
+      } else {
+        if ($user) {
+          switch ($user['codCategoriaIva']) {
+            case 'CF':
+            case 'INR':
+            case 'RSS':
+            case 'RI': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA'; break;
+            case 'EX':
+            case 'PCE':
+            case 'PCS':
+            case 'EXE':
+            case 'SNC':
+            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA';
+          }
         }
       }
     });

@@ -2,7 +2,7 @@
     "Resultados" : [
         {
             "head": {
-                "imagen": "./assets/images/resultados/head.png",
+                "imagen": "./assets/images/resultados/head.webp",
                 "texto":  "Ofertas",
                 "filter":   "ofertas"
             },
@@ -51,7 +51,7 @@
         },
         {
             "head": {
-                "imagen": "./assets/images/resultados/head.png",
+                "imagen": "./assets/images/resultados/head.webp",
                 "texto":  "Novedades",
                 "filter":   "novedades"
             },
@@ -100,13 +100,13 @@
         },
         {
             "head": {
-                "imagen": "./assets/images/resultados/head.png",
+                "imagen": "./assets/images/resultados/head.webp",
                 "texto":  "Ofertas y Novedades",
                 "filter":   "ofertas-y-novedades"
             },
             "lista" : [
                 { 
-                    "urlImagen": "./assets/images/resultados/1.png",
+                    "urlImagen": "./assets/images/resultados/1.webp",
                     "cantidad": 1,
                     "texto1": "Escobon",
                     "texto2": "Escobillón sina",
@@ -117,7 +117,7 @@
                     "minimo":   0
                   },
                   { 
-                    "urlImagen": "./assets/images/resultados/1.png",
+                    "urlImagen": "./assets/images/resultados/1.webp",
                     "cantidad": 1,
                     "texto1": "Escobon",
                     "texto2": "Escobillón sina",
@@ -128,7 +128,7 @@
                     "minimo":   12
                   },
                   { 
-                    "urlImagen": "./assets/images/resultados/1.png",
+                    "urlImagen": "./assets/images/resultados/1.webp",
                     "cantidad": 1,
                     "texto1": "Escobon",
                     "texto2": "Escobillón sina",
@@ -139,7 +139,7 @@
                     "minimo":   0
                   },
                   { 
-                    "urlImagen": "./assets/images/resultados/1.png",
+                    "urlImagen": "./assets/images/resultados/1.webp",
                     "cantidad": 1,
                     "texto1": "Escobon",
                     "texto2": "Escobillón sina",

@@ -126,6 +126,7 @@ export class CuentaComponent implements OnInit, OnDestroy {
 
   misFrecuentesLink: string = '#';
 
+  provincia_lista = [];
   transporte_lista = [];
   initialLista = [];
   procesando_info: boolean = false;
@@ -180,9 +181,9 @@ export class CuentaComponent implements OnInit, OnDestroy {
               producto.comprado = true;
             }
           });
-          producto.cantidad = +producto['cantSugerida'];
+          producto.cantidad = producto['cantSugerida'] ? parseInt(producto['cantSugerida']) : 1;
           if (producto['cantPack'] !== '1') {
-            producto.cantidad = +producto['cantPack'];
+            producto.cantidad = producto['cantPack'] ? parseInt(producto['cantPack']) : 1;
             producto.arrayCants = [];
             for (let i = 0; i < 20; i++) {
               producto.arrayCants[i] = producto.cantidad * (i + 1);
@@ -329,10 +330,16 @@ export class CuentaComponent implements OnInit, OnDestroy {
         this.DatosUsuario = $user;
         new Promise(($acepto, $rechazo) => {
           this.auth.get('public/cliente/envio/getAll').then((result) => {
-            result.response.forEach((transporte) => {
+            result.responseT.forEach((transporte) => {
               this.transporte_lista.push({
                 id: transporte.codigo,
                 text: transporte.nombre,
+              });
+            });
+            result.responseP.forEach((provincia) => {
+              this.provincia_lista.push({
+                id: provincia.codigo,
+                text: provincia.nombre,
               });
             });
             // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
@@ -368,17 +375,23 @@ export class CuentaComponent implements OnInit, OnDestroy {
           this.data.log('public/cliente/envio/getAll error cuenta:', this.transporte_lista, this.initialLista);
           this.data.log('oninit error cuenta:', $error);
         });
-        switch ($user['codCategoriaIva']) {
-          case 'CF':
-          case 'INR':
-          case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
-          case 'RI':
-          case 'EX':
-          case 'PCE':
-          case 'PCS':
-          case 'EXE':
-          case 'SNC':
-          default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
+        if ($user && $user['c'] === '1') {
+          this.iva_usuario = 'LOS PRECIOS SON UNITARIOS Y ESTÁN SUJETOS A SU CONDICIÓN HABITUAL';
+        } else {
+          if ($user) {
+            switch ($user['codCategoriaIva']) {
+              case 'CF':
+              case 'INR':
+              case 'RSS':
+              case 'RI': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA'; break;
+              case 'EX':
+              case 'PCE':
+              case 'PCS':
+              case 'EXE':
+              case 'SNC':
+              default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA';
+            }
+          }
         }
       }
     });

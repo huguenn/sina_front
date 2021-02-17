@@ -32,6 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('responsable') ngSelectResponsable: NgSelectComponent;
   @ViewChild('provincia_value') ngSelectProvincia: NgSelectComponent;
   @ViewChild('provincia_value2') ngSelectProvincia2: NgSelectComponent;
+  @ViewChild('transporte_value') ngSelectTransporte: NgSelectComponent;
   @ViewChild('input_razon_social') inputRazonSocial: ElementRef;
   @ViewChild('input_email') inputEmail: ElementRef;
   @ViewChild('input_check_email') inputCheckEmail: ElementRef;
@@ -87,15 +88,16 @@ export class AppComponent implements OnInit, OnDestroy {
     domicilio_codigo_postal: '',
     cod_categoria_iva: '',
     envio_domicilio_direccion: '',
+    entrega_domicilio_numero: '',
     envio_domicilio_codigo_postal: '',
     envio_domicilio_ciudad: '',
     envio_domicilio_provincia: '',
+    envio_transporte: '',
     actividad: '',
   };
 
-  public provincia = ['Ciudad de Buenos Aires', 'Buenos Aires', 'Catamarca', 'Chaco', 'Chubut', 'Córdoba',
-    'Corrientes', 'Entre Ríos', 'Formosa', 'Jujuy', 'La Pampa', 'La Rioja', 'Mendoza', 'Misiones', 'Neuquén',
-    'Río Negro', 'Salta', 'San Juan', 'San Luis', 'Santa Cruz', 'Santa Fe', 'Santiago del Estero', 'Tierra del Fuego', 'Tucumán', 'Otra'];
+  public provincia = [];
+  public transportes = [];
   public reponsable: string[] = [
     'Consumidor final',
     'Monotributista',
@@ -121,9 +123,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   cat_selected: any;
   domicilio_provincia = '';
-  envio_provincia = '';
+  // envio_provincia = '';
+  // envio_transporte = '';
 
   showScrollPromptUno = true;
+  showScrollPromptDos = true;
   showScrollPromptTres = true;
 
   public seleccionar($herramienta, $codigo) {
@@ -134,8 +138,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // this.data.log('seleccionar items app:', this.cat_selected, this.domicilio_provincia, item);
     if (item) {
       $herramienta.select(item);
-    // this.data.log('seleccionar items app:', cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
-    // this._ngZone.run(() => {this.cat_selected = cat_selected.codigo});
+      // this.data.log('seleccionar items app:', cat_selected, this.ngSelectResponsable.open(), this.refResponsable)
+      // this._ngZone.run(() => {this.cat_selected = cat_selected.codigo});
     }
   }
 
@@ -163,18 +167,33 @@ export class AppComponent implements OnInit, OnDestroy {
   }
   public refreshProvincia(value: any): void {
     this.data.log('refreshprovincia value app:', value);
-    this.domicilio_provincia = value;
+    const prov = this.provincia.find(($item) => $item.id === value);
+    if (prov) {
+      this.domicilio_provincia = prov.text;
+    }
+    // this.contacto.domicilio_provincia = value.id;
     this.contacto.domicilio_provincia = value;
   }
   public deleteProvincia() {
-    this.domicilio_provincia = '';
+    this.contacto.domicilio_provincia = '';
   }
   public refreshProvincia2(value: any): void {
-    this.envio_provincia = value;
+    this.data.log('refreshprovincia2 value app:', value);
+    // this.envio_provincia = value.text;
+    // this.contacto.envio_domicilio_provincia = value.id;
     this.contacto.envio_domicilio_provincia = value;
   }
   public deleteProvincia2() {
-    this.envio_provincia = '';
+    this.contacto.envio_domicilio_provincia = '';
+  }
+  public refreshTransporte(value: any): void {
+    this.data.log('refreshtransporte value app:', value);
+    // this.envio_transporte = value.text;
+    // this.contacto.envio_transporte = value.id;
+    this.contacto.envio_transporte = value;
+  }
+  public deleteTransporte() {
+    this.contacto.envio_transporte = '';
   }
 
   processing = {
@@ -277,11 +296,12 @@ export class AppComponent implements OnInit, OnDestroy {
       if (this._step === 1) {
         setTimeout(() => {
           this.seleccionar(this.ngSelectResponsable, this.cat_selected);
-          this.seleccionar(this.ngSelectProvincia, this.domicilio_provincia);
+          this.seleccionar(this.ngSelectProvincia, this.contacto.domicilio_provincia);
         }, 500);
       } else if (this._step === 2) {
         setTimeout(() => {
-          this.seleccionar(this.ngSelectProvincia2, this.envio_provincia);
+          this.seleccionar(this.ngSelectProvincia2, this.contacto.envio_domicilio_provincia);
+          this.seleccionar(this.ngSelectTransporte, this.contacto.envio_transporte);
         }, 500);
       }
     } else {
@@ -290,7 +310,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
   confirmacion: any = {
     error: false,
-    mensaje: 'Se ha enviado un correo a el mail provisto para su confirmación, por favor siga los pasos del mismo.',
+    mensaje: 'Se ha enviado un correo al mail provisto para su confirmación, por favor siga los pasos del mismo.',
     action: 'Volver al inicio',
     value: () => {
       this.processing.finish(); this.registrarStatus = false; this._changeStep(1);
@@ -367,6 +387,9 @@ export class AppComponent implements OnInit, OnDestroy {
               this.processing.stop();
               this.googleAnalyticsService.nuevoCliente();
               this.response = this.confirmacion;
+              this.showScrollPromptUno = false;
+              this.showScrollPromptDos = false;
+              this.showScrollPromptTres = false;
             }, ($error) => {
               this.processing.stop();
               this.error.reset();
@@ -473,7 +496,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }
           }
 
-          // Chequeo la constraseña
+          // Chequeo la contraseña
           if ($campo_obligatorio === 'contrasena' && this.contacto[$campo_obligatorio]) {
             const passwordRegExp = new RegExp(/.{6,}/); // 6 caracteres o mas
             if (passwordRegExp.test(this.contacto[$campo_obligatorio])) {
@@ -510,7 +533,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.validador['cat_selected'] = true;
           this.ngSelectResponsable.elementRef.nativeElement.querySelector('input').focus();
         }
-        if (this.domicilio_provincia && Object.keys(this.domicilio_provincia).length !== 0) {
+        if (this.contacto.domicilio_provincia && Object.keys(this.contacto.domicilio_provincia).length !== 0) {
           delete this.validador['domicilio_provincia'];
         } else {
           this.validador['domicilio_provincia'] = true;
@@ -522,13 +545,16 @@ export class AppComponent implements OnInit, OnDestroy {
         if (this._step === 1) {
           setTimeout(() => {
             this.seleccionar(this.ngSelectResponsable, this.cat_selected);
-            this.seleccionar(this.ngSelectProvincia, this.domicilio_provincia);
+            this.seleccionar(this.ngSelectProvincia, this.contacto.domicilio_provincia);
           }, 500);
         }
         if (this._step === 2) {
           setTimeout(() => {
-            if (this.envio_provincia) {
-              this.seleccionar(this.ngSelectProvincia2, this.envio_provincia);
+            if (this.contacto.envio_domicilio_provincia) {
+              this.seleccionar(this.ngSelectProvincia2, this.contacto.envio_domicilio_provincia);
+            }
+            if (this.contacto.envio_transporte) {
+              this.seleccionar(this.ngSelectTransporte, this.contacto.envio_transporte);
             }
           }, 500);
         }
@@ -542,13 +568,16 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this._step === 1) {
       setTimeout(() => {
         this.seleccionar(this.ngSelectResponsable, this.cat_selected);
-        this.seleccionar(this.ngSelectProvincia, this.domicilio_provincia);
+        this.seleccionar(this.ngSelectProvincia, this.contacto.domicilio_provincia);
       }, 500);
     }
     if (this._step === 2) {
       setTimeout(() => {
-        if (this.envio_provincia) {
-          this.seleccionar(this.ngSelectProvincia2, this.envio_provincia);
+        if (this.contacto.envio_domicilio_provincia) {
+          this.seleccionar(this.ngSelectProvincia2, this.contacto.envio_domicilio_provincia);
+        }
+        if (this.contacto.envio_transporte) {
+          this.seleccionar(this.ngSelectTransporte, this.contacto.envio_transporte);
         }
       }, 500);
     }
@@ -565,10 +594,28 @@ export class AppComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private auth: AutenticacionService,
     private router: Router,
-    private googleAnalyticsService: GoogleAnalyticsService) {
+    private googleAnalyticsService: GoogleAnalyticsService
+  ) {
     this.recuperarClave = false;
     this.recuperarOk = '';
     this.recuperarError = '';
+
+    this.auth.get('public/cliente/envio/getAll').then((result) => {
+      this.transportes = [];
+      result.responseT.forEach((transporte) => {
+        this.transportes.push({
+          id: transporte.codigo,
+          text: transporte.nombre,
+        });
+      });
+      this.provincia = [];
+      result.responseP.forEach((provincia) => {
+        this.provincia.push({
+          id: provincia.codigo,
+          text: provincia.nombre,
+        });
+      });
+    }).catch((error) => this.data.log('public/cliente/envio/getAll error app:', error));
   }
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
@@ -636,11 +683,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.SocialList[0] = {
           activo: this.config.stickySocialTelActivo, texto: this.config.stickySocialTelTexto,
-          url: this.config.stickySocialTelUrl, urlImg: '/assets/images/header/phone.png',
+          url: this.config.stickySocialTelUrl, urlImg: '/assets/images/header/phone.webp',
         };
         this.SocialList[1] = {
           activo: this.config.stickySocialWhatsappActivo, texto: this.config.stickySocialWhatsappTexto,
-          url: this.config.stickySocialWhatsappUrl, urlImg: '/assets/images/header/whatsapp.png',
+          url: this.config.stickySocialWhatsappUrl, urlImg: '/assets/images/header/whatsapp.webp',
         };
         this.SocialList[2] = {
           activo: this.config.stickySocialFacebookActivo, texto: this.config.stickySocialFacebookTexto,
@@ -1091,7 +1138,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }).catch((error) => this.data.log('carrito/eliminar error app:', error));
   }
 
-  ckeckItem($item) {
+  checkItem($item) {
     return {
       status: $item !== '' ? '' : 'complete',
       text: $item !== '' ? $item : '¡Campo incompleto!',
@@ -1126,6 +1173,11 @@ export class AppComponent implements OnInit, OnDestroy {
   focusProvincia2() {
     if (window.outerWidth && window.outerWidth < 540) {
       this.ngSelectProvincia2.elementRef.nativeElement.querySelector('input').blur();
+    }
+  }
+  focusTransporte() {
+    if (window.outerWidth && window.outerWidth < 540) {
+      this.ngSelectTransporte.elementRef.nativeElement.querySelector('input').blur();
     }
   }
 
@@ -1166,6 +1218,11 @@ export class AppComponent implements OnInit, OnDestroy {
   stepUnoScroll(e) {
     if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 5) {
       this.showScrollPromptUno = false;
+    }
+  }
+  stepDosScroll(e) {
+    if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 5) {
+      this.showScrollPromptDos = false;
     }
   }
   stepTresScroll(e) {

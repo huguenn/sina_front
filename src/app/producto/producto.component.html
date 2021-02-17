@@ -8,8 +8,8 @@
 </div>
 <div class="container producto">
   <div class="row producto__header" style="position: relative;">
-    <img *ngIf="producto.oferta == true" [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.png" alt="">
-    <img *ngIf="producto.oferta == false && producto.novedad == true" [ngClass]="'lazyload'" data-src="./assets/images/iconos/imperdible.png" alt="">
+    <img *ngIf="producto.oferta == true" [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.webp" alt="">
+    <img *ngIf="producto.oferta == false && producto.novedad == true" [ngClass]="'lazyload'" data-src="./assets/images/iconos/imperdible.webp" alt="">
     <p *ngIf="producto.oferta == true">OFERTA DEL MES</p>
     <p *ngIf="producto.oferta == false && producto.novedad == true">NOVEDAD DEL MES</p>
     <h1 [ngStyle]="{'max-width': producto.oferta == false && producto.novedad == false ? 'unset' : 'calc(100% - 60px)' }">{{producto["titulo"] + ', ' + producto["titulo"] + ' al por mayor'}}</h1>
@@ -24,7 +24,7 @@
   <div class="row">
     <div class="col-xs-12 col-md-6 imagen__visor" style="max-height: 350px;display: flex;">
       <!--ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div-->
-      <img [ngClass]="'lazyload'" [attr.data-src]="producto['urlImagen']" alt="">
+      <img [ngClass]="'lazyload'" [attr.data-src]="producto['urlImagen']" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
     </div>
     <div class="col-xs-12 col-md-6 producto__descripcion">
       <div class="row title">

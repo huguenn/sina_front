@@ -38,8 +38,9 @@
     padding: 0px;
     background-color: #0579ff;
     overflow: hidden;
+    border: 2px solid black;
 }
-.tab__header ul li{
+.tab__header ul li {
     display: inline-block;
     text-decoration: none;
     vertical-align: baseline;
@@ -54,54 +55,81 @@
     position: relative;
     margin-right: 20px;
 }
-.tab__header ul li:nth-child(3){
+.tab__header ul li:nth-child(3) {
     margin-right: 0px;
 }
-.tab__header ul li:after{
+.tab__header ul li:after {
     position: absolute;
     content: "";
     width: 0px;
     height: 0px;
-    border-top: 43px solid transparent;
-    border-bottom: 43px solid transparent;
+    border-top: 39px solid transparent;
+    border-bottom: 39px solid transparent;
     border-left: 23px solid #0579ff;
     top: 0;
     right: -22px;
     display: none;
 }
-.tab__header ul li:before{
+.tab__header ul li:before {
     position: absolute;
     content: "";
     width: 0px;
     height: 0px;
-    border-top: 43px solid transparent;
-    border-bottom: 43px solid transparent;
+    border-top: 39px solid transparent;
+    border-bottom: 39px solid transparent;
     border-left: 23px solid #0579ff;
     top: 0;
     left: -23px;
     display: none;
     background: #fff;
 }
-.tab__header ul li.active,
-.tab__header ul li:active{
+.tab__header ul li.active {
     background-color: #ffffff;
     color: #0579ff;
 }
-.tab__header ul li.active::after,
-.tab__header ul li:active::after{
+.tab__header ul li.active::after {
     display: block;
     border-left: 23px solid #ffffff;
 }
-.tab__header ul li.active::before,
-.tab__header ul li:active::before{
+.tab__header ul li.active::before {
     display: block;
     border-left: 23px solid #0579ff;
 }
 
 .tab__header ul li:nth-child(1):before,
-.tab__header ul li:nth-child(3):after{
+.tab__header ul li:nth-child(3):after {
     display: none;
 }
+
+.arrow-pointer-1-up,
+.arrow-pointer-2-up {
+    width: 2px;
+    height: 50px;
+    border: 2px solid black;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    transform: rotate(-30deg);
+    position: absolute;
+    right: -10px;
+    top: -8px;
+    z-index: 1;
+}
+.arrow-pointer-1-down,
+.arrow-pointer-2-down {
+    width: 2px;
+    height: 50px;
+    border: 2px solid black;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    transform: rotate(30deg);
+    position: absolute;
+    right: -10px;
+    bottom: -4px;
+    z-index: 1;
+}
+
 .tab__content {
     background-color: #ffffff;
 }

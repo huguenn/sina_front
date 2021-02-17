@@ -47,7 +47,7 @@
                               <p>{{DatosUsuario.categoriaIva}}</p>
                               <p>CUIL {{DatosUsuario.cuit}}</p>
                             </div>
-                            <img [ngClass]="'lazyload'" data-src="./assets/images/producto/1.png" alt="" />
+                            <img [ngClass]="'lazyload'" data-src="./assets/images/producto/1.webp" alt="" />
                             <span>Escobón Escobillón Sina®</span>
                         </div>
                       </div>
@@ -193,9 +193,9 @@
                                   ng-model="DatosUsuario.domicilio.provincia"
                                   placeholder="Provincia"
                                 >
-                                <ng-option *ngFor="let prov of data.provincia_lista" [value]="prov">
-                                  {{prov}}
-                                </ng-option>
+                                  <ng-option *ngFor="let prov of provincia_lista" [value]="prov.id">
+                                    {{prov.text}}
+                                  </ng-option>
                                 </ng-select>
                               </div>
                             </div>
@@ -209,7 +209,7 @@
                             </div>
                             <div class="form-group row">
                               <label for="example-text-input" class="col-xs-3 col-form-label">
-                                  Responsable facturacion
+                                  Responsable compras
                               </label>
                               <div class="col-xs-9">
                                 <input class="form-control" type="text" name="nombreResponsableFacturacion" [(ngModel)]="DatosUsuario.nombreResponsableFacturacion" aria-label="Nombre Responsable Facturacion">
@@ -275,9 +275,9 @@
                                     ng-model="DatosUsuario.datosEnvio.domicilioEntrega.provincia"
                                     placeholder="Provincia"
                                   >
-                                  <ng-option *ngFor="let prov of data.provincia_lista" [value]="prov">
-                                    {{prov}}
-                                  </ng-option>
+                                    <ng-option *ngFor="let prov of provincia_lista" [value]="prov.id">
+                                      {{prov.text}}
+                                    </ng-option>
                                   </ng-select>
                                 </div>
                               </div>

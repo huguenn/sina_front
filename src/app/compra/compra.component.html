@@ -6,11 +6,11 @@
             <p>{{secciones[transaccion.paso]}}</p>
             <ul>
               <li [class.active]="transaccion.check(0)"
-                  >Carrito</li>
+                >Carrito<div class="arrow-pointer-1-up"></div><div class="arrow-pointer-1-down"></div></li>
               <li [class.active]="transaccion.check(1)"
-                  >Envío y facturación</li>
+                >Envío y facturación<div class="arrow-pointer-2-up"></div><div class="arrow-pointer-2-down"></div></li>
               <li [class.active]="transaccion.check(2)"
-                  >Confirmacion</li>
+                >Confirmacion</li>
             </ul>
           </div>
           <div class="tab__content">
@@ -159,7 +159,7 @@
                             <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                               <ul>
                                 <li *ngFor="let item of ResultadoBusqueda" (click)="cerrarBusqueda(item)">
-                                  <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" alt="">
+                                  <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
                                   <p class="busqueda__titulo">{{item.titulo}}</p>
                                   <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                                 </li>
@@ -230,14 +230,14 @@
                         <p>FORMA DE ENTREGA</p>
                       </div>
                       <div *ngIf="datosCompra.agregado === '0'" class="row">
-                        <div *ngIf="this.carrito.subtotal >= this.config.montoEnvio" class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('0')">
-                          <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/camion.png" alt="">
+                        <div *ngIf="carrito.subtotal >= config.montoEnvio" class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('0')">
+                          <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/camion.webp" alt="">
                           <p>Envío</p>
                           <input type="radio" id="test1" name="test1" aria-label="Opcion Envio" value="0" [ngModel]="datosCompra.entrega" checked>
                           <label for="test1"></label>
                         </div>
                         <div class="col-xs-4 envio__seccion__opcion" (click)="selectedForma('1')">
-                          <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.png" alt="">
+                          <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.webp" alt="">
                           <p>Retiro en tienda</p>
                           <input type="radio" id="test2" name="test2" aria-label="Opcion Retiro en tienda" value="1" [ngModel]="datosCompra.entrega">
                           <label for="test2"></label>
@@ -253,7 +253,7 @@
                       <div class="row envio__seccion__header--editable">
                         <p>DATOS DE ENVÍO</p>
                         <button (click)="toggleEditingEnvio()">
-                          <img width="20" [ngClass]="'lazyload'" data-src="./assets/images/iconos/lapiz.png" alt="">
+                          <img width="20" [ngClass]="'lazyload'" data-src="./assets/images/iconos/lapiz.webp" alt="">
                         </button>
                       </div>
                       <div class="row envio__seccion__content transporte error" *ngIf="!editingEnvio && !datosEnvio_flag">
@@ -262,9 +262,9 @@
                       <div class="row envio__seccion__content" *ngIf="!editingEnvio">
                         <p>{{datos_envio.domicilio_direccion}}</p>
                         <p>{{datos_envio.domicilio_ciudad}} ({{datos_envio.domicilio_codigo_postal}})</p>
-                        <p>{{datos_envio.domicilio_provincia}}</p>
+                        <p>{{entrega.provincia.array[datos_envio.domicilio_provincia]}}</p>
                         <p>{{datos_envio.telefono}}</p>
-                        <p>{{this.datos_envio.cod_transporte ? medioTransporte : "Debe seleccionar un medio de transporte"}}</p>
+                        <p>{{datos_envio.cod_transporte ? entrega.transporte.array[datos_envio.cod_transporte] : "Debe seleccionar un medio de transporte"}}</p>
                       </div>
                       <div class="row envio__seccion__content edit" *ngIf="editingEnvio">
                         <div class="form-group row" *ngIf="!cargarTransporte">
@@ -296,7 +296,15 @@
                               Provincia
                           </label>
                           <div class="col-xs-8">
-                            <input class="form-control" type="text" name="provincia" aria-label="Domicilio Provincia" [(ngModel)]="datos_envio.domicilio_provincia">
+                            <ng-select #provincia style="height: 32px; margin: 6px 0px;"
+                              [clearable]="true"
+                              (change)="refreshProvincia($event)"
+                              ng-model="datos_envio.domicilio_provincia"
+                              placeholder="Provincia">
+                              <ng-option *ngFor="let p of entrega.provincia.lista" [value]="p.id">
+                                {{p.text}}
+                              </ng-option>
+                            </ng-select>
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="!cargarTransporte">
@@ -357,15 +365,15 @@
                               Transporte
                           </label>
                           <div class="col-xs-8">
-                              <ng-select #transporte style="height: 32px; margin: 6px 0px;"
-                                [clearable]="true"
-                                (change)="refreshTransporte($event)"
-                                ng-model="initialLista[0].value"
-                                placeholder="Medio de transporte">
-                                <ng-option *ngFor="let country of entrega.transporte.lista" [value]="country">
-                                  {{country.text}}
-                                </ng-option>
-                              </ng-select>
+                            <ng-select #transporte style="height: 32px; margin: 6px 0px;"
+                              [clearable]="true"
+                              (change)="refreshTransporte($event)"
+                              ng-model="datos_envio.cod_transporte"
+                              placeholder="Medio de transporte">
+                              <ng-option *ngFor="let t of entrega.transporte.lista" [value]="t.id">
+                                {{t.text}}
+                              </ng-option>
+                            </ng-select>
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="cargarTransporte">
@@ -459,7 +467,7 @@
                       <div class="row envio__seccion__header--editable">
                         <p>DATOS DE FACTURACIÓN</p>
                         <!--button (click)="editingFacturacion = !editingFacturacion">
-                          <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                          <img width="20" src="./assets/images/iconos/lapiz.webp" alt="">
                         </button-->
                       </div>
                       <div class="row envio__seccion__content" *ngIf="!editingFacturacion">
@@ -468,7 +476,7 @@
                         <p>Cat. I.V.A.: {{facturacion.datos.categoria_iva}}</p>
                         <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
                         <p>Localidad: {{facturacion.datos.domicilio_ciudad}} ({{facturacion.datos.domicilio_codigo_postal}})</p>
-                        <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
+                        <p>Provincia: {{entrega.provincia.array[facturacion.datos.domicilio_provincia]}}</p>
                         <p>Email: {{facturacion.datos.email}}</p>
                         <p>Teléfono: {{facturacion.datos.telefono}}</p>
                       </div>
@@ -519,7 +527,7 @@
                           </label>
                           <div class="col-xs-8">
                             <input class="form-control" type="text" [(ngModel)]="facturacion.datos.cod_categoria_iva">
-                            <img width="20" src="./assets/images/iconos/lapiz.png" alt="">
+                            <img width="20" src="./assets/images/iconos/lapiz.webp" alt="">
                           </div>
                         </div-->
                         <div class="form-group row">
@@ -625,7 +633,7 @@
                       </div>
 
 					  <div class="row envio__total" *ngIf="datosCompra.entrega === '1'">
-						<img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.png" alt="" style="height: 50px; margin-right: 10px;">
+						<img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.webp" alt="" style="height: 50px; margin-right: 10px;">
 						<p>Retiro en tienda</p>
 					  </div>
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
@@ -675,7 +683,7 @@
                         <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank" rel="noopener noreferrer">
                           <button class="actionButton">IMPRIMIR PEDIDO</button>
                         </a>
-                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.webp" alt="">
                       </div>
                     </div>
                     <div class="row confirmacion">
@@ -685,11 +693,11 @@
                         </div>
                         <div *ngIf="datosCompra.agregado === '0'" class="row">
                           <div class="envio__seccion__opcion" *ngIf="datosCompra.entrega === '0'">
-                            <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/camion.png" alt="">
+                            <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/camion.webp" alt="">
                             <p>Envío</p>
                           </div>
                           <div class="envio__seccion__opcion" *ngIf="datosCompra.entrega === '1'">
-                            <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.png" alt="">
+                            <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/retiro.webp" alt="">
                             <p>Retiro en tienda</p>
                           </div>
                         </div>
@@ -704,9 +712,9 @@
                         <div class="row envio__seccion__content">
                           <p>{{datos_envio.domicilio_direccion}}</p>
                           <p>{{datos_envio.domicilio_ciudad}} ({{datos_envio.domicilio_codigo_postal}})</p>
-                          <p>{{datos_envio.domicilio_provincia}}</p>
+                          <p>{{entrega.provincia.array[datos_envio.domicilio_provincia]}}</p>
                           <p>{{datos_envio.telefono}}</p>
-                          <p>{{this.datos_envio.cod_transporte ? medioTransporte : "Debe seleccionar un medio de transporte"}}</p>
+                          <p>{{datos_envio.cod_transporte ? entrega.transporte.array[datos_envio.cod_transporte] : "Debe seleccionar un medio de transporte"}}</p>
                         </div>
                       </div>
                       <div class="col-xs-12 col-md-3 envio__seccion--editable">
@@ -725,7 +733,7 @@
                           <p>Telefono de facturación: {{facturacion.datos.facturacion_telefono}}</p>
                           <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
                           <p>Ciudad: {{facturacion.datos.domicilio_ciudad}} CP: {{facturacion.datos.domicilio_codigo_postal}}</p>
-                          <p>Provincia: {{facturacion.datos.domicilio_provincia}}</p>
+                          <p>Provincia: {{entrega.provincia.array[facturacion.datos.domicilio_provincia]}}</p>
                         </div>
                       </div>
                       <div class="col-xs-12 col-md-3">

@@ -22,6 +22,7 @@ import { cliente, SharedService } from '../shared.service';
 export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   @ViewChild('transporte') ngSelectTransporte: NgSelectComponent;
+  @ViewChild('provincia') ngSelectProvincia: NgSelectComponent;
   @ViewChild('inputCantidad') inputCantidad: ElementRef;
   @ViewChild('mensaje_error_retiro') mensajeErrorRetiro: ElementRef;
   inputSub: Subscription;
@@ -78,7 +79,12 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
   entrega: any = {
     transporte: {
       lista: [],
+      array: [],
     },
+    provincia: {
+      lista: [],
+      array: [],
+    }
   };
 
   datos_envio: clientEnvioActualizarDatos = new clientEnvioActualizarDatos();
@@ -706,20 +712,26 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.data.user) {
       this.user = this.data.user as cliente;
       this.auth.get('public/cliente/envio/getAll').then((result) => {
-        result.response.forEach((transporte) => {
+        result.responseT.forEach((transporte) => {
           this.entrega.transporte.lista.push({
             id: transporte.codigo,
             text: transporte.nombre,
           });
+          this.entrega.transporte.array[transporte.codigo] = transporte.nombre;
         });
-        this.entrega.transporte.lista.push({id: 'FFF', text: 'INGRESAR NUEVO TRANSPORTE'});
         this.initialLista.push(this.entrega.transporte.lista.find((transporte) => {
           return transporte.id === this.user.datosEnvio.codigoTransporte;
         }));
+        result.responseP.forEach((provincia) => {
+          this.entrega.provincia.lista.push({
+            id: provincia.codigo,
+            text: provincia.nombre,
+          });
+          this.entrega.provincia.array[provincia.codigo] = provincia.nombre;
+        });
       }).catch((error) => this.data.log('public/cliente/envio/getAll error compra:', error));
 
       if (this.user.datosEnvio) {
-        this.medioTransporte = this.user.datosEnvio.nombreTransporte;
         this.datos_envio.cargar(this.user.datosEnvio);
         this.datosEnvio_flag = true;
         if (this.user.datosEnvio.domicilioEntrega) {
@@ -764,17 +776,14 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   cargarTransporte: boolean = false;
-  medioTransporte:  string = '';
   datosEnvio_flag:       boolean = false;
 
   public refreshTransporte(value: any): void {
-    this.medioTransporte = value.text;
-    this.datos_envio.cod_transporte = value.id;
-    if (value.text === 'INGRESAR NUEVO TRANSPORTE') {
-      this.cargarTransporte = true;
-    }else {
-      this.cargarTransporte = false;
-    }
+    this.datos_envio.cod_transporte = value;
+    this.cargarTransporte = false;
+  }
+  public refreshProvincia(value: any): void {
+    this.datos_envio.domicilio_provincia = value;
   }
 
   observaciones = '';
@@ -859,18 +868,22 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     this.data.currentMessage.pipe(takeUntil(this.destroy$)).subscribe(() => this.checkCarritoInit(0));
     this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
-      if ($user) {
-        switch ($user['codCategoriaIva']) {
-          case 'CF':
-          case 'INR':
-          case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
-          case 'RI':
-          case 'EX':
-          case 'PCE':
-          case 'PCS':
-          case 'EXE':
-          case 'SNC':
-          default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
+      if ($user && $user['c'] === '1') {
+        this.iva_usuario = 'LOS PRECIOS SON UNITARIOS Y ESTÁN SUJETOS A SU CONDICIÓN HABITUAL';
+      } else {
+        if ($user) {
+          switch ($user['codCategoriaIva']) {
+            case 'CF':
+            case 'INR':
+            case 'RSS':
+            case 'RI': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA'; break;
+            case 'EX':
+            case 'PCE':
+            case 'PCS':
+            case 'EXE':
+            case 'SNC':
+            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA';
+          }
         }
       }
     });
@@ -908,9 +921,17 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 2000);
   }
 
-  public seleccionartransporte($herramienta, $codigo) {
+  public seleccionarTransporte($herramienta, $codigo) {
     if ($herramienta) {
-      const item = $herramienta.itemsList._items.find(($item) => $item.value.id === $codigo);
+      const item = $herramienta.itemsList._items.find(($item) => $item.value === $codigo);
+      if (item) {
+        $herramienta.select(item);
+      }
+    }
+  }
+  public seleccionarProvincia($herramienta, $codigo) {
+    if ($herramienta) {
+      const item = $herramienta.itemsList._items.find(($item) => $item.value === $codigo);
       if (item) {
         $herramienta.select(item);
       }
@@ -996,7 +1017,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
         Object.values(error.error.response).forEach(($error_item) => this.datos_envio_error += $error_item);
       });
       // this.transaccion.cambio(2)
-    }else {
+    } else {
       this.datostransporte.update().then((response) => {
         this.datos_envio_error = '';
         this.editingEnvio = false;
@@ -1123,7 +1144,10 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.editingEnvio) {
       setTimeout(() => {
         if (this.datos_envio.cod_transporte) {
-          this.seleccionartransporte(this.ngSelectTransporte, this.datos_envio.cod_transporte);
+          this.seleccionarTransporte(this.ngSelectTransporte, this.datos_envio.cod_transporte);
+        }
+        if (this.datos_envio.domicilio_provincia) {
+          this.seleccionarProvincia(this.ngSelectProvincia, this.datos_envio.domicilio_provincia);
         }
       }, 500);
     }

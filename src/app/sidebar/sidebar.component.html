@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-xs-10">
                 <a class="navbar-brand" [routerLink]="['/']" (click)="toggleSideBar()">
-                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.png" alt="Sina" width="100">
+                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" width="100">
                 </a>
             </div>
             <div class="col-xs-2">
@@ -23,7 +23,7 @@
                     margin: 0px 5px;
                     padding: 8px;">
                     <a href="tel:01121399100" target="_blank" rel="noopener noreferrer">
-                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/phone.png" alt="telefono" width="24">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/phone.webp" alt="telefono" width="24">
                     </a>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     border-radius: 25px;
                     padding: 8px;">
                     <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491123145727?text=Hola">
-                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/whatsapp.png" alt="whatsapp" width="24">
+                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/whatsapp.webp" alt="whatsapp" width="24">
                     </a>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     border-radius: 25px;
                     margin: 0px 5px;
                     padding: 8px;" routerLink="contacto">
-                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/email.png" alt="email" width="24">
+                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/email.webp" alt="email" width="24">
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@
     </div>
     <div class="sesion">
         <div class="cuenta" [routerLink]="['/cuenta']" *ngIf="UserLog" (click)="toggleSideBar()">
-            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.png" alt="User" width="40">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
             <p style="color: #fff; 
             max-width: 130px;
             width: 100px;
@@ -135,7 +135,7 @@
         </div>
         <div class="cuenta" (click)="registrar()" *ngIf="!UserLog" style="width: calc(100% - 40px);">
             <div [ngClass]="{'pulsating_white': !UserLog}"></div>
-            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.png" alt="User" width="40" style="z-index: 2;">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40" style="z-index: 2;">
             <p style="z-index: 2;">Iniciar sesión <br> Registrarse</p>
         </div>
         <div class="cerrar" *ngIf="UserLog" (click)="sidebarCerrarSesion()">

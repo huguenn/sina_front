@@ -27,8 +27,8 @@
               </div>
               <div class="modal-content">
               <div class="modal-header">
-                <img class="desktop" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
-                <img class="mobile" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.png" alt="Sina" height="34">
+                <img class="desktop" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.webp" alt="Sina" height="34">
+                <img class="mobile" [ngClass]="'lazyload'" data-src="./assets/images/header/logo_mobile_azul.webp" alt="Sina" height="34">
               <h4 class="modal-title desktop">{{registrarStatus ? (config.switchAltasActivo ? "Registrando nuevo usuario" : "&#x26A0; Altas de usuarios suspendidas temporalmente &#x26A0;") : ("Bienvenido | Bienvenida")}}</h4>
               <h4 class="modal-title movil">{{registrarStatus ? (config.switchAltasActivo ? "Registro en 3 pasos" : "&#x26A0; Altas suspendidas temporalmente &#x26A0;") : ("Bienvenido | Bienvenida")}}</h4>
               <button aria-label="Close" class="close" type="button" (click)= "closeModal()">
@@ -148,12 +148,14 @@
                                     <input type="text" placeholder="Código Postal"  [(ngModel)]="contacto.domicilio_codigo_postal" name="domicilio_codigo_postal" aria-label="Domicilio Codigo Postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <ng-select #provincia_value labelForId="provincia_value" [ngClass]="{'noValidado': validador?.domicilio_provincia}" style="max-height: 32px; margin: 6px 0px;"
                                         [clearable]="true"
-                                        [items]="provincia"
                                         (change)="refreshProvincia($event)"
                                         ng-model="domicilio_provincia"
                                         placeholder="Provincia*"
                                         (focus)="focusProvincia()"
                                     >
+                                        <ng-option *ngFor="let p of provincia" [value]="p.id">
+                                            {{p.text}}
+                                        </ng-option>
                                     </ng-select>
                                     <!-- <input #input_contrasena [ngClass]="{'noValidado': validador?.checkcontrasena, 'noValidado': validador?.contrasena}" [(ngModel)]="contacto.contrasena" name="contrasena" type="password" placeholder="Contraseña*" (focus)="passwordFocused()" (blur)="passwordBlured()" autocomplete="new-password"> -->
                                     <div>
@@ -172,7 +174,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="row stepsContent" *ngIf="_step === 2">
+                        <div class="row stepsContent" *ngIf="_step === 2" (scroll)="stepDosScroll($event)">
+                            <div *ngIf="showScrollPromptDos" class="scroll-prompt"><div class="scroll-prompt-shape"></div></div>
                             <div class="col-xs-12 col-md-12 modal__registrar" style="padding: 5px">
                                     <input type="text" placeholder="Persona de contacto" [(ngModel)]="contacto.nombre_responsable_compras" name="nombre_responsable_compras" aria-label="Nombre Responsable Compras" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
@@ -180,18 +183,32 @@
                                         <input style="width: 100px;" type="number" placeholder="Número" [(ngModel)]="contacto.entrega_domicilio_numero" name="entrega_domicilio_numero" aria-label="Domicilio Entrega Numero" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
                                     <div class="contenedor_de_input" style="display: flex; justify-content: space-between">
-                                            <input style="width: 49%" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad" aria-label="Domicilio Envio Ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                            <input style="width: 49%" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal" aria-label="Domicilio Envio Codigo Postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: 49%;" type="text" placeholder="Localidad de entrega" [(ngModel)]="contacto.envio_domicilio_ciudad" name="envio_domicilio_ciudad" aria-label="Domicilio Envio Ciudad" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <input style="width: 49%;" type="text" placeholder="Código postal" [(ngModel)]="contacto.envio_domicilio_codigo_postal" name="envio_domicilio_codigo_postal" aria-label="Domicilio Envio Codigo Postal" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
                                     </div>
-                                    <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
+                                    <ng-select #provincia_value2 labelForId="provincia_value2" style="max-height: 32px; margin: 6px 0px;"
                                         placeholder="Provincia de entrega"
                                         [clearable]="true"
-                                        [items]="provincia"
                                         (remove)="deleteProvincia2()"
                                         (change)="refreshProvincia2($event)"
-                                        ng-model="envio_provincia"
+                                        ng-model="envio_domicilio_provincia"
                                         (focus)="focusProvincia2()"
                                     >
+                                        <ng-option *ngFor="let p of provincia" [value]="p.id">
+                                            {{p.text}}
+                                        </ng-option>
+                                    </ng-select>
+                                    <ng-select #transporte_value labelForId="transporte_value" style="max-height: 32px; margin: 6px 0px;"
+                                        placeholder="Medio de transporte"
+                                        [clearable]="true"
+                                        (remove)="deleteTransporte()"
+                                        (change)="refreshTransporte($event)"
+                                        ng-model="envio_transporte"
+                                        (focus)="focusTransporte()"
+                                    >
+                                        <ng-option *ngFor="let transporte of transportes" [value]="transporte.id">
+                                            {{transporte.text}}
+                                        </ng-option>
                                     </ng-select>
                             </div>
                         </div>
@@ -199,19 +216,19 @@
                             <div *ngIf="showScrollPromptTres" class="scroll-prompt"><div class="scroll-prompt-shape"></div></div>
                             <div class="notProcessing" *ngIf="!processing.started">
                                 <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
-                                    <p><b>Nombre o razón social: </b>{{ckeckItem(contacto.razon_social).text}}</p>
+                                    <p><b>Nombre o razón social: </b>{{checkItem(contacto.razon_social).text}}</p>
                                     <p *ngIf="contacto.nombre_fantasia"><b>Nombre comercial: </b>{{contacto.nombre_fantasia}}</p>
-                                    <p><b>Email: </b>{{ckeckItem(contacto.email).text}}</p>
-                                    <p><b>CAT. IVA.: </b>{{ckeckItem(cativa).text}}</p>
-                                    <p><b>Localidad: </b>{{ckeckItem(contacto.domicilio_ciudad).text}}</p>
+                                    <p><b>Email: </b>{{checkItem(contacto.email).text}}</p>
+                                    <p><b>CAT. IVA.: </b>{{checkItem(cativa).text}}</p>
+                                    <p><b>Localidad: </b>{{checkItem(contacto.domicilio_ciudad).text}}</p>
                                     <p *ngIf="contacto.domicilio_direccion"><b>Dirección: </b>{{(contacto.domicilio_direccion) + " " + contacto.domicilio_numero}}</p>
                                 </div>
                                 <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
-                                    <p><b>Teléfono: </b>{{ckeckItem(contacto.telefono).text}}</p>
+                                    <p><b>Teléfono: </b>{{checkItem(contacto.telefono).text}}</p>
                                     <p *ngIf="(contacto.telefono_celular)"><b>Teléfono celular: </b>{{contacto.telefono_celular}}</p>
-                                    <p><b>DNI o CUIT.: </b>{{ckeckItem(contacto.cuit).text}}</p>
-                                    <p><b>C.P.: </b>{{ckeckItem(contacto.domicilio_codigo_postal).text}}</p>
-                                    <p><b>Provincia: </b>{{ckeckItem(contacto.domicilio_provincia).text}}</p>
+                                    <p><b>DNI o CUIT.: </b>{{checkItem(contacto.cuit).text}}</p>
+                                    <p><b>C.P.: </b>{{checkItem(contacto.domicilio_codigo_postal).text}}</p>
+                                    <p><b>Provincia: </b>{{checkItem(domicilio_provincia).text}}</p>
                                 </div>
                                 <div class="col-xs-12">
                                     <textarea [(ngModel)]="contacto.actividad" name="actividad" aria-label="Breve Descripcion Actividad" id="actividad" cols="30" rows="3" placeholder="BREVE DESCRIPCIÓN DE ACTIVIDAD"></textarea>
@@ -222,9 +239,10 @@
                                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                                 </div>
                                 <div class="response" *ngIf="!processing.right_now">
-                                    <img class="processing__icono" *ngIf="!response.error" [ngClass]="'lazyload'" data-src="./assets/images/registro/confirmacion.png" alt="Sina" height="50">
+                                    <img class="processing__icono" *ngIf="!response.error" [ngClass]="'lazyload'" data-src="./assets/images/registro/confirmacion.webp" alt="Sina" height="50">
                                     <img class="processing__icono" *ngIf="response.error" [ngClass]="'lazyload'" data-src="./assets/images/registro/error.png" alt="Sina" height="50">
-                                    <pre style="white-space: pre-line; word-break: normal;">{{response.mensaje}}</pre>
+                                    <pre *ngIf="!response.error" style="border: 2px solid #00c973;">{{response.mensaje}}</pre>
+                                    <pre *ngIf="response.error" style="border: 2px solid red;">{{response.mensaje}}</pre>
                                     <button  *ngIf="response.error" class="whiteButton" style="width: 50%;" type="button" (click)="response.value()">{{response.action}}</button>
                                 </div>
                             </div>
@@ -263,7 +281,7 @@
             <div role="document" class="modal-dialog" style="width: 950px;">
                 <div class="modal-content">
                     <div class="modal-header mobile_padding-top_extra_60">
-                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.webp" alt="Sina" height="34">
                         <h4 class="modal-title mobile_padding-top_extra_25">Tiene un carrito pendiente</h4>
                         <button aria-label="Close" class="close" type="button" (click)= "carritoCancelModal()">
                             <span style="color: red;" aria-hidden="true">X</span>
@@ -349,7 +367,7 @@
             <div role="document" class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34" class="show__web">
+                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.webp" alt="Sina" height="34" class="show__web">
                     <h4 class="modal-title">Cuentas disponibles para representación</h4>
                     <button aria-label="Close" class="close" type="button" (click)= "cerrarRepresentarCuenta()">
                         <span style="color: red;" aria-hidden="true">X</span>
@@ -432,7 +450,7 @@
             <div role="document" class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.png" alt="Sina" height="34">
+                <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo_azul.webp" alt="Sina" height="34">
                 <h4 class="modal-title">Migrando datos</h4>
                 <button aria-label="Close" class="close" type="button" (click)= "migrandoCancelModal()">
                 <span style="color: red;" aria-hidden="true">X</span>

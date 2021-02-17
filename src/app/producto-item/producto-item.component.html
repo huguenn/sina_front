@@ -2,7 +2,7 @@
   <div class="imgContainer">
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     <div class="imagen">
-      <img *ngIf="item.urlImagen" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" alt="">
+      <img *ngIf="item.urlImagen" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
     </div>
   </div>
   <div class="tituloContainer">
@@ -30,11 +30,11 @@
   </div>
 </div>
 <div *ngIf="item.oferta" class="oferta">
-  <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.png" alt="">
+  <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/oferta.webp" alt="">
   <h3>OFERTA</h3>
 </div>
 <div *ngIf="item.imperdible" class="imperdible">
-  <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/imperdible.png" alt="">
+  <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/imperdible.webp" alt="">
   <h3>NOVEDAD</h3>
 </div>
 <div class="resultado__item__comprar" *ngIf="!relacionado" style="    padding: 0px 15px;">

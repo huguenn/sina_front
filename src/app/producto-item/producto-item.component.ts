@@ -46,18 +46,22 @@ export class ProductoItemComponent implements OnInit, OnDestroy {
       }
     });
     this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user) => {
-      if ($user) {
-        switch ($user['codCategoriaIva']) {
-          case 'CF':
-          case 'INR':
-          case 'RSS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
-          case 'RI':
-          case 'EX':
-          case 'PCE':
-          case 'PCS':
-          case 'EXE':
-          case 'SNC':
-          default: this.iva_usuario = 'UNIT + I.V.A.';
+      if ($user && $user['c'] === '1') {
+        this.iva_usuario = '';
+      } else {
+        if ($user) {
+          switch ($user['codCategoriaIva']) {
+            case 'CF':
+            case 'INR':
+            case 'RSS':
+            case 'RI': this.iva_usuario = 'UNIT + I.V.A.'; break;
+            case 'EX':
+            case 'PCE':
+            case 'PCS':
+            case 'EXE':
+            case 'SNC':
+            default: this.iva_usuario = 'UNIT I.V.A. incluido';
+          }
         }
       }
     });

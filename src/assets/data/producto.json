@@ -1,6 +1,6 @@
 {
     "detalles": { 
-        "imagen": "./images/resultados/1.png",
+        "imagen": "./images/resultados/1.webp",
         "texto1": "Escobon",
         "texto2": "Escobillón sina",
         "precio": 18.99,
@@ -19,7 +19,7 @@
     ],
     "relacionados": [
         { 
-          "imagen": "./assets/images/resultados/1.png",
+          "imagen": "./assets/images/resultados/1.webp",
           "texto1": "Escobon",
           "texto2": "Escobillón sina",
           "precio": 18.99,
@@ -30,7 +30,7 @@
           "minimo":   5
         },
         { 
-          "imagen": "./assets/images/resultados/1.png",
+          "imagen": "./assets/images/resultados/1.webp",
           "texto1": "Escobon",
           "texto2": "Escobillón sina",
           "precio": 18.99,
@@ -41,7 +41,7 @@
           "minimo":   12
         },
         { 
-          "imagen": "./assets/images/resultados/1.png",
+          "imagen": "./assets/images/resultados/1.webp",
           "texto1": "Escobon",
           "texto2": "Escobillón sina",
           "precio": 18.99,
@@ -52,7 +52,7 @@
           "minimo":   0
         },
         { 
-          "imagen": "./assets/images/resultados/1.png",
+          "imagen": "./assets/images/resultados/1.webp",
           "texto1": "Escobon",
           "texto2": "Escobillón sina",
           "precio": 18.99,

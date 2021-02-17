@@ -421,7 +421,7 @@
 .col-rep-5 {
     width: calc(100% *5 / 12);
 }
-/******pregress bar******/
+/******progress bar******/
 .steps {
     width: 90%;
     margin: auto;
@@ -500,6 +500,16 @@
     bottom: auto !important;
     left: auto !important;
     margin-bottom: 15px !important;
+    margin-top: 10px !important;
+}
+
+.response pre {
+    white-space: pre-line;
+    word-break: normal;
+    background-color: transparent;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .modal-header {
@@ -766,5 +776,9 @@ textarea {
             opacity: 0;
             transform: translate(0, 80px);
         }
+    }
+
+    .response pre {
+        font-size: 13px;
     }
 }
