@@ -33,7 +33,19 @@ export class FooterComponent implements OnInit {
   email: string;
   suscripcion: string = 'SUSCRIBIRME';
   enableSuscribir: boolean = true;
-  constructor(public data: SharedService, private auth: AutenticacionService) { }
+  _existDesktop: boolean = false;
+  _existMobile: boolean = false;
+  year: number;
+  constructor(public data: SharedService, private auth: AutenticacionService) {
+    if (window.innerWidth <= 992) {
+      this._existDesktop = false;
+      this._existMobile = true;
+    } else {
+      this._existDesktop = true;
+      this._existMobile = false;
+    }
+    this.year = new Date().getFullYear();
+  }
   registrar() {
     this.data.toggleLoginModal();
   }
@@ -58,11 +70,13 @@ export class FooterComponent implements OnInit {
       if (this.data.statusLogin) {
         body.set('logueado', 'SI');
 
-        this.auth.get('sendy/cliente/getIdListaPrecios')
+        this.auth.get('sendy/cliente/getDatosNewsletter')
         .then((result) => {
-          this.data.log('response getidlistaprecios footer', result);
+          this.data.log('response getDatosNewsletter footer', result);
 
-          body.set('lista_precios', result.response);
+          body.set('lista_precios', result.response.lista_precios);
+          body.set('tipo_lista', result.response.tipo_lista);
+          body.set('perfil', result.response.perfil);
 
           this.auth.post(sendyUrl + 'subscribe', body)
           .then(($response) => {
@@ -74,7 +88,7 @@ export class FooterComponent implements OnInit {
           });
         })
         .catch((error) => {
-          this.data.log('error getidlistaprecios footer', error);
+          this.data.log('error getDatosNewsletter footer', error);
 
           this.auth.post(sendyUrl + 'subscribe', body)
           .then(($response) => {

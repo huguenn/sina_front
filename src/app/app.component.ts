@@ -278,6 +278,8 @@ export class AppComponent implements OnInit, OnDestroy {
   _MODES: string[] = ['over', 'push', 'slide'];
   _opened: boolean = false;
   _option: number = 2;
+  _existDesktop: boolean = false;
+  _existMobile: boolean = false;
 
   myOptions: INgxMyDpOptions = {
     // other options...
@@ -359,13 +361,17 @@ export class AppComponent implements OnInit, OnDestroy {
           const body = new URLSearchParams();
 
           Object.keys(this.contacto).forEach((element) => {
-            if (!element.includes('domicilio_direccion')) {
+            if (element.includes('email') || element.includes('contrasena')) {
               body.set(element, this.contacto[element]);
             } else {
-              if (element.includes('envio_domicilio_direccion')) {
-                body.set(element, this.contacto.envio_domicilio_direccion + (this.contacto.entrega_domicilio_numero ? ' ' + this.contacto.entrega_domicilio_numero : ''));
+              if (!element.includes('domicilio_direccion')) {
+                body.set(element, this.contacto[element].toUpperCase ? this.contacto[element].toUpperCase() : this.contacto[element]);
               } else {
-                body.set(element, this.contacto.domicilio_direccion + (this.contacto.domicilio_numero ? ' ' + this.contacto.domicilio_numero : ''));
+                if (element.includes('envio_domicilio_direccion')) {
+                  body.set(element, this.contacto.envio_domicilio_direccion.toUpperCase ? (this.contacto.envio_domicilio_direccion.toUpperCase() + (this.contacto.entrega_domicilio_numero ? ' ' + this.contacto.entrega_domicilio_numero : '')) : (this.contacto.envio_domicilio_direccion + (this.contacto.entrega_domicilio_numero ? ' ' + this.contacto.entrega_domicilio_numero : '')));
+                } else {
+                  body.set(element, this.contacto.domicilio_direccion.toUpperCase ? (this.contacto.domicilio_direccion.toUpperCase() + (this.contacto.domicilio_numero ? ' ' + this.contacto.domicilio_numero : '')) : (this.contacto.domicilio_direccion + (this.contacto.domicilio_numero ? ' ' + this.contacto.domicilio_numero : '')));
+                }
               }
             }
           });
@@ -541,6 +547,29 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }
       if (Object.keys(this.validador).length === 0 && this.validador.constructor === Object) {
+        if (this.contacto['razon_social'] && this.contacto['email']) {
+          // Lo suscribo al newsletter      
+          const sendyUrl = 'https://mailing.leren.com.ar/';
+
+          const body = new URLSearchParams();
+          body.set('api_key', 'RCUuYdks5u0kwkTgCVlw ');
+          body.set('name', this.contacto['razon_social']);
+          body.set('email', this.contacto['email']);
+          body.set('list', 'cqW4SwUCeaOE36rhy8922C3A');
+          body.set('country', 'AR');
+          body.set('referrer', 'https://www.sina.com.ar/');
+          body.set('boolean', 'true');
+
+          this.auth.post(sendyUrl + 'subscribe', body)
+          .then(($response) => {
+            this.data.log('response suscribir registro', $response);
+          })
+          .catch(($error) => {
+            this.data.log('error suscribir registro', $error);
+          });
+        }
+
+        // Continuo con el registro normalmente
         this._step = $step ? $step : (this._step < 3 ? this._step + 1 : 3);
         if (this._step === 1) {
           setTimeout(() => {
@@ -596,25 +625,37 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private googleAnalyticsService: GoogleAnalyticsService
   ) {
+    if (window.innerWidth <= 992) {
+      this._existDesktop = false;
+      this._existMobile = true;
+    } else {
+      this._existDesktop = true;
+      this._existMobile = false;
+    }
+
     this.recuperarClave = false;
     this.recuperarOk = '';
     this.recuperarError = '';
 
     this.auth.get('public/cliente/envio/getAll').then((result) => {
-      this.transportes = [];
-      result.responseT.forEach((transporte) => {
-        this.transportes.push({
-          id: transporte.codigo,
-          text: transporte.nombre,
+      if (result.responseT) {
+        this.transportes = [];
+        result.responseT.forEach((transporte) => {
+          this.transportes.push({
+            id: transporte.codigo,
+            text: transporte.nombre,
+          });
         });
-      });
-      this.provincia = [];
-      result.responseP.forEach((provincia) => {
-        this.provincia.push({
-          id: provincia.codigo,
-          text: provincia.nombre,
+      }
+      if (result.responseP) {
+        this.provincia = [];
+        result.responseP.forEach((provincia) => {
+          this.provincia.push({
+            id: provincia.codigo,
+            text: provincia.nombre,
+          });
         });
-      });
+      }
     }).catch((error) => this.data.log('public/cliente/envio/getAll error app:', error));
   }
   ngAfterViewChecked() {
@@ -860,7 +901,9 @@ export class AppComponent implements OnInit, OnDestroy {
                       const body = new URLSearchParams();
                       const array = [];
                       for (const item of this.data.lista) {
-                        array.push({id_producto: item.id, cantidad: item.cantidad});
+                        if (item.cantidad > 0) {
+                          array.push({id_producto: item.id, cantidad: item.cantidad});
+                        }
                       }
                       body.set('lista', JSON.stringify(array));
 
@@ -942,7 +985,7 @@ export class AppComponent implements OnInit, OnDestroy {
   loginModal($user, $pass) {
     this.loginLoading = true;
     this.login.error = false;
-    this.auth.autorizar($user, $pass)
+    this.auth.autorizar($user.trim(), $pass.trim())
       .then(($response) => {
         if (this.auth.localGet('login').primer_login) {
           this.migrandoStatus = false;
@@ -1228,6 +1271,12 @@ export class AppComponent implements OnInit, OnDestroy {
   stepTresScroll(e) {
     if (e.target.offsetHeight + e.target.scrollTop >= e.target.scrollHeight - 5) {
       this.showScrollPromptTres = false;
+    }
+  }
+
+  public revisarCantidad(e) {
+    if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
+      e.target.value = e.target.min;
     }
   }
 }

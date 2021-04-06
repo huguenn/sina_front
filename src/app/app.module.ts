@@ -42,6 +42,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 // import { NosotrosComponent } from './nosotros/nosotros.component';
 // import { ContactoComponent } from './contacto/contacto.component';
 // import { PreguntasFrecuentesComponent } from './preguntas-frecuentes/preguntas-frecuentes.component';
+// import { PoliticaPrivacidadComponent } from './politica-privacidad/politica-privacidad.component';
 
 // router config
 const appRoutes: Routes = [
@@ -69,28 +70,33 @@ const appRoutes: Routes = [
     data: { id: 1 },
   },
   {
+    path: 'politica-privacidad',
+    // component: PoliticaPrivacidadComponent,
+    loadChildren: './politica-privacidad/politica-privacidad.module#PoliticaPrivacidadModule',
+  },
+  {
     path: 'preguntas-frecuentes',
-    // component: PreguntasFrecuentesComponent
+    // component: PreguntasFrecuentesComponent,
     loadChildren: './preguntas-frecuentes/preguntas-frecuentes.module#PreguntasFrecuentesModule',
   },
   {
     path: 'como-comprar',
-    // component: ComoComprarComponent
+    // component: ComoComprarComponent,
     loadChildren: './como-comprar/como-comprar.module#ComoComprarModule',
   },
   {
     path: 'contacto',
-    // component: ContactoComponent
+    // component: ContactoComponent,
     loadChildren: './contacto/contacto.module#ContactoModule',
   },
   {
     path: 'envios',
-    // component: EnviosComponent
+    // component: EnviosComponent,
     loadChildren: './envios/envios.module#EnviosModule',
   },
   {
     path: 'nosotros',
-    // component: NosotrosComponent
+    // component: NosotrosComponent,
     loadChildren: './nosotros/nosotros.module#NosotrosModule',
   },
   {

@@ -458,7 +458,7 @@
 /* Carrito */
 .envio {
     border: 1px solid #ccc;
-    padding: 5px 30px;
+    padding: 10px 30px;
     background: #f8f8f8;
     color: #ccc;
     /* margin: 0px; */
@@ -770,6 +770,7 @@
 
 .volver {
     text-align: right;
+    padding-right: 5px;
 }
 
 

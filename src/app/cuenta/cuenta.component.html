@@ -58,12 +58,16 @@
                           <p style="margin: auto;">¿COMO COMPRAR?</p>
                         </button>
                         <button (click)="descargarLista()" class="whiteButton">
-                            <i class="fa fa-download" aria-hidden="true"></i>
-                            <p>LISTA DE PRECIOS</p>
+                          <i class="fa fa-download" aria-hidden="true"></i>
+                          <p>LISTA DE PRECIOS</p>
+                        </button>
+                        <button (click)="descargarListaFrecuentes()" class="whiteButton">
+                          <i class="fa fa-download" aria-hidden="true"></i>
+                          <p>LISTA FRECUENTES</p>
                         </button>
             						<div class="text-center" id="loaderFile" style="display:none;">
             							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
-            							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
+            							<span style="color:#0579ff; font-size:11px;">Por favor espere...</span>
             							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
             						</div>
                         <ul>
@@ -139,7 +143,7 @@
                                 Categoria IVA
                             </label>
                             <div class="col-xs-9">
-                                <ng-select #responsable style="max-height: 32px; margin: 6px 0px;"
+                                <ng-select #responsable labelForId="responsable_value" style="max-height: 32px; margin: 6px 0px;"
                                   [clearable]="true"
                                   (change)="refreshCategoria($event)"
                                   ng-model="DatosUsuario.codCategoriaIva"
@@ -187,7 +191,7 @@
                                   Provincia
                               </label>
                               <div class="col-xs-9">
-                                <ng-select #provincia_value style="max-height: 32px; margin: 6px 0px;"
+                                <ng-select #provincia_value labelForId="provincia_value" style="max-height: 32px; margin: 6px 0px;"
                                   [clearable]="true"
                                   (change)="refreshProvincia($event)"
                                   ng-model="DatosUsuario.domicilio.provincia"
@@ -269,7 +273,7 @@
                                     Provincia
                                 </label>
                                 <div class="col-xs-9">
-                                  <ng-select #provincia_value2 style="max-height: 32px; margin: 6px 0px;"
+                                  <ng-select #provincia_value2 labelForId="provincia_value2" style="max-height: 32px; margin: 6px 0px;"
                                     [clearable]="true"
                                     (change)="refreshProvincia2($event)"
                                     ng-model="DatosUsuario.datosEnvio.domicilioEntrega.provincia"
@@ -294,7 +298,7 @@
                                     Telefono
                                 </label>
                                 <div class="col-xs-9">
-                                  <input class="form-control" type="text"  name="entrega_domicilio_telefono" aria-label="Domicilio Entrega Telefono" [(ngModel)]="DatosUsuario.datosEnvio.telefono">
+                                  <input class="form-control" type="text" name="entrega_domicilio_telefono" aria-label="Domicilio Entrega Telefono" [(ngModel)]="DatosUsuario.datosEnvio.telefono">
                                 </div>
                               </div>
                               <div class="form-group row">
@@ -302,7 +306,7 @@
                                     Transporte
                                 </label>
                                 <div class="col-xs-9">
-                                    <ng-select #transporte style="max-height: 32px; margin: 6px 0px;"
+                                    <ng-select #transporte labelForId="transporte" style="max-height: 32px; margin: 6px 0px;"
                                       [clearable]="true"
                                       (change)="refreshTransporte($event)"
                                       ng-model="DatosUsuario.datosEnvio.codigoTransporte"
@@ -311,6 +315,53 @@
                                         {{transporte.text}}
                                       </ng-option>
                                     </ng-select>
+                                </div>
+                              </div>
+                              <div class="form-group row" style="margin-top: 10px; margin-bottom: 10px;">
+                                <label for="example-text-input" class="col-xs-3 col-form-label" style="margin-top: -8px;">
+                                  Días que recibe mercadería
+                                </label>
+                                <div class="col-xs-9" style="padding-top: 5px; padding-bottom: 5px;">
+                                  <div class="check_dia_entrega">
+                                    <label for="entrega_lunes" class="show__desktop_inline" style="font-weight: normal;">Lunes:</label>
+                                    <label for="entrega_lunes" class="show__mobile_inline" style="font-weight: normal;">Lu:</label>
+                                    <input type="checkbox" name="entrega_lunes" aria-label="Dias que recibe mercaderia Lunes" [(ngModel)]="DatosUsuario.datosEnvio.entregaLunes">
+                                  </div>
+                                  <div class="check_dia_entrega">
+                                    <label for="entrega_martes" class="show__desktop_inline" style="font-weight: normal;">Martes:</label>
+                                    <label for="entrega_martes" class="show__mobile_inline" style="font-weight: normal;">Ma:</label>
+                                    <input type="checkbox" name="entrega_martes" aria-label="Dias que recibe mercaderia Martes" [(ngModel)]="DatosUsuario.datosEnvio.entregaMartes">
+                                  </div>
+                                  <div class="check_dia_entrega">
+                                    <label for="entrega_miercoles" class="show__desktop_inline" style="font-weight: normal;">Miércoles:</label>
+                                    <label for="entrega_miercoles" class="show__mobile_inline" style="font-weight: normal;">Mi:</label>
+                                    <input type="checkbox" name="entrega_miercoles" aria-label="Dias que recibe mercaderia Miercoles" [(ngModel)]="DatosUsuario.datosEnvio.entregaMiercoles">
+                                  </div>
+                                </div>
+                                <div class="col-xs-9" style="float: right; padding-top: 5px; padding-bottom: 5px;">
+                                  <div class="check_dia_entrega">
+                                    <label for="entrega_jueves" class="show__desktop_inline" style="font-weight: normal;">Jueves:</label>
+                                    <label for="entrega_jueves" class="show__mobile_inline" style="font-weight: normal;">Ju:</label>
+                                    <input type="checkbox" name="entrega_jueves" aria-label="Dias que recibe mercaderia Jueves" [(ngModel)]="DatosUsuario.datosEnvio.entregaJueves">
+                                  </div>
+                                  <div class="check_dia_entrega">
+                                    <label for="entrega_viernes" class="show__desktop_inline" style="font-weight: normal;">Viernes:</label>
+                                    <label for="entrega_viernes" class="show__mobile_inline" style="font-weight: normal;">Vi:</label>
+                                    <input type="checkbox" name="entrega_viernes" aria-label="Dias que recibe mercaderia Viernes" [(ngModel)]="DatosUsuario.datosEnvio.entregaViernes">
+                                  </div>
+                                  <div class="check_dia_entrega">
+                                    <label for="entrega_sabado" class="show__desktop_inline" style="font-weight: normal;">Sábado:</label>
+                                    <label for="entrega_sabado" class="show__mobile_inline" style="font-weight: normal;">Sá:</label>
+                                    <input type="checkbox" name="entrega_sabado" aria-label="Dias que recibe mercaderia Sabado" [(ngModel)]="DatosUsuario.datosEnvio.entregaSabado">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="example-text-input" class="col-xs-3 col-form-label" style="margin-top: -5px;">
+                                  Horario Entrega
+                                </label>
+                                <div class="col-xs-9">
+                                  <input class="form-control" type="text" name="entrega_horario" aria-label="Horario de entrega" [(ngModel)]="DatosUsuario.datosEnvio.horarioEntrega">
                                 </div>
                               </div>
                           </ng-template>
@@ -335,11 +386,15 @@
                         <i class="fa fa-download" aria-hidden="true"></i>
                         <p>LISTA DE PRECIOS</p>
 						          </button>
-						<div class="text-center" id="loaderFile" style="display:none;">
-							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
-							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
-						</div>
+                      <button (click)="descargarListaFrecuentes()" class="whiteButton">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <p>LISTA FRECUENTES</p>
+                      </button>
+                      <div class="text-center" id="loaderFile" style="display:none;">
+                        <span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+                        <span style="color:#0579ff; font-size:11px;">Por favor espere...</span>
+                        <div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
+                      </div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
@@ -385,7 +440,7 @@
                         </div>
                         <div class="row misFrecuentesRow" *ngFor="let item of comprados">
                           <div class="col-1">
-                            <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" [(ngModel)]="item.cantidad">
+                            <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" [(ngModel)]="item.cantidad" (keyup)="revisarCantidad($event)">
                             <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="item.cantidad">
                               <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
                             </select>
@@ -413,15 +468,19 @@
                           <p>{{iva_usuario}}</p>
                         </div>
                         <div class="col-md-3 col-xs-12">
-                            <button (click)="descargarLista()" class="whiteButton">
-                                <i class="fa fa-download" aria-hidden="true"></i>
-								<p>LISTA DE PRECIOS</p>
-							</button>
-							<div class="text-center" id="loaderFile" style="display:none;">
-								<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
-								<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-								<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
-							</div>
+                          <button (click)="descargarLista()" class="whiteButton">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            <p>LISTA DE PRECIOS</p>
+                          </button>
+                          <button (click)="descargarListaFrecuentes()" class="whiteButton">
+                            <i class="fa fa-download" aria-hidden="true"></i>
+                            <p>LISTA FRECUENTES</p>
+                          </button>
+                          <div class="text-center" id="loaderFile" style="display:none;">
+                            <span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+                            <span style="color:#0579ff; font-size:11px;">Por favor espere...</span>
+                            <div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
+                          </div>
                         </div>
                     </div>
                     <div class="row" *ngIf="!comprados?.length">
@@ -434,14 +493,18 @@
                         <p style="margin: auto;">¿COMO COMPRAR?</p>
                       </button>
                       <button (click)="descargarLista()" class="whiteButton">
-                          <i class="fa fa-download" aria-hidden="true"></i>
-                          <p>LISTA DE PRECIOS</p>
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <p>LISTA DE PRECIOS</p>
                       </button>
-					  <div class="text-center" id="loaderFile" style="display:none;">
-							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
-							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
-						</div>
+                      <button (click)="descargarListaFrecuentes()" class="whiteButton">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <p>LISTA FRECUENTES</p>
+                      </button>
+                      <div class="text-center" id="loaderFile" style="display:none;">
+                        <span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+                        <span style="color:#0579ff; font-size:11px;">Por favor espere...</span>
+                        <div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
+                      </div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
@@ -554,14 +617,18 @@
                         <p style="margin: auto;">¿COMO COMPRAR?</p>
                       </button>
                       <button (click)="descargarLista()" class="whiteButton">
-                          <i class="fa fa-download" aria-hidden="true"></i>
-                          <p>LISTA DE PRECIOS</p>
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <p>LISTA DE PRECIOS</p>
                       </button>
-					  <div class="text-center" id="loaderFile" style="display:none;">
-							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
-							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
-						</div>
+                      <button (click)="descargarListaFrecuentes()" class="whiteButton">
+                        <i class="fa fa-download" aria-hidden="true"></i>
+                        <p>LISTA FRECUENTES</p>
+                      </button>
+                      <div class="text-center" id="loaderFile" style="display:none;">
+                        <span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+                        <span style="color:#0579ff; font-size:11px;">Por favor espere...</span>
+                        <div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
+                      </div>
                       <ul>
                         <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                           <div class="list">
@@ -616,14 +683,18 @@
                           <p style="margin: auto;">¿COMO COMPRAR?</p>
                         </button>
                         <button (click)="descargarLista()" class="whiteButton">
-                            <i class="fa fa-download" aria-hidden="true"></i>
-                            <p>LISTA DE PRECIOS</p>
+                          <i class="fa fa-download" aria-hidden="true"></i>
+                          <p>LISTA DE PRECIOS</p>
                         </button>
-						<div class="text-center" id="loaderFile" style="display:none;">
-							<span style="color:#0579ff; font-size:11px;">Generando archivo</span>
-							<span style="color:#0579ff; font-size:11px;">Por favor espere</span>
-							<div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
-						</div>
+                        <button (click)="descargarListaFrecuentes()" class="whiteButton">
+                          <i class="fa fa-download" aria-hidden="true"></i>
+                          <p>LISTA FRECUENTES</p>
+                        </button>
+                        <div class="text-center" id="loaderFile" style="display:none;">
+                          <span style="color:#0579ff; font-size:11px;">Generando archivo</span>
+                          <span style="color:#0579ff; font-size:11px;">Por favor espere...</span>
+                          <div><img [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" /></div>
+                        </div>
                         <ul>
                           <li *ngFor="let item of ListaItems; let i = index" [class.active]="transaccion.check(i)" (click)="cambioTab(i)">
                             <div class="list">

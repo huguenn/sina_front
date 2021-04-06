@@ -24,7 +24,7 @@
   <div class="row">
     <div class="col-xs-12 col-md-6 imagen__visor" style="max-height: 350px;display: flex;">
       <!--ngx-gallery style="max-height: 400px;" [options]="galleryOptions" [images]="galleryImages"></ngx-gallery></div-->
-      <img [ngClass]="'lazyload'" [attr.data-src]="producto['urlImagen']" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+      <img [ngClass]="'lazyload'" style="max-width: 100%;" [attr.data-src]="producto['urlImagen']" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
     </div>
     <div class="col-xs-12 col-md-6 producto__descripcion">
       <div class="row title">
@@ -66,7 +66,7 @@
         <div class="row producto__compra">
           <div class="cantidad">
             <p style="margin-right: 10px; margin-bottom: 0;">Cantidad:</p>
-            <input *ngIf="producto.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" [(ngModel)]="producto.cantidad">
+            <input *ngIf="producto.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" [(ngModel)]="producto.cantidad" (keyup)="revisarCantidad($event)">
             <select *ngIf="producto.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="producto.cantidad">
               <option *ngFor="let cant of arrayCants" [ngValue]="cant">{{cant}}</option>
             </select>
@@ -101,7 +101,7 @@
   </div>
   <div class="row producto__relacionados">
     <div class="row">
-      <h2>Articulos relacionados</h2>
+      <h2>También te puede interesar</h2>
     </div>
     <div class="row resultado">
         <div class="resultado__item col-xs-6 col-md-3" *ngFor="let item of relacionados | myfilter:{id: null}">

@@ -41,21 +41,21 @@
                       <div class="row envio__total envio__total__confirmar">
                         <p>SUBTOTAL</p>
                         <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
-                        <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
+                        <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE') ? '+ I.V.A.' : (iva_usuario.includes('INCLUYE') ? 'I.V.A. INCLUIDO' : (iva_usuario.includes('FINAL') ? 'FINAL' : 'SUJETO A SU CONDICIÓN HABITUAL'))}}</span>
                       </div>
                       <div class="row compra__confirm" style="margin-top: 5px;">
-                        <button *ngIf="carrito.subtotal >= config.montoMinimo" class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
-                        <div *ngIf="carrito.subtotal < config.montoMinimo">
+                        <button *ngIf="carrito.subtotal >= config.montoMinimo && !showAgregado" class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                        <div *ngIf="carrito.subtotal < config.montoMinimo && !showAgregado">
                           <p style="margin-top: 30px; padding: 0px 15px; color: red;">La compra actual no supera el monto mínimo de $ {{formatMoney(config.montoMinimo)}}</p>
-                          <button *ngIf="carrito.subtotal > 0" type="button" class="whiteButton" style="margin-top: 15px;" (click)="showAgregado = !showAgregado">Es un agregado</button>
-                          <div *ngIf="showAgregado" class="div__agregado">
-                            <p style="padding-bottom: 10px;">Ingrese el ID del pedido al que desea agregar los productos del carrito actual:</p>
-                            <input class="form-control" type="number" min="1" name="idPedido" aria-label="ID Pedido" id="idPedido" placeholder="ID del pedido" (keydown)="enterBusquedaAgregado($event)" [(ngModel)]="idPedidoAgregado">
-                            <button class="busqueda__agregado" type="button"><i class="fa fa-search" aria-hidden="true" (click)="finalizarCompraAgregado()"></i></button>
-                            <p *ngIf="showErrorAgregado" style="padding-top: 10px; color: red; text-align: center;">{{responseErrorAgregado}}</p>
-                          </div>
                         </div>
-                        <p *ngIf="carrito.subtotal >= config.montoMinimo && carrito.subtotal < config.montoEnvio" style="margin-top: 30px;">*Unicamente retiro en mostrador hasta ${{formatMoney(config.montoEnvio)}}</p>
+                        <p *ngIf="carrito.subtotal >= config.montoMinimo && carrito.subtotal < config.montoEnvio && !showAgregado" style="margin-top: 15px;">*Envíos únicamente a partir de ${{formatMoney(config.montoEnvio)}}<br>Cualquier consulta contactate con nosotros.</p>
+                        <button *ngIf="carrito.subtotal > 0" type="button" class="whiteButton" style="margin-top: 25px; padding: 4px 10px;" (click)="showAgregado = !showAgregado">Es un agregado</button>
+                        <div *ngIf="showAgregado" class="div__agregado">
+                          <p style="padding-bottom: 10px;">Ingrese el Nro del pedido al que desea agregar los productos del carrito actual:</p>
+                          <input class="form-control" type="number" min="1" name="idPedido" aria-label="ID Pedido" id="idPedido" placeholder="Nro del pedido" (keydown)="enterBusquedaAgregado($event)" [(ngModel)]="idPedidoAgregado">
+                          <button class="busqueda__agregado" type="button"><i class="fa fa-search" aria-hidden="true" (click)="finalizarCompraAgregado()"></i></button>
+                          <p *ngIf="showErrorAgregado" style="padding-top: 10px; color: red; text-align: center;">{{responseErrorAgregado}}</p>
+                        </div>
                       </div>
                     </div>
                     <!--div class="row carrito__busqueda">
@@ -99,7 +99,7 @@
                       </div>
                       <div class="row carrito__content" *ngFor="let compra of carrito.lista">
                         <div class="col-1">
-                          <input *ngIf="compra.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
+                          <input *ngIf="compra.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}" (keyup)="revisarCantidad($event)">
                           <select *ngIf="compra.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="updateValueDelayed()" [(ngModel)]="compra.cantidad">
                             <option *ngFor="let cant of compra.arrayCants" [ngValue]="cant">{{cant}}</option>
                           </select>
@@ -123,7 +123,7 @@
                       <div class="carrito__content__mobile" *ngFor="let compra of carrito.lista">
                         <div class="row">
                           <div class="col-1">
-                            <input *ngIf="compra.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}">
+                            <input *ngIf="compra.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}" (keyup)="revisarCantidad($event)">
                             <select *ngIf="compra.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="updateValueDelayed()" [(ngModel)]="compra.cantidad">
                               <option *ngFor="let cant of compra.arrayCants" [ngValue]="cant">{{cant}}</option>
                             </select>
@@ -159,7 +159,7 @@
                             <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                               <ul>
                                 <li *ngFor="let item of ResultadoBusqueda" (click)="cerrarBusqueda(item)">
-                                  <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+                                  <img class="busqueda__icono" style="max-width: 100%;" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
                                   <p class="busqueda__titulo">{{item.titulo}}</p>
                                   <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                                 </li>
@@ -187,20 +187,20 @@
                       <div class="row envio__total envio__total__confirmar">
                         <p>SUBTOTAL</p>
                         <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
-                        <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
+                        <span style="position: absolute; bottom: -27px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE') ? '+ I.V.A.' : (iva_usuario.includes('INCLUYE') ? 'I.V.A. INCLUIDO' : (iva_usuario.includes('FINAL') ? 'FINAL' : 'SUJETO A SU CONDICIÓN HABITUAL'))}}</span>
                       </div>
-                      <button *ngIf="carrito.subtotal > config.montoMinimo" class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
-                      <div *ngIf="carrito.subtotal < config.montoMinimo">
+                      <button *ngIf="carrito.subtotal > config.montoMinimo && !showAgregado" class="actionButton" (click)="finalizarCompra()">FINALIZAR COMPRA</button>
+                      <div *ngIf="carrito.subtotal < config.montoMinimo && !showAgregado">
                         <p style="margin-top: 30px; padding: 0px 30px; color: red;">La compra actual no supera el monto mínimo de $ {{formatMoney(config.montoMinimo)}}</p>
-                        <button *ngIf="carrito.subtotal > 0" type="button" class="whiteButton" style="margin-top: 15px;" (click)="showAgregado = !showAgregado">Es un agregado</button>
-                        <div *ngIf="showAgregado" class="div__agregado">
-                          <p style="padding-bottom: 10px;">Ingrese el ID del pedido al que desea agregar los productos del carrito actual:</p>
-                          <input class="form-control" type="number" min="1" name="idPedido" aria-label="ID Pedido" id="idPedido" placeholder="ID del pedido" (keydown)="enterBusquedaAgregado($event)" [(ngModel)]="idPedidoAgregado">
-                          <button class="busqueda__agregado" type="button"><i class="fa fa-search" aria-hidden="true" (click)="finalizarCompraAgregado()"></i></button>
-                          <p *ngIf="showErrorAgregado" style="padding-top: 10px; color: red; text-align: center;">{{responseErrorAgregado}}</p>
-                        </div>
                       </div>
-                      <p *ngIf="carrito.subtotal >= config.montoMinimo && carrito.subtotal < config.montoEnvio" style="margin-top: 30px;">*Unicamente retiro en mostrador hasta ${{formatMoney(config.montoEnvio)}}</p>
+                      <p *ngIf="carrito.subtotal >= config.montoMinimo && carrito.subtotal < config.montoEnvio && !showAgregado" style="margin-top: 15px;">*Envíos únicamente a partir de ${{formatMoney(config.montoEnvio)}}<br>Cualquier consulta contactate con nosotros.</p>
+                      <button *ngIf="carrito.subtotal > 0" type="button" class="whiteButton" style="margin-top: 35px; padding: 4px 20px;" (click)="showAgregado = !showAgregado">Es un agregado</button>
+                      <div *ngIf="showAgregado" class="div__agregado">
+                        <p style="padding-bottom: 10px;">Ingrese el Nro del pedido al que desea agregar los productos del carrito actual:</p>
+                        <input class="form-control" type="number" min="1" name="idPedido" aria-label="ID Pedido" id="idPedido" placeholder="Nro del pedido" (keydown)="enterBusquedaAgregado($event)" [(ngModel)]="idPedidoAgregado">
+                        <button class="busqueda__agregado" type="button"><i class="fa fa-search" aria-hidden="true" (click)="finalizarCompraAgregado()"></i></button>
+                        <p *ngIf="showErrorAgregado" style="padding-top: 10px; color: red; text-align: center;">{{responseErrorAgregado}}</p>
+                      </div>
                     </div>
                     <!--div class="row carrito__busqueda">
                       <h3>¿TENÉS UN CUPÓN?</h3>
@@ -288,7 +288,7 @@
                               Código Postal
                           </label>
                           <div class="col-xs-8">
-                            <input class="form-control" type="text" name="cod_postal" aria-label="Domicilio Codigo Postal" [(ngModel)]="datos_envio.domicilio_codigo_postal">
+                            <input class="form-control" type="text" maxlength="8" name="cod_postal" aria-label="Domicilio Codigo Postal" [(ngModel)]="datos_envio.domicilio_codigo_postal">
                           </div>
                         </div>
                         <div class="form-group row" *ngIf="!cargarTransporte">
@@ -423,7 +423,7 @@
                             <br>
                             <div class="horario">
                               <div class="col__1" style="padding-left: 0px;">
-                                <input [ngModel]="inputHora" (ngModelChange)="fechaUpdate1($event)" name="retiroHora1" type="number" aria-label="Hora Retiro"/>
+                                <input [ngModel]="inputHora" (ngModelChange)="fechaUpdate1($event)" name="retiroHora1" type="number" min="0" max="24" aria-label="Hora Retiro"/>
                               </div>
                               <div class="col__1"><p>:</p></div>
                               <div class="col__2" style="padding-right: 0px;">
@@ -471,7 +471,7 @@
                         </button-->
                       </div>
                       <div class="row envio__seccion__content" *ngIf="!editingFacturacion">
-                        <p>Nombre o razón Social: {{facturacion.datos.razon_social || facturacion.datos.nombre_fantasia}}</p>
+                        <p>Nombre o Razón Social: {{facturacion.datos.razon_social || facturacion.datos.nombre_fantasia}}</p>
                         <p>CUIT/DNI: {{facturacion.datos.cuit}}</p>
                         <p>Cat. I.V.A.: {{facturacion.datos.categoria_iva}}</p>
                         <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
@@ -551,7 +551,7 @@
                               Código Postal
                           </label>
                           <div class="col-xs-8">
-                            <input class="form-control" type="text" [(ngModel)]="facturacion.datos.cod_postal" aria-label="Domicilio Facturacion Codigo Postal">
+                            <input class="form-control" type="text" maxlength="8" [(ngModel)]="facturacion.datos.cod_postal" aria-label="Domicilio Facturacion Codigo Postal">
                           </div>
                         </div>
                         <div class="form-group row">
@@ -621,7 +621,7 @@
                       <div class="row envio__total">
                           <p style="padding-bottom: 10px;">SUBTOTAL</p>
                           <h2>$ {{updateTotal(carrito.subtotal)}}</h2>
-                          <span style="position: absolute; bottom: -30px; right: 20px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE')? '+ I.V.A.' : 'I.V.A. INCLUIDO'}}</span>
+                          <span style="position: absolute; bottom: -30px; right: 0px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE') ? '+ I.V.A.' : (iva_usuario.includes('INCLUYE') ? 'I.V.A. INCLUIDO' : (iva_usuario.includes('FINAL') ? 'FINAL' : 'SUJETO A SU CONDICIÓN HABITUAL'))}}</span>
                       </div>
 					            <div class="row envio__total" style="font-weight: normal; padding-top: 0px;" *ngIf="carrito.subtotal >= config.montoEnvioGratis && datosCompra.entrega === '0'">
                           <p style="padding-top: 22px;">ENVÍO</p>
@@ -737,16 +737,17 @@
                         </div>
                       </div>
                       <div class="col-xs-12 col-md-3">
-                        <div class="row envio">
+                        <div class="row envio" style="margin-left: 0px; margin-right: 0px;">
                           <div class="row envio__total">
                               <p>TOTAL</p>
                               <h3>$ {{formatMoney(total)}}</h3>
+                              <span style="position: absolute; bottom: -20px; right: 0px; font-weight: initial;">{{iva_usuario.includes('NO INCLUYE') ? '+ I.V.A.' : (iva_usuario.includes('INCLUYE') ? 'I.V.A. INCLUIDO' : (iva_usuario.includes('FINAL') ? 'FINAL' : 'SUJETO A SU CONDICIÓN HABITUAL'))}}</span>
                           </div>
                         </div>
                       </div>
                   </div>
                   <div class="row volver">
-                    <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank" rel="noopener noreferrer">
+                    <a href="{{completarCompraLink}}" *ngIf="completarCompraLink" target="_blank" rel="noopener noreferrer" style="margin-right: -5px;">
                       <button class="whiteButton">IMPRIMIR</button>
                     </a>
                   </div>

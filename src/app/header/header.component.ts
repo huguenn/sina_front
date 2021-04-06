@@ -39,6 +39,9 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
   @ViewChild('inputCantidadHeaderVerde') inputCantidadHeaderVerde: ElementRef;
   inputSubHeaderVerde: Subscription;
 
+  _existDesktop: boolean = false;
+  _existMobile: boolean = false;
+
   menuToggle = false;
   CompraList = COMPRA;
   LinkList  = [];
@@ -101,7 +104,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     }
   }
   clickBusqueda(item) {
-    const ruta = '/articulo/' + (item.categorias ? item.categorias[0].nombre.split(' ').join('-') : '') + '/' + item['id'];
+    const ruta = '/articulo/' + ((item.categorias && item.categorias.length > 0) ? item.categorias[0].nombre.split(' ').join('-') : '') + '/' + item['id'];
     this.router.navigate([ruta]);
     this.cerrarBusqueda();
 
@@ -124,6 +127,13 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     this.texto_busqueda = '';
   }
   constructor(private menu: MenuService, private router: Router, public data: SharedService, private auth: AutenticacionService) {
+    if (window.innerWidth <= 992) {
+      this._existDesktop = false;
+      this._existMobile = true;
+    } else {
+      this._existDesktop = true;
+      this._existMobile = false;
+    }
     this.MenuClass = '';
     this.menu.notifyObservable$.pipe(takeUntil(this.destroy$)).subscribe(($cambio) => {
       if ($cambio) {
@@ -213,7 +223,9 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
           const body = new URLSearchParams();
           const array = [];
           for (const item of this.data.lista) {
-            array.push({id_producto: item.id, cantidad: item.cantidad});
+            if (item.cantidad > 0) {
+              array.push({id_producto: item.id, cantidad: item.cantidad});
+            }
           }
           body.set('lista', JSON.stringify(array));
 
@@ -226,26 +238,30 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
           });
         },
       );
-      this.inputSubHeaderVerde = Observable.fromEvent(this.inputCantidadHeaderVerde.nativeElement, 'input')
-      .debounceTime(1000)
-      .pipe(takeUntil(this.destroy$)).subscribe(
-        () => {
-          const body = new URLSearchParams();
-          const array = [];
-          for (const item of this.data.lista) {
-            array.push({id_producto: item.id, cantidad: item.cantidad});
-          }
-          body.set('lista', JSON.stringify(array));
+      if (this.inputCantidadHeaderVerde) {
+        this.inputSubHeaderVerde = Observable.fromEvent(this.inputCantidadHeaderVerde.nativeElement, 'input')
+        .debounceTime(1000)
+        .pipe(takeUntil(this.destroy$)).subscribe(
+          () => {
+            const body = new URLSearchParams();
+            const array = [];
+            for (const item of this.data.lista) {
+              if (item.cantidad > 0) {
+                array.push({id_producto: item.id, cantidad: item.cantidad});
+              }
+            }
+            body.set('lista', JSON.stringify(array));
 
-          this.auth.post('carrito/update_cantidades', body)
-          .then(($response) => {
-            this.data.log('response carritoupdatecantidades header debounced verde', $response);
-          })
-          .catch(($error) => {
-            this.data.log('error carritoupdatecantidades header debounced verde', $error);
-          });
-        },
-      );
+            this.auth.post('carrito/update_cantidades', body)
+            .then(($response) => {
+              this.data.log('response carritoupdatecantidades header debounced verde', $response);
+            })
+            .catch(($error) => {
+              this.data.log('error carritoupdatecantidades header debounced verde', $error);
+            });
+          },
+        );
+      }
     }, 2000);
   }
 
@@ -418,5 +434,11 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     j = (j = i.length) > 3 ? j % 3 : 0;
 
     return s + (j ? i.substr(0, j) + t : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + t) + (c ? d + Math.abs(n - +i).toFixed(c).slice(2) : '');
+  }
+  
+  public revisarCantidad(e) {
+    if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
+      e.target.value = e.target.min;
+    }
   }
 }

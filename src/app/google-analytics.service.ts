@@ -28,7 +28,7 @@ export class GoogleAnalyticsService {
 
     for (const p of productos) {
       ga('ecommerce:addItem', {
-        id: p.id,                     // Transaction ID. Required.
+        id: idpedido,                 // Transaction ID. Required.
         name: p.descripcion,          // Product name. Required.
         sku: p.sku,                   // SKU/code.
         category: p.categoria,        // Category or variation.

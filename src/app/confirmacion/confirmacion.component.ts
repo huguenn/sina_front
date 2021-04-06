@@ -14,7 +14,8 @@ import { SharedService } from '../shared.service';
 export class ConfirmacionComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   sub: Subscription;
-  respuesta: string = 'Esperando respuesta';
+  respuesta: string = 'Esperando respuesta...';
+  loading: boolean = true;
   constructor(
     private route:  ActivatedRoute,
     // private router: Router,
@@ -32,6 +33,7 @@ export class ConfirmacionComponent implements OnInit, OnDestroy {
       if (params['codigo'] || 0) {
         this.auth.get('public/cliente/confirmar_email/' + params['codigo'])
         .then(($response)  => {
+          this.loading = false;
           this.respuesta = $response.response;
         })
         .catch(($error) => {

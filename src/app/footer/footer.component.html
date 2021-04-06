@@ -1,19 +1,19 @@
  <div class="fondoFooter"> 
   <div class="container footer">
     <div class="row showAlways">
-      <div class="col-sm-4 col-xs-12 footer__section">
+      <div class="col-sm-4 col-xs-12 footer__section" *ngIf="_existDesktop">
         <div class="header">SINA</div>
         <div class="content">
           <p><i class="fa fa-envelope" aria-hidden="true"></i> Email: <a href="mailto:infoweb@sina.com.ar" style="text-transform: none;">infoweb@sina.com.ar</a></p>
           <p><i class="fa fa-phone" aria-hidden="true"></i> Teléfono: <a href="tel:01121399100">011 2139-9100</a></p>
-          <p><i class="fa fa-whatsapp" aria-hidden="true"></i> Whatsapp: <a target="_blank" rel="noopener noreferrer" href="https://api.whatsapp.com/send?phone=5491123145727">+54 9 11 2314-5727</a></p>
+          <p><i class="fa fa-whatsapp" aria-hidden="true"></i> Whatsapp: <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491153073468">+54 9 11 5307-3468</a></p>
           <p><i class="fa fa-clock-o" aria-hidden="true"></i> Horario de atención: Lun. a Vie. de 8 a 12 hs. y de 14 a 17 hs. Sáb. de 8 a 12 hs.</p>
           <p><i class="fa fa-location-arrow" aria-hidden="true"></i> Domicilio: <a href="https://g.page/Sina-messina-hnos?share" target="_blank" rel="noopener noreferrer">Madres de Plaza de Mayo 949 (1878), Quilmes, Bs. As.</a></p>
         </div>
       </div>
       <div class="col-sm-8 col-xs-12">
         <div class="row">
-            <div class="col-sm-2 col-xs-6 footer__section">
+            <div class="col-sm-2 col-xs-6 footer__section" *ngIf="_existDesktop">
               <div class="header">CONTENIDO</div>
               <div class="content">
                 <ul>
@@ -66,13 +66,13 @@
           </div>
       </div>
     </div>
-    <div class="row showMobile">
+    <div class="row showMobile" *ngIf="_existMobile">
       <div class="col-xs-12 footer__section">
         <div class="header">SINA</div>
         <div class="content">
           <p><i class="fa fa-envelope" aria-hidden="true"></i> Email: <a href="mailto:infoweb@sina.com.ar" style="text-transform: none;">infoweb@sina.com.ar</a></p>
           <p><i class="fa fa-phone" aria-hidden="true"></i> Teléfono: <a href="tel:01121399100">011 2139-9100</a></p>
-          <p><i class="fa fa-whatsapp" aria-hidden="true"></i> Whatsapp: <a target="_blank" rel="noopener noreferrer" href="https://api.whatsapp.com/send?phone=5491123145727">+54 9 11 2314-5727</a></p>
+          <p><i class="fa fa-whatsapp" aria-hidden="true"></i> Whatsapp: <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491153073468">+54 9 11 5307-3468</a></p>
           <p><i class="fa fa-clock-o" aria-hidden="true"></i> Horario de atención: Lun. a Vie. de 8 a 12 hs. y de 14 a 17 hs. Sáb. de 8 a 12 hs.</p>
           <p><i class="fa fa-location-arrow" aria-hidden="true"></i> Domicilio: <a href="https://g.page/Sina-messina-hnos?share" target="_blank" rel="noopener noreferrer">Madres de Plaza de Mayo 949 (1878), Quilmes, Bs. As.</a></p>
         </div>
@@ -95,7 +95,6 @@
                   <li class="nav-item">
                     <a class="nav-link" routerLink="contacto" routerLinkActive="active">Contacto<span class="sr-only">current</span></a>
                   </li>
-
                 </ul>
               </div>
             </div>
@@ -103,11 +102,19 @@
       </div>
     </div>
     
-    <div class="row">
-        <div class="col-md-12">
-          <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" height="34">
-          <p>Copyright © 2020 Sina. Todos los derechos reservados. Desarrollado por <a href="https://www.leren.com.ar"><b>Leren</b></a></p>
-        </div>
+    <div class="row" style="padding-bottom: 50px;">
+      <div class="col-md-12" style="width: 70%; display: inline-block;">
+        <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" height="34">
+        <p>
+          Copyright © {{year}} Sina. Todos los derechos reservados. - <a routerLink="politica-privacidad">Política de Privacidad</a><br>
+          Desarrollado por <a href="https://www.leren.com.ar"><b>Leren</b></a>
+        </p>
+      </div>
+      <div style="position: relative; width: 55px; text-align: right; float: right; padding-right: 30px; height: 84px;">
+        <a href="http://qr.afip.gob.ar/?qr=BIt7TM_d2TcdF7mMgQjHOw,," target="_blank" rel="noopener noreferrer">
+          <img [ngClass]="'lazyload'" data-src="./assets/images/footer/AFIP_DATA_FISCAL.webp" alt="AFIP" height="60" style="margin-top: 12px;">
+        </a>
+      </div>
     </div>
   </div>
 </div>

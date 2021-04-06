@@ -92,7 +92,7 @@
   left: 0;
 }
 
-@keyframes imgFade {
+/* @keyframes imgFade {
  0% {
    opacity:1;
  }
@@ -155,4 +155,4 @@
   -moz-animation-delay: 0;
   -o-animation-delay: 0;
   animation-delay: 0;
-}
+} */

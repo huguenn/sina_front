@@ -58,7 +58,12 @@ export class cliente {
     codigoTransporte: string,
     nombreTransporte: string,
     costo:            string,
-    diasEntrega:      any,
+    entregaLunes:     any,
+    entregaMartes:    any,
+    entregaMiercoles: any,
+    entregaJueves:    any,
+    entregaViernes:   any,
+    entregaSabado:    any,
     domicilioEntrega: domicilio,
     horarioEntrega:   string,
     idTransporte:     string,
@@ -319,7 +324,7 @@ export class SharedService {
           if (!this.lista.some((articulo_carrito) => articulo_carrito.id === msg.id)) {
             msg.comprado = true;
             this.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, msg.precio, msg.precio * (+msg.cantidad),
-                                msg.id, msg.codInterno, msg.categorias ? msg.categorias[0].nombre : '', msg.cantPack);
+                                msg.id, msg.codInterno, (msg.categorias && msg.categorias.length > 0) ? msg.categorias[0].nombre : '', msg.cantPack);
             return {value: true, text: `Producto agregado al Carrito!`};
           } else {
             msg.comprado = true;

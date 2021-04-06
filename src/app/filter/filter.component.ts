@@ -147,16 +147,17 @@ export class FilterComponent implements OnInit, OnDestroy {
       } else {
         if ($user) {
           switch ($user['codCategoriaIva']) {
-            case 'CF':
-            case 'INR':
-            case 'RSS':
+            case 'CF': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'INR': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'RS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
             case 'RI': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA'; break;
-            case 'EX':
-            case 'PCE':
-            case 'PCS':
-            case 'EXE':
-            case 'SNC':
-            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA';
+            case 'EX': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'PCE': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'PCS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'EXE': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS SON FINALES'; break;
+            case 'SNC': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
           }
         }
       }
@@ -187,7 +188,9 @@ export class FilterComponent implements OnInit, OnDestroy {
               const path = window.location.href;
               // url_consulta += (window.location.href.indexOf('ofertas') !== -1) ? 'producto/listado/ofertas/' :
               // (window.location.href.indexOf('novedades') !== -1) ? 'producto/listado/novedades' : '';
-              if (path.indexOf('ofertas') !== -1) {
+              if (path.indexOf('ofertas-y-novedades') !== -1) {
+                url_consulta += 'producto/listado/campania/';
+              } else if (path.indexOf('ofertas') !== -1) {
                 url_consulta += 'producto/listado/ofertas/';
               } else if (path.indexOf('novedades') !== -1) {
                 url_consulta += 'producto/listado/novedades';
@@ -240,7 +243,34 @@ export class FilterComponent implements OnInit, OnDestroy {
             setTimeout(() => {
 
               const path = window.location.href;
-              if (path.indexOf('Limpieza') !== -1 && this.LinkList) {
+              if (path.indexOf('ofertas-y-novedades') !== -1) {
+                this.paginado.disable(); // Para poner listado por default, en lugar de paginado
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                this.familiaActual = 'Más vendidos';
+
+                this.id_categoria.push({link: '/ofertas', texto: 'Ofertas', listado_subcategorias: null});
+                this.id_categoria.push({link: '/novedades', texto: 'Novedades', listado_subcategorias: null});
+                this.id_categoria.push({link: '/ofertas-y-novedades', texto: 'Más vendidos', listado_subcategorias: null});
+              } else if (path.indexOf('novedades') !== -1 && this.LinkList) {
+                this.paginado.disable(); // Para poner listado por default, en lugar de paginado
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                this.familiaActual = 'Novedades';
+
+                this.id_categoria.push({link: '/ofertas', texto: 'Ofertas', listado_subcategorias: null});
+                this.id_categoria.push({link: '/novedades', texto: 'Novedades', listado_subcategorias: null});
+                this.id_categoria.push({link: '/ofertas-y-novedades', texto: 'Más vendidos', listado_subcategorias: null});
+              } else if (path.indexOf('ofertas') !== -1 && this.LinkList) {
+                this.paginado.disable(); // Para poner listado por default, en lugar de paginado
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                this.familiaActual = 'Ofertas';
+
+                this.id_categoria.push({link: '/ofertas', texto: 'Ofertas', listado_subcategorias: null});
+                this.id_categoria.push({link: '/novedades', texto: 'Novedades', listado_subcategorias: null});
+                this.id_categoria.push({link: '/ofertas-y-novedades', texto: 'Más vendidos', listado_subcategorias: null});
+              } else if (path.indexOf('Limpieza') !== -1 && this.LinkList) {
                 this.modoVista = 'Paginado';
                 this.num_subcategoria = -2;
                 this.id_categoria = [];

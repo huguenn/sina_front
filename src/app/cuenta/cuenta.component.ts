@@ -6,7 +6,6 @@ import { debounceTime } from 'rxjs/operator/debounceTime';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-import { utils as XLSXutils, WorkBook, WorkSheet, writeFile as XLSXwrite } from 'xlsx';
 import { AutenticacionService } from '../autenticacion.service';
 import { Datos, DatosTransaccion } from '../data';
 import { cliente, SharedService } from '../shared.service';
@@ -29,7 +28,7 @@ const datosFis: Datos[] = [
     model: 'nombre',
   },
   {
-    texto: 'Telfono',
+    texto: 'Telefono',
     model: 'nombre',
   },    {
     texto: 'E-mail',
@@ -109,6 +108,7 @@ export class CuentaComponent implements OnInit, OnDestroy {
 
   ultimasCompras = [];
   listadoProductos = [];
+  listadoFrecuentes = [];
 
   /*ultimasCompras = [
     {
@@ -255,7 +255,7 @@ export class CuentaComponent implements OnInit, OnDestroy {
 
               this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1,
               compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id,
-              compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '', compra.producto.cantPack);
+              compra.producto.codInterno, (compra.producto.categorias && compra.producto.categorias.length > 0) ? compra.producto.categorias[0].nombre : '', compra.producto.cantPack);
             })
             .catch(($error) => {
               this.data.log('error carritoagregaritem cuenta', $error);
@@ -287,7 +287,7 @@ export class CuentaComponent implements OnInit, OnDestroy {
 
               this.data.changeMessage(compra.cantidad ? parseInt(compra.cantidad, 10) : 1,
               compra.producto.titulo, compra.producto.precio, parseFloat(compra.producto.precio) * parseInt(compra.producto.cantidad, 10), compra.producto.id,
-              compra.producto.codInterno, compra.producto.categorias.length > 0 ? compra.producto.categorias[0].nombre : '', compra.producto.cantPack);
+              compra.producto.codInterno, (compra.producto.categorias && compra.producto.categorias.length > 0) ? compra.producto.categorias[0].nombre : '', compra.producto.cantPack);
             })
             .catch(($error) => {
               this.data.log('error carritoagregaritem cuenta', $error);
@@ -328,27 +328,37 @@ export class CuentaComponent implements OnInit, OnDestroy {
     this.data.currentUser.pipe(takeUntil(this.destroy$)).subscribe(($user: any) => {
       if ($user) {
         this.DatosUsuario = $user;
+
+        if (this.DatosUsuario.datosEnvio) {
+          this.DatosUsuario.datosEnvio.entregaLunes = this.DatosUsuario.datosEnvio.entregaLunes && this.DatosUsuario.datosEnvio.entregaLunes === '1' ? true : false;
+          this.DatosUsuario.datosEnvio.entregaMartes = this.DatosUsuario.datosEnvio.entregaMartes && this.DatosUsuario.datosEnvio.entregaMartes === '1' ? true : false;
+          this.DatosUsuario.datosEnvio.entregaMiercoles = this.DatosUsuario.datosEnvio.entregaMiercoles && this.DatosUsuario.datosEnvio.entregaMiercoles === '1' ? true : false;
+          this.DatosUsuario.datosEnvio.entregaJueves= this.DatosUsuario.datosEnvio.entregaJueves && this.DatosUsuario.datosEnvio.entregaJueves === '1' ? true : false;
+          this.DatosUsuario.datosEnvio.entregaViernes = this.DatosUsuario.datosEnvio.entregaViernes && this.DatosUsuario.datosEnvio.entregaViernes === '1' ? true : false;
+          this.DatosUsuario.datosEnvio.entregaSabado = this.DatosUsuario.datosEnvio.entregaSabado && this.DatosUsuario.datosEnvio.entregaSabado === '1' ? true : false;
+        }
+
         new Promise(($acepto, $rechazo) => {
           this.auth.get('public/cliente/envio/getAll').then((result) => {
-            result.responseT.forEach((transporte) => {
-              this.transporte_lista.push({
-                id: transporte.codigo,
-                text: transporte.nombre,
+            if (result.responseT) {
+              this.transporte_lista = [];
+              result.responseT.forEach((transporte) => {
+                this.transporte_lista.push({
+                  id: transporte.codigo,
+                  text: transporte.nombre,
+                });
               });
-            });
-            result.responseP.forEach((provincia) => {
-              this.provincia_lista.push({
-                id: provincia.codigo,
-                text: provincia.nombre,
-              });
-            });
-            // Esto tiene pinta de ser un fix re turbio que no debería hacerse asi
-            const findTransporte = this.transporte_lista.find((transporte) => {
-              return (this.DatosUsuario.datosEnvio && transporte.id === this.DatosUsuario.datosEnvio.codigoTransporte);
-            });
-            if (findTransporte) {
-              this.DatosUsuario.datosEnvio.codigoTransporte = findTransporte.text;
             }
+            if (result.responseP) {
+              this.provincia_lista = [];
+              result.responseP.forEach((provincia) => {
+                this.provincia_lista.push({
+                  id: provincia.codigo,
+                  text: provincia.nombre,
+                });
+              });
+            }
+            
             $acepto('ok');
           }).catch((error) => $rechazo(error));
         })
@@ -380,16 +390,17 @@ export class CuentaComponent implements OnInit, OnDestroy {
         } else {
           if ($user) {
             switch ($user['codCategoriaIva']) {
-              case 'CF':
-              case 'INR':
-              case 'RSS':
+              case 'CF': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              case 'INR': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              case 'RS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
               case 'RI': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA'; break;
-              case 'EX':
-              case 'PCE':
-              case 'PCS':
-              case 'EXE':
-              case 'SNC':
-              default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA';
+              case 'EX': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              case 'PCE': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              case 'PCS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              case 'EXE': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS SON FINALES'; break;
+              case 'SNC': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+              default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
             }
           }
         }
@@ -514,41 +525,597 @@ export class CuentaComponent implements OnInit, OnDestroy {
   }
 
   descargarLista() {
-    (document.querySelector('#loaderFile') as HTMLElement).style.display = 'block';
-    this.auth.get('producto/listadoProductos')
-    .then(($response)  => {
+    for (const key in document.querySelectorAll('#loaderFile')) {
+      if (Object.prototype.hasOwnProperty.call(document.querySelectorAll('#loaderFile'), key)) {
+        const element = document.querySelectorAll('#loaderFile')[key];
+        (element as HTMLElement).style.display = 'block';
+      }
+    }
+    this.auth.get('producto/listaPrecios')
+    .then(async ($response)  => {
       if ($response.response) {
         this.listadoProductos = $response.response;
-        const print: any[] = [];
-        print.push(['Código interno', 'Título + título adicional', 'Codigo de barras', 'Unidad de medida (presentacion)',
-          'Precio', 'Familia', 'Categoria', 'SubCategoria', 'Oferta']);
+        let listadoProductosOrdenados: any[] = [];
         this.listadoProductos.forEach((producto) => {
-          print.push
-          (
+          if (Array.isArray(listadoProductosOrdenados[producto.familia])) {
+            if (Array.isArray(listadoProductosOrdenados[producto.familia][producto.categoria])) {
+              if (Array.isArray(listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria])) {
+                listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria].push(producto);
+              } else {
+                listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria] = new Array();
+                listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria].push(producto);
+              }
+            } else {
+              listadoProductosOrdenados[producto.familia][producto.categoria] = new Array();
+              listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria] = new Array();
+              listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria].push(producto);
+            }
+          } else {
+            listadoProductosOrdenados[producto.familia] = new Array();
+            listadoProductosOrdenados[producto.familia][producto.categoria] = new Array();
+            listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria] = new Array();
+            listadoProductosOrdenados[producto.familia][producto.categoria][producto.subcategoria].push(producto);
+          }
+        });
+        
+        const print: any[] = [];
+        if (this.listadoProductos[0].precio) {
+          print.push(
             [
-              producto.codigo_interno,
-              producto.nombre + ' - ' + producto.nombre_adicional,
-              producto.codigo_barras,
-              producto.unidad_medida,
-              producto.precio,
-              producto.familia,
-              producto.categoria,
-              producto.subcategoria,
-              producto.es_oferta,
-            ],
+              'Código',
+              'Descripción',
+              'Código de barras',
+              'Unidad de medida',
+              'Precio',
+            ]
           );
+        } else {
+          print.push(
+            [
+              'Código',
+              'Descripción',
+              'Código de barras',
+              'Unidad de medida',
+              'Precio 1',
+              'Precio 2',
+            ]
+          );
+        }
+        print.push([]);
+        
+        let i = 3;
+        let merges: any[] = [];
+
+        for (const key in listadoProductosOrdenados) {
+          if (Object.prototype.hasOwnProperty.call(listadoProductosOrdenados, key)) {
+            merges.push({ row: i, cant: 3 });
+            i = i + 3;
+            print.push([key]);
+            print.push([]);
+            print.push([]);
+            const familia = listadoProductosOrdenados[key];
+            for (const key in familia) {
+              if (Object.prototype.hasOwnProperty.call(familia, key)) {
+                merges.push({ row: i, cant: 2 });
+                i = i + 2;
+                print.push([key]);
+                print.push([]);
+                const categoria = familia[key];
+                for (const key in categoria) {
+                  if (Object.prototype.hasOwnProperty.call(categoria, key)) {
+                    merges.push({ row: i, cant: 1 });
+                    i = i + 1;
+                    print.push([key]);
+                    const subcategoria = categoria[key];
+                    for (const key in subcategoria) {
+                      if (Object.prototype.hasOwnProperty.call(subcategoria, key)) {
+                        i = i + 1;
+                        const producto = subcategoria[key];
+                        if (producto.precio) {
+                          print.push(
+                            [
+                              producto.codigo_interno,
+                              producto.nombre + ' - ' + producto.nombre_adicional,
+                              producto.codigo_barras,
+                              producto.unidad_medida,
+                              producto.precio,
+                            ],
+                          );
+                        } else {
+                          print.push(
+                            [
+                              producto.codigo_interno,
+                              producto.nombre + ' - ' + producto.nombre_adicional,
+                              producto.codigo_barras,
+                              producto.unidad_medida,
+                              producto.precio_1,
+                              producto.precio_2,
+                            ],
+                          );
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        const hoy = new Date();
+        const hoyString = ('0' + hoy.getDate()).slice(-2) + '-' + ('0' + (hoy.getMonth() + 1)).slice(-2) + '-' + hoy.getFullYear();
+
+        const Excel = require('exceljs');
+        const FileSaver = require('file-saver');
+
+        // Workbook and properties
+        
+        const wb = new Excel.Workbook();
+        wb.creator = 'SINA';
+        wb.lastModifiedBy = 'SINA';
+        wb.created = hoy;
+        wb.modified = hoy;
+        wb.lastPrinted = hoy;
+        wb.properties.date1904 = true;
+        wb.views = [
+          {
+            x: 0, y: 0, width: 10000, height: 20000,
+            firstSheet: 0, activeTab: 1, visibility: 'visible'
+          }
+        ]
+
+        // Worksheet and properties
+
+        const ws = wb.addWorksheet('Sina.com.ar_Lista-de-precios',
+          {
+            properties: { tabColor: { argb:'FF057AFF' } },
+            pageSetup: { paperSize: 9, orientation: 'portrait', fitToPage: true, fitToWidth: 1, fitToHeight: 0, printTitlesRow: '1:2' },
+            headerFooter: { oddHeader: 'Lista de precios sina.com.ar al ' + hoyString + ' - ' + this.iva_usuario, oddFooter: "&LPágina &P de &N" }
+          }
+        );
+        ws.state = 'visible';
+        ws.properties.defaultRowHeight = 20;
+        ws.autoFilter = 'A:B';
+
+        // Adding Rows
+
+        ws.addRows(print);
+
+        // Styles
+
+        // Columna precio alineada a la derecha
+
+        ws.getColumn('E').alignment = { vertical: 'middle', horizontal: 'right' };
+        if (this.listadoProductos[0].precio_2) {
+          ws.getColumn('F').alignment = { vertical: 'middle', horizontal: 'right' };
+        }
+
+        // Anchos de columna
+
+        ws.getColumn('A').width = 12;
+        ws.getColumn('B').width = 47;
+        ws.getColumn('C').width = 15;
+        ws.getColumn('D').width = 15;
+        ws.getColumn('E').width = 10;
+        if (this.listadoProductos[0].precio_2) {
+          ws.getColumn('F').width = 10;
+        }
+
+        // Borde izquierdo primer columna
+        // Borde derecho a cada columna
+
+        ws.getColumn('A').border = { left: { style: 'thin' }, right: { style: 'thin' } };
+        ws.getColumn('B').border = { right: { style: 'thin' } };
+        ws.getColumn('C').border = { right: { style: 'thin' } };
+        ws.getColumn('D').border = { right: { style: 'thin' } };
+        ws.getColumn('E').border = { right: { style: 'thin' } };
+        if (this.listadoProductos[0].precio_2) {
+          ws.getColumn('E').border = { right: { style: 'mediumDashed' } };
+          ws.getColumn('F').border = { right: { style: 'thin'} };
+        }
+
+        // Borde inferior a la ultima fila
+        ws.getCell('A' + ws.rowCount).border = { left: { style: 'thin' }, right: { style: 'thin' }, bottom: { style: 'thin' } };
+        ws.getCell('B' + ws.rowCount).border = { right: { style: 'thin' }, bottom: { style: 'thin' } };
+        ws.getCell('C' + ws.rowCount).border = { right: { style: 'thin' }, bottom: { style: 'thin' } };
+        ws.getCell('D' + ws.rowCount).border = { right: { style: 'thin' }, bottom: { style: 'thin' } };
+        ws.getCell('E' + ws.rowCount).border = { right: { style: 'thin' }, bottom: { style: 'thin' } };
+        if (this.listadoProductos[0].precio_2) {
+          ws.getCell('E' + ws.rowCount).border = { right: { style: 'mediumDashed', bottom: { style: 'thin' } } };
+          ws.getCell('F' + ws.rowCount).border = { right: { style: 'thin'}, bottom: { style: 'thin' } };
+        }
+
+        // Cabeceras centradas
+
+        const alignMiddleCenter = { vertical: 'middle', horizontal: 'center', wrapText: true };
+        ws.getCell('A1').alignment = alignMiddleCenter;
+        ws.getCell('B1').alignment = alignMiddleCenter;
+        ws.getCell('C1').alignment = alignMiddleCenter;
+        ws.getCell('D1').alignment = alignMiddleCenter;
+        ws.getCell('E1').alignment = alignMiddleCenter;
+        if (this.listadoProductos[0].precio_2) {
+          ws.getCell('F1').alignment = alignMiddleCenter;
+        }
+
+        // Cabeceras Arial 12 y negrita
+
+        const fontArial12Bold = { name: 'Arial', size: 12, bold: true };
+        ws.getCell('A1').font = fontArial12Bold;
+        ws.getCell('B1').font = fontArial12Bold;
+        ws.getCell('C1').font = fontArial12Bold;
+        ws.getCell('D1').font = fontArial12Bold;
+        ws.getCell('E1').font = fontArial12Bold;
+        if (this.listadoProductos[0].precio_2) {
+          ws.getCell('F1').font = fontArial12Bold;
+        }
+
+        // Cabeceras color de fondo gris
+
+        const fillSolidGris = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEAEAEA' } };
+        ws.getCell('A1').fill = fillSolidGris;
+        ws.getCell('B1').fill = fillSolidGris;
+        ws.getCell('C1').fill = fillSolidGris;
+        ws.getCell('D1').fill = fillSolidGris;
+        ws.getCell('E1').fill = fillSolidGris;
+        if (this.listadoProductos[0].precio_2) {
+          ws.getCell('F1').fill = fillSolidGris;
+        }
+
+        // Cabeceras con borde
+
+        const bordeSimple = {
+          top: {style:'thin'},
+          left: {style:'thin'},
+          bottom: {style:'thin'},
+          right: {style:'thin'}
+        };
+        ws.getCell('A1').border = bordeSimple;
+        ws.getCell('B1').border = bordeSimple;
+        ws.getCell('C1').border = bordeSimple;
+        ws.getCell('D1').border = bordeSimple;
+        ws.getCell('E1').border = bordeSimple;
+        if (this.listadoProductos[0].precio_2) {
+          ws.getCell('F1').border = bordeSimple;
+        }
+
+        // Mergeo cada cabecera con su row de abajo
+
+        ws.mergeCells('A1', 'A2');
+        ws.mergeCells('B1', 'B2');
+        ws.mergeCells('C1', 'C2');
+        ws.mergeCells('D1', 'D2');
+        ws.mergeCells('E1', 'E2');
+        if (this.listadoProductos[0].precio_2) {
+          ws.mergeCells('F1', 'F2');
+        }
+
+        // Merge de las rows que obtuve antes
+        const fillSolidAzul = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF00B0F0' } };
+
+        merges.forEach(m => {
+          let idCeldaInicio = 'A' + m.row;
+          let idCeldaFin = 'E' + (m.row + (m.cant - 1));
+          if (this.listadoProductos[0].precio_2) {
+            idCeldaFin = 'F' + (m.row + (m.cant - 1));
+          }
+          ws.getCell(idCeldaInicio).font = fontArial12Bold;
+          ws.getCell(idCeldaInicio).border = bordeSimple;
+          ws.getCell(idCeldaInicio).alignment = alignMiddleCenter;
+          if (m.cant === 3) {
+            ws.getCell(idCeldaInicio).fill = fillSolidAzul;
+          }
+          ws.mergeCells(idCeldaInicio, idCeldaFin);
         });
 
-        const ws: WorkSheet = XLSXutils.aoa_to_sheet(print);
-        const wb: WorkBook = XLSXutils.book_new();
-        XLSXutils.book_append_sheet(wb, ws, 'Hoja 1');
-        XLSXwrite(wb, 'Listado de productos.xlsx');
-      }
-      (document.querySelector('#loaderFile') as HTMLElement).style.display = 'none';
+        // Descarga del archivo
 
+        await wb.xlsx.writeBuffer().then(data => {
+          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' }); 
+          FileSaver.saveAs(blob, 'Lista de precios SINA al ' + hoyString + '.xlsx');
+        });
+      }
+
+      for (const key in document.querySelectorAll('#loaderFile')) {
+        if (Object.prototype.hasOwnProperty.call(document.querySelectorAll('#loaderFile'), key)) {
+          const element = document.querySelectorAll('#loaderFile')[key];
+          (element as HTMLElement).style.display = 'none';
+        }
+      }
+      for (const key in document.querySelectorAll('#loaderFileMsg')) {
+        if (Object.prototype.hasOwnProperty.call(document.querySelectorAll('#loaderFileMsg'), key)) {
+          const element = document.querySelectorAll('#loaderFileMsg')[key];
+          (element as HTMLElement).style.display = 'none';
+        }
+      }
     })
     .catch(($error) => {
       this.data.log('descargarlista error cuenta:', $error);
+    });
+  }
+
+  descargarListaFrecuentes() {
+    for (const key in document.querySelectorAll('#loaderFile')) {
+      if (Object.prototype.hasOwnProperty.call(document.querySelectorAll('#loaderFile'), key)) {
+        const element = document.querySelectorAll('#loaderFile')[key];
+        (element as HTMLElement).style.display = 'block';
+      }
+    }
+    this.auth.get('producto/listaFrecuentes')
+    .then(async ($response)  => {
+      if ($response.response) {
+        this.listadoFrecuentes = $response.response;
+
+        const arrowUp = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADLSURBVDhPlY67DcJAEETXRZBQhwMSAoQxNVALETkd0ABdAOKTUwW0AATm2Z6VDD4fZqRn+XZmb85iKsxmMNbxf7F8hp2O/0nthZho3F8sle1+wUHjfmKh2e5MZf8W4Wa7c5QdF8FQu5Mp1i1CoXbnrFhYBGLtTq54W5ixdif8Cow+7U77FQxPX6EYF63VYtDVvoeui+da5/QZesAGUtmln2r2BM/Vr+An0+AOSxhWRkB4A1jBDcqdPOGzxrvCNjF7VckfYoeoLcxs9AZpdd/dZrRAVwAAAABJRU5ErkJggg==';
+        const arrowDown = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC8SURBVDhPnY7LDcIwEEQnHSBRBCVwyAEQdMYdDjRAB/xuNIFEBzQAJSxjvGvhYDsObzSJnN14poFgA+COBnu+6xCM+JzSrTu0tNOT3tLjz1IK96NgTT9op7kNbvrBtKMnfkjcor/8RZsuOiWCWfgc60p3LzdpupFfTOkr3RAswrhfnXSjrsVZtxMIlmEtr0y6UW5x0q0CglVY/1VPupFucdRpBekWlelG3GJAuhG3GJhu+BYHPf2BSy6mA28evt5OXyFPfgAAAABJRU5ErkJggg==';
+
+        const print: any[] = [];
+        if (this.listadoFrecuentes[0].precio) {
+          print.push(
+            [
+              'Código',
+              'Descripción',
+              'Código de barras',
+              'Unidad de medida',
+              'Precio',
+              'CPUC',
+            ]
+          );
+        } else {
+          print.push(
+            [
+              'Código',
+              'Descripción',
+              'Código de barras',
+              'Unidad de medida',
+              'Precio 1',
+              'Precio 2',
+              'CPUC',
+            ]
+          );
+        }
+        print.push([]);
+
+        let i = 2.25;
+        let images: any[] = [];
+
+        this.listadoFrecuentes.forEach(producto => {
+          if (producto.precio) {
+            print.push(
+              [
+                producto.codigo_interno,
+                producto.nombre + ' - ' + producto.nombre_adicional,
+                producto.codigo_barras,
+                producto.unidad_medida,
+                producto.precio,
+                producto.cpuc === '-' ? '-' : '',
+              ],
+            );
+            if (producto.cpuc === 'UP') {
+              images.push({ col: 5.25, row: i, arrow: 'UP'});
+            } else if (producto.cpuc === 'DOWN') {
+              images.push({ col: 5.25, row: i, arrow: 'DOWN'});
+            }
+          } else {
+            print.push(
+              [
+                producto.codigo_interno,
+                producto.nombre + ' - ' + producto.nombre_adicional,
+                producto.codigo_barras,
+                producto.unidad_medida,
+                producto.precio_1,
+                producto.precio_2,
+                producto.cpuc === '-' ? '-' : '',
+              ],
+            );
+            if (producto.cpuc === 'UP') {
+              images.push({ col: 6.25, row: i, arrow: 'UP'});
+            } else if (producto.cpuc === 'DOWN') {
+              images.push({ col: 6.25, row: i, arrow: 'DOWN'});
+            }
+          }
+          i++;
+        });
+
+        print.push(['* CPUC: Comparación de precios de últimas compras. ( 90 días )']);
+
+        const hoy = new Date();
+        const hoyString = ('0' + hoy.getDate()).slice(-2) + '-' + ('0' + (hoy.getMonth() + 1)).slice(-2) + '-' + hoy.getFullYear();
+
+        const Excel = require('exceljs');
+        const FileSaver = require('file-saver');
+
+        // Workbook and properties
+          
+        const wb = new Excel.Workbook();
+        wb.creator = 'SINA';
+        wb.lastModifiedBy = 'SINA';
+        wb.created = hoy;
+        wb.modified = hoy;
+        wb.lastPrinted = hoy;
+        wb.properties.date1904 = true;
+        wb.views = [
+          {
+            x: 0, y: 0, width: 10000, height: 20000,
+            firstSheet: 0, activeTab: 1, visibility: 'visible'
+          }
+        ]
+
+        // Worksheet and properties
+
+        const ws = wb.addWorksheet('Sina.com.ar_Lista-frecuentes',
+          {
+            properties: { tabColor: { argb:'FF057AFF' } },
+            pageSetup: { paperSize: 9, orientation: 'portrait', fitToPage: true, fitToWidth: 1, fitToHeight: 0, printTitlesRow: '1:2' },
+            headerFooter: { oddHeader: 'Lista de frecuentes sina.com.ar al ' + hoyString + ' - ' + this.iva_usuario, oddFooter: "&LPágina &P de &N" }
+          }
+        );
+        ws.state = 'visible';
+        ws.properties.defaultRowHeight = 20;
+        ws.autoFilter = 'A:B';
+
+        // Adding Rows
+
+        ws.addRows(print);
+
+        // Styles
+
+        // Columnas precio alineada a la derecha y CPUC al centro
+
+        ws.getColumn('E').alignment = { vertical: 'middle', horizontal: 'right' };
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getColumn('F').alignment = { vertical: 'middle', horizontal: 'right' };
+          ws.getColumn('G').alignment = { vertical: 'middle', horizontal: 'center' };
+        } else {
+          ws.getColumn('F').alignment = { vertical: 'middle', horizontal: 'center' };
+        }
+
+        // Anchos de columna
+
+        ws.getColumn('A').width = 12;
+        ws.getColumn('B').width = 47;
+        ws.getColumn('C').width = 15;
+        ws.getColumn('D').width = 15;
+        ws.getColumn('E').width = 10;
+        ws.getColumn('F').width = 7;
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getColumn('F').width = 10;
+          ws.getColumn('G').width = 7;
+        }
+
+        // Border izquierdo primer columna
+        // Borde derecho a cada columna
+
+        ws.getColumn('A').border = { left: { style: 'thin' }, right: { style: 'thin' } };
+        ws.getColumn('B').border = { right: { style: 'thin' } };
+        ws.getColumn('C').border = { right: { style: 'thin' } };
+        ws.getColumn('D').border = { right: { style: 'thin' } };
+        ws.getColumn('E').border = { right: { style: 'thin' } };
+        ws.getColumn('F').border = { right: { style: 'thin' } };
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getColumn('E').border = { right: { style: 'mediumDashed' } };
+          ws.getColumn('G').border = { right: { style: 'thin' } };
+        }
+
+        // Borde inferior y merge a la ultima fila
+        ws.getCell('A' + ws.rowCount).border = { left: { style: 'thin' }, right: { style: 'thin' }, top: { style: 'thin' }, bottom: { style: 'thin' } };
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.mergeCells('A' + ws.rowCount, 'G' + ws.rowCount);
+        } else {
+          ws.mergeCells('A' + ws.rowCount, 'F' + ws.rowCount);
+        }
+
+        // Cabeceras centradas
+
+        const alignMiddleCenter = { vertical: 'middle', horizontal: 'center', wrapText: true };
+        ws.getCell('A1').alignment = alignMiddleCenter;
+        ws.getCell('B1').alignment = alignMiddleCenter;
+        ws.getCell('C1').alignment = alignMiddleCenter;
+        ws.getCell('D1').alignment = alignMiddleCenter;
+        ws.getCell('E1').alignment = alignMiddleCenter;
+        ws.getCell('F1').alignment = alignMiddleCenter;
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getCell('G1').alignment = alignMiddleCenter;
+        }
+
+        // Cabeceras Arial 12 y negrita
+
+        const fontArial12Bold = { name: 'Arial', size: 12, bold: true };
+        ws.getCell('A1').font = fontArial12Bold;
+        ws.getCell('B1').font = fontArial12Bold;
+        ws.getCell('C1').font = fontArial12Bold;
+        ws.getCell('D1').font = fontArial12Bold;
+        ws.getCell('E1').font = fontArial12Bold;
+        ws.getCell('F1').font = fontArial12Bold;
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getCell('G1').font = fontArial12Bold;
+        }
+
+        // Cabeceras color de fondo gris
+
+        const fillSolidGris = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEAEAEA' } };
+        ws.getCell('A1').fill = fillSolidGris;
+        ws.getCell('B1').fill = fillSolidGris;
+        ws.getCell('C1').fill = fillSolidGris;
+        ws.getCell('D1').fill = fillSolidGris;
+        ws.getCell('E1').fill = fillSolidGris;
+        ws.getCell('F1').fill = fillSolidGris;
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getCell('G1').fill = fillSolidGris;
+        }
+
+        // Cabeceras con borde
+
+        const bordeSimple = {
+          top: {style:'thin'},
+          left: {style:'thin'},
+          bottom: {style:'thin'},
+          right: {style:'thin'}
+        };
+        ws.getCell('A1').border = bordeSimple;
+        ws.getCell('B1').border = bordeSimple;
+        ws.getCell('C1').border = bordeSimple;
+        ws.getCell('D1').border = bordeSimple;
+        ws.getCell('E1').border = bordeSimple;
+        ws.getCell('F1').border = bordeSimple;
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.getCell('G1').border = bordeSimple;
+        }
+
+        // Mergeo cada cabecera con su row de abajo
+
+        ws.mergeCells('A1', 'A2');
+        ws.mergeCells('B1', 'B2');
+        ws.mergeCells('C1', 'C2');
+        ws.mergeCells('D1', 'D2');
+        ws.mergeCells('E1', 'E2');
+        ws.mergeCells('F1', 'F2');
+        if (this.listadoFrecuentes[0].precio_2) {
+          ws.mergeCells('G1', 'G2');
+        }
+
+        for (let i = 0; i < images.length; i++) {
+          // Add image to workbook by base64
+          const arrowUpID = wb.addImage({
+            base64: arrowUp,
+            extension: 'png',
+          });
+          const arrowDownID = wb.addImage({
+            base64: arrowDown,
+            extension: 'png',
+          });
+          
+          const m = images[i];
+
+          if (m.arrow === 'UP') {
+            ws.addImage(arrowUpID, {
+              tl: { col: m.col, row: m.row },
+              ext: { width: 16, height: 16 }
+            });
+          } else if (m.arrow === 'DOWN') {
+            ws.addImage(arrowDownID, {
+              tl: { col: m.col, row: m.row },
+              ext: { width: 16, height: 16 }
+            });
+          }
+        }
+
+        // Descarga del archivo
+
+        await wb.xlsx.writeBuffer().then(data => {
+          const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' }); 
+          FileSaver.saveAs(blob, 'Lista de frecuentes SINA al ' + hoyString + '.xlsx');
+        });
+      }
+
+      for (const key in document.querySelectorAll('#loaderFile')) {
+        if (Object.prototype.hasOwnProperty.call(document.querySelectorAll('#loaderFile'), key)) {
+          const element = document.querySelectorAll('#loaderFile')[key];
+          (element as HTMLElement).style.display = 'none';
+        }
+      }
+    })
+    .catch(($error) => {
+      this.data.log('productosmaspedidos frecuentes error cuenta:', $error);
     });
   }
 
@@ -575,6 +1142,13 @@ export class CuentaComponent implements OnInit, OnDestroy {
     body.set('envio_domicilio_codigo_postal', this.DatosUsuario.datosEnvio.domicilioEntrega.codPostal);
     body.set('envio_telefono', this.DatosUsuario.datosEnvio.telefono);
     body.set('envio_cod_transporte', this.DatosUsuario.datosEnvio.codigoTransporte);
+    body.set('envio_horario_entrega', this.DatosUsuario.datosEnvio.horarioEntrega);
+    body.set('envio_entrega_lunes', this.DatosUsuario.datosEnvio.entregaLunes);
+    body.set('envio_entrega_martes', this.DatosUsuario.datosEnvio.entregaMartes);
+    body.set('envio_entrega_miercoles', this.DatosUsuario.datosEnvio.entregaMiercoles);
+    body.set('envio_entrega_jueves', this.DatosUsuario.datosEnvio.entregaJueves);
+    body.set('envio_entrega_viernes', this.DatosUsuario.datosEnvio.entregaViernes);
+    body.set('envio_entrega_sabado', this.DatosUsuario.datosEnvio.entregaSabado);
 
     this.data.log('guardardatos body cuenta:', body);
 
@@ -610,5 +1184,11 @@ export class CuentaComponent implements OnInit, OnDestroy {
         this.data.log('updatecliente error cuenta:', $throw);
       }
     });
+  }
+  
+  public revisarCantidad(e) {
+    if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
+      e.target.value = e.target.min;
+    }
   }
 }

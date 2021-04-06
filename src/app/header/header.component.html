@@ -38,7 +38,7 @@
               <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                 <ul>
                   <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
-                    <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+                    <img class="busqueda__icono" style="max-width: 100%;" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
                     <p class="busqueda__titulo">{{item.titulo}}</p>
                     <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
                   </li>
@@ -48,7 +48,7 @@
           </form>    
         </div>
         <div #inputCantidadHeader class="col-md-4 col-xs-2 right__form" style="max-width: none;">
-          <div class="login" (click)="toggle('cuenta')">
+          <div *ngIf="_existDesktop" class="login" (click)="toggle('cuenta')">
             <div [ngClass]="{'pulsating_blue': !UserLog}"></div>
             <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
             <p *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> <b>{{representado ? "Representado" : UserJob || "Registrarse"}} </b></p>
@@ -83,7 +83,7 @@
               background: #0083ff;
               border-radius: 25px;
               padding: 8px;">
-              <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491123145727?text=Hola">
+              <a target="_blank" rel="noopener noreferrer" href="https://wa.me/5491153073468">
                 <img [ngClass]="'lazyload'" data-src="./assets/images/header/whatsapp.webp" alt="whatsapp" width="24">
               </a>
             </div>
@@ -98,7 +98,7 @@
               <img [ngClass]="'lazyload'" data-src="./assets/images/header/email.webp" alt="email" width="24">
             </div>
           </div>
-          <div class="logoMobile" style="cursor: pointer; margin-right: 5px; margin-left: -30px;" (click)="toggle('cuenta')">
+          <div *ngIf="_existMobile" class="logoMobile" style="cursor: pointer; margin-right: 5px; margin-left: -30px;" (click)="toggle('cuenta')">
             <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
             <div class="contPop" style="left: -200%;">
               <div class="popup" *ngIf="popup.cuenta">
@@ -132,7 +132,7 @@
                   <li *ngFor="let item of listFilter(greetMessage)" class="list-group-item justify-content-between">
                     {{item.descripcion}}
                     <p>${{updatePrecio(item.precio, item.cantidad)}}</p>                    
-                    <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
+                    <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" (input)="data.updateMessage()" [(ngModel)]="item.cantidad" (keyup)="revisarCantidad($event)">
                     <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
                       <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
                     </select>
@@ -175,144 +175,144 @@
         <i (click)="config.stickyHeaderActivo = false" class="fa fa-times-circle"></i>
     </div>
   </div>
-    <div class="container" [ngClass]="SideState">
-      <nav class="navbar navbar-fixed" [ngClass]="SearchFocus">
-          <div class="col-xs-2" style="display: flex; align-items: center;">
-            <div class="menu" [ngClass]="SideStateIcon">
-              <i (click)="toggleMenu()" class="fa fa-bars" aria-hidden="true"></i>          
-            </div>    
-            <a class="navbar-brand" [routerLink]="['/']">
-              <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" width="140">
-              <img [ngClass]="'lazyload'" data-src="./assets/images/header/icono_mobile_blanco.webp" alt="Sina" height="34">              
-            </a>
-            <ul class="nav navbar-nav">
-              <li *ngFor="let item of LinkList; let itemIndex = index" style="cursor: pointer;" class="nav-item" (mouseover)="changeStyle($event, itemIndex)" (mouseout)="changeStyle($event, itemIndex)">
-                <a class="nav-link" (click)="changeStyleClick(itemIndex)" routerLink="{{'/' + MenuTitle}}">
-                  <div class="cont">
-                    <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img1" alt="">
-                    <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img2" alt="">
-                  </div>
-                  <p class="iconoMenu">{{item.texto}}</p>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="col-xs-8 buscador__container">
-            <a class="logoMobile" [routerLink]="['/']">
-              <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" height="34">
-            </a>  
-            <form class="buscador form-inline ">
-              <div class="controles">
-                <button style="display: none;" class="backButton" (click)="SearchFocus = ''">
-                  <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                </button>
-                <!-- removing (keyup)="buscarPalabra($event)" -->
-                <input  [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)" name="texto_busqueda" aria-label="Texto Busqueda" (focus)="focusFunction()" (focusout)="focusoutFunction()" class="form-control" type="text" placeholder="Buscar">
-                <button class="btn btn-outline-sucess" type="submit" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
-                    <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.webp" alt="Sina" width="20">
-                </button>
-                <i class="fa fa-search" aria-hidden="true"></i>                    
-                <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0" style="
-                  right: -185px;
-                  width: calc(100vw);
-                  max-width: 880px;
-                  font-size: 13px;">
-                  <ul>
-                    <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
-                      <img class="busqueda__icono" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
-                      <p class="busqueda__titulo">{{item.titulo}}</p>
-                      <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
-                    </li>
-                  </ul>
-                </div>                                
-              </div>
-            </form>
-          </div>   
-          <div #inputCantidadHeaderVerde class="col-xs-2 col-md-3 right__form">
-            <div class="login" (click)="toggle2('cuenta')">
-              <div [ngClass]="{'pulsating_white': !UserLog}"></div>
-              <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
-              <p style="color: #fff" *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> {{UserJob || "Registrarse"}} </p>
-              <p style="color: #fff" *ngIf="!UserLog"> {{"Iniciar sesión"}} <br> {{"Registrarse"}} </p>
-              <div class="contPop">
-                <div class="popup" *ngIf="popup2.cuenta">
-                  <div class="popup__lista">
-                    <ul class="list-group">
-                      <li (click)="headerCuentaLink(item.id)" *ngFor="let item of cuenta" class="list-group-item">
-                        {{item.texto}}
-                      </li>
-                    </ul>          
-                  </div>
-                </div>  
-              </div>
-            </div>
-            <div class="logoMobile" style="cursor: pointer; margin-right: 5px; margin-left: -30px;" (click)="toggle2('cuenta')">
-              <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
-              <div class="contPop" style="left: -200%;">
-                <div class="popup" *ngIf="popup2.cuenta">
-                  <div class="popup__lista">
-                    <ul class="list-group">
-                      <li (click)="headerCuentaLink(item.id)" *ngFor="let item of cuenta" class="list-group-item">
-                        {{item.texto}}
-                      </li>
-                    </ul>          
-                  </div>
-                </div> 
-              </div>
-            </div>  
-            <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
-              <div style="cursor: pointer" (click)="toggle2('compra')">
-                <span class="badge badge-default badge-pill">{{greetMessage?.length}}</span>                              
-                <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/carrito--verde.webp" alt="Carrito" width="40">
-              </div>
-              <div class="contPop">
-                <div class="popup" *ngIf="popup2.compra">
-                  <div class="popup__header">
-                    <b>ESTADO DE COMPRA</b>
-                    <p>Mostrando {{greetMessage?.length < 8 ? greetMessage?.length : '8'}} de {{greetMessage?.length}} items</p>
-                  </div>
-                  <div style="text-align: center; padding-bottom: 15px;" *ngIf="listFilter(greetMessage)?.length === 0 || !listFilter(greetMessage)">
-                    <h1 style="color: #057aff; font-size: 30px;">Tu carrito está vacío</h1>
-                    <h4 style="margin:auto; width: 90%;">¡Esperamos que encuentres pronto lo que estas buscando!</h4>
-                  </div>
-                  <div class="popup__lista" *ngIf="listFilter(greetMessage)?.length !== 0">
-                    <ul class="list-group">
-                    <li *ngFor="let item of listFilter(greetMessage)" [ngClass]="{'selected': true}" class="list-group-item justify-content-between">
-                      {{item.descripcion}}
-                      <p>${{updatePrecio(item.precio, item.cantidad)}}</p>
-                      <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="0" max="999999" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
-                      <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
-                        <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
-                      </select>
-                      <div class="eliminar">
-                        <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
-                        <img class="eliminar--hover" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
-                      </div>    
-                    </li>
-                    </ul>          
-                  </div>
-                  <div class="popup__mas" (click)="carritoVerTodos2()">
-                    <div class="popup__subtotal">
-                      Subtotal: <strong>${{updateSubtotal(greetMessage)}}</strong>
-                    </div>
-                    <p>Ver todos</p>
-                  </div>
+  <div class="container" [ngClass]="SideState">
+    <nav class="navbar navbar-fixed" [ngClass]="SearchFocus">
+        <div class="col-xs-2" style="display: flex; align-items: center;">
+          <div class="menu" [ngClass]="SideStateIcon">
+            <i (click)="toggleMenu()" class="fa fa-bars" aria-hidden="true"></i>          
+          </div>    
+          <a class="navbar-brand" [routerLink]="['/']">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" width="140">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/icono_mobile_blanco.webp" alt="Sina" height="34">              
+          </a>
+          <ul *ngIf="_existDesktop" class="nav navbar-nav">
+            <li *ngFor="let item of LinkList; let itemIndex = index" style="cursor: pointer;" class="nav-item" (mouseover)="changeStyle($event, itemIndex)" (mouseout)="changeStyle($event, itemIndex)">
+              <a class="nav-link" (click)="changeStyleClick(itemIndex)" routerLink="{{'/' + MenuTitle}}">
+                <div class="cont">
+                  <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img1" alt="">
+                  <img height="30" [ngClass]="'lazyload'" [attr.data-src]="item.img2" alt="">
                 </div>
-              </div>                  
+                <p class="iconoMenu">{{item.texto}}</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-xs-8 buscador__container">
+          <a class="logoMobile" [routerLink]="['/']">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/logo.webp" alt="Sina" height="34">
+          </a>  
+          <form class="buscador form-inline">
+            <div class="controles">
+              <button style="display: none;" class="backButton" (click)="SearchFocus = ''">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <!-- removing (keyup)="buscarPalabra($event)" -->
+              <input [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)" name="texto_busqueda" aria-label="Texto Busqueda" (focus)="focusFunction()" (focusout)="focusoutFunction()" class="form-control" type="text" placeholder="Buscar">
+              <button class="btn btn-outline-sucess" type="submit" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
+                  <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.webp" alt="Sina" width="20">
+              </button>
+              <i class="fa fa-search" aria-hidden="true"></i>                    
+              <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0" style="
+                right: -185px;
+                width: calc(100vw);
+                max-width: 880px;
+                font-size: 13px;">
+                <ul>
+                  <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
+                    <img class="busqueda__icono" style="max-width: 100%;" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+                    <p class="busqueda__titulo">{{item.titulo}}</p>
+                    <p class="busqueda__subtitulo">{{item.tituloAdicional}}</p>
+                  </li>
+                </ul>
+              </div>                                
             </div>
-            <div class="iconoBusqueda" (click)="SearchFocus = 'onSearchFocus'">
-                <i style="
-                    font-size: 20px;
-                    padding: 14px;
-                    padding-right: 0;
-                    margin-right: -9px;
-                    color: #fff;
-                  "class="fa fa-search" aria-hidden="true"></i>
+          </form>
+        </div>   
+        <div #inputCantidadHeaderVerde class="col-xs-2 col-md-3 right__form">
+          <div *ngIf="_existDesktop" class="login" (click)="toggle2('cuenta')">
+            <div [ngClass]="{'pulsating_white': !UserLog}"></div>
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
+            <p style="color: #fff" *ngIf="UserLog"> {{UserName || "Iniciar sesión"}} <br> {{UserJob || "Registrarse"}} </p>
+            <p style="color: #fff" *ngIf="!UserLog"> {{"Iniciar sesión"}} <br> {{"Registrarse"}} </p>
+            <div class="contPop">
+              <div class="popup" *ngIf="popup2.cuenta">
+                <div class="popup__lista">
+                  <ul class="list-group">
+                    <li (click)="headerCuentaLink(item.id)" *ngFor="let item of cuenta" class="list-group-item">
+                      {{item.texto}}
+                    </li>
+                  </ul>          
+                </div>
+              </div>  
             </div>
-          </div>     
-      </nav>
-    </div>
-  <div class="header__filter" [ngClass]="MenuClass">
+          </div>
+          <div *ngIf="_existMobile" class="logoMobile" style="cursor: pointer; margin-right: 5px; margin-left: -30px;" (click)="toggle2('cuenta')">
+            <img [ngClass]="'lazyload'" data-src="./assets/images/header/user__verde.webp" alt="User" width="40">
+            <div class="contPop" style="left: -200%;">
+              <div class="popup" *ngIf="popup2.cuenta">
+                <div class="popup__lista">
+                  <ul class="list-group">
+                    <li (click)="headerCuentaLink(item.id)" *ngFor="let item of cuenta" class="list-group-item">
+                      {{item.texto}}
+                    </li>
+                  </ul>          
+                </div>
+              </div> 
+            </div>
+          </div>  
+          <div class="buy" *ngIf="actualRoute.indexOf('compra') === -1">
+            <div style="cursor: pointer" (click)="toggle2('compra')">
+              <span class="badge badge-default badge-pill">{{greetMessage?.length}}</span>                              
+              <img [ngClass]="'lazyload'" data-src="./assets/images/iconos/carrito--verde.webp" alt="Carrito" width="40">
+            </div>
+            <div class="contPop">
+              <div class="popup" *ngIf="popup2.compra">
+                <div class="popup__header">
+                  <b>ESTADO DE COMPRA</b>
+                  <p>Mostrando {{greetMessage?.length < 8 ? greetMessage?.length : '8'}} de {{greetMessage?.length}} items</p>
+                </div>
+                <div style="text-align: center; padding-bottom: 15px;" *ngIf="listFilter(greetMessage)?.length === 0 || !listFilter(greetMessage)">
+                  <h1 style="color: #057aff; font-size: 30px;">Tu carrito está vacío</h1>
+                  <h4 style="margin:auto; width: 90%;">¡Esperamos que encuentres pronto lo que estas buscando!</h4>
+                </div>
+                <div class="popup__lista" *ngIf="listFilter(greetMessage)?.length !== 0">
+                  <ul class="list-group">
+                  <li *ngFor="let item of listFilter(greetMessage)" [ngClass]="{'selected': true}" class="list-group-item justify-content-between">
+                    {{item.descripcion}}
+                    <p>${{updatePrecio(item.precio, item.cantidad)}}</p>
+                    <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" (input)="data.updateMessage()" [(ngModel)]="item.cantidad" (keyup)="revisarCantidad($event)">
+                    <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="data.updateMessage()" [(ngModel)]="item.cantidad">
+                      <option *ngFor="let cant of item.arrayCants" [ngValue]="cant">{{cant}}</option>
+                    </select>
+                    <div class="eliminar">
+                      <img class="eliminar--initial" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto.png" (click)="removeMessage(item); item.comprado = false">
+                      <img class="eliminar--hover" width="18" [ngClass]="'lazyload'" data-src="./assets/images/iconos/Eliminar-producto-hover.png" (click)="removeMessage(item); item.comprado = false">
+                    </div>    
+                  </li>
+                  </ul>          
+                </div>
+                <div class="popup__mas" (click)="carritoVerTodos2()">
+                  <div class="popup__subtotal">
+                    Subtotal: <strong>${{updateSubtotal(greetMessage)}}</strong>
+                  </div>
+                  <p>Ver todos</p>
+                </div>
+              </div>
+            </div>                  
+          </div>
+          <div class="iconoBusqueda" (click)="SearchFocus = 'onSearchFocus'">
+              <i style="
+                  font-size: 20px;
+                  padding: 14px;
+                  padding-right: 0;
+                  margin-right: -9px;
+                  color: #fff;
+                "class="fa fa-search" aria-hidden="true"></i>
+          </div>
+        </div>     
+    </nav>
+  </div>
+  <div *ngIf="_existDesktop" class="header__filter" [ngClass]="MenuClass">
     <div class="container" (mouseover)="changeStyleMenu($event, 0)" (mouseout)="changeStyleMenu($event, 0)">
       <!--img src="./assets/images/header/seccion/bazar.png" width="20"-->        
       <!--div class="row header__filter__top">
@@ -349,9 +349,3 @@
     </div>
   </div>    
 </div>
-
-<style>
-  .hidden {
-    display: none;
-  }
-</style>

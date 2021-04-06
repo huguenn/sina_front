@@ -2,7 +2,7 @@
   <div class="imgContainer">
     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     <div class="imagen">
-      <img *ngIf="item.urlImagen" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+      <img *ngIf="item.urlImagen" style="max-width: 100%;" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
     </div>
   </div>
   <div class="tituloContainer">
@@ -22,7 +22,7 @@
   </div>
   <div class="cantidad--left">
     <div class="custom-select">
-      <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" (keyup.enter)="enterCheck()" type="number" min="0" max="999999" [(ngModel)]="item.cantidad">
+      <input *ngIf="item.cantPack === '1'" name="cantidad" aria-label="Cantidad" (keyup.enter)="enterCheck()" type="number" min="1" max="999999" [(ngModel)]="item.cantidad" (keyup)="revisarCantidad($event)">
       <select *ngIf="item.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="item.cantidad">
         <option *ngFor="let cant of arrayCants" [ngValue]="cant">{{cant}}</option>
       </select>

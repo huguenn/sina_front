@@ -22,7 +22,7 @@ export class ProductoItemComponent implements OnInit, OnDestroy {
   }
   arrayCants = [];
   ngOnInit() {
-    const categoria = this.item.categorias ? this.item.categorias[0] : null;
+    const categoria = (this.item.categorias && this.item.categorias.length > 0) ? this.item.categorias[0] : null;
     const padre = categoria ? (categoria.padre ? categoria.padre.nombre.split(' ').join('-') : 'Categoria') : 'Categoria';
     const hijo = categoria ? categoria.nombre.split(' ').join('-') : 'Subcategoria';
     this.item.fullLink = '/' + this.replaceHash(padre) + '/' + this.replaceHash(hijo) + '/' + this.replaceHash(this.item.titulo) + '/' + this.replaceHash(this.item.id);
@@ -51,16 +51,17 @@ export class ProductoItemComponent implements OnInit, OnDestroy {
       } else {
         if ($user) {
           switch ($user['codCategoriaIva']) {
-            case 'CF':
-            case 'INR':
-            case 'RSS':
+            case 'CF': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            case 'INR': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            case 'RS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            case 'RSS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
             case 'RI': this.iva_usuario = 'UNIT + I.V.A.'; break;
-            case 'EX':
-            case 'PCE':
-            case 'PCS':
-            case 'EXE':
-            case 'SNC':
-            default: this.iva_usuario = 'UNIT I.V.A. incluido';
+            case 'EX': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            case 'PCE': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            case 'PCS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            case 'EXE': this.iva_usuario = 'UNIT Final'; break;
+            case 'SNC': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+            default: this.iva_usuario = 'UNIT + I.V.A.';
           }
         }
       }
@@ -117,6 +118,12 @@ export class ProductoItemComponent implements OnInit, OnDestroy {
       });
     }else {
       this.data.toggleLoginModal();
+    }
+  }
+  
+  public revisarCantidad(e) {
+    if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
+      e.target.value = e.target.min;
     }
   }
 }

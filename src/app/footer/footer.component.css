@@ -93,10 +93,6 @@
   .footer__section.social p {
     display: none
   }
-  .showAlways .footer__section:nth-child(1),
-  .showAlways .footer__section:nth-child(1){
-    display: none;
-  }
   .showMobile {
     display: block;
   }

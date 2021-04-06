@@ -13,6 +13,9 @@ export class AutenticacionService {
   public  razonsocial:  string;
   public  email:     	string;
 
+  private refreshingToken: boolean = false;
+  private renewingToken: boolean = false;
+
   // Observable para el estado del login
   private tokenSource = new BehaviorSubject<string>('');
   public  tokenStatus = this.tokenSource.asObservable();
@@ -130,7 +133,7 @@ export class AutenticacionService {
             for (const item of $responseCarrito.response.items) {
               const prod = item.producto;
               this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10),
-                                      prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '', prod.cantPack);
+                                      prod.id, prod.codInterno, (prod.categorias && prod.categorias.length > 0) ? prod.categorias[0].nombre : '', prod.cantPack);
             }
           }
 
@@ -174,16 +177,76 @@ export class AutenticacionService {
   }
 
   /**********************************/
-  /*********      LOGIN      ********/
+  /*********    FIN LOGIN    ********/
   /**********************************/
 
+  // TODO: Agregar que en cualquier 403 Forbidden, te desloguee
   get($url): Promise<any> {
     const ahora = Date.now();
-    // checkeo si el token se genero entre 19 dias (1641600000) y 21 dias (1814400000) en el pasado
-    if (this.localGet('login') !== '') {
-      if ((ahora - this.localGet('fecha') > 1641600000) && (ahora - this.localGet('fecha') < 1814400000)) {
-        this.data.log('get msg autenticacion', 'Ya pasaron aprox 20 días del ultimo token');
-        // TODO: hacer refresh acá
+    // checkeo si el token se genero entre 14 dias (1209600000) y 21 dias (1814400000) en el pasado
+    if (this.localGet('login') !== '' && !this.refreshingToken && !this.renewingToken) {
+      const $username = this.localGet('login').username;
+      if ((ahora - this.localGet('fecha') > 1209600000) && (ahora - this.localGet('fecha') < 1814400000)) {
+        this.data.log('get msg autenticacion', 'Ya pasaron entre 14 y 21 días del ultimo token');
+        // Hago refresh del token acá...
+        this.refreshingToken = true;
+        this.http.get(this.getPath('auth/refresh'), this.getHeader({'username': $username}))
+        .subscribe(($response) => {
+          this.data.log('response auth/refresh autenticacion.service', $response);
+
+          this.username = $username;
+          this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
+            primer_login: $response['primer_login']});
+          this.localSet('fecha', Date.now());
+          this.tokenUpdate($response['token']);
+
+          // No recargo la pagina y continuo con el request que desencadenó el refresh acá...
+          return new Promise((resolve, reject) => {
+            this.http.get(this.getPath($url), this.getHeader({}))
+            .subscribe(($response) => {
+              resolve($response);
+            }, ($error) => {
+              if ($error.status === 400 || $error.status === 403) {
+                this.data.log('error 400 o 403 get desacreditando..', $error);
+                this.desacreditar();
+                this.loginUpdate(false);
+                window.location.reload();
+              }
+              reject({error: $error['error']});
+            });
+          });
+        }, ($error) => {
+          this.data.log('error auth/refresh get autenticacion.service', $error);
+          this.desacreditar();
+          this.loginUpdate(false);
+          window.location.reload();
+        });
+      } else {
+        if (ahora - this.localGet('fecha') >= 1814400000) {
+          this.data.log('get msg autenticacion', 'Ya pasaron 21 días o más del ultimo token');
+
+          // acá hago auth/renew...
+          this.renewingToken = true;
+
+          this.http.get(this.getPath('auth/renew'), this.getHeader({'username': $username}))
+          .subscribe(($response) => {
+            this.data.log('response auth/renew autenticacion.service', $response);
+
+            this.username = $username;
+            this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
+              primer_login: $response['primer_login']});
+            this.localSet('fecha', Date.now());
+            this.tokenUpdate($response['token']);
+
+            // Recargo la pagina porque hay otros requests que van a fallar y deben reintentarse
+            window.location.reload();
+          }, ($error) => {
+            this.data.log('error auth/renew get autenticacion.service', $error);
+            this.desacreditar();
+            this.loginUpdate(false);
+            window.location.reload();
+          });
+        }
       }
     }
     return new Promise((resolve, reject) => {
@@ -194,6 +257,12 @@ export class AutenticacionService {
         this.loginUpdate(true)*/
         resolve($response);
       }, ($error) => {
+        if ($error.status === 400 || $error.status === 403) {
+          this.data.log('error 400 o 403 get desacreditando..', $error);
+          this.desacreditar();
+          this.loginUpdate(false);
+          window.location.reload();
+        }
         reject({error: $error['error']});
         /*let dialogRef = this.dialog.open(LoginDialog, {
           width: '400px',
@@ -203,13 +272,77 @@ export class AutenticacionService {
     });
   }
 
+  // TODO: Agregar que en cualquier 403 Forbidden, te desloguee
   post($url, $body): Promise<any> {
     const ahora = Date.now();
-    // checkeo si el token se genero entre 19 dias y 21 dias en el pasado
-    if (this.localGet('login') !== '') {
-      if ((ahora - this.localGet('fecha') > 1641600000) && (ahora - this.localGet('fecha') < 1814400000)) {
-        this.data.log('post msg autenticacion', 'Ya pasaron aprox 20 días del ultimo token');
-        // TODO: hacer refresh acá
+    // checkeo si el token se genero entre 14 dias y 21 dias en el pasado
+    if (this.localGet('login') !== '' && !this.refreshingToken && !this.renewingToken) {
+      const $username = this.localGet('login').username;
+      if ((ahora - this.localGet('fecha') > 1209600000) && (ahora - this.localGet('fecha') < 1814400000)) {
+        this.data.log('get msg autenticacion', 'Ya pasaron entre 14 y 21 días del ultimo token');
+        // Hago refresh del token acá...
+        this.refreshingToken = true;
+        this.http.get(this.getPath('auth/refresh'), this.getHeader({'username': $username}))
+        .subscribe(($response) => {
+          this.data.log('response auth/refresh autenticacion.service', $response);
+
+          this.username = $username;
+          this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
+            primer_login: $response['primer_login']});
+          this.localSet('fecha', Date.now());
+          this.tokenUpdate($response['token']);
+
+          // No recargo la pagina y continuo con el request que desencadenó el refresh acá...
+          const headers = new HttpHeaders({
+            'Content-Type':  'application/x-www-form-urlencoded',
+            'X-API-TOKEN': this.tokenValue,
+          });
+          return new Promise((resolve, reject) => {
+            this.http.post(this.getPath($url), $body.toString(), {headers, observe: 'response'})
+            .subscribe(($response) => {
+              resolve($response);
+            }, ($error) => {
+              if ($error.status === 400 || $error.status === 403) {
+                this.data.log('error 400 o 403 post desacreditando..', $error);
+                this.desacreditar();
+                this.loginUpdate(false);
+                window.location.reload();
+              }
+              reject({error: $error['error']});
+            });
+          });
+        }, ($error) => {
+          this.data.log('error auth/refresh get autenticacion.service', $error);
+          this.desacreditar();
+          this.loginUpdate(false);
+          window.location.reload();
+        });
+      } else {
+        if (ahora - this.localGet('fecha') >= 1814400000) {
+          this.data.log('get msg autenticacion', 'Ya pasaron 21 días o más del ultimo token');
+          
+          // acá hago auth/renew...
+          this.renewingToken = true;
+
+          this.http.get(this.getPath('auth/renew'), this.getHeader({'username': $username}))
+          .subscribe(($response) => {
+            this.data.log('response auth/renew autenticacion.service', $response);
+
+            this.username = $username;
+            this.localSet('login', {username: this.username, token: $response['token'], administrativo: $response['administrativo'] === 1 ? true : false,
+              primer_login: $response['primer_login']});
+            this.localSet('fecha', Date.now());
+            this.tokenUpdate($response['token']);
+
+            // Recargo la pagina porque hay otros requests que van a fallar y deben reintentarse
+            window.location.reload();
+          }, ($error) => {
+            this.data.log('error auth/renew get autenticacion.service', $error);
+            this.desacreditar();
+            this.loginUpdate(false);
+            window.location.reload();
+          });
+        }
       }
     }
     const headers = new HttpHeaders({
@@ -221,6 +354,12 @@ export class AutenticacionService {
       .subscribe(($response) => {
         resolve($response);
       }, ($error) => {
+        if ($error.status === 400 || $error.status === 403) {
+          this.data.log('error 400 o 403 post desacreditando..', $error);
+          this.desacreditar();
+          this.loginUpdate(false);
+          window.location.reload();
+        }
         reject({error: $error['error']});
       });
     });
@@ -262,7 +401,7 @@ export class AutenticacionService {
           for (const item of $response.response.items) {
             const prod = item.producto;
             this.data.changeMessage(item.cantidad ? parseInt(item.cantidad, 10) : 1, prod.titulo, prod.precio, parseFloat(prod.precio) * parseInt(prod.cantidad, 10),
-                                    prod.id, prod.codInterno, prod.categorias.length > 0 ? prod.categorias[0].nombre : '', prod.cantPack);
+                                    prod.id, prod.codInterno, (prod.categorias && prod.categorias.length > 0) ? prod.categorias[0].nombre : '', prod.cantPack);
           }
         }
       })

@@ -38,8 +38,8 @@ export class ProductoComponent implements OnInit, OnDestroy {
   respuesta = ($response)  => {
       this.relacionados = $response.response.productosRelacionados;
       this.producto = $response.response;
-      const categoria = this.producto['categorias'][0];
-      this.full_link = 'http://www.sina.com.ar/producto/'
+      const categoria = (this.producto['categorias'] && this.producto['categorias'].length) ? this.producto['categorias'][0] : '';
+      this.full_link = 'https://www.sina.com.ar/producto/'
         + (categoria ? categoria.nombre.split(' ').join('-') : '') + '/' + this.producto['id'];
       this.producto.cantidad = this.producto['cantSugerida'] ? parseInt(this.producto['cantSugerida']) : 1;
       if (this.producto['cantPack'] !== '1') {
@@ -149,16 +149,17 @@ export class ProductoComponent implements OnInit, OnDestroy {
         } else {
           if ($user) {
             switch ($user['codCategoriaIva']) {
-              case 'CF':
-              case 'INR':
-              case 'RSS':
+              case 'CF': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              case 'INR': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              case 'RS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              case 'RSS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
               case 'RI': this.iva_usuario = 'UNIT + I.V.A.'; break;
-              case 'EX':
-              case 'PCE':
-              case 'PCS':
-              case 'EXE':
-              case 'SNC':
-              default: this.iva_usuario = 'UNIT I.V.A. incluido';
+              case 'EX': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              case 'PCE': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              case 'PCS': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              case 'EXE': this.iva_usuario = 'UNIT Final'; break;
+              case 'SNC': this.iva_usuario = 'UNIT I.V.A. incluido'; break;
+              default: this.iva_usuario = 'UNIT + I.V.A.';
             }
           }
         }
@@ -217,6 +218,12 @@ export class ProductoComponent implements OnInit, OnDestroy {
       });
     }else {
       this.data.toggleLoginModal();
+    }
+  }
+  
+  public revisarCantidad(e) {
+    if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
+      e.target.value = e.target.min;
     }
   }
 }

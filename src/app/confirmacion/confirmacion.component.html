@@ -21,6 +21,7 @@
             <div class="tab__content" style="    background-color: #ffffff;">
               <div class="content" style="padding: 40px;">
                 <p style="font-size: 16px; font-weight: bold;">
+                  <img *ngIf="loading" id="rel2" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/><br>
                   {{respuesta}}
                 </p>            
               </div>

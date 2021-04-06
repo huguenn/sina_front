@@ -62,7 +62,17 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
         const body = new URLSearchParams();
         for (const dato in this.facturacion.datos) {
           if (dato) {
-            body.set(dato, this.facturacion.datos[dato]);
+            if (dato.includes('razon_social') 
+            || dato.includes('nombre_fantasia') 
+            || dato.includes('nombre_responsable_compras') 
+            || dato.includes('facturacion_nombre_responsable') 
+            || dato.includes('domicilio_direccion') 
+            || dato.includes('domicilio_ciudad') 
+            || dato.includes('domicilio_provincia')) {
+              body.set(dato, this.facturacion.datos[dato].toUpperCase ? this.facturacion.datos[dato].toUpperCase() : this.facturacion.datos[dato]);
+            } else {
+              body.set(dato, this.facturacion.datos[dato]);
+            }
           }
         }
         this.auth.post('cliente/actualizar', body)
@@ -124,7 +134,13 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
         const body = new URLSearchParams();
         const datos = this.datos_envio.enviar();
         Object.keys(datos).forEach((key) => {
-          body.set(key, datos[key]);
+          if (key.includes('domicilio_direccion') 
+          || key.includes('domicilio_ciudad') 
+          || key.includes('domicilio_provincia')) {
+            body.set(key, datos[key].toUpperCase ? datos[key].toUpperCase() : datos[key]);
+          } else {
+            body.set(key, datos[key]);
+          }
         });
         this.auth.post('cliente/envio/actualizar_datos', body)
         .then(($response) => {
@@ -158,11 +174,11 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
   flagHoraPasada: boolean = false;
   dia: string = '';
   hoy = new Date();
-  hoyFormatted = this.hoy.getFullYear() + '-' + this.hoy.getMonth() + 1 + '-' + this.hoy.getDate();
+  hoyFormatted = this.hoy.getFullYear() + '-' + ('0' + (this.hoy.getMonth() + 1)).slice(-2) + '-' + ('0' + this.hoy.getDate()).slice(-2);
   hoyMediodia = new Date(this.hoy.getFullYear(), this.hoy.getMonth(), this.hoy.getDate(), 13, 0);
-  retiroHora = this.hoyMediodia.getFullYear() + '-' + this.hoyMediodia.getMonth() + 1 + '-' + this.hoyMediodia.getDate();
-  retiroHora1 = this.hoyMediodia;
-  inputFecha: string = this.hoyMediodia.getDate() + '/' + this.hoyMediodia.getMonth() + 1 + '/' + this.hoyMediodia.getFullYear();
+  retiroHora = this.hoyMediodia.getFullYear() + '-' + (this.hoyMediodia.getMonth() + 1) + '-' + this.hoyMediodia.getDate();
+  retiroHora1 = new Date(this.hoyMediodia.getTime());
+  inputFecha: string = this.hoyMediodia.getDate() + '/' + (this.hoyMediodia.getMonth() + 1) + '/' + this.hoyMediodia.getFullYear();
   inputHora: string = '13';
   inputMinuto: string = '00';
   fechaUpdate($event) {
@@ -179,10 +195,10 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
       this.retiro = false;
       this.flagHoraPasada = true;
     } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
-      if (parseInt(mesElegido) < this.hoy.getMonth() + 1) {
+      if (parseInt(mesElegido) < (this.hoy.getMonth() + 1)) {
         this.retiro = false;
         this.flagHoraPasada = true;
-      } else if (parseInt(mesElegido) === this.hoy.getMonth() + 1) {
+      } else if (parseInt(mesElegido) === (this.hoy.getMonth() + 1)) {
         if (parseInt(diaElegido) < this.hoy.getDate()) {
           this.retiro = false;
           this.flagHoraPasada = true;
@@ -336,24 +352,29 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     const anoElegido = this.retiroHora.split('-')[0];
     this.flagHoraPasada = false;
     const hora = $event;
-    this.inputHora = hora;
-    this.retiroHora1.setHours(parseInt(hora));
+    let horaInt = parseInt(hora);
+    if (!isNaN(hora) && !isNaN(horaInt) && horaInt >= 0 && horaInt < 24) {
+      this.inputHora = hora;
+      this.retiroHora1.setHours(horaInt);
+    } else {
+      horaInt = parseInt(this.inputHora);
+    }
 
     if (parseInt(anoElegido) < this.hoy.getFullYear()) {
       this.retiro = false;
       this.flagHoraPasada = true;
     } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
-      if (parseInt(mesElegido) < this.hoy.getMonth() + 1) {
+      if (parseInt(mesElegido) < (this.hoy.getMonth() + 1)) {
         this.retiro = false;
         this.flagHoraPasada = true;
-      } else if (parseInt(mesElegido) === this.hoy.getMonth() + 1) {
+      } else if (parseInt(mesElegido) === (this.hoy.getMonth() + 1)) {
         if (parseInt(diaElegido) < this.hoy.getDate()) {
           this.retiro = false;
           this.flagHoraPasada = true;
-        } else if (parseInt(diaElegido) === this.hoy.getDate() && parseInt(hora) < this.hoy.getHours()) {
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && horaInt < this.hoy.getHours()) {
           this.retiro = false;
           this.flagHoraPasada = true;
-        } else if (parseInt(diaElegido) === this.hoy.getDate() && parseInt(hora) === this.hoy.getHours()) {
+        } else if (parseInt(diaElegido) === this.hoy.getDate() && horaInt === this.hoy.getHours()) {
           if (this.retiroHora1.getMinutes() <= this.hoy.getMinutes() + 10) {
             this.retiro = false;
             this.flagHoraPasada = true;
@@ -363,19 +384,19 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.retiro = false;
                 break;
               case 'Sábado':
-                if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+                if (horaInt >= 8 && horaInt < 12) {
                   this.retiro = true;
-                } else if (parseInt(hora) === 12) {
+                } else if (horaInt === 12) {
                   this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
                 } else {
                   this.retiro = false;
                 }
                 break;
               default:
-                if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+                if (horaInt >= 8 && horaInt < 17) {
                   this.retiro = true;
-                  if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
-                    if (parseInt(hora) === 12) {
+                  if (horaInt >= 12 && horaInt < 14) {
+                    if (horaInt === 12) {
                       this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
                     } else {
                       this.retiro = false;
@@ -383,7 +404,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
                   } else {
                     this.retiro = true;
                   }
-                } else if (parseInt(hora) === 17) {
+                } else if (horaInt === 17) {
                   this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
                 } else {
                   this.retiro = false;
@@ -397,19 +418,19 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
               this.retiro = false;
               break;
             case 'Sábado':
-              if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+              if (horaInt >= 8 && horaInt < 12) {
                 this.retiro = true;
-              } else if (parseInt(hora) === 12) {
+              } else if (horaInt === 12) {
                 this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
               } else {
                 this.retiro = false;
               }
               break;
             default:
-              if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+              if (horaInt >= 8 && horaInt < 17) {
                 this.retiro = true;
-                if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
-                  if (parseInt(hora) === 12) {
+                if (horaInt >= 12 && horaInt < 14) {
+                  if (horaInt === 12) {
                     this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
                   } else {
                     this.retiro = false;
@@ -417,7 +438,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else {
                   this.retiro = true;
                 }
-              } else if (parseInt(hora) === 17) {
+              } else if (horaInt === 17) {
                 this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
               } else {
                 this.retiro = false;
@@ -431,19 +452,19 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
             this.retiro = false;
             break;
           case 'Sábado':
-            if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+            if (horaInt >= 8 && horaInt < 12) {
               this.retiro = true;
-            } else if (parseInt(hora) === 12) {
+            } else if (horaInt === 12) {
               this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
             } else {
               this.retiro = false;
             }
             break;
           default:
-            if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+            if (horaInt >= 8 && horaInt < 17) {
               this.retiro = true;
-              if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
-                if (parseInt(hora) === 12) {
+              if (horaInt >= 12 && horaInt < 14) {
+                if (horaInt === 12) {
                   this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
                 } else {
                   this.retiro = false;
@@ -451,7 +472,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
               } else {
                 this.retiro = true;
               }
-            } else if (parseInt(hora) === 17) {
+            } else if (horaInt === 17) {
               this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
             } else {
               this.retiro = false;
@@ -465,19 +486,19 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
           this.retiro = false;
           break;
         case 'Sábado':
-          if (parseInt(hora) >= 8 && parseInt(hora) < 12) {
+          if (horaInt >= 8 && horaInt < 12) {
             this.retiro = true;
-          } else if (parseInt(hora) === 12) {
+          } else if (horaInt === 12) {
             this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
           } else {
             this.retiro = false;
           }
           break;
         default:
-          if (parseInt(hora) >= 8 && parseInt(hora) < 17) {
+          if (horaInt >= 8 && horaInt < 17) {
             this.retiro = true;
-            if (parseInt(hora) >= 12 && parseInt(hora) < 14) {
-              if (parseInt(hora) === 12) {
+            if (horaInt >= 12 && horaInt < 14) {
+              if (horaInt === 12) {
                 this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
               } else {
                 this.retiro = false;
@@ -485,7 +506,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
             } else {
               this.retiro = true;
             }
-          } else if (parseInt(hora) === 17) {
+          } else if (horaInt === 17) {
             this.retiro = this.retiroHora1.getMinutes() === 0 ? true : false;
           } else {
             this.retiro = false;
@@ -507,10 +528,10 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
       this.retiro = false;
       this.flagHoraPasada = true;
     } else if (parseInt(anoElegido) === this.hoy.getFullYear()) {
-      if (parseInt(mesElegido) < this.hoy.getMonth() + 1) {
+      if (parseInt(mesElegido) < (this.hoy.getMonth() + 1)) {
         this.retiro = false;
         this.flagHoraPasada = true;
-      } else if (parseInt(mesElegido) === this.hoy.getMonth() + 1) {
+      } else if (parseInt(mesElegido) === (this.hoy.getMonth() + 1)) {
         if (parseInt(diaElegido) < this.hoy.getDate()) {
           this.retiro = false;
           this.flagHoraPasada = true;
@@ -712,23 +733,27 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.data.user) {
       this.user = this.data.user as cliente;
       this.auth.get('public/cliente/envio/getAll').then((result) => {
-        result.responseT.forEach((transporte) => {
-          this.entrega.transporte.lista.push({
-            id: transporte.codigo,
-            text: transporte.nombre,
+        if (result.responseT) {
+          result.responseT.forEach((transporte) => {
+            this.entrega.transporte.lista.push({
+              id: transporte.codigo,
+              text: transporte.nombre,
+            });
+            this.entrega.transporte.array[transporte.codigo] = transporte.nombre;
           });
-          this.entrega.transporte.array[transporte.codigo] = transporte.nombre;
-        });
-        this.initialLista.push(this.entrega.transporte.lista.find((transporte) => {
-          return transporte.id === this.user.datosEnvio.codigoTransporte;
-        }));
-        result.responseP.forEach((provincia) => {
-          this.entrega.provincia.lista.push({
-            id: provincia.codigo,
-            text: provincia.nombre,
+          this.initialLista.push(this.entrega.transporte.lista.find((transporte) => {
+            return transporte.id === this.user.datosEnvio.codigoTransporte;
+          }));
+        }
+        if (result.responseP) {
+          result.responseP.forEach((provincia) => {
+            this.entrega.provincia.lista.push({
+              id: provincia.codigo,
+              text: provincia.nombre,
+            });
+            this.entrega.provincia.array[provincia.codigo] = provincia.nombre;
           });
-          this.entrega.provincia.array[provincia.codigo] = provincia.nombre;
-        });
+        }
       }).catch((error) => this.data.log('public/cliente/envio/getAll error compra:', error));
 
       if (this.user.datosEnvio) {
@@ -803,19 +828,21 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.datosCompra.agregado === '1' && this.idPedidoAgregado && this.responseSuccessAgregado) {
         this.observaciones = this.observaciones + '\r\n' + ' - ' + '\r\n' + 'Agregado al pedido ID #' + this.idPedidoAgregado +
                             ' realizado el dia ' + this.responseSuccessAgregado.fechaPedido;
+        body.set('es_agregado', this.datosCompra.agregado);
+        body.set('ref_pedido', this.idPedidoAgregado.toString());
       }
       body.set('observaciones', this.observaciones);
       body.set('total', this.pedido ? this.updateTotal(this.carrito.subtotal) : '100.01');
-      if (this.datosCompra.entrega === '1') {
+      if (this.datosCompra.entrega === '1' && this.datosCompra.agregado !== '1') {
         body.set('retiro_tienda', this.datosCompra.entrega);
         const retiroDate = new Date(this.retiroHora);
         const diaRetiro = retiroDate.getUTCDate();
         const mesRetiro = retiroDate.getMonth() + 1;
         const anioRetiro = retiroDate.getFullYear();
         const fechaRetiro = diaRetiro + '/' + mesRetiro + '/' + anioRetiro + ' (' + this.dia + ')';
-        const hora = this.retiroHora1.getHours() < 10 ? '0' + this.retiroHora1.getHours() : this.retiroHora1.getHours();
-        const minutos = this.retiroHora1.getMinutes() < 10 ? '0' + this.retiroHora1.getMinutes() : this.retiroHora1.getMinutes();
-        const horaRetiro = hora + ':' + minutos;
+        const hora = this.retiroHora1.getHours();
+        const minutos = this.retiroHora1.getMinutes();
+        const horaRetiro = ('0' + hora).slice(-2) + ':' + ('0' + minutos).slice(-2);
         body.set('dia_retiro', fechaRetiro);
         body.set('hora_retiro', horaRetiro);
       }
@@ -835,6 +862,41 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.completarCompraTexto = $confirmado.body.response.message;
         this.completarCompraLink = $confirmado.body.response.urlPdf;
+
+        // Lo suscribo el newsletter
+        const sendyUrl = 'https://mailing.leren.com.ar/';
+
+        const body = new URLSearchParams();
+        body.set('api_key', 'RCUuYdks5u0kwkTgCVlw ');
+        body.set('name', this.user.razonSocial);
+        body.set('email', this.user.email);
+        body.set('list', 'cqW4SwUCeaOE36rhy8922C3A');
+        body.set('country', 'AR');
+        body.set('referrer', 'https://www.sina.com.ar/');
+        body.set('boolean', 'true');
+        body.set('logueado', 'SI');
+
+        this.auth.get('sendy/cliente/getDatosNewsletter')
+        .then((result) => {
+          this.data.log('response getDatosNewsletter compra', result);
+
+          body.set('lista_precios', result.response.lista_precios);
+          body.set('tipo_lista', result.response.tipo_lista);
+          body.set('perfil', result.response.perfil);
+
+          this.auth.post(sendyUrl + 'subscribe', body)
+          .then(($response) => {
+            this.data.log('response suscribir compra', $response);
+          })
+          .catch(($error) => {
+            this.data.log('error suscribir compra', $error);
+          });
+        })
+        .catch((error) => {
+          this.data.log('error getDatosNewsletter footer', error);
+        });
+
+        // Continuo el flujo normal de la compra
         setTimeout(() => {
           this.data.rutaActual = '/compra/finalizada';
           this.location.go('/compra/finalizada');
@@ -873,16 +935,17 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         if ($user) {
           switch ($user['codCategoriaIva']) {
-            case 'CF':
-            case 'INR':
-            case 'RSS':
+            case 'CF': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'INR': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'RS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'RSS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
             case 'RI': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA'; break;
-            case 'EX':
-            case 'PCE':
-            case 'PCS':
-            case 'EXE':
-            case 'SNC':
-            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA';
+            case 'EX': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'PCE': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'PCS': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            case 'EXE': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS SON FINALES'; break;
+            case 'SNC': this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS INCLUYEN IVA'; break;
+            default: this.iva_usuario = 'LOS PRECIOS UNITARIOS DETALLADOS NO INCLUYEN IVA';
           }
         }
       }
@@ -904,7 +967,9 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
             const body = new URLSearchParams();
             const array = [];
             for (const item of this.carrito.lista) {
-              array.push({id_producto: item.id, cantidad: item.cantidad});
+              if (item.cantidad > 0) {
+                array.push({id_producto: item.id, cantidad: item.cantidad});
+              }
             }
             body.set('lista', JSON.stringify(array));
 
@@ -1049,7 +1114,9 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
       const body = new URLSearchParams();
       const array = [];
       for (const item of this.carrito.lista) {
-        array.push({id_producto: item.id, cantidad: item.cantidad});
+        if (item.cantidad > 0) {
+          array.push({id_producto: item.id, cantidad: item.cantidad});
+        }
       }
       body.set('lista', JSON.stringify(array));
 
@@ -1114,7 +1181,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
   cerrarBusqueda(msg) {
     const precio = msg.precio;
     this.data.changeMessage(msg.cantidad ? msg.cantidad : 1, msg.titulo, precio, precio * (+msg.cantidad), msg.id,
-      msg.codInterno, msg.categorias.length > 0 ? msg.categorias[0].nombre : '', msg.cantPack);
+      msg.codInterno, (msg.categorias && msg.categorias.length > 0) ? msg.categorias[0].nombre : '', msg.cantPack);
     this.ResultadoBusqueda = [];
   }
   descargarPedido($pedido) {
@@ -1170,7 +1237,9 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
         const body = new URLSearchParams();
         const array = [];
         for (const item of this.carrito.lista) {
-          array.push({id_producto: item.id, cantidad: item.cantidad});
+          if (item.cantidad > 0) {
+            array.push({id_producto: item.id, cantidad: item.cantidad});
+          }
         }
         body.set('lista', JSON.stringify(array));
 
@@ -1214,6 +1283,12 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.showErrorAgregado = true;
       this.responseErrorAgregado = 'No se ingresó un ID de pedido válido.';
+    }
+  }
+  
+  public revisarCantidad(e) {
+    if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
+      e.target.value = e.target.min;
     }
   }
 }
