@@ -134,9 +134,9 @@
                                         <span *ngIf="validationCUIT && cuit === 'DNI (Solo numeros)*'" style="color: red;">Colocar 8 dígitos, sin puntos</span>
                                         <span *ngIf="validationCUIT && cuit === 'CUIT (Solo numeros)*'" style="color: red;">Colocar 11 dígitos, sin guiones</span>
                                         <input #input_telefono [ngClass]="{'noValidado': validador?.telefono}" type="text" placeholder="Teléfono*" [(ngModel)]="contacto.telefono" name="telefono" aria-label="Telefono" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                        <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el teléfono</span>
-                                        <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono celular" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" aria-label="Telefono Celular" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
-                                        <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones para el celular</span>
+                                        <span *ngIf="validationTelefono" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones</span>
+                                        <input #input_celular [ngClass]="{'noValidado': validador?.telefono_celular}" type="text" placeholder="Teléfono alternativo" [(ngModel)]="contacto.telefono_celular" name="telefono_celular" aria-label="Telefono Alternativo" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
+                                        <span *ngIf="validationCelular" style="color: red; font-size: 0.9em;">Solo se permiten números y guiones</span>
                                     </div>
                                     <div class="col-xs-12 col-md-6 modal__registrar" style="padding: 5px">
                                         <input type="text" placeholder="Nombre comercial" [(ngModel)]="contacto.nombre_fantasia" name="nombre_fantasia" aria-label="Nombre Comercial" (focus)="campoRegistroFocused()" (blur)="campoRegistroBlured()">
@@ -225,7 +225,7 @@
                                     </div>
                                     <div class="col-xs-12 col-md-6 modal__registrar final" style="padding: 10px">
                                         <p><b>Teléfono: </b>{{checkItem(contacto.telefono).text}}</p>
-                                        <p *ngIf="(contacto.telefono_celular)"><b>Teléfono celular: </b>{{contacto.telefono_celular}}</p>
+                                        <p *ngIf="(contacto.telefono_celular)"><b>Teléfono Alternativo: </b>{{contacto.telefono_celular}}</p>
                                         <p><b>DNI o CUIT.: </b>{{checkItem(contacto.cuit).text}}</p>
                                         <p><b>C.P.: </b>{{checkItem(contacto.domicilio_codigo_postal).text}}</p>
                                         <p><b>Provincia: </b>{{checkItem(domicilio_provincia).text}}</p>
