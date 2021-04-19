@@ -72,6 +72,7 @@ export class FilterComponent implements OnInit, OnDestroy {
   id_subcategoria = '';
   num_subcategoria = -1;
   listado_subcategorias;
+  show_mensaje_ofertas: boolean = true;
   mensaje: string;
   LinkList = [];
   public familiaActual: string = 'Limpieza';

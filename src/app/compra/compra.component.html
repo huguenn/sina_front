@@ -97,7 +97,7 @@
                         </div>
                         <div class="col-5"></div>
                       </div>
-                      <div class="row carrito__content" *ngFor="let compra of carrito.lista">
+                      <div class="row carrito__content" *ngFor="let compra of carrito.lista | sort:'id'">
                         <div class="col-1">
                           <input *ngIf="compra.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" (input)="updateValue()" [(ngModel)]="compra.cantidad" value="{{compra.cantidad}}" (keyup)="revisarCantidad($event)">
                           <select *ngIf="compra.cantPack !== '1'" name="cantidad" aria-label="Cantidad" (input)="updateValueDelayed()" [(ngModel)]="compra.cantidad">
@@ -475,11 +475,11 @@
                         <p>Nombre o Razón Social: {{facturacion.datos.razon_social || facturacion.datos.nombre_fantasia}}</p>
                         <p>CUIT/DNI: {{facturacion.datos.cuit}}</p>
                         <p>Cat. I.V.A.: {{facturacion.datos.categoria_iva}}</p>
-                        <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p>
-                        <p>Localidad: {{facturacion.datos.domicilio_ciudad}} ({{facturacion.datos.domicilio_codigo_postal}})</p>
-                        <p>Provincia: {{entrega.provincia.array[facturacion.datos.domicilio_provincia]}}</p>
-                        <p>Email: {{facturacion.datos.email}}</p>
-                        <p>Teléfono: {{facturacion.datos.telefono}}</p>
+                        <!-- <p>Dirección: {{facturacion.datos.domicilio_direccion}}</p> -->
+                        <!-- <p>Localidad: {{facturacion.datos.domicilio_ciudad}} ({{facturacion.datos.domicilio_codigo_postal}})</p> -->
+                        <!-- <p>Provincia: {{entrega.provincia.array[facturacion.datos.domicilio_provincia]}}</p> -->
+                        <!-- <p>Email: {{facturacion.datos.email}}</p> -->
+                        <!-- <p>Teléfono: {{facturacion.datos.telefono}}</p> -->
                       </div>
                       <div class="row envio__seccion__content edit" *ngIf="editingFacturacion">
                         <div class="form-group row">

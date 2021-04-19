@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import 'rxjs/add/observable/defer';
@@ -1290,5 +1290,26 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     if (e.target && parseInt(e.target.value) < parseInt(e.target.min)) {
       e.target.value = e.target.min;
     }
+  }
+}
+
+@Pipe({
+  name: "sort"
+})
+export class ArraySortIntPipe  implements PipeTransform {
+  transform(array: any, field: string): any[] {
+    if (!Array.isArray(array)) {
+      return;
+    }
+    array.sort((a: any, b: any) => {
+      if (parseInt(a[field]) < parseInt(b[field])) {
+        return -1;
+      } else if (a[field] > b[field]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+    return array;
   }
 }

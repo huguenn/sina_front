@@ -19,7 +19,7 @@ import { SharedService } from '../app/shared.service';
 import { AppComponent, BusquedaCuentaPipe } from './app.component';
 import { AutenticacionService } from './autenticacion.service';
 import { CategoriasComponent } from './categorias/categorias.component';
-import { CompraComponent } from './compra/compra.component';
+import { ArraySortIntPipe, CompraComponent } from './compra/compra.component';
 import { ConfirmacionComponent } from './confirmacion/confirmacion.component';
 import { ConfirmarDatosComponent } from './confirmar-datos/confirmar-datos.component';
 import { CuentaComponent } from './cuenta/cuenta.component';
@@ -203,6 +203,7 @@ const appRoutes: Routes = [
     CompraComponent,
     FilterPipe,
     BusquedaCuentaPipe,
+    ArraySortIntPipe,
     SidebarComponent,
     ProductoItemComponent,
     ConfirmacionComponent,

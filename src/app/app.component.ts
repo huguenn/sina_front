@@ -1141,6 +1141,8 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
   enterRecuperarEvento() {
+    this.recuperarError = '';
+    
     const body = new URLSearchParams();
     body.set('email', this.login.user);
 
