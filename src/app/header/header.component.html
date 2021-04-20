@@ -333,14 +333,14 @@
         <div class="col-xs-12">
           <div class="col-xs-2 column" *ngFor="let section of MenuList">
             <div style="display: flex; align-items: center;">
-              <a style="font-weight: bold;" routerLink="{{section.head?.link}}" class="title">{{section.head.texto}} </a>
+              <a style="font-weight: bold; font-size: 15px;" routerLink="{{section.head?.link}}" class="title">{{section.head.texto}} </a>
             </div>
             <ul class="nav navbar-nav item" *ngIf="section.items.length">
               <li *ngFor="let item of section.items| slice:0:3" class="nav-item">
-                <a class="nav-link" style="font-size: 12px;" routerLink="{{item.link}}" (click)="itemClicked()">{{item.texto}}</a>
+                <a class="nav-link" style="font-size: 14px;" routerLink="{{item.link}}" (click)="itemClicked()">{{item.texto}}</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" routerLink="{{section.head?.link}}" (click)="itemClicked()">VER MÁS...</a>
+                <a class="nav-link" style="font-size: 11px;" routerLink="{{section.head?.link}}" (click)="itemClicked()">VER MÁS...</a>
               </li>
             </ul>            
           </div>
