@@ -537,7 +537,7 @@
                         <ngb-panel *ngFor="let compra of ultimasCompras; let i = index" id="compra{{i}}">
                           <ng-template ngbPanelTitle>
                             <div class="header" style="font-weight: bold;">
-                              Compra del {{compra.fechaPedido?.date.date}}/{{compra.fechaPedido?.date.month}}/{{compra.fechaPedido?.date.year}} <span>&#x25B2;</span>
+                              Compra del {{compra.fechaPedido?.date.date}}/{{compra.fechaPedido?.date.month}}/{{compra.fechaPedido?.date.year}} <span style="color: #00c973;">Ver detalle &#x25BC;</span>
                             </div>
                           </ng-template>
                           <ng-template ngbPanelContent>
