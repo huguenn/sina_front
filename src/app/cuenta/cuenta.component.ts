@@ -135,6 +135,10 @@ export class CuentaComponent implements OnInit, OnDestroy {
   procesando_info_entrega_error: string = '';
   procesando_info_ok: string = '';
   procesando_info_entrega_ok: string = '';
+
+  _existDesktop: boolean = false;
+  _existMobile: boolean = false;
+  
   constructor(
     // private _ngZone: NgZone,
     private data:   SharedService,
@@ -143,6 +147,14 @@ export class CuentaComponent implements OnInit, OnDestroy {
     private http:   HttpClient,
     private auth:   AutenticacionService,
   ) {
+    if (window.innerWidth <= 992) {
+      this._existDesktop = false;
+      this._existMobile = true;
+    } else {
+      this._existDesktop = true;
+      this._existMobile = false;
+    }
+
     this.transaccion = new DatosTransaccion(0);
 
     this.http.get('assets/data/cuenta.json')

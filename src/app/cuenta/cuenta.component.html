@@ -575,13 +575,21 @@
                                           VER PEDIDO
                                         </button>
                                       </a>
-                                      </div>
-                                    <div class="col-1"></div>
-                                    <div class="col-3">
-                                          <p style="margin-top: 16px; font-weight: bold;">Subtotal</p>
                                     </div>
-                                    <div class="col-4">
-                                      <p style="margin-top: 10px;font-size: 20px;font-weight: bold;">${{formatMoney(compra.total)}}</p>
+
+                                    <div *ngIf="_existDesktop" class="col-1"></div>
+                                    <div *ngIf="_existDesktop" class="col-3">
+                                      <p style="margin-top: 16px; font-weight: bold;">Subtotal</p>
+                                    </div>
+                                    <div *ngIf="_existDesktop" class="col-4">
+                                      <p style="margin-top: 10px;font-size: 20px; font-weight: bold;">${{formatMoney(compra.total)}}</p>
+                                    </div>
+
+                                    <div *ngIf="_existMobile" style="margin-left: 60%;">
+                                      <p style="margin-top: 16px; font-weight: bold; font-size: 12px;">Subtotal</p>
+                                    </div>
+                                    <div *ngIf="_existMobile" style="margin-left: 60%;">
+                                      <p style="margin-top: 10px;font-size: 16px; font-weight: bold;">${{formatMoney(compra.total)}}</p>
                                     </div>
                                   </div>
                               </div>
