@@ -416,17 +416,19 @@
                       <div class="row envio__seccion__content retiro" style="width: 100%;
                           margin: 0;
                           padding: 0 5px;">
-                          <p style="font-weight: bold; font-size: 14px; padding-bottom: 10px;">Día y horario</p>
+                          <p style="font-weight: bold; font-size: 15px; padding-bottom: 10px;">Día y horario</p>
                           <div class="form-group">
                             <div class="horario" style="width: 234px;">
                               <input [ngModel]="retiroHora | date:'yyyy-MM-dd'" (ngModelChange)="fechaUpdate($event)" type="date" [min]="hoyFormatted" name="retiroHora" aria-label="Fecha Retiro"/>
                             </div>
                             <br>
                             <div class="horario">
-                              <div class="col__1" style="padding-left: 0px;">
-                                <input [ngModel]="inputHora" (ngModelChange)="fechaUpdate1($event)" name="retiroHora1" type="number" min="0" max="24" aria-label="Hora Retiro"/>
+                              <div class="col__1"><p style="font-size: 14px; text-align: left;">Hora</p></div>
+                              <div class="col__2" style="padding-left: 0px;">
+                                <input [ngModel]="inputHora" (ngModelChange)="fechaUpdate1($event)" name="retiroHora1" type="number" min="0" max="23" aria-label="Hora Retiro"/>
                               </div>
-                              <div class="col__1"><p>:</p></div>
+                              <br>
+                              <div class="col__1"><p style="font-size: 14px; text-align: left;">Minutos</p></div>
                               <div class="col__2" style="padding-right: 0px;">
                                 <!-- <input [ngModel]="inputMinuto" (ngModelChange)="fechaUpdate2($event)" name="retiroHora2"/> -->
                                 <div class="btn-group" role="group" aria-label="Minutos">
@@ -639,6 +641,9 @@
 					  </div>
                         <div class="row envio__confirm" style="margin-bottom: 15px;">
                         <button class="actionButton" [ngClass]="{'deshabilitado': carritoLoading}" (click)="completarCompra()">COMPLETAR COMPRA</button>
+                        <div *ngIf="datosCompra.agregado === '0' && datosCompra.entrega === '1' && (flagHoraPasada || dia === 'Domingo' || !retiro)">
+                          <p style="color: red;">Error en el horario de retiro seleccionado</p>
+                        </div>
                         <div [ngClass]="{textoVerde: pedidoCorrecto == true, textoRojo: pedidoCorrecto != true}">
                           <p> {{completarCompraTexto}}</p>
                         </div>
@@ -756,9 +761,11 @@
             </div>
         </div>
       </div>
+      <br>
       <div *ngIf="config.switchComprasActivo">
-        <p class="iva__mensaje">{{iva_usuario}}</p>
+        <p class="iva__custom__border">{{iva_usuario}}</p>
       </div>
+      <br>
     </div>
   </div>
 </div>

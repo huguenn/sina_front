@@ -111,8 +111,9 @@
             <app-producto-item [item]="item" [sesion]="loginStatus" [mensaje]="_success"></app-producto-item>            
         </div>
       </div>
+      <br>
       <div class="row">
-        <p style="margin: 10px 15px;">{{iva_usuario}}</p>
+        <p class="iva__custom__border">{{iva_usuario}}</p>
         <p *ngIf="show_mensaje_ofertas" style="margin: 10px 15px;">Los productos que se encuentran en oferta, tienen una validez que se limita a la modalidad de contado efectivo, hasta agotar Stock.</p>
       </div>
       <div class="row">

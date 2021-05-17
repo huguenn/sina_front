@@ -9,6 +9,16 @@
 #div1 { position:relative; }
 
 
+/* Estilo especial para iva usuario */
+.iva__custom__border {
+    display: inline-block;
+    padding: 0px 2px;
+    margin: 20px 0px;
+    margin-bottom:60px;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
 /*custom bootstrap column*/
 .col-xs-15,
 .col-sm-15,

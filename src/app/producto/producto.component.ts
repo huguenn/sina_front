@@ -39,8 +39,9 @@ export class ProductoComponent implements OnInit, OnDestroy {
       this.relacionados = $response.response.productosRelacionados;
       this.producto = $response.response;
       const categoria = (this.producto['categorias'] && this.producto['categorias'].length) ? this.producto['categorias'][0] : '';
-      this.full_link = 'https://www.sina.com.ar/producto/'
-        + (categoria ? categoria.nombre.split(' ').join('-') : '') + '/' + this.producto['id'];
+      const categoriaPadre = (categoria && categoria['padre']) ? categoria['padre'] : '';
+      this.full_link = 'https://www.sina.com.ar/' + (categoriaPadre ? categoriaPadre.nombre.split(' ').join('-') : 'Categoria') + '/'
+        + (categoria ? categoria.nombre.split(' ').join('-') : 'Subcategoria') + '/' + this.producto['titulo'] + '/' + this.producto['id'];
       this.producto.cantidad = this.producto['cantSugerida'] ? parseInt(this.producto['cantSugerida']) : 1;
       if (this.producto['cantPack'] !== '1') {
         this.producto.cantidad = this.producto['cantPack'] ? parseInt(this.producto['cantPack']) : 1;

@@ -7,6 +7,15 @@
     padding-bottom: 0px;
 }
 
+/* Estilo especial para iva usuario */
+.iva__custom__border {
+    display: inline-block;
+    padding: 0px 10px;
+    margin: 20px 12px;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
 .resultado {
     width: 100%;
 }
