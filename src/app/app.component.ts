@@ -1106,7 +1106,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.cuentaRespuesta = 'Esperando respuesta...';
     if (cuenta) {
       const body = new URLSearchParams();
-      body.set('cuit_cliente', cuenta.cuit);
+      body.set('codigo_cliente', cuenta.codigo_cliente);
       this.auth.post('auth/admin/representar', body)
         .then(($response) => {
           this.cuentaRespuesta = $response.body.response;
