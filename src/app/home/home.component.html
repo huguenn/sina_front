@@ -28,12 +28,22 @@
 <div class="container">
     <div class="resultado row" style="margin: 50px 0px;" *ngFor="let row of listaResultados">
         <div class="col-xs-6 col-md-15">
-            <div class="resultado__head">
-                <div class="img" [ngStyle]="{'background-image': 'url(' + row.head.imagen + ')'}"></div>
-                <!-- <p>{{row.head.texto}}</p> -->
-                <a routerLink="{{row.head.filter}}">
-                    <button>VER TODOS</button>
-                </a>
+            <div class="resultado__head" [style.background-color]="row.head.background_color" [style.filter]="'drop-shadow(0px 0px 15px '+row.head.background_color+')' | safe">
+                <!-- <div class="img" [ngStyle]="{'background-image': 'url(' + row.head.imagen + ')'}"></div> -->
+                <div class="img">
+                    <img [ngClass]="'lazyload'" src="./assets/images/header/logo_mobile_{{row.head.icono_color}}.webp" alt="Sina">
+                </div>
+                <div class="texto" [style.color]="row.head.texto_color">
+                    <p>{{row.head.texto}}</p>
+                </div>
+                <div class="link">
+                    <a routerLink="{{row.head.filter}}">
+                        <button>VER TODOS</button>
+                    </a>
+                </div>
+                <div class="url">
+                    <p>WWW.<strong>SINA</strong>.COM.AR</p>
+                </div>
             </div>
         </div>
         <div class="resultado__item col-xs-6 col-md-15" *ngFor="let item of row.lista">

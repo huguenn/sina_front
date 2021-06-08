@@ -29,6 +29,7 @@ import { FilterComponent } from './filter/filter.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { HomeComponent } from './home/home.component';
+import { SafePipe } from './home/home.component';
 import { MenuService } from './menu.service';
 import { MyFilterPipe } from './my-filter.pipe';
 import { ProductoItemComponent } from './producto-item/producto-item.component';
@@ -195,6 +196,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     HeaderComponent,
+    SafePipe,
     HomeComponent,
     FooterComponent,
     FilterComponent,

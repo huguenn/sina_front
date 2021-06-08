@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Pipe } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import 'rxjs/add/operator/map';
 import { debounceTime } from 'rxjs/operator/debounceTime';
 import { takeUntil } from 'rxjs/operators';
@@ -71,16 +72,25 @@ export class HomeComponent implements OnInit, OnDestroy {
 
           if (this.config) {
             this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+            this.listaResultados[0].head.texto_color = '#fff';
             this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+            this.listaResultados[0].head.background_color = '#00c973';
+            this.listaResultados[0].head.icono_color = 'azul';
             this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+            this.listaResultados[1].head.texto_color = '#fff';
             this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+            this.listaResultados[1].head.background_color = '#0579ff';
+            this.listaResultados[1].head.icono_color = 'verde';
             this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+            this.listaResultados[2].head.texto_color = '#fff';
             this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+            this.listaResultados[2].head.background_color = '#00c973';
+            this.listaResultados[2].head.icono_color = 'azul';
           }
 
           // this.listaResultados[2].lista = [];
           const $public = this.loginStatus ? '' : 'public/';
-          this.auth.get($public + 'producto/listado/ofertas')
+          this.auth.get($public + 'producto/listado/home/ofertas')
           .then(($response)  => {
             const ofertas1 = $response.response.slice(0, 4);
             // let ofertas2 = $response.response.slice(0, 2);
@@ -90,17 +100,26 @@ export class HomeComponent implements OnInit, OnDestroy {
 
             if (this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+              this.listaResultados[0].head.texto_color = '#fff';
               this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+              this.listaResultados[0].head.background_color = '#00c973';
+              this.listaResultados[0].head.icono_color = 'azul';
               this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+              this.listaResultados[1].head.texto_color = '#fff';
               this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+              this.listaResultados[1].head.background_color = '#0579ff';
+              this.listaResultados[1].head.icono_color = 'verde';
               this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+              this.listaResultados[2].head.texto_color = '#fff';
               this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+              this.listaResultados[2].head.background_color = '#00c973';
+              this.listaResultados[2].head.icono_color = 'azul';
             }
           })
           .catch(($error) => {
             this.data.log('getresultadoshome.json error home:', $error);
           });
-          this.auth.get($public + 'producto/listado/novedades')
+          this.auth.get($public + 'producto/listado/home/novedades')
           .then(($response)  => {
             const ofertas1 = $response.response.slice(0, 4);
             // const ofertas2 = $response.response.slice(0, 2);
@@ -110,28 +129,46 @@ export class HomeComponent implements OnInit, OnDestroy {
 
             if (this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+              this.listaResultados[0].head.texto_color = '#fff';
               this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+              this.listaResultados[0].head.background_color = '#00c973';
+              this.listaResultados[0].head.icono_color = 'azul';
               this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+              this.listaResultados[1].head.texto_color = '#fff';
               this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+              this.listaResultados[1].head.background_color = '#0579ff';
+              this.listaResultados[1].head.icono_color = 'verde';
               this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+              this.listaResultados[2].head.texto_color = '#fff';
               this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+              this.listaResultados[2].head.background_color = '#00c973';
+              this.listaResultados[2].head.icono_color = 'azul';
             }
           })
           .catch(($error) => {
             this.data.log('getlistadonovedades error home:', $error);
           });
-          this.auth.get($public + 'producto/listado/campania')
+          this.auth.get($public + 'producto/listado/home/campania')
           .then(($response)  => {
             const ofertas1 = $response.response.slice(0, 4);
             this.listaResultados[2].lista = JSON.parse(JSON.stringify(ofertas1));
 
             if (this.config) {
               this.listaResultados[0].head.texto = this.config.bannerOfertasTitulo;
+              this.listaResultados[0].head.texto_color = '#fff';
               this.listaResultados[0].head.imagen = this.config.bannerOfertasImagen;
+              this.listaResultados[0].head.background_color = '#00c973';
+              this.listaResultados[0].head.icono_color = 'azul';
               this.listaResultados[1].head.texto = this.config.bannerNovedadesTitulo;
+              this.listaResultados[1].head.texto_color = '#fff';
               this.listaResultados[1].head.imagen = this.config.bannerNovedadesImagen;
+              this.listaResultados[1].head.background_color = '#0579ff';
+              this.listaResultados[1].head.icono_color = 'verde';
               this.listaResultados[2].head.texto = this.config.bannerCampaniasTitulo;
+              this.listaResultados[2].head.texto_color = '#fff';
               this.listaResultados[2].head.imagen = this.config.bannerCampaniasImagen;
+              this.listaResultados[2].head.background_color = '#00c973';
+              this.listaResultados[2].head.icono_color = 'azul';
             }
           })
           .catch(($error) => {
@@ -525,4 +562,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.data.toggleLoginModal();
     }
   }
+}
+
+@Pipe({
+  name: 'safe',
+})
+export class SafePipe {
+    constructor(private sanitizer: DomSanitizer){}
+    transform(style) {
+      return this.sanitizer.bypassSecurityTrustStyle(style);
+    }
 }

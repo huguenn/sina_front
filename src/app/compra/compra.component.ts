@@ -835,7 +835,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
       body.set('total', this.pedido ? this.updateTotal(this.carrito.subtotal) : '100.01');
       if (this.datosCompra.entrega === '1' && this.datosCompra.agregado !== '1') {
         body.set('retiro_tienda', this.datosCompra.entrega);
-        const retiroDate = new Date(this.retiroHora);
+        const retiroDate = new Date(this.retiroHora.replace('-', '/'));
         const diaRetiro = retiroDate.getUTCDate();
         const mesRetiro = retiroDate.getMonth() + 1;
         const anioRetiro = retiroDate.getFullYear();

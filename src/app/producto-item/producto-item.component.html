@@ -1,15 +1,17 @@
-<div class="resultado__item__content" routerLink="{{item.fullLink}}" >
-  <div class="imgContainer">
-    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-    <div class="imagen">
-      <img *ngIf="item.urlImagen" style="max-width: 100%;" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+<a class="producto__link" routerLink="{{item.fullLink}}">
+  <div class="resultado__item__content" >
+    <div class="imgContainer">
+      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      <div class="imagen">
+        <img *ngIf="item.urlImagen" style="max-width: 100%;" [ngClass]="'lazyload'" [attr.data-src]="item.urlImagen" onerror="this.src='/assets/images/producto/picGenerica.webp'" alt="">
+      </div>
+    </div>
+    <div class="tituloContainer">
+      <p style="font-size: 17px;">{{item.titulo}}</p>
+      <p style="font-size: 15px;">{{item.tituloAdicional}}</p>
     </div>
   </div>
-  <div class="tituloContainer">
-    <p style="font-size: 17px;">{{item.titulo}}</p>
-    <p style="font-size: 15px;">{{item.tituloAdicional}}</p>
-  </div>
-</div>
+</a>
 <div class="cantidad" *ngIf="sesion || item.oferta">
   <div class="cantidad--right" [class.alerta]="item.incompleto">
     <div class="precio" *ngIf="sesion || item.oferta">

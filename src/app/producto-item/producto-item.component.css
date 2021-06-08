@@ -1,3 +1,7 @@
+a.producto__link {
+    color: #333;
+    text-decoration: none;
+}
 img{
     width: 70%;
     margin: 15px auto 0 auto;
