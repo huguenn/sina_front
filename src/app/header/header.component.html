@@ -31,10 +31,10 @@
               </button>
               <!--(keyup)="buscarPalabra($event)" -->
               <input (focusout)="focusoutFunction()" (keydown)="enterBusqueda($event)" class="form-control" type="text" placeholder="Buscar" [(ngModel)]="texto_busqueda" name="texto_busqueda" aria-label="Texto Busqueda">
-              <button class="btn btn-outline-sucess" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
+              <button class="btn btn-outline-sucess" (click)="buscarTexto()">
                   <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.webp" alt="Sina" width="20">
               </button>
-              <i class="fa fa-search" aria-hidden="true" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()"></i>
+              <i class="fa fa-search" aria-hidden="true" (click)="buscarTexto()"></i>
               <div class="busqueda" *ngIf="ResultadoBusqueda?.length > 0">
                 <ul>
                   <li *ngFor="let item of ResultadoBusqueda" (click)="clickBusqueda(item)">
@@ -208,7 +208,7 @@
               </button>
               <!-- removing (keyup)="buscarPalabra($event)" -->
               <input [(ngModel)]="texto_busqueda" (keydown)="enterBusqueda($event)" name="texto_busqueda" aria-label="Texto Busqueda" (focus)="focusFunction()" (focusout)="focusoutFunction()" class="form-control" type="text" placeholder="Buscar">
-              <button class="btn btn-outline-sucess" type="submit" routerLink="/busqueda/{{texto_busqueda}}" (click)="cerrarBusqueda()">
+              <button class="btn btn-outline-sucess" type="submit" (click)="buscarTexto()">
                   <img [ngClass]="'lazyload'" data-src="./assets/images/header/buscador.webp" alt="Sina" width="20">
               </button>
               <i class="fa fa-search" aria-hidden="true"></i>                    

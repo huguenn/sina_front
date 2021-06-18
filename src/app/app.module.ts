@@ -32,6 +32,7 @@ import { HomeComponent } from './home/home.component';
 import { SafePipe } from './home/home.component';
 import { MenuService } from './menu.service';
 import { MyFilterPipe } from './my-filter.pipe';
+import { HighlightSearchPipe } from './producto-item/producto-item.component';
 import { ProductoItemComponent } from './producto-item/producto-item.component';
 import { ProductoComponent } from './producto/producto.component';
 import { RecuperarPassComponent } from './recuperar-pass/recuperar-pass.component';
@@ -200,6 +201,7 @@ const appRoutes: Routes = [
     HomeComponent,
     FooterComponent,
     FilterComponent,
+    HighlightSearchPipe,
     ProductoComponent,
     MyFilterPipe,
     CuentaComponent,

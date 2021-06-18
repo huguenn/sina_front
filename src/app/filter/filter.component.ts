@@ -244,7 +244,21 @@ export class FilterComponent implements OnInit, OnDestroy {
             setTimeout(() => {
 
               const path = window.location.href;
-              if (path.indexOf('ofertas-y-novedades') !== -1) {
+              if (path.indexOf('/busqueda/') !== -1) {
+                if (this.listaDefault && this.listaDefault.length <= 48) {
+                  this.paginado.disable(); // Para poner listado por default, en lugar de paginado
+                } else {
+                  this.modoVista = 'Paginado';
+                }
+                this.num_subcategoria = -2;
+                this.id_categoria = [];
+                this.familiaActual = 'Ofertas';
+
+                this.id_categoria.push({link: '/ofertas', texto: 'Ofertas', listado_subcategorias: null});
+                this.id_categoria.push({link: '/novedades', texto: 'Novedades', listado_subcategorias: null});
+                this.id_categoria.push({link: '/ofertas-y-novedades', texto: 'Más vendidos', listado_subcategorias: null});
+              }
+              else if (path.indexOf('ofertas-y-novedades') !== -1) {
                 this.paginado.disable(); // Para poner listado por default, en lugar de paginado
                 this.num_subcategoria = -2;
                 this.id_categoria = [];

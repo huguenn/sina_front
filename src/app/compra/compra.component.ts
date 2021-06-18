@@ -1174,8 +1174,50 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   enterBusqueda(event) {
     if (event.keyCode == 13) {
-      this.router.navigate(['/busqueda/' + this.texto_busqueda]);
-      // this.cerrarBusqueda()
+      this.buscarTexto();
+      // this.cerrarBusqueda() // No usar
+    }
+  }
+  buscarTexto() {
+    let arraySecciones = [
+      'ofertas',
+      'novedades'
+    ];
+    let arrayFamilias = [
+      'ofertas',
+      'novedades',
+      'limpieza',
+      'bazar',
+      'textil',
+      'liquidos', 'líquidos',
+      'jardin y riego', 'jardín y riego',
+      'profesional',
+      'mas productos', 'más productos'
+    ]
+
+    if (arraySecciones.indexOf(this.texto_busqueda.toLowerCase()) !== -1) {
+      let toUrl = this.texto_busqueda.toLowerCase();
+      this.router.navigateByUrl('/', {skipLocationChange: true})
+      .then(() => {   
+        this.router.navigate(['/' + toUrl]);
+      });
+    } else if (arrayFamilias.indexOf(this.texto_busqueda.toLowerCase()) !== -1) {
+      let toUrl = this.texto_busqueda.charAt(0).toUpperCase() + this.texto_busqueda.slice(1).toLowerCase();
+      toUrl = toUrl.replace('á', 'a');
+      toUrl = toUrl.replace('é', 'e');
+      toUrl = toUrl.replace('í', 'i');
+      toUrl = toUrl.replace('ó', 'o');
+      toUrl = toUrl.replace('ú', 'u');
+      this.router.navigateByUrl('/', {skipLocationChange: true})
+      .then(() => {
+        this.router.navigate(['/' + toUrl]);
+      });
+    } else {
+      let toUrl = this.texto_busqueda;
+      this.router.navigateByUrl('/', {skipLocationChange: true})
+      .then(() => {
+        this.router.navigate(['/busqueda/' + toUrl]);
+      });
     }
   }
   cerrarBusqueda(msg) {

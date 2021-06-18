@@ -53,6 +53,25 @@
         </div>
       </div>
     </div>
+    <div class="col-md-9 col-xs-12" *ngIf="mensaje" style="
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      height: 300px;
+    ">
+      <p
+      style="
+        margin-top: 100px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 3em;
+        color: #057aff;
+        opacity: 0.6;
+      "
+      >{{mensaje}}</p>
+      <img id="loadCat" *ngIf="mensaje == 'Cargando'" style="margin-left: auto; margin-right: auto;" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
+    </div>
     <div class="col-md-9 col-xs-12" *ngIf="listaResultados && listaResultados?.length">
       <div class="row filter__top" style="padding-top: 0px;">
         <div class="col" [ngStyle]="{'padding-top': modoVista === 'Paginado' ? '0px' : '29px' }">
@@ -108,7 +127,7 @@
       </div>
       <div class="row resultado">
         <div class="resultado__item col-md-3 col-xs-6" *ngFor="let item of listaResultados | filter : term">
-            <app-producto-item [item]="item" [sesion]="loginStatus" [mensaje]="_success"></app-producto-item>            
+          <app-producto-item [item]="item" [sesion]="loginStatus" [mensaje]="_success"></app-producto-item>
         </div>
       </div>
       <br>
@@ -123,25 +142,6 @@
               <button (click)="paginado.siguiente()">Siguiente</button>
           </div>    
       </div>
-    </div>
-    <div class="col-md-9 col-xs-12" *ngIf="mensaje" style="
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-      height: 300px;
-    ">
-      <p
-      style="
-        margin-top: 100px;
-        margin-left: auto;
-        margin-right: auto;
-        font-size: 3em;
-        color: #057aff;
-        opacity: 0.6;
-      "
-      >{{mensaje}}</p>
-      <img id="loadCat" *ngIf="mensaje == 'Cargando'" style="margin-left: auto; margin-right: auto;" [ngClass]="'lazyload'" data-src="./assets/images/loader/ajax-loader.gif" height="40" width="50"/>
     </div>
   </div>
 </div>

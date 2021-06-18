@@ -1,4 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { AutenticacionService } from '../autenticacion.service';
@@ -16,12 +17,26 @@ export class ProductoItemComponent implements OnInit, OnDestroy {
   @Input() mensaje;
   @Input() relacionado;
   public iva_usuario: string = '';
-  constructor(private data: SharedService, private auth: AutenticacionService) {}
+  public search_term = '';
+  constructor(private data: SharedService, private auth: AutenticacionService, private route: ActivatedRoute,) {}
   private replaceHash($entrada: string) {
     return $entrada ? $entrada.replace(new RegExp('/'), '~') : $entrada;
   }
   arrayCants = [];
   ngOnInit() {
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      const path = window.location.href;
+      if (path.indexOf('/busqueda/') !== -1) {
+        if (!params['id2'] && !params['padre']) {
+          this.search_term = params['id'];
+        } else {
+          this.search_term = '';
+        }
+      } else {
+        this.search_term = '';
+      }
+    });
+
     const categoria = (this.item.categorias && this.item.categorias.length > 0) ? this.item.categorias[0] : null;
     const padre = categoria ? (categoria.padre ? categoria.padre.nombre.split(' ').join('-') : 'Categoria') : 'Categoria';
     const hijo = categoria ? categoria.nombre.split(' ').join('-') : 'Subcategoria';
@@ -126,4 +141,26 @@ export class ProductoItemComponent implements OnInit, OnDestroy {
       e.target.value = e.target.min;
     }
   }
+}
+
+@Pipe({
+  name: 'highlight',
+  pure: true // true makes it pure and false makes it impure
+})
+export class HighlightSearchPipe implements PipeTransform {
+
+  transform(text: string, search): string {
+    if (search && text) {
+      let pattern = search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+      pattern = pattern.split(' ').filter((t) => {
+        return t.length > 0;
+      }).join('|');
+      const regex = new RegExp(pattern, 'gi');
+
+      return text.replace(regex, (match) => `<span class="search-highlight">${match}</span>`);
+    } else {
+      return text;
+    }
+  }
+
 }

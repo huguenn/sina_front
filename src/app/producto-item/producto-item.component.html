@@ -7,8 +7,8 @@
       </div>
     </div>
     <div class="tituloContainer">
-      <p style="font-size: 17px;">{{item.titulo}}</p>
-      <p style="font-size: 15px;">{{item.tituloAdicional}}</p>
+      <p style="font-size: 17px;" [innerHTML]='item.titulo | highlight : search_term'></p>
+      <p style="font-size: 15px;" [innerHTML]='item.tituloAdicional | highlight : search_term'></p>
     </div>
   </div>
 </a>
