@@ -364,7 +364,7 @@ export class SharedService {
   }
 
   updatePageTitle(
-    $title: string = 'Productos de limpieza por mayor, fabrica de productos de limpieza | Sina',
+    $title: string = 'Artículos de limpieza por mayor, artículos de bazar | Sina',
     $meta_content: string = 'Fábrica mayorista y distribuidora de artículos de limpieza y bazar con entrega a todo el país, hacé tu pedido online!') {
     /**
      * Configura el titulo de la pagina.

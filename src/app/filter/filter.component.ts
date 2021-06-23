@@ -87,7 +87,26 @@ export class FilterComponent implements OnInit, OnDestroy {
   ) { }
   updateMenu(id, id2, padre) {
     if (!id && !id2 && !padre) {
-      this.data.updatePageTitle();
+      let cat = window.location.href;
+      if (cat.indexOf('/busqueda/') === -1) {
+        if (cat.indexOf('/Limpieza') !== -1) {
+          this.data.updatePageTitle('Productos de Limpieza por mayor, fabrica de productos de Limpieza', 'Encontrá la mayor variedad de Limpieza al por mayor y al mejor precio en Sina.com.ar');
+        } else if (cat.indexOf('/Bazar') !== -1) {
+          this.data.updatePageTitle('Productos de Bazar por mayor, fabrica de productos de Bazar', 'Encontrá la mayor variedad de Bazar al por mayor y al mejor precio en Sina.com.ar');
+        } else if (cat.indexOf('/Textil') !== -1) {
+          this.data.updatePageTitle('Productos de Textil por mayor, fabrica de productos de Textil', 'Encontrá la mayor variedad de Textil al por mayor y al mejor precio en Sina.com.ar');
+        } else if (cat.indexOf('/Liquidos') !== -1) {
+          this.data.updatePageTitle('Productos de Liquidos por mayor, fabrica de productos de Liquidos', 'Encontrá la mayor variedad de Liquidos al por mayor y al mejor precio en Sina.com.ar');
+        } else if (cat.indexOf('/Jardin%20y%20riego') !== -1) {
+          this.data.updatePageTitle('Productos de Jardin y riego por mayor, fabrica de productos de Jardin y riego', 'Encontrá la mayor variedad de Jardin y riego al por mayor y al mejor precio en Sina.com.ar');
+        } else if (cat.indexOf('/Profesional') !== -1) {
+          this.data.updatePageTitle('Productos de Linea profesional por mayor, fabrica de productos de Linea profesional', 'Encontrá la mayor variedad de Linea profesional al por mayor y al mejor precio en Sina.com.ar');
+        } else if (cat.indexOf('/Mas%20productos') !== -1) {
+          this.data.updatePageTitle('Productos de Mas productos por mayor, fabrica de productos de Mas productos', 'Encontrá la mayor variedad de Mas productos al por mayor y al mejor precio en Sina.com.ar');
+        }
+      } else {
+        this.data.updatePageTitle();
+      }
       return;
     }
     this.ordenamiento = '';
@@ -138,6 +157,11 @@ export class FilterComponent implements OnInit, OnDestroy {
         this.id_categoria = [];
         this.id_categoria.push({link: itemActualMenuPadre.head.link, texto: itemActualMenuPadre.head.texto, listado_subcategorias: this.listado_subcategorias});
         this.num_subcategoria = itemActualMenuHijo;
+      }
+    } else {
+      let cat = window.location.href;
+      if (cat.indexOf('/busqueda/') !== -1) {
+        this.data.updatePageTitle(id2+', '+id2+' al por mayor', 'Encontrá la mayor variedad de '+id2+' al por mayor y al mejor precio en Sina.com.ar');
       }
     }
   }

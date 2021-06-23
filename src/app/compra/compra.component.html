@@ -29,12 +29,13 @@
                 </div>
                 <div class="row" *ngIf="config.switchComprasActivo">
                   <div class="col-xs-12 col-md-4 show__mobile">
-                    <div class="row carrito__total__mobile" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px;">
+                    <div class="row carrito__total__mobile" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px; position: relative;">
+                      <div style="position: absolute; bottom: 3px; right: 8px; font-size: 0.8em;"><a href="https://sina.leren.com.ar/envios" target="_blank" rel="noopener noreferrer">Conocé más sobre envíos <i class="fa fa-external-link"></i></a></div>
                       <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < config.montoEnvioGratis">
-                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(config.montoEnvioGratis - carrito.subtotal)}}</strong> PARA TENER EL <strong style="padding-bottom: 3px">ENVÍO GRATIS</strong></p>
+                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(config.montoEnvioGratis - carrito.subtotal)}}</strong> PARA TENER <strong style="padding-bottom: 3px">ENVÍO SIN CARGO</strong></p>
                       </div>
                       <div class="row envio__total text-center" style="font-weight: normal;" *ngIf="carrito.subtotal >= config.montoEnvioGratis">
-                        <p>ENVÍO GRATIS &#10004;</p>
+                        <p>ENVÍO SIN CARGO &#10004;</p>
                       </div>
                     </div>
                     <div class="row carrito__total__mobile" style="margin-top: 10px !important;">
@@ -174,12 +175,13 @@
                     </div>
                   </div>
                   <div class="col-xs-12 col-md-4 show__web">
-                    <div class="row carrito__total" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px;">
+                    <div class="row carrito__total" [ngClass]="{'borde__animado' : carrito.subtotal < config.montoEnvioGratis, 'envio' : carrito.subtotal >= config.montoEnvioGratis}" style="margin-bottom: 10px; position: relative;">
+                      <div style="position: absolute; bottom: 3px; right: 8px; font-size: 0.8em;"><a href="https://sina.leren.com.ar/envios" target="_blank" rel="noopener noreferrer">Conocé más sobre envíos <i class="fa fa-external-link"></i></a></div>
                       <div class="row envio__total" style="font-weight: normal; color: #0579ff;" *ngIf="carrito.subtotal < config.montoEnvioGratis">
-                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(config.montoEnvioGratis - carrito.subtotal)}}</strong> PARA TENER EL <strong style="padding-bottom: 3px">ENVÍO GRATIS</strong></p>
+                        <p>TE FALTAN $ <strong style="padding-bottom: 3px">{{formatMoney(config.montoEnvioGratis - carrito.subtotal)}}</strong> PARA TENER <strong style="padding-bottom: 3px">ENVÍO SIN CARGO</strong></p>
                       </div>
                       <div class="row envio__total text-center" style="font-weight: normal;" *ngIf="carrito.subtotal >= config.montoEnvioGratis">
-                        <p>ENVÍO GRATIS &#10004;</p>
+                        <p>ENVÍO SIN CARGO &#10004;</p>
                       </div>
                     </div>
                     
@@ -419,7 +421,7 @@
                           <p style="font-weight: bold; font-size: 15px; padding-bottom: 10px;">Día y horario</p>
                           <div class="form-group">
                             <div class="horario" style="width: 234px;">
-                              <input [ngModel]="retiroHora | date:'yyyy-MM-dd'" (ngModelChange)="fechaUpdate($event)" type="date" [min]="hoyFormatted" name="retiroHora" aria-label="Fecha Retiro"/>
+                              <input [ngModel]="retiroHora | date:'yyyy-MM-dd'" (ngModelChange)="fechaUpdate($event)" type="date" [min]="hoyFormatted" name="retiroHora" aria-label="Fecha Retiro" onkeydown="return false"/>
                             </div>
                             <br>
                             <div class="horario">

@@ -176,6 +176,9 @@ export class ProductoComponent implements OnInit, OnDestroy {
     this.data.toggleCarritoShow();
   }
 
+  enterCheck() {
+    this.newMessage(this.producto);
+  }
   newMessage(msg) {
     // const precio = msg.precio;
     if (this.loginStatus === true) {

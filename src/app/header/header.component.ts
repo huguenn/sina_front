@@ -122,6 +122,7 @@ export class HeaderComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     }
   }
   buscarTexto() {
+    this.texto_busqueda = this.texto_busqueda.replace('/', ' ');
     let arraySecciones = [
       'ofertas',
       'novedades'

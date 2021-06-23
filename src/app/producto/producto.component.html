@@ -66,7 +66,7 @@
         <div class="row producto__compra">
           <div class="cantidad">
             <p style="margin-right: 10px; margin-bottom: 0;">Cantidad:</p>
-            <input *ngIf="producto.cantPack === '1'" name="cantidad" aria-label="Cantidad" type="number" min="1" max="999999" [(ngModel)]="producto.cantidad" (keyup)="revisarCantidad($event)">
+            <input *ngIf="producto.cantPack === '1'" name="cantidad" aria-label="Cantidad" (keyup.enter)="enterCheck()" type="number" min="1" max="999999" [(ngModel)]="producto.cantidad" (keyup)="revisarCantidad($event)">
             <select *ngIf="producto.cantPack !== '1'" name="cantidad" aria-label="Cantidad" [(ngModel)]="producto.cantidad">
               <option *ngFor="let cant of arrayCants" [ngValue]="cant">{{cant}}</option>
             </select>
@@ -101,7 +101,7 @@
   </div>
   <div class="row producto__relacionados">
     <div class="row">
-      <h2>También te puede interesar</h2>
+      <h2 class="wiggle">Artículos relacionados</h2>
     </div>
     <div class="row resultado">
         <div class="resultado__item col-xs-6 col-md-3" *ngFor="let item of relacionados | myfilter:{id: null}">

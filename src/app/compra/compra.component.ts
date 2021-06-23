@@ -1179,6 +1179,7 @@ export class CompraComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   buscarTexto() {
+    this.texto_busqueda = this.texto_busqueda.replace('/', ' ');
     let arraySecciones = [
       'ofertas',
       'novedades'
